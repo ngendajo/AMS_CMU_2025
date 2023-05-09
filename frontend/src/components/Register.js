@@ -1,7 +1,7 @@
 import {useRef, useState, useEffect} from "react";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FntAwesomeIcon, FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from './api/axios';
+import axios from '../api/axios';
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -137,7 +137,6 @@ const Register = () => {
             );
             console.log(response.data);
             console.log(response.access);
-            console.log(JSON.stringify(response));
             setSucess(true);
             //clear input fields
     }catch(err){
