@@ -24,6 +24,7 @@ User = get_user_model()
 class CrcRegistrationView(APIView):
     #permission_classes = [IsAuthenticated, ]
     def post(self, request):
+        print(request.data)
         serializer = CrcRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

@@ -26,7 +26,7 @@ class CrcRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email','first_name','last_name','phone1','phone2', 'password', 'profile')
+        fields = ('email','first_name','last_name','phone1', 'password', 'profile')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):

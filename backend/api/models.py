@@ -7,7 +7,7 @@ class UserManager(BaseUserManager):
 	'''
 	creating a manager for a custom user model
 	'''
-	def create_user(self, email,first_name,last_name,phone1,phone2, password=None):
+	def create_user(self, email,first_name,last_name,phone1, password=None):
 		"""
 		Create and return a `User` with an email, username and password.
 		"""
@@ -19,39 +19,38 @@ class UserManager(BaseUserManager):
 			first_name=first_name,
 	        last_name=last_name,
 	        phone1=phone1,
-	        phone2=phone2,
 		)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email,first_name,last_name,phone1,phone2, password):
+	def create_superuser(self, email,first_name,last_name,phone1, password):
 		"""
 		Create and return a `User` with superuser (admin) permissions.
 		"""
 		if password is None:
 			raise TypeError('Superusers must have a password.')
 
-		user = self.create_user(email,first_name,last_name,phone1,phone2, password)
+		user = self.create_user(email,first_name,last_name,phone1, password)
 		user.is_superuser = True
 		user.is_staff = True
 		user.save()
 		return user
 
-	def create_crcuser(self,email,first_name,last_name,phone1,phone2,password):
+	def create_crcuser(self,email,first_name,last_name,phone1,password):
 		if password is None:
 			raise TypeError('CRC staff must have a password')
-		user = self.create_user(email,first_name,last_name,phone1,phone2,password)
+		user = self.create_user(email,first_name,last_name,phone1,password)
 		user.is_crc = True
 		user.is_staff = True
 		user.save()
 		return user
 
 
-	def create_alumniuser(self,email,first_name,last_name,phone1,phone2,password):
+	def create_alumniuser(self,email,first_name,last_name,phone1,password):
 		if password is None:
 			raise TypeError('Alumni must have a password')
-		user = self.create_user(email,first_name,last_name,phone1,phone2,password)
+		user = self.create_user(email,first_name,last_name,phone1,password)
 		user.is_alumni = True
 		user.save()
 		return user
@@ -70,10 +69,9 @@ class User(AbstractBaseUser):
 	first_name=models.CharField(max_length=200)
 	last_name=models.CharField(max_length=200)
 	phone1=models.CharField(max_length=200, blank=True,unique=True)
-	phone2=models.CharField(max_length=200, blank=True,unique=True)
 	username=None
 	USERNAME_FIELD = 'email'
-	REQUIRED_FIELDS = ['first_name', 'last_name', 'phone1', 'phone2']
+	REQUIRED_FIELDS = ['first_name', 'last_name', 'phone1']
 
 	# Tells Django that the UserManager class defined above should manage
 	# objects of this type.
