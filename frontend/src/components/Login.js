@@ -1,18 +1,24 @@
-import { useRef,useState, useEffect, useContext } from "react"
-import AuthContext from "../context/AuthProvider";
+import { useRef,useState, useEffect } from "react"
+import useAuth from "../hooks/useAuth";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 import axios from "../api/axios";
 const LOGIN_URL = '/token/';
 
 const Login = () => {
-    const { setAuth } = useContext(AuthContext);
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
     const emailRef =useRef();
     const errRef = useRef();
 
     const [email, setEmail] = useState('');
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState('');
 
     useEffect(() =>{
         emailRef.current.focus();
@@ -36,11 +42,13 @@ const Login = () => {
                 }
                 );
                 const accessToken = response?.data.access;
-                setAuth({email, pwd, accessToken });
+                const user =jwtDecode(accessToken);
+                const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": null
+                console.log(roles)
+                setAuth({user,roles,email, pwd, accessToken });
                 setEmail('');
                 setPwd('');
-                console.log(accessToken)
-                setSuccess(true);
+                navigate(from, {replace:true})
         }catch(err){
             if(!err?.response){
                 setErrMsg("Missing Email or Password");
@@ -55,16 +63,8 @@ const Login = () => {
     }
 
     return (
-        <>
-        {success ? (
-            <section>
-                <h1>You are logged in!</h1>
-                <p>
-                    <p>Go to Home</p>
-                </p>
-            </section>
-        ):(
-            <section>
+        
+            <div>
                 <p ref={errRef} className={errMsg ? "errmsg":
             "offscreen"} aria-live="assertive">
                     {errMsg}
@@ -102,12 +102,10 @@ const Login = () => {
                 <p>
                     Need an Account?<br/>
                     <span className="line">
-                        <p>Sign Up</p>
+                        <Link to="/register">Sign Up</Link>
                     </span>
                 </p>
-            </section>
-        )}
-        </>
+            </div>
     )
 }
 
