@@ -1,42 +1,51 @@
-from django.contrib.auth.models import User
-from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from userprofile.models import CrcProfile
+from api.models import User
+from userprofile.models import CrcProfile
+from django.contrib.auth import get_user_model
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Add custom claims
-        token['username'] = user.username
-        token['email'] = user.email
-        # ...
-        return token
+User = get_user_model()
 
-class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+
+
+class CrcSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = CrcProfile
+        fields = ('position',)
+
+class CrcListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CrcProfile
+        fields = '__all__'
+        depth = 1
+
+
+class CrcRegistrationSerializer(serializers.ModelSerializer):
+
+    profile = CrcSerializer()
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2')
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError(
-                {"password": "Password fields didn't match."})
-
-        return attrs
+        fields = ('email','first_name','last_name','phone1','phone2', 'password', 'profile')
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username']
+        profile_data = validated_data.pop('profile')
+        user = User.objects.create_crcuser(**validated_data)
+        CrcProfile.objects.create(
+            user=user,
+            position=profile_data['position'],
         )
-
-        user.set_password(validated_data['password'])
-        user.save()
-
         return user
+    
+
+    #User login serialisers
+
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField(style={"input_type": "password"}, required=True)
+    new_password = serializers.CharField(style={"input_type": "password"}, required=True)
+
+    def validate_current_password(self, value):
+        if not self.context['request'].user.check_password(value):
+            raise serializers.ValidationError({'current_password': 'Does not match'})
+        return value
