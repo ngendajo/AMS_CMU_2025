@@ -1,7 +1,8 @@
 import {useRef, useState, useEffect} from "react";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FntAwesomeIcon, FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from '../api/axios';
+import { Link } from "react-router-dom";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -157,7 +158,7 @@ const Register = () => {
                     <section>
                         <h1>Success!</h1>
                         <p>
-                            <a href="#">Sign In</a>
+                            <Link to="/home">Sign In</Link>
                         </p>
                     </section>
                 ) :(
@@ -363,7 +364,7 @@ const Register = () => {
                 <p>
                     Already registered?<br/>
                     <span className="line">
-                        <a href="#">Sign In</a>
+                    <Link to="/home">Sign In</Link>
                     </span>
                 </p>
             </section>

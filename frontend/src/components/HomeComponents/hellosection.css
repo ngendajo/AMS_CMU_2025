@@ -1,0 +1,106 @@
+.hellosection{
+margin: 50px 5% 0px 5%;
+display: flex;
+flex-wrap: wrap;
+gap: 3%;
+}
+.hellolefttop h1{
+    line-height: 40px;
+}
+.introvideoplay{
+    color: #F0A459;
+    font-weight: 800;
+}
+.helloleftbottom{
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+}
+.introvideo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.introvideo .icon{
+    color:#F0A459; 
+    font-size: 50px;
+}
+
+.left{
+    flex: 1;
+    margin-top: 30px;
+}
+
+.right{
+    width: 530px;
+    flex: 1;
+    padding: 5px;
+    height: 350px;
+}
+.rightimg1  img{
+    width: 430px;
+    border-radius: 2%;
+    position: relative;
+    left: 80px;
+    bottom: 70px;
+}
+.rightimg2 img{
+    width: 150px;
+    border-radius: 3%;
+    position: relative;
+    z-index: 1;
+}
+.rightalumninumber{
+    background: #FFFFFF;
+    box-shadow: 0px 0px 48px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin: 0 10px;
+    padding: 10px;
+    width: 140px;
+    position: relative;
+    bottom: 100px;
+    left: 360px;
+}
+.rightalumninumber span{
+    font-size: 22px;
+}
+.rightleftbars1{
+    width: 51px;
+    height: 11px;
+    background: #F49D47;
+    border-radius: 8px;
+    position: relative;
+    bottom: 250px;
+    left: 60px;
+}
+.rightleftbars2{
+    width: 88px;
+    height: 10px;
+    background: #F49D47;
+    border-radius: 8px;
+    position: relative;
+    bottom: 240px;
+    left: 25px;
+}
+.rightbars1{
+    width: 50px;
+    height: 10px;
+    background: #F49D47;
+    border-radius: 4px;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    position: relative;
+    bottom: 275px;
+    left: 480px;
+}
+.rightbars2{
+    width: 87px;
+    height: 10px;
+    background: #F49D47;
+    border-radius: 4px;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    position: relative;
+    bottom: 265px;
+    left: 480px;
+}

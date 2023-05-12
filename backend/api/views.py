@@ -22,7 +22,7 @@ User = get_user_model()
 
 #CRC data
 class CrcRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = CrcRegistrationSerializer(data=request.data)
@@ -57,7 +57,7 @@ def update_crc(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND) """
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_crc(request, pk):
     crc = get_object_or_404(User, pk=pk)
     crc.delete()
