@@ -1,4 +1,4 @@
-import { AiOutlineMenu } from "react-icons/ai";
+
 import images from '../../Static/Images/images.png';
 import { MdCancel } from "react-icons/md"; 
 
@@ -12,12 +12,26 @@ import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
+import {NavLink} from 'react-router-dom'
+
 import axios from "../../api/axios";
 const LOGIN_URL = '/token/';
 
+// Define MobileMenu component
+const MobileMenu = () => {
+  return (
+    <div className={'mobile-menu'}>
+      <NavLink exact activeClassName="active" to='#home'>Home</NavLink>
+      <NavLink activeClassName="active" to='#about'>About Us</NavLink>
+      <NavLink activeClassName="active" to='#resources'>Resources</NavLink>
+      <NavLink activeClassName="active" to='#news'>News</NavLink>
+      <NavLink activeClassName="active" to='#contact'>Contact</NavLink>
+    </div>
+  );
+};
+
 export default function HomeMenuBar() {
     const [seen, setSeen] = useState(false)
-    const [nav, setNav] = useState(false)
 
     const { setAuth } = useAuth();
 
@@ -82,34 +96,40 @@ export default function HomeMenuBar() {
     function togglePop () {
         setSeen(!seen);
     };
-    function showmenu(){
-      setNav(!nav)
-      const menu = document.querySelectorAll('.link');
-      menu.forEach(men => {
-        if(nav){
-          men.style.display = 'block';
-        }else{
-          men.style.display = 'none';
-        }
-        
-      });
-    }
+    const [isShown, setIsShown] = useState(false);
+      const toggleMobileMenu = () => {
+        setIsShown(!isShown);
+      };
   return (
     <>
     <div className='HomeMenuBar topbarWrapper'>
                 <div className="left-menu">
                     <img src={images} alt="logo" />
                 </div>
-                <div className="center-menu">
-                  <div className="topnav" id="myTopnav">
-                    <AiOutlineMenu className='icon links' onClick={showmenu}/>
-                    <Link to="#home" className="active links link">Home</Link>
-                    <Link to="#about" className="links link">About us</Link>
-                    <Link to="#resources" className="links link">Resources</Link>
-                    <Link to="#news" className="links link">News</Link>
-                    <Link to="#contact" className="links link">Contact</Link>
+
+                <div>
+                    {/* Desktop Menu, which only appears on large screens */}
+                    <div className='menu'>
+                      <NavLink exact activeClassName="active" to='#home'>Home</NavLink>
+                      <NavLink activeClassName="active" to='#about'>About Us</NavLink>
+                      <NavLink activeClassName="active" to='#resources'>Resources</NavLink>
+                      <NavLink activeClassName="active" to='#news'>News</NavLink>
+                      <NavLink activeClassName="active" to='#contact'>Contact</NavLink>
+                    </div>
+
+                    {/* This button only shows up on small screens. It is used to open the mobile menu */}
+                      <button className='show-mobile-menu-button' onClick={toggleMobileMenu}>
+                        &#8801;
+                      </button>
+                      {/* The mobile menu and the close button */}
+                      {isShown && <MobileMenu />}
+                      {isShown && (
+                        <button className='close-mobile-menu-button' onClick={toggleMobileMenu}>
+                          &times;
+                        </button>
+                      )}
                   </div>
-                </div>
+
                 <div className="right-menu">
                   <button onClick={togglePop} className="log logsmall">Login</button>
                   {seen ? 

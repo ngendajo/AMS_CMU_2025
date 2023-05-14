@@ -35,19 +35,19 @@ gap: 3%;
 
 .right{
     width: 530px;
-    flex: 1;
+    flex: 2;
     padding: 5px;
     height: 350px;
 }
 .rightimg1  img{
-    width: 430px;
+    width: 80%;
     border-radius: 2%;
     position: relative;
-    left: 80px;
+    left: 10%;
     bottom: 70px;
 }
 .rightimg2 img{
-    width: 150px;
+    width: 27%;
     border-radius: 3%;
     position: relative;
     z-index: 1;
@@ -61,7 +61,7 @@ gap: 3%;
     width: 140px;
     position: relative;
     bottom: 100px;
-    left: 360px;
+    left: 70%;
 }
 .rightalumninumber span{
     font-size: 22px;
@@ -72,8 +72,8 @@ gap: 3%;
     background: #F49D47;
     border-radius: 8px;
     position: relative;
-    bottom: 250px;
-    left: 60px;
+    bottom: 280px;
+    left: 7%;
 }
 .rightleftbars2{
     width: 88px;
@@ -81,8 +81,8 @@ gap: 3%;
     background: #F49D47;
     border-radius: 8px;
     position: relative;
-    bottom: 240px;
-    left: 25px;
+    bottom: 270px;
+    left: 2%;
 }
 .rightbars1{
     width: 50px;
@@ -91,8 +91,8 @@ gap: 3%;
     border-radius: 4px;
     transform: matrix(-1, 0, 0, 1, 0, 0);
     position: relative;
-    bottom: 275px;
-    left: 480px;
+    bottom: 310px;
+    left: 86%;
 }
 .rightbars2{
     width: 87px;
@@ -101,6 +101,6 @@ gap: 3%;
     border-radius: 4px;
     transform: matrix(-1, 0, 0, 1, 0, 0);
     position: relative;
-    bottom: 265px;
-    left: 480px;
+    bottom: 300px;
+    left: 86%;
 }
