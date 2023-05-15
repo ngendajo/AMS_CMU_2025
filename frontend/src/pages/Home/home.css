@@ -1,6 +1,4 @@
-.home{
-    font-weight: 400;
-}
+
 .HomeTopBar{
     display: flex;
     flex-wrap: wrap;
@@ -82,7 +80,7 @@
     padding: 3%;
     border-radius: 5px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-    width: 230px;
+    width: 300px;
     }
     .welcomemessage{
       color: #F49D47;
@@ -166,7 +164,8 @@
       height: 100%;
       display: inline-flex;
       align-items: center;
-      padding: 0 20px;
+      padding: 0;
+      margin: 0 20px;
       color: #615E69;
       font-weight: bold;
       font-size: 17px;
@@ -174,9 +173,7 @@
       transition: 0.3s;
     }
     
-    .menu a:hover{
-      color: #ff9800;
-    }
+    .menu a:hover,
     .menu a.active {
       color: #ff9800;
       border-bottom: #ff9800 solid;

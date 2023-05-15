@@ -5,7 +5,7 @@ import HomeMenuBar from '../../components/HomeComponents/HomeMenuBar'
 
 export default function Home() {
   return (
-    <div className='home'>
+    <div>
         <HomeTopBar/>
         <HomeMenuBar/>
     </div>

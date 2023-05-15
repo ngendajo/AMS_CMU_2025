@@ -1,0 +1,14 @@
+.results-list{
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    max-height: 50px;
+    position: absolute;
+}
+.search-result{
+    padding: 10px 20px;
+}
+.search-result:hover{
+    background-color: #efefef;
+}

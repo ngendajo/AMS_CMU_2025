@@ -1,0 +1,84 @@
+.header{
+    margin: 0 3%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+.headerleft{
+    display: flex;
+    align-items: center;
+}
+.headerleft img{
+    width: 50px;
+}
+.headerleft span{
+    color:#F49D47;
+}
+.headerleft h4{
+    font-weight: 800;
+}
+.todaydate{
+    color: rgb(90, 79, 79);
+}
+.search-bar-container{
+    width: 200px;
+}
+
+.postsmsnotific{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.add-post{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 20px;
+    color: white;
+    background-color: #F49D47;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.messages-sign, .notifications-sign{
+    font-size: 50px;
+    display: block;
+}
+.messages-sign{
+    color: rgb(14, 77, 17);
+    position: relative;
+    top: 10px;
+    right: 8px;
+}
+.notifications-sign{
+    color: #F49D47;
+    position: relative;
+    top: 10px;
+    right: 11px;
+}
+.messages-icon, .notifications-icon{
+    font-size: 20px;
+    color: rgb(90, 79, 79);
+    position: relative;
+    bottom: 20px;
+}
+
+.profile{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+.profile img{
+    width: 25px;
+}
+.profile p{
+    font-size: 10px;
+}
+.profile-icon{
+    font-size: 12px;
+    color: rgb(90, 79, 79);
+}

@@ -1,8 +1,9 @@
 
 import images from '../../Static/Images/images.png';
 import { MdCancel } from "react-icons/md"; 
+import { BiMessageRoundedDots } from "react-icons/bi";
 
-import { AiFillPlayCircle } from "react-icons/ai";
+import { AiFillPlayCircle,AiOutlineArrowRight } from "react-icons/ai";
 import screen1 from "../../Static/Images/screen1.png"
 import screen2 from "../../Static/Images/creen3.jfif"
 import "./hellosection.css"
@@ -12,8 +13,6 @@ import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
-import {NavLink} from 'react-router-dom'
-
 import axios from "../../api/axios";
 const LOGIN_URL = '/token/';
 
@@ -21,11 +20,11 @@ const LOGIN_URL = '/token/';
 const MobileMenu = () => {
   return (
     <div className={'mobile-menu'}>
-      <NavLink exact activeClassName="active" to='#home'>Home</NavLink>
-      <NavLink activeClassName="active" to='#about'>About Us</NavLink>
-      <NavLink activeClassName="active" to='#resources'>Resources</NavLink>
-      <NavLink activeClassName="active" to='#news'>News</NavLink>
-      <NavLink activeClassName="active" to='#contact'>Contact</NavLink>
+      <a className="active" href='#home'>Home</a>
+      <a href='#about'>About Us</a>
+      <a href='#resources'>Resources</a>
+      <a  href='#news'>News</a>
+      <a  href='#contact'>Contact</a>
     </div>
   );
 };
@@ -71,7 +70,7 @@ export default function HomeMenuBar() {
                 );
                 const accessToken = response?.data.access;
                 const refresh = response?.data.refresh;
-                const user =jwtDecode(accessToken);
+                const user =jwtDecode(accessToken); 
                 const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": null
                 console.log(roles)
                 setAuth({user,roles,email, pwd, accessToken,refresh });
@@ -110,11 +109,11 @@ export default function HomeMenuBar() {
                 <div>
                     {/* Desktop Menu, which only appears on large screens */}
                     <div className='menu'>
-                      <NavLink exact activeClassName="active" to='#home'>Home</NavLink>
-                      <NavLink activeClassName="active" to='#about'>About Us</NavLink>
-                      <NavLink activeClassName="active" to='#resources'>Resources</NavLink>
-                      <NavLink activeClassName="active" to='#news'>News</NavLink>
-                      <NavLink activeClassName="active" to='#contact'>Contact</NavLink>
+                      <a className="active" href='#home'>Home</a>
+                      <a href='#about'>About Us</a>
+                      <a href='#resources'>Resources</a>
+                      <a  href='#news'>News</a>
+                      <a  href='#contact'>Contact</a>
                     </div>
 
                     {/* This button only shows up on small screens. It is used to open the mobile menu */}
@@ -179,7 +178,7 @@ export default function HomeMenuBar() {
                   : null}
                 </div>
     </div>
-    <div className="hellosection">
+    <section id="home" className="hellosection">
                 <div className="left">
                     <div className="hellolefttop">
                         <h1>
@@ -208,7 +207,7 @@ export default function HomeMenuBar() {
                     </div>
                     <div className="rightalumninumber">
                         <span>1200 + Alumni</span>
-                    </div>
+                    </div> 
                     <div className="rightleftbars1">
                     </div>
                     <div className="rightleftbars2">
@@ -218,7 +217,40 @@ export default function HomeMenuBar() {
                     <div className="rightbars2">
                     </div>
                 </div>
-            </div>
+                
+            </section>
+
+            <div className="knowmore">
+                      <div className="school">
+                          Liquidnet Family High School
+                      </div>
+                      <div className="infull">
+                          Liquidnet Family High School education doesn't end after graduation. LFHS offers
+                          programs & resources to alumni at every phase of thier career.
+                      </div>
+                      <div className="rightlink">
+                             <span>Know more</span><AiOutlineArrowRight className="know"/>
+                      </div>
+                      <BiMessageRoundedDots className="sendsms"/>
+              </div>
+
+            <section id="about">
+          <h2>About</h2>
+          
+        </section>
+        <section id="resources">
+          <h2>Resources</h2>
+          
+        </section>
+        <section id="news">
+          <h2>News</h2>
+          
+        </section>
+        <section id="contact">
+          <h2>Contact</h2>
+          
+        </section>
+        
             </>
   )
 }

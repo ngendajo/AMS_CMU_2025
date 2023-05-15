@@ -7591,6 +7591,11 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-active-menu@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/react-active-menu/-/react-active-menu-0.0.14.tgz#f5dd97691eb04efeae47f2d890b12c75630961e1"
+  integrity sha512-n/G8gM73O1vaBBM1chWW4d4zklCIT3XFjSankK2+ungYEyDsDEVOjgh77v3wIHRhZQTEPaVPeVTW63Xf3KIovw==
+
 react-app-polyfill@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-3.0.0.tgz#95221e0a9bd259e5ca6b177c7bb1cb6768f68fd7"
