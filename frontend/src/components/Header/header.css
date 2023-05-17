@@ -76,9 +76,28 @@
     width: 25px;
 }
 .profile p{
-    font-size: 10px;
+    font-size: 14px;
 }
 .profile-icon{
     font-size: 12px;
     color: rgb(90, 79, 79);
+}
+
+.profile-logout{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 10px 2%;
+    position: absolute;
+    transition: 200ms;
+}
+
+.profile-logout-link{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    color: rgb(90, 79, 79);
+    padding: 5px 10px;
+    text-decoration: none;
 }

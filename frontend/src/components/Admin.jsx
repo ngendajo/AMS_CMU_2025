@@ -3,7 +3,7 @@
 const Admin = () => {
   return (
     <div>
-        <p>You are on Admin page</p>
+        <p>You are on Admin dashboard</p>
     </div>
   )
 }

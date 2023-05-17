@@ -2,7 +2,7 @@
 const Alumni = () => {
   return (
     <div>
-        <p>You are on Alumni</p>
+        <p>You are on Alumni Dashboard</p>
     </div>
   )
 }

@@ -2,7 +2,7 @@
 const Crc = () => {
   return (
     <div>
-        You are on Crc page
+        You are on Crc Dashboard
     </div>
   )
 }

@@ -3,50 +3,49 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Register from './components/Register';
 import Missing from './components/Missing';
-import Dashboard from './pages/Dashboard';
+import MainDashboard from './pages/MainDashboard';
 import RequireAuth from './components/RequireAuth';
 import Home from './pages/Home/Home';
-import { AboutUs, OurAim, OurVision } from "./pages/dashoardpages/AboutUs";
-import {
-  Services,
-  ServicesOne,
-  ServicesTwo,
-  ServicesThree,
-} from "./pages/dashoardpages/Services";
-import { Events, EventsOne, EventsTwo } from "./pages/dashoardpages/Events";
-import Contact from "./pages/dashoardpages/ContactUs";
-import Support from "./pages/dashoardpages/Support";
+import Dashboard from './pages/dashboardpages/Dashboard';
+import Events from './pages/dashboardpages/Events';
+import Chats from './pages/dashboardpages/Chats';
+import Opportunities from './pages/dashboardpages/Opportunities';
+import Schedule from './pages/dashboardpages/Schedule';
+import Gallery from './pages/dashboardpages/Gallery';
+import Alumni from './pages/dashboardpages/Alumni';
+import Staff from './pages/dashboardpages/Staff';
+import Profile from './pages/dashboardpages/Profile';
+import Help from './pages/dashboardpages/Help';
+
 
 function App() {
   return (
-    <Routes>
-      <Route path='/' element={<Layout />}>
-        {/* public routes*/}
-          <Route path='home' element={<Home />}/>
-          <Route path='register' element={<Register />}/>
+          <Routes>
+            <Route path='/' element={<Layout />}>
+              {/* public routes*/}
+                <Route path='home' element={<Home />}/>
+                <Route path='register' element={<Register />}/>
 
-          {/* we want to protect these routes*/}
-          <Route element={<RequireAuth />}>
-            <Route path='/' element={<Dashboard />}>
-              <Route path='about-us' element={<AboutUs/>} />
-              <Route path='about-us/aim' element={<OurAim/>} />
-              <Route path='about-us/vision' element={<OurVision/>} />
-              <Route path='services' element={<Services/>} />
-              <Route path='services/services1' element={<ServicesOne/>} />
-              <Route path='services/services2' element={<ServicesTwo/>} />
-              <Route path='services/services3' element={<ServicesThree/>} />
-              <Route path='contact' element={<Contact/>} />
-              <Route path='events' element={<Events/>} />
-              <Route path='events/events1' element={<EventsOne/>} />
-              <Route path='events/events2' element={<EventsTwo/>} />
-              <Route path='support' element={<Support/>} />
+                {/* we want to protect these routes*/}
+                <Route element={<RequireAuth />}>
+                  <Route path='/' element={<MainDashboard />}>
+                    <Route path='/' element={<Dashboard />}/>
+                    <Route path='events' element={<Events />}/>
+                    <Route path='chats' element={<Chats />}/>
+                    <Route path='opportunities' element={<Opportunities />}/>
+                    <Route path='schedule' element={<Schedule />}/>
+                    <Route path='gallery' element={<Gallery />}/>
+                    <Route path='alumni' element={<Alumni />}/>
+                    <Route path='staff' element={<Staff />}/>
+                    <Route path='profile' element={<Profile />}/>
+                    <Route path='help' element={<Help />}/>
+                  </Route>
+                </Route>
+
+                {/* catch all */}
+                <Route path='*' element={<Missing />} />
             </Route>
-          </Route>
-
-          {/* catch all */}
-          <Route path='*' element={<Missing />} />
-      </Route>
-    </Routes>
+          </Routes>
   );
 }
 

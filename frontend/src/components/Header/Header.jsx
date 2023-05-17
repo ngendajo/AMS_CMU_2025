@@ -7,12 +7,27 @@ import  './header.css';
 import SearchBar from './SearchBar';
 import SearchResultsList from './SearchResultsList';
 import useAuth from '../../hooks/useAuth';
+import {Link, useNavigate} from 'react-router-dom';
+import useLogout from '../../hooks/useLogout';
+import * as CiIcons from "react-icons/ci";
+import { BiLogOut } from "react-icons/bi";
 
 
 export default function Header() {
     const [results, setResults]=useState([]);
+    const [profile, setProfile] = useState(false);
     const { auth } = useAuth();
     const current = new Date();
+    const showprofile = () => {
+        setProfile(!profile);
+      }
+      const navigate = useNavigate();
+      const logout = useLogout();
+  
+      const signOut = async () => {
+          await logout();
+          navigate('/home');
+      }
     let daysArray = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let monthsArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const date = `${daysArray[current.getDay()]}, ${monthsArray[current.getMonth()]}, ${current.getDate()}, ${current.getFullYear()}`;
@@ -27,7 +42,7 @@ export default function Header() {
         </div>
         <div className='search-bar-container'>
           <SearchBar setResults={setResults}/>
-          <SearchResultsList results={results}/>
+          <SearchResultsList results={results}/> 
         </div>
         <div className='postsmsnotific'>
             <div className='add-post'>
@@ -43,13 +58,22 @@ export default function Header() {
                 <IoIosNotificationsOutline className='notifications-icon'/>
             </div>
         </div>
-        <div className='profile'>
-        <img src={images} alt="logo" />
-        <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
-        <br/>{auth.user.is_superuser? "Admin":
-        auth.user.is_crc? "CRC Staff":auth.user.alumni.grade.name
-        }</p>
-        <IoIosArrowDropdown className='profile-icon'/>
+        <div onClick={showprofile}>
+            <div className='profile'>
+                <img src={images} alt="logo" />
+                <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
+                <br/>{auth.user.is_superuser? "Admin":
+                auth.user.is_crc? "CRC Staff":auth.user.alumni.grade.name
+                }</p>
+                <IoIosArrowDropdown className='profile-icon' />
+            </div>
+            {profile ?
+                <div className='profile-logout'>
+                    <Link to="/profile" className='profile-logout-link'><CiIcons.CiUser /><span>Profile</span></Link>
+                    <Link to="#" className='profile-logout-link' onClick={signOut}><BiLogOut/><span>Log Out</span></Link>
+                </div>
+                :null
+            }
         </div>
     </div>
   )

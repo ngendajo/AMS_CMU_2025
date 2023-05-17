@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <React.Fragment>
     <BrowserRouter>
       <AuthProvider>
         <Routes>
@@ -15,7 +15,7 @@ root.render(
       </AuthProvider>
     </BrowserRouter>
     
-  </React.StrictMode>
+    </React.Fragment>
   
 );
 

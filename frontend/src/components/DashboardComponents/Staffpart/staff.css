@@ -1,0 +1,31 @@
+.staff-data{
+    margin: 10px 1%;
+}
+.staff-data-header{
+    background-color: white;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-staff{
+    width: 200px;
+}
+.staff-header-right{
+    display: flex;
+    gap: 10px;
+}
+.export-staff{
+    color: #F49D47;
+    border: 1px #F49D47 solid;
+    border-radius: 3px;
+    padding: 5px;
+}
+.add-staff{
+    color: #FFF;
+    background-color:  #F49D47;
+    border-radius: 3px;
+    padding: 5px;
+}

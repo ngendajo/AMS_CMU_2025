@@ -17,17 +17,7 @@ import axios from "../../api/axios";
 const LOGIN_URL = '/token/';
 
 // Define MobileMenu component
-const MobileMenu = () => {
-  return (
-    <div className={'mobile-menu'}>
-      <a className="active" href='#home'>Home</a>
-      <a href='#about'>About Us</a>
-      <a href='#resources'>Resources</a>
-      <a  href='#news'>News</a>
-      <a  href='#contact'>Contact</a>
-    </div>
-  );
-};
+
 
 export default function HomeMenuBar() {
     const [seen, setSeen] = useState(false)
@@ -72,7 +62,7 @@ export default function HomeMenuBar() {
                 const refresh = response?.data.refresh;
                 const user =jwtDecode(accessToken); 
                 const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": null
-                console.log(roles)
+                
                 setAuth({user,roles,email, pwd, accessToken,refresh });
                 setEmail('');
                 setPwd('');
@@ -80,7 +70,7 @@ export default function HomeMenuBar() {
         }catch(err){
             if(!err?.response){
                 setErrMsg("Missing Email or Password");
-            }else if (err.response?.status === 404){
+            }else if (err.response?.status === 401){
                 setErrMsg('Unauthorised');
             }else{
                 setErrMsg('Login Failed');
@@ -98,6 +88,17 @@ export default function HomeMenuBar() {
     const [isShown, setIsShown] = useState(false);
       const toggleMobileMenu = () => {
         setIsShown(!isShown);
+      };
+      const MobileMenu = () => {
+        return (
+          <div className={'mobile-menu'}>
+            <a onClick={toggleMobileMenu} className="active" href='#home'>Home</a>
+            <a onClick={toggleMobileMenu} href='#about'>About Us</a>
+            <a onClick={toggleMobileMenu} href='#resources'>Resources</a>
+            <a onClick={toggleMobileMenu} href='#news'>News</a>
+            <a onClick={toggleMobileMenu} href='#contact'>Contact</a>
+          </div>
+        );
       };
   return (
     <>

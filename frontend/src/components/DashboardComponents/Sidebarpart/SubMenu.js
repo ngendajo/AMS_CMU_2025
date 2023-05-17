@@ -4,18 +4,18 @@ import styled from "styled-components";
  
 const SidebarLink = styled(Link)`
   display: flex;
-  color: #e1e9fc;
+  color: #615E69;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 0.3rem;
   list-style: none;
-  height: 60px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 14px;
+  border-left: ${props => props.active ? "4px solid #ff9800" : "4px solid #fff"};
  
   &:hover {
-    background: #252831;
-    border-left: 4px solid green;
+    background: #efefef;
+    border-left: 4px solid #ff9800;
     cursor: pointer;
   }
 `;
@@ -25,17 +25,19 @@ const SidebarLabel = styled.span`
 `;
  
 const DropdownLink = styled(Link)`
-  background: #252831;
-  height: 60px;
-  padding-left: 3rem;
+  background: #FFF;
+  padding:0.3rem;
+  margin-left: 2rem;
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #f5f5f5;
-  font-size: 18px;
+  color: #615E69;
+  font-size: 14px;
+  border-left: 4px solid #fff;
  
   &:hover {
-    background: green;
+    background: #efefef;
+    border-left: 4px solid #ff9800;
     cursor: pointer;
   }
 `;
@@ -43,7 +45,9 @@ const DropdownLink = styled(Link)`
 const SubMenu = ({ item }) => {
   const [subnav, setSubnav] = useState(false);
  
-  const showSubnav = () => setSubnav(!subnav);
+  const showSubnav = () => {
+    setSubnav(!subnav);
+  }
  
   return (
     <>
