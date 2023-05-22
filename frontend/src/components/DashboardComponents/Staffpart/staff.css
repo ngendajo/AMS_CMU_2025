@@ -24,8 +24,37 @@
     padding: 5px;
 }
 .add-staff{
-    color: #FFF;
     background-color:  #F49D47;
     border-radius: 3px;
     padding: 5px;
+}
+.add-staff .link{
+    color: #FFF;
+    text-decoration: none;
+}
+
+.staff-info{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30px;
+    
+}
+.staff-info p,.staff-info h3{
+    padding:5px;
+}
+.user-image{
+    width: 50px;
+    border-radius: 50%;
+}
+.useredit{
+    background-color: #F49D47;
+    color: #FFF;
+    border-radius: 5px;
+    width: 100px;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 7px;
+    margin-right: 7px;
 }

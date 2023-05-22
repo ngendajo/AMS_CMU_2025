@@ -1,12 +1,9 @@
 import {useState, useEffect} from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useNavigate, useLocation } from "react-router-dom"
 
-const Crcusers = () => {
+const Crcusers = () => { 
     const [ crcUsers, setCrcUsers ] = useState();
     const axiosPrivate = useAxiosPrivate();
-    //const navigate = useNavigate();
-    const location = useLocation();
 
     useEffect(() =>{
         let isMounted = true;
@@ -20,8 +17,7 @@ const Crcusers = () => {
                 console.log(response.data);
                 isMounted && setCrcUsers(response.data);
             }catch(err) {
-                console.log(err);/* 
-                navigate('/login', {state: { from: location }, replace: true }); */
+                console.log(err);
             }
         }
 

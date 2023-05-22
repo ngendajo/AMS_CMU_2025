@@ -19,6 +19,13 @@ class CrcListSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+class CrcListSerializer1(serializers.ModelSerializer):
+    profile = CrcListSerializer()
+    class Meta:
+        model = User
+        fields = ('id','email','first_name','last_name','phone1', 'password', 'profile')
+        extra_kwargs = {'password': {'write_only': True}}
+
 
 class CrcRegistrationSerializer(serializers.ModelSerializer):
 

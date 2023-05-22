@@ -195,3 +195,11 @@ gap: 3%;
 .errmsg{
     color: red;
 }
+@media screen and (max-width: 680px) {
+    
+    .hellosection{
+        display: flex;
+        flex-direction: column;
+    }
+
+}

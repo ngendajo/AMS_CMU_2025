@@ -4,7 +4,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 0px 5%;
-}
+} 
 .HomeTopBarLeft{
     width: 28%;
     display: flex;
@@ -256,3 +256,11 @@
     .content {
       padding: 40px 20px;
     }
+    @media screen and (max-width: 680px) {
+    
+      .HomeTopBar{
+          display: flex;
+          flex-direction: column;
+      }
+  
+  }

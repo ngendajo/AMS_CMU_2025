@@ -4,6 +4,7 @@ import '../../components/Header/header.css';
 import '../../components/Header/searchBar.css';
 import '../../components/Header/searchResultsList.css';
 import '../../components/DashboardComponents/Staffpart/staff.css';
+import { Link } from 'react-router-dom';
 
 export default function Staff() {
   const [results, setResults]=useState([]);
@@ -11,18 +12,16 @@ export default function Staff() {
   const fetchDAta = (value) =>{
       let listoflinks=["alumni","staff","events","chats","opportunities","schedule","gallery","profile","helpcenter"];
       let results=listoflinks.filter(link => link.includes(value));
-      if(value===""){
-        setResults([])
-      }else{
+      
         setResults(results)
-      }
+      
     }
     const handleChange = (value) =>{
       setInput(value)
       fetchDAta(value)
   }
   return (
-    <div staff-data>
+    <div className='staff-data'>
         <div className='staff-data-header'>
           <div className='input-wrapper search-staff'>
               <FaSearch id='search-icon'/>
@@ -33,7 +32,7 @@ export default function Staff() {
               <span>Export Staff</span>
             </div>
             <div className='add-staff'>
-              <span>Add Staff</span>
+              <Link to="/add-crc" className='link'>Add Staff</Link>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework.views import APIView 
-from .serializer import CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer
+from .serializer import CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
 from userprofile.models import CrcProfile
 from .models import User
 from django.contrib.auth import get_user_model
@@ -22,9 +22,8 @@ User = get_user_model()
 
 #CRC data
 class CrcRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
-        print(request.data)
         serializer = CrcRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -33,7 +32,7 @@ class CrcRegistrationView(APIView):
     
     def get(self,request):
         if request.query_params:
-            crc = CrcProfile.objects.filter(**request.query_params.dict())
+            crc=CrcProfile.objects.filter(**request.query_params.dict())
         else:
             crc = CrcProfile.objects.all()
     
@@ -43,6 +42,19 @@ class CrcRegistrationView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class GetCrcView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    
+    def get(self,request,pk):
+        crc= User.objects.filter(email=pk)
+        print(pk)
+        if crc:
+            serializer = CrcListSerializer1(crc, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)       
+
         
 """ @api_view(['POST'])
 @permission_classes([IsAuthenticated])

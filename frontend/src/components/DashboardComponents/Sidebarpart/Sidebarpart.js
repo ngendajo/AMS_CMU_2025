@@ -3,13 +3,15 @@ import styled from "styled-components";
 import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import useLogout from '../../../hooks/useLogout';
+import { BiLogOut } from "react-icons/bi";
 import sidebarmenufooter from '../../../Static/Images/sidebarmenufooter.JPG';
  
  
 const SidebarNav = styled.nav`
   background: #FFF;
-  width: 170px;
+  width: 200px;
   display: flex;
   margin-top:20px;
   justify-content: center;
@@ -48,7 +50,12 @@ const Sidebarmenufooter = styled.div`
 `;
 
 const Sidebarpart = () => {
-  
+  const navigate = useNavigate();
+  const logout = useLogout();
+  const signOut = async () => {
+    await logout();
+    navigate('/home');
+}
  
   return (
     <>
@@ -58,6 +65,7 @@ const Sidebarpart = () => {
             {SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             })}
+              <Link to="#" className='profile-logout-link' onClick={signOut}><BiLogOut/><span>Log Out</span></Link>
             <Sidebarmenufooter>
               <h4>Are you aware of the available opportunities?</h4>
               <Link to="#" className='links'>know more</Link>

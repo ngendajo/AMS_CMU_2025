@@ -14,7 +14,7 @@ export default function HomeTopBar() {
         fontSize: 15,
         color:'#575757',
         margin:5,
-        cursor:'pointer'
+        cursor:'pointer' 
       }
   return (
     <div className='HomeTopBar'>

@@ -1,7 +1,6 @@
 import Layout from './components/Layout';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import Register from './components/Register';
 import Missing from './components/Missing';
 import MainDashboard from './pages/MainDashboard';
 import RequireAuth from './components/RequireAuth';
@@ -16,6 +15,9 @@ import Alumni from './pages/dashboardpages/Alumni';
 import Staff from './pages/dashboardpages/Staff';
 import Profile from './pages/dashboardpages/Profile';
 import Help from './pages/dashboardpages/Help';
+import Register from './components/DashboardComponents/Register';
+import StaffDetails from './components/DashboardComponents/Staffpart/StaffDetails';
+import EditCrc from './components/DashboardComponents/Staffpart/EditCrc';
 
 
 function App() {
@@ -24,7 +26,6 @@ function App() {
             <Route path='/' element={<Layout />}>
               {/* public routes*/}
                 <Route path='home' element={<Home />}/>
-                <Route path='register' element={<Register />}/>
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>
@@ -39,6 +40,10 @@ function App() {
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
                     <Route path='help' element={<Help />}/>
+                    {/* crc crud */}
+                    <Route path='add-crc' element={<Register />}/>
+                    <Route path='add-crc/:id' element={<EditCrc />}/>
+                    <Route path='view-crc/:id' element={<StaffDetails />}/>
                   </Route>
                 </Route>
 
