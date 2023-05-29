@@ -32,7 +32,7 @@ export default function EditPosition() {
                 });
                 let data=response.data;
                 data.forEach((result)=>{
-                    setPosition(result.profile ? result.profile.position:"Owner");
+                    setPosition(result.profile ? result.profile.position:null);
                 })
             }catch(err) {
                 console.log(err);
@@ -67,8 +67,6 @@ export default function EditPosition() {
 
    const handleSubmit = async (e) =>{
     e.preventDefault();
-    
-    
     const v5 = USER_REGIX.test(position);
     if (!v5){
         setErrMsg("Invalid Entry");
@@ -77,8 +75,8 @@ export default function EditPosition() {
     try{
         let formData = new FormData();
         
-        formData.append('posotion',position);
-        const response = await axios.post("http://127.0.0.1:8000/api/registercrc/",
+        formData.append('position',position);
+        const response = await axios.post("http://127.0.0.1:8000/api/updateposition/"+params.id,
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -88,7 +86,7 @@ export default function EditPosition() {
             }
             );
             console.log(response.data)
-            setMsg("First name updated successfully");
+            setMsg("Position updated successfully");
             //clear input fields
     }catch(err){
         if (!err?.response) {
@@ -110,9 +108,9 @@ export default function EditPosition() {
                 <p>
                     <Link className="lines" to={'/add-crc/'+params.id}>Go Back</Link>
                 </p>
-                <p>
+                {/* <p>
                     <Link className="lines" to={'/add-crc/ps/'+params.id}>Update Password</Link>
-                </p>
+                </p> */}
             </div>
         <p ref={errRef} className={errMsg ? "errmsg" :"offscreen"} aria-live="assertive">
             {errMsg}
@@ -131,7 +129,9 @@ export default function EditPosition() {
                         <FontAwesomeIcon icon={faTimes}/>
                     </span>
                 </label>
-                <input
+                {
+                    position?
+                    <input
                 type="text"
                 id="position"
                 value={position}
@@ -143,7 +143,8 @@ export default function EditPosition() {
                 aria-describedby="positionnote"
                 onFocus={() => setPositionFocus(true)}
                 onBlur={() => setPositionFocus(false)}
-                />
+                />:<p>Don't change position</p>
+                }
                 <p id="positionnote" className={positionFocus && position && !validPosition ? "instructions" : "offscreen"}>
                     <FontAwesomeIcon icon={faInfoCircle}/>
                     2 to 50 characters. <br/>
@@ -153,7 +154,7 @@ export default function EditPosition() {
                 </div>
                 </center>
             <center>
-            <button>Register</button>
+            <button>Update</button>
             </center>
         </form>
     </section>

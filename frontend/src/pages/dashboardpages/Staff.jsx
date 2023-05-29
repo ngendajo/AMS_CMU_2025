@@ -39,7 +39,7 @@ export default function Staff() {
 },[auth])
   const fetchDAta = (value) =>{
       let results=results1.filter((person) =>
-      person.first_name.toLowerCase().includes(value.toLowerCase()) || person.last_name.toLowerCase().includes(value.toLowerCase()) || person.email.toLowerCase().includes(value.toLowerCase())
+      person?.first_name.toLowerCase().includes(value.toLowerCase()) || person?.last_name.toLowerCase().includes(value.toLowerCase()) || person?.email.toLowerCase().includes(value.toLowerCase())
     );
       
         setResults(results)

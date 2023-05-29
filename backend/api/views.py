@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework.views import APIView 
-from .serializer import UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
+from .serializer import CrcSerializer, UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
 from userprofile.models import CrcProfile
 from .models import User
 from django.contrib.auth import get_user_model
@@ -68,18 +68,7 @@ class CrcRegistrationView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-class GetCrcView(APIView):
-    permission_classes = [IsAuthenticated, ]
     
-    def get(self,request,pk):
-        crc= User.objects.filter(email=pk)
-        print(pk)
-        if crc:
-            serializer = CrcListSerializer1(crc, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)       
 
         
 @api_view(['POST'])
@@ -87,6 +76,19 @@ class GetCrcView(APIView):
 def update_user(request, pk):
     user = User.objects.get(pk=pk)
     data = UpdateUserSerializer(instance=user, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        print(data.errors)
+        return Response(status=status.HTTP_404_NOT_FOUND) 
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_position(request, pk):
+    user = CrcProfile.objects.get(user_id=pk)
+    data = CrcSerializer(instance=user, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -155,6 +157,17 @@ class ChangePasswordView(APIView):
         request.user.set_password(serializer.validated_data['new_password'])
         request.user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    #reset password
+class ResetPasswordView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        print(request.data)
+        """ 
+        request.user.set_password(serializer.validated_data['new_password'])
+        request.user.save() """
+        return Response("status=status.HTTP_204_NO_CONTENT")
     
     # End login logout and change password portal
 

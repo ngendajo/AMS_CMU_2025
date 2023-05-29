@@ -23,6 +23,7 @@ import { useEffect } from 'react';
 import useAuth from './hooks/useAuth';
 import Deleteuser from './components/DashboardComponents/Staffpart/Deleteuser';
 import EditPosition from './components/DashboardComponents/Staffpart/EditPosition';
+import ChangePassword from './components/DashboardComponents/Staffpart/ChangePassword';
 
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
                     <Route path='view-crc/:id' element={<StaffDetails />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
+                    <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                   </Route>
                 </Route>
 
