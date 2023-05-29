@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import images from '../../Static/Images/images.png'; 
 import { AiOutlinePlusCircle,AiOutlineMessage } from "react-icons/ai";
 import { IoIosNotificationsOutline,IoIosArrowDropdown } from "react-icons/io";
@@ -11,16 +11,43 @@ import {Link, useNavigate} from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
 import * as CiIcons from "react-icons/ci";
 import { BiLogOut } from "react-icons/bi";
+import axios from 'axios';
 
 
 export default function Header() {
     const [results, setResults]=useState([]);
+    const [userid, setUserid]=useState([]);
     const [profile, setProfile] = useState(false);
     const { auth } = useAuth();
     const current = new Date();
     const showprofile = () => {
         setProfile(!profile);
       }
+
+
+      useEffect(() =>{
+    
+        const getuser = async () =>{
+            try{
+                const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/?id='+auth?.user.id,{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                console.log(response.data)
+                setUserid(response.data)
+            }catch(err) {
+                console.log(err);
+            }
+        }
+    
+        getuser();
+    
+    },[auth])
+
+
       const navigate = useNavigate();
       const logout = useLogout();
   
@@ -60,7 +87,8 @@ export default function Header() {
         </div>
         <div onClick={showprofile}>
             <div className='profile'>
-                <img src={images} alt="logo" />
+            {userid.map((result, id)=>{return <span key={id}> <img src={"http://localhost:8000"+result.image_url} alt="logo" /></span>})}
+                
                 <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
                 <br/>{auth.user.is_superuser? "Admin":
                 auth.user.is_crc? "CRC Staff":auth.user.alumni.grade.name

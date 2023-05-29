@@ -23,7 +23,7 @@ class PostResource(resources.ModelResource):
     comments = Field()
     class Meta:
         model = User
-        fields = ('email','id','first_name','last_name','phone1')
+        fields = ('email','id','first_name','last_name','phone1','image_url')
         export_order = fields
 
 class PostAdmin(ExportActionMixin,admin.ModelAdmin):
@@ -36,7 +36,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email','id','first_name','last_name','phone1')
+        fields = ('email','id','first_name','last_name','phone1','image_url')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -60,7 +60,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email','id', 'password','first_name','last_name','phone1')
+        fields = ('email','id', 'password','first_name','last_name','phone1','image_url')
 
     def clean_password(self):
         return self.initial["password"]
@@ -70,7 +70,7 @@ class UserAdmin(ImportExportModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('email','id','first_name','last_name','phone1','is_active','is_staff','is_superuser','is_crc','is_alumni')
+    list_display = ('email','id','first_name','last_name','phone1','is_active','is_staff','is_superuser','is_crc','is_alumni','image_url')
     list_filter = ('is_superuser', )
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -82,11 +82,12 @@ class UserAdmin(ImportExportModelAdmin):
         ('is_staff', {'fields': ('is_staff', )}),
         ('is_crc', {'fields': ('is_crc', )}),
         ('is_alumni', {'fields': ('is_alumni', )}),
+        ('image_url', {'fields': ('image_url', )}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email','id',  'password1', 'password2', 'first_name','last_name', 'phone1','phone2'),
+            'fields': ('email','id',  'password1', 'password2', 'first_name','last_name', 'phone1','phone2','image_url'),
         }),
     )
     search_fields = ('email',)

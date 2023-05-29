@@ -12,3 +12,13 @@
 .search-result:hover{
     background-color: #efefef;
 }
+.results-list-in-table{
+    background-color: #FFF;
+    margin: 1rem 3%;
+}
+.icon{
+    color: #F49D47;
+    margin: 2px 7px;
+    font-size: 22px;
+    cursor: pointer;
+}

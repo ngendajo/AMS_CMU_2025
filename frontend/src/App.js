@@ -18,9 +18,28 @@ import Help from './pages/dashboardpages/Help';
 import Register from './components/DashboardComponents/Register';
 import StaffDetails from './components/DashboardComponents/Staffpart/StaffDetails';
 import EditCrc from './components/DashboardComponents/Staffpart/EditCrc';
+import useRefreshToken from './hooks/useRefreshToken';
+import { useEffect } from 'react';
+import useAuth from './hooks/useAuth';
+import Deleteuser from './components/DashboardComponents/Staffpart/Deleteuser';
 
 
 function App() {
+  const refresh = useRefreshToken();
+  const {auth} = useAuth();
+
+  useEffect(()=> {
+    let fourMinutes = 1000 * 60 * 4
+
+    let interval =  setInterval(()=> {
+        
+            if(auth?.accessToken){
+              refresh()
+            }
+    }, fourMinutes)
+    return ()=> clearInterval(interval)
+
+}, [refresh,auth])
   return (
           <Routes>
             <Route path='/' element={<Layout />}>
@@ -44,6 +63,7 @@ function App() {
                     <Route path='add-crc' element={<Register />}/>
                     <Route path='add-crc/:id' element={<EditCrc />}/>
                     <Route path='view-crc/:id' element={<StaffDetails />}/>
+                    <Route path='delete-user/:id' element={<Deleteuser/>}/>
                   </Route>
                 </Route>
 

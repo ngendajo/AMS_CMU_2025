@@ -64,6 +64,7 @@ export default function HomeMenuBar() {
                 const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": null
                 
                 setAuth({user,roles,email, pwd, accessToken,refresh });
+                console.log(user);
                 setEmail('');
                 setPwd('');
                 navigate(from, {replace:true})
@@ -73,7 +74,7 @@ export default function HomeMenuBar() {
             }else if (err.response?.status === 401){
                 setErrMsg('Unauthorised');
             }else{
-                setErrMsg('Login Failed');
+                setErrMsg('Login Failed'+err);
             }
             setErrMsg('Login Failed')
         }

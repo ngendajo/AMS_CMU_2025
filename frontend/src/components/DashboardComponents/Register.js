@@ -6,16 +6,29 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import "./forms.css";
+import Dropzone from "react-dropzone";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
 const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
 const PWD_REGIX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = 'http://127.0.0.1:8000/api/registercrc/';
 
 const Register = () => {
     const {auth} = useAuth()
     const navigate = useNavigate();
+    const [image, setImage] = useState(null);
+    const current = new Date();
+    const [file, setFile] = useState();
+
+    const [selectedFiles, setSelectedFiles] = useState(undefined);
+
+      const onDrop = (files) => {
+        if (files.length > 0) {
+            setSelectedFiles(files);
+            setFile(URL.createObjectURL(files[0]));
+        }
+      };
+
     const errRef = useRef();
     const emailRef = useRef();
     const first_nameRef = useRef();
@@ -103,6 +116,20 @@ const Register = () => {
 
    const handleSubmit = async (e) =>{
     e.preventDefault();
+    if (selectedFiles && selectedFiles[0].name){
+        var imgname=email+current+".jpeg"
+    const file = new File(selectedFiles, imgname);
+          setImage({
+            image_url:file,
+        });
+    }else{
+        setErrMsg("Select file")
+        return;
+    }
+    if(!image){
+        return;
+    }
+    
     const v1 = EMAIL_REGIX.test(email);
     const v2 = PWD_REGIX.test(pwd);
     const v3 = USER_REGIX.test(first_name);
@@ -113,34 +140,34 @@ const Register = () => {
         return;
     }
     try{
-        const response = await axios.post(REGISTER_URL,
-            JSON.stringify({
-                email:email,
-                first_name:first_name,
-                last_name:last_name,
-                phone1:phone1,
-                password:pwd,
-                profile:{
-                    position:position
-                }
-            }),{
+        let formData = new FormData();
+        
+        formData.append('email',email);
+        formData.append('first_name',first_name);
+        formData.append('last_name',last_name);
+        formData.append('phone1',phone1);
+        formData.append('password',pwd);
+        formData.append('profile',position);
+        formData.append('image_url',image.image_url);
+        const response = await axios.post("http://127.0.0.1:8000/api/registercrc/",
+            formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'application/json'
+                    "Content-Type": 'multipart/form-data'
                 },
                 withCredentials:true
             }
             );
             console.log(response.data)
-            navigate("/view-crc/"+email)
+            navigate("/staff")
             //clear input fields
     }catch(err){
         if (!err?.response) {
-            setErrMsg('No Server Response');
+            setErrMsg('No Server Response'+err);
         } else if (err.response?.status === 404) {
             setErrMsg('problem with registration');
         } else{
-            setErrMsg("Registration Failed")
+            setErrMsg("Registration Failed"+err)
             console.log(err)
         }
         errRef.current.focus(); 
@@ -154,6 +181,25 @@ const Register = () => {
                 </p>
                <center> <h1>Add CRC Staff</h1></center>
                 <form onSubmit={handleSubmit}>
+                <center>
+                <img className="img-for-profile" src={file} alt="" />
+                <Dropzone onDrop={onDrop} multiple={false}>
+                            {({ getRootProps, getInputProps }) => (
+                            <section>
+                                <div {...getRootProps({ className: "dropzone" })}>
+                                <input {...getInputProps()} />
+                                {selectedFiles && selectedFiles[0].name ? (
+                                    <div className="selected-file">
+                                    {selectedFiles && selectedFiles[0].name}
+                                    </div>
+                                ) : (
+                                    "Drag and drop image here, or click to select it"
+                                )}
+                                </div>
+                            </section>
+                            )}
+                        </Dropzone>
+                        </center>
                     <div className="form-content">
                         <div className="formpart">
                             <label htmlFor="email">

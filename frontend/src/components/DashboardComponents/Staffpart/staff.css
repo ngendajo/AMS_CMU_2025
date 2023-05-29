@@ -34,16 +34,18 @@
 }
 
 .staff-info{
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 30px;
-    
+    margin: 20px 3%;  
+    background: #FFF;
+    border-radius: 10px;
+    padding: 5px;
 }
-.staff-info p,.staff-info h3{
-    padding:5px;
-}
+
 .user-image{
     width: 50px;
+    border-radius: 50%;
+}
+.user-image-icon{
+    width: 25px;
     border-radius: 50%;
 }
 .useredit{
@@ -57,4 +59,8 @@
     text-decoration: none;
     padding: 7px;
     margin-right: 7px;
+}
+.staff-details{
+    display: flex;
+    flex-wrap: wrap;
 }

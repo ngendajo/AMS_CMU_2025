@@ -7,7 +7,7 @@ class UserManager(BaseUserManager):
 	'''
 	creating a manager for a custom user model
 	'''
-	def create_user(self, email,first_name,last_name,phone1, password=None):
+	def create_user(self, email,first_name,last_name,phone1,image_url, password=None):
 		"""
 		Create and return a `User` with an email, username and password.
 		"""
@@ -20,27 +20,29 @@ class UserManager(BaseUserManager):
 	        last_name=last_name,
 	        phone1=phone1,
 		)
+		if image_url:
+			user.image_url=image_url
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email,first_name,last_name,phone1, password):
+	def create_superuser(self, email,first_name,last_name,phone1,image_url, password):
 		"""
 		Create and return a `User` with superuser (admin) permissions.
 		"""
 		if password is None:
 			raise TypeError('Superusers must have a password.')
 
-		user = self.create_user(email,first_name,last_name,phone1, password)
+		user = self.create_user(email,first_name,last_name,phone1,image_url, password)
 		user.is_superuser = True
 		user.is_staff = True
 		user.save()
 		return user
 
-	def create_crcuser(self,email,first_name,last_name,phone1,password):
+	def create_crcuser(self,email,first_name,last_name,phone1,image_url,password):
 		if password is None:
 			raise TypeError('CRC staff must have a password')
-		user = self.create_user(email,first_name,last_name,phone1,password)
+		user = self.create_user(email,first_name,last_name,phone1,image_url,password)
 		user.is_crc = True
 		user.is_staff = True
 		user.save()
@@ -54,7 +56,7 @@ class UserManager(BaseUserManager):
 		user.is_alumni = True
 		user.save()
 		return user
-		
+
 class User(AbstractBaseUser):
 	email = models.EmailField(
 		verbose_name='email address',
@@ -69,6 +71,7 @@ class User(AbstractBaseUser):
 	first_name=models.CharField(max_length=200)
 	last_name=models.CharField(max_length=200)
 	phone1=models.CharField(max_length=200, blank=True,unique=True)
+	image_url = models.ImageField(upload_to='profiles', default='profiles/default.jpg')
 	username=None
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['first_name', 'last_name', 'phone1']

@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework.views import APIView 
-from .serializer import CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
+from .serializer import UpdateUserEmailSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
 from userprofile.models import CrcProfile
 from .models import User
 from django.contrib.auth import get_user_model
@@ -21,13 +21,39 @@ User = get_user_model()
 # Create your views here.
 
 #CRC data
+
+class AdminRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        print(request.data)
+        serializer = AdminRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request):
+        if request.query_params:
+            user=User.objects.filter(**request.query_params.dict(),is_alumni=False)
+        else:
+            user = User.objects.filter(is_alumni=False)
+    
+        # if there is something in items else raise error
+        if user:
+            serializer = AdminSerializer(user, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 class CrcRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = CrcRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def get(self,request):
@@ -44,7 +70,7 @@ class CrcRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 class GetCrcView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     
     def get(self,request,pk):
         crc= User.objects.filter(email=pk)
@@ -56,23 +82,24 @@ class GetCrcView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)       
 
         
-""" @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_crc(request, pk):
-    crc = CrcProfile.objects.get(pk=pk)
-    data = EpRSerializer(instance=ep, data=request.data)
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_user_email(request, pk):
+    user = User.objects.get(pk=pk)
+    data = UpdateUserEmailSerializer(instance=user, data=request.data)
  
     if data.is_valid():
         data.save()
         return Response(data.data)
     else:
-        return Response(status=status.HTTP_404_NOT_FOUND) """
+        print(data.errors)
+        return Response(status=status.HTTP_404_NOT_FOUND) 
     
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_crc(request, pk):
-    crc = get_object_or_404(User, pk=pk)
-    crc.delete()
+def delete_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
         
 #End CRC data 
@@ -90,6 +117,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_superuser']=user.is_superuser
         token['is_crc']=user.is_crc
         token['is_alumni']=user.is_alumni
+        token['id']=user.id
         # ...
 
         return token
