@@ -19,6 +19,7 @@ export default function EditCrc() {
     const params = useParams();
     
     const [currentfile, setCurrentfile] = useState();
+    const [msg, setMsg] = useState("");
 
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(false);
@@ -89,7 +90,36 @@ export default function EditCrc() {
         if (files.length > 0) {
             setSelectedFiles(files);
             setFile(URL.createObjectURL(files[0]));
+            var imgname=email+current+".jpeg"
+            const file = new File(files, imgname);
+                
             setDisplayifile(false)
+            try{
+                let formData = new FormData();
+                formData.append('image_url',file);
+                const response = axios.post("http://127.0.0.1:8000/api/updateuserimage/"+params.id,
+                    formData,{
+                        headers: {
+                            "Authorization": 'Bearer ' + String(auth.accessToken),
+                            "Content-Type": 'multipart/form-data'
+                        },
+                        withCredentials:true
+                    }
+                    );
+                    console.log(response.data)
+                    setMsg("Image updated successfully");
+                    //clear input fields
+            }catch(err){
+                if (!err?.response) {
+                    setErrMsg('No Server Response'+err);
+                } else if (err.response?.status === 404) {
+                    setErrMsg('problem with saving');
+                } else{
+                    setErrMsg("update image Failed"+err)
+                    console.log(err)
+                }
+                errRef.current.focus(); 
+            }
         }
       };
 
@@ -210,13 +240,98 @@ export default function EditCrc() {
     }
    }
 
+   //update user
+  const updateEmail =()=>{
+    
+    if(!(EMAIL_REGIX.test(email)) || !(USER_REGIX.test(first_name)) || !(USER_REGIX.test(first_name))){
+        setErrMsg("Enter a valid user data.")
+    }
+    try{
+        let formData = new FormData();
+        formData.append('email',email);
+        formData.append('first_name',first_name);
+        formData.append('last_name',last_name);
+        formData.append('phone1',phone1);
+        const response = axios.post("http://127.0.0.1:8000/api/updateuser/"+params.id,
+            formData,{
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials:true
+            }
+            );
+            console.log(response.data)
+            setMsg("user data updated successfully");
+            //clear input fields
+    }catch(err){
+        if (!err?.response) {
+            setErrMsg('No Server Response'+err);
+        } else if (err.response?.status === 404) {
+            setErrMsg('problem with saving');
+        } else{
+            setErrMsg("update image Failed"+err)
+            console.log(err)
+        }
+        errRef.current.focus(); 
+    }
+
+  }
+
+  //updateFirstName
+  const updateFirstName =(e)=>{
+    setFirst_name(e)
+    if(!(USER_REGIX.test(first_name))){
+        setErrMsg("Enter a valid name.")
+    }
+    try{
+        let formData = new FormData();
+        formData.append('first_name',e);
+        const response = axios.post("http://127.0.0.1:8000/api/updateuserfirstname/"+params.id,
+            formData,{
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials:true
+            }
+            );
+            console.log(response.data)
+            setMsg("First name updated successfully");
+            //clear input fields
+    }catch(err){
+        if (!err?.response) {
+            setErrMsg('No Server Response'+err);
+        } else if (err.response?.status === 404) {
+            setErrMsg('problem with saving');
+        } else{
+            setErrMsg("update image Failed"+err)
+            console.log(err)
+        }
+        errRef.current.focus(); 
+    }
+
+  }
+
 
     
   return (
      <section className="form">
+        <div className="updateactivities">
+            <p>
+                <Link className="lines" to="/staff">Go back</Link>
+            </p>
+            <p>
+                <Link className="lines" to={'/add-crc/p/'+params.id}>Update Position</Link>
+            </p>
+            <p>
+                <Link className="lines" to={'/add-crc/ps/'+params.id}>Update Password</Link>
+            </p>
+        </div>
      <p ref={errRef} className={errMsg ? "errmsg" :"offscreen"} aria-live="assertive">
          {errMsg}
      </p>
+     <center className="updatemsg">{msg}</center>
     <center> <h1>Update Staff Info</h1></center>
      <form onSubmit={handleSubmit}>
      <center>
@@ -264,6 +379,7 @@ export default function EditCrc() {
                  onFocus={() => setEmailFocus(true)}
                  onBlur={() => setEmailFocus(false)}
                  />
+                 
                  <p id="emailnote" className={EmailFocus && email && !validEmail ? "instructions" : "offscreen"}>
                      <FontAwesomeIcon icon={faInfoCircle}/>
                      Provide valid email. 
@@ -285,7 +401,7 @@ export default function EditCrc() {
                  value={first_name}
                  ref={first_nameRef}
                  autoComplete="off"
-                 onChange={(e) => setFirst_name(e.target.value)}
+                 onChange={(e) => updateFirstName(e.target.value)}
                  required
                  aria-invalid={validFirst_name? "false":"true"}
                  aria-describedby="first_namenote"
@@ -356,7 +472,7 @@ export default function EditCrc() {
              </p>
 
              </div>
-
+             {((EMAIL_REGIX.test(email)) && (USER_REGIX.test(first_name)) && (USER_REGIX.test(first_name)) && (PHONE_REGIX.test(phone1)))?<center onClick={updateEmail}><h1 className="saveemail">Update User</h1></center>:null}
              <div className="formpart">
              <label htmlFor="position">
                  Position
@@ -455,9 +571,6 @@ export default function EditCrc() {
          >Register</button>
          </center>
      </form>
-     <p>
-         <Link className="line" to="/staff">Go back</Link>
-     </p>
  </section>
   )
 }

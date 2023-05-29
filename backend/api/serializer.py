@@ -30,7 +30,7 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
 
     class Meta:
-        model = User
+        model = User 
         fields = ('email','first_name','last_name','phone1', 'password','image_url')
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -46,20 +46,11 @@ class CrcListSerializer1(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 #Update user
-class UpdateUserEmailSerializer(serializers.ModelSerializer):
+class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email',)
+        fields = ('email','first_name','last_name','phone1')
 
-class UpdateUserFirstNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('first_name',)
-
-class UpdateUserLastNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('last_name',)
 
 class UpdateUserImageUrlSerializer(serializers.ModelSerializer):
     class Meta:

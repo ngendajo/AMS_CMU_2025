@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework.views import APIView 
-from .serializer import UpdateUserEmailSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
+from .serializer import UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
 from userprofile.models import CrcProfile
 from .models import User
 from django.contrib.auth import get_user_model
@@ -83,10 +83,10 @@ class GetCrcView(APIView):
 
         
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
-def update_user_email(request, pk):
+@permission_classes([IsAuthenticated])
+def update_user(request, pk):
     user = User.objects.get(pk=pk)
-    data = UpdateUserEmailSerializer(instance=user, data=request.data)
+    data = UpdateUserSerializer(instance=user, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -94,6 +94,20 @@ def update_user_email(request, pk):
     else:
         print(data.errors)
         return Response(status=status.HTTP_404_NOT_FOUND) 
+    
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_image(request, pk):
+    user = User.objects.get(pk=pk)
+    data = UpdateUserImageUrlSerializer(instance=user, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        print(data.errors)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])

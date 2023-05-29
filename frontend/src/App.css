@@ -82,3 +82,23 @@ html.results-list-in-table table:before {
 .img-for-profile{
   width: 70px;
 }
+.updatemsg{
+  color: #045711;
+}
+.saveemail,.updateactivities .lines{
+  background-color: #2e6541;
+  color: #FFF;
+  padding: 3px;
+  border-radius: 3px;
+  width: 120px;
+  margin: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 250ms;
+  font-size: 12px;
+}
+.updateactivities{
+  display: flex;
+  text-align: center;
+  margin-right: 3%;
+}

@@ -72,7 +72,7 @@ export default function Staff() {
           <table>
             <thead>
             <tr>
-              <th>No</th><th>Profile</th><th>Name</th><th>Email</th><th>Level</th><th>Title</th><th>Action</th>
+              <th>No</th><th>Profile</th><th>Name</th><th>Email</th><th>Phone</th><th>Level</th><th>Title</th><th>Action</th>
             </tr>
             </thead>
 
@@ -85,6 +85,7 @@ export default function Staff() {
                       <td><img src={"http://localhost:8000"+result.image_url} alt="logo" className="user-image-icon" /></td>
                       <td>{result.first_name} {result.last_name}</td>
                       <td>{result.email}</td>
+                      <td>{result?.phone1}</td>
                       <td>{result.is_superuser? "Admin":result.is_crc? "CRC Staff":"Unknown"}</td>
                       <td>{result.profile ? result.profile.position:"Owner"}</td>
                       <td><Link to={`/add-crc/${result.id}`}><BiEditAlt className='icon'/></Link>

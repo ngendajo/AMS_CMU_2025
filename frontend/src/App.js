@@ -22,6 +22,7 @@ import useRefreshToken from './hooks/useRefreshToken';
 import { useEffect } from 'react';
 import useAuth from './hooks/useAuth';
 import Deleteuser from './components/DashboardComponents/Staffpart/Deleteuser';
+import EditPosition from './components/DashboardComponents/Staffpart/EditPosition';
 
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
                     <Route path='add-crc/:id' element={<EditCrc />}/>
                     <Route path='view-crc/:id' element={<StaffDetails />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
+                    <Route path='add-crc/p/:id' element={<EditPosition/>}/>
                   </Route>
                 </Route>
 
