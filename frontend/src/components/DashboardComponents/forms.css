@@ -32,7 +32,7 @@
   margin-top: 1rem;
 }
 
-.form button {
+.form button,.browse {
   padding: 0.2rem;
   color: #F49D47;
   cursor: pointer;

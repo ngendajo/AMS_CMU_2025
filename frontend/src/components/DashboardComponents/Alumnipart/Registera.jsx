@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
-import "./forms.css";
+import useAuth from "../../../hooks/useAuth";
+import "../forms.css";
 import Dropzone from "react-dropzone";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
@@ -13,7 +13,7 @@ const PHONE_REGIX = /^[0-9]{10}$/;
 const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
 const PWD_REGIX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-const Register = () => {
+const Registera = () => {
     const {auth} = useAuth()
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
@@ -179,7 +179,7 @@ const Register = () => {
                 <p ref={errRef} className={errMsg ? "errmsg" :"offscreen"} aria-live="assertive">
                     {errMsg}
                 </p>
-               <center> <h1>Add CRC Staff</h1></center>
+               <center> <h1>Add Alumni</h1></center>
                 <form onSubmit={handleSubmit}>
                 <center>
                 <img className="img-for-profile" src={file} alt="" />
@@ -411,10 +411,10 @@ const Register = () => {
                     </center>
                 </form>
                 <p>
-                    <Link className="line" to="/staff">Go back</Link>
+                    <Link className="line" to="/alumni">Go back</Link>
                 </p>
             </section>
   )
 }
 
-export default Register
+export default Registera

@@ -23,6 +23,13 @@ import { useEffect } from 'react';
 import useAuth from './hooks/useAuth';
 import Deleteuser from './components/DashboardComponents/Staffpart/Deleteuser';
 import EditPosition from './components/DashboardComponents/Staffpart/EditPosition';
+import ChangePassword from './components/DashboardComponents/Staffpart/ChangePassword';
+import Registera from './components/DashboardComponents/Alumnipart/Registera';
+import { Grades } from './components/DashboardComponents/Alumnipart/Grades';
+import AddGrade from './components/DashboardComponents/Alumnipart/AddGrade';
+import EditGrade from './components/DashboardComponents/Alumnipart/EditGrade';
+import { Combinations } from './components/DashboardComponents/Alumnipart/Combinations';
+import { Eps } from './components/DashboardComponents/Alumnipart/Eps';
 
 
 function App() {
@@ -66,6 +73,14 @@ function App() {
                     <Route path='view-crc/:id' element={<StaffDetails />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
+                    <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
+                    {/* alumni crud */}
+                    <Route path='add-alumni' element={<Registera />}/>
+                    <Route path='grades' element={<Grades />}/>
+                    <Route path='add-grade' element={<AddGrade />}/>
+                    <Route path='add-grade/:id' element={<EditGrade />}/>
+                    <Route path='combinations' element={<Combinations />}/>
+                    <Route path='eps' element={<Eps />}/>
                   </Route>
                 </Route>
 

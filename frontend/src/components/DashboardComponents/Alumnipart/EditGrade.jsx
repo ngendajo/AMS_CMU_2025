@@ -1,0 +1,203 @@
+import "./userList.css";
+import { useState, useEffect} from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import useAuth from "../../../hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import './register.css'
+
+export default function AddGrade() {
+    const {auth} = useAuth();
+    const [grade, setGrade]=useState([]);
+    const navigate = useNavigate();
+    const params = useParams();
+    const [families, setFamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: '',id:0  }])
+    
+    useEffect(() =>{
+    
+        const getGrade = async () =>{
+            try{
+                const response = await axios.get('http://127.0.0.1:8000/api/grades/?id='+params.id,{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                let data=response.data;
+                
+                let values=[];
+                const value = [];
+                data.forEach((e)=>{
+                    value.push({
+                        name: e.name, 
+                        start_date: e.start_date,
+                        end_date: e.end_date,
+                    })
+                    e.families.forEach((f)=>{
+                        values.push({
+                            family_name: f.family_name, 
+                            family_number: f.family_number,
+                            family_mother: f.family_mother, 
+                            family_mother_tel: f.family_mother_tel,
+                            id: f.id
+                        });
+                    })
+                })
+                setFamilies(values);
+                setGrade(value)
+            }catch(err) {
+                console.log(err);
+            }
+        }
+    
+        getGrade();
+    
+    },[auth,params])
+
+   
+      const handleInputChange = (index, event) => {
+        const values = [...families];
+        const updatedValue = event.target.name;
+        values[index][updatedValue] = event.target.value;
+        setFamilies(values);
+        axios.post('http://127.0.0.1:8000/api/family/'+values[index]["id"]+'/', {
+            family_name:values[index]["family_name"], 
+            family_number:values[index]["family_number"],
+            family_mother:values[index]["family_mother"], 
+            family_mother_tel:values[index]["family_mother_tel"]
+        },
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+    )
+      };
+      const handleInputChangegrade = (index, event) => {
+        const values = [...grade];
+        const updatedValue = event.target.name;
+        values[index][updatedValue] = event.target.value;
+        axios.post('http://127.0.0.1:8000/api/grade/'+params.id+'/', {
+            'name':values[index]['name'], 
+            'start_date':values[index]['start_date'],
+            'end_date':values[index]['end_date']
+        },
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+    )
+        setGrade(values);
+      };
+
+      const handleDeletegrade = () => {
+        
+        axios.delete('http://127.0.0.1:8000/api/grade/'+params.id+'/delete/',
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+        ).then(res =>{
+            console.log(res)
+            navigate('/grades')
+        })
+      };
+    
+
+  return (
+    <div className='alumni-list-body'>
+        <p>
+            <Link className="line" to="/grades">Go back</Link>
+        </p>
+        <center><h1>Update grade form </h1></center>
+        <form className='form-element'>
+        {grade.map((e,i) => {
+                   return <div className="grade-info">
+                   <label> 
+                       <span>Grade name:</span>
+                       <input 
+                       type="text"
+                       name="name" 
+                       value={e.name} placeholder="Enter grade name" 
+                               onChange={(event) =>handleInputChangegrade(i,event)} required />
+                   </label>
+                   <label>
+                       <span>Start year:</span>
+                       <input 
+                       value={e.start_date} placeholder="Enter start year" 
+                       onChange={(event) =>handleInputChangegrade(i, event)}
+                       type="text" name="start_date" required/>
+                   </label>
+                   <label>
+                       <span>End year:</span>
+                       <input 
+                       value={e.end_date} placeholder="Enter End year" 
+                       onChange={(event) =>handleInputChangegrade(i, event)}
+                       type="text" name="end_date" required />
+                   </label>
+               </div>
+
+        })}
+                <div>
+                {families.map((input, index) => {
+                    return (
+                        <>
+                        <label key={index} className="family-info">
+                            <span>Family{index +1}:</span>
+                            <div className="family-info-input">
+                                <input
+                                type='text'
+                                name='family_name'
+                                placeholder='Family name'
+                                value={input.family_name}
+                                onChange={(event) =>
+                                handleInputChange(index, event)
+                                }
+                                />
+                                <input
+                                type='number'
+                                name='family_number'
+                                placeholder='Family number'
+                                value={input.family_number}
+                                onChange={(event) =>
+                                handleInputChange(index, event)
+                                }
+                                />
+                                <input
+                                type='text'
+                                name='family_mother'
+                                placeholder='Family mother'
+                                value={input.family_mother}
+                                onChange={(event) =>
+                                handleInputChange(index, event)
+                                }
+                                />
+                                <input
+                                type='text'
+                                name='family_mother_tel'
+                                placeholder='Family mother tel'
+                                value={input.family_mother_tel}
+                                onChange={(event) =>
+                                handleInputChange(index, event)
+                                    }
+                                />
+                            </div>
+                        </label>
+                        </>
+                        )
+                        })}
+                </div>
+            </form>
+            <p>
+                 <Link onClick={handleDeletegrade} className="line" to="#">Delete Grade</Link>
+            </p>
+    </div>
+  )
+}
