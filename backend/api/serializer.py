@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from userprofile.models import CrcProfile
 from api.models import User
-from userprofile.models import CrcProfile
+from userprofile.models import CrcProfile,Grade,Family,Combination,Ep
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -78,11 +78,6 @@ class CrcRegistrationSerializer(serializers.ModelSerializer):
         return user
     
 
-class CrcImageRegistrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('email','is_staff','is_crc','first_name','last_name','phone1','image_url', 'password') 
-
     #User login serialisers
 
 class PasswordChangeSerializer(serializers.Serializer):
@@ -93,3 +88,93 @@ class PasswordChangeSerializer(serializers.Serializer):
         if not self.context['request'].user.check_password(value):
             raise serializers.ValidationError({'current_password': 'Does not match'})
         return value
+    
+#combination data serializers
+class CombinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Combination
+        fields = '__all__'
+
+class CombinationRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Combination
+        fields = ('combination_name',)
+
+    """ def create(self, validated_data):
+        combination = Combination.objects.create(**validated_data)
+        return combination """
+
+#end
+    
+
+    #EP data serialisers
+class EpSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ep
+        fields = '__all__'
+
+class EpRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ep
+        fields = ('title','type')
+
+    """ def create(self, validated_data):
+        ep = Ep.objects.create(**validated_data)
+        return ep """
+    
+    #end
+
+#Grades and families data serializers
+
+class FamilyRSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Family
+        fields=('family_name','family_number','family_mother','family_mother_tel')
+        depth = 1 
+        
+
+class FamilyRegistrationSerializers(serializers.ModelSerializer):
+    family=FamilyRSerializers(many=True,required=False)
+
+    class Meta:
+        model = Grade
+        fields = ('grade_name','start_academic_year','end_academic_year','family')
+
+    def create(self, validated_data):
+        family_data = validated_data.pop('family')
+        grade = Grade.objects.create(**validated_data)
+        for f in family_data:
+            Family.objects.create(
+            grade=grade,
+            family_name=f['family_name'],
+            family_number=f['family_number'],
+            family_mother=f['family_mother'],
+            family_mother_tel=f['family_mother_tel']
+        )
+        return grade
+    
+
+class FamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Family
+        fields = '__all__'
+        depth = 1 
+
+class GradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grade
+        fields = '__all__'
+
+class AllFamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Family
+        fields ='__all__'
+        depth=1
+
+class AllGradeSerializer(serializers.ModelSerializer):
+    families=AllFamilySerializer(read_only=True,many=True)
+    class Meta:
+        model = Grade
+        fields ='__all__'
+    
+    #End
