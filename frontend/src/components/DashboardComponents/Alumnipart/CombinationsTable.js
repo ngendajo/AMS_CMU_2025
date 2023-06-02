@@ -19,7 +19,6 @@ export const CombinationsTable = ({ mockData }) => {
     getTableProps, 
     getTableBodyProps, 
     headerGroups, 
-    rows, 
     prepareRow,
     setGlobalFilter,
     page,

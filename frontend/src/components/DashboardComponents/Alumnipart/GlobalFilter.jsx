@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAsyncDebounce } from "react-table";
+import {FaSearch} from "react-icons/fa";
 
 export const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   const [value, setValue] = useState(globalFilter);
@@ -8,8 +9,8 @@ export const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   }, 200);
 
   return (
-    <span>
-      Search:{" "}
+    <div className='input-wrapper search-staff'>
+                <FaSearch id='search-icon'/>
       <input
         value={value || ""}
         onChange={(e) => {
@@ -22,6 +23,6 @@ export const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
           margin: "0.1rem 0",
         }}
       />
-    </span>
+    </div>
   );
 };

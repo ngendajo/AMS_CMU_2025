@@ -148,7 +148,6 @@ export default function AddGrade() {
                 <div>
                 {families.map((input, index) => {
                     return (
-                        <>
                         <label key={index} className="family-info">
                             <span>Family{index +1}:</span>
                             <div className="family-info-input">
@@ -190,7 +189,6 @@ export default function AddGrade() {
                                 />
                             </div>
                         </label>
-                        </>
                         )
                         })}
                 </div>
