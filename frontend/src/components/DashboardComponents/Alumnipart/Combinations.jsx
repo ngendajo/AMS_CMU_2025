@@ -36,7 +36,7 @@ export const Combinations = () => {
     let registerCombination = (e )=> {
         e.preventDefault()
         axios.post('http://127.0.0.1:8000/api/combination/', {
-            'name':e.target.combination_name.value,
+            'combination_name':e.target.combination_name.value,
         },
         {
             headers: {

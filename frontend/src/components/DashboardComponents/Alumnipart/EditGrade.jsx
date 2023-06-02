@@ -31,9 +31,9 @@ export default function AddGrade() {
                 const value = [];
                 data.forEach((e)=>{
                     value.push({
-                        name: e.name, 
-                        start_date: e.start_date,
-                        end_date: e.end_date,
+                        grade_name: e.grade_name, 
+                        start_academic_year: e.start_academic_year,
+                        end_academic_year: e.end_academic_year,
                     })
                     e.families.forEach((f)=>{
                         values.push({
@@ -81,9 +81,9 @@ export default function AddGrade() {
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
         axios.post('http://127.0.0.1:8000/api/grade/'+params.id+'/', {
-            'name':values[index]['name'], 
-            'start_date':values[index]['start_date'],
-            'end_date':values[index]['end_date']
+            'grade_name':values[index]['grade_name'], 
+            'start_academic_year':values[index]['start_academic_year'],
+            'end_academic_year':values[index]['end_academic_year']
         },
         {
             headers: {
@@ -119,28 +119,28 @@ export default function AddGrade() {
         <center><h1>Update grade form </h1></center>
         <form className='form-element'>
         {grade.map((e,i) => {
-                   return <div className="grade-info">
+                   return <div key={i} className="grade-info">
                    <label> 
                        <span>Grade name:</span>
                        <input 
                        type="text"
-                       name="name" 
-                       value={e.name} placeholder="Enter grade name" 
+                       name="grade_name" 
+                       value={e.grade_name} placeholder="Enter grade name" 
                                onChange={(event) =>handleInputChangegrade(i,event)} required />
                    </label>
                    <label>
                        <span>Start year:</span>
                        <input 
-                       value={e.start_date} placeholder="Enter start year" 
+                       value={e.start_academic_year} placeholder="Enter start year" 
                        onChange={(event) =>handleInputChangegrade(i, event)}
-                       type="text" name="start_date" required/>
+                       type="text" name="start_academic_year" required/>
                    </label>
                    <label>
                        <span>End year:</span>
                        <input 
-                       value={e.end_date} placeholder="Enter End year" 
+                       value={e.end_academic_year} placeholder="Enter End year" 
                        onChange={(event) =>handleInputChangegrade(i, event)}
-                       type="text" name="end_date" required />
+                       type="text" name="end_academic_year" required />
                    </label>
                </div>
 

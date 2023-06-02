@@ -38,9 +38,9 @@ export const Grades = () => {
       const fetchDAta = (value) =>{
         if(results1.length>0){
           let results=results1.filter((grade) =>
-          grade?.name.toLowerCase().includes(value.toLowerCase()) || 
-          grade?.start_date.toLowerCase().includes(value.toLowerCase()) || 
-          grade?.end_date.toLowerCase().includes(value.toLowerCase())
+          grade?.grade_name.toLowerCase().includes(value.toLowerCase()) || 
+          grade?.start_academic_year.toLowerCase().includes(value.toLowerCase()) || 
+          grade?.end_academic_year.toLowerCase().includes(value.toLowerCase())
         );
         setResults(results)
          }
@@ -76,9 +76,9 @@ export const Grades = () => {
                     <>
                       {results.map((result, id)=>{
                         return <Link to={`/add-grade/${result.id}`} key={id} className='grade-details'>
-                    <p>Grade: {result.name}</p>
-                    <p>Start Academic Year:{result.start_date}</p>
-                    <p>End Academic Year:{result.end_date}</p>
+                    <p>Grade: {result.grade_name}</p>
+                    <p>Start Academic Year:{result.start_academic_year}</p>
+                    <p>End Academic Year:{result.end_academic_year}</p>
                     <h3>Families</h3>
                     <ol>
                         {result.families.map((fa,i)=>{
@@ -93,7 +93,7 @@ export const Grades = () => {
                     </ol>
                 </Link>
                 })}
-                </>:null
+                </>:<h1>No grade registered yet!</h1>
         }
             </div>
       </div>

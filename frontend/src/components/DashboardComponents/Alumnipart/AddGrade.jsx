@@ -15,9 +15,9 @@ export default function AddGrade() {
         e.preventDefault()
         console.log(families);
         axios.post('http://127.0.0.1:8000/api/grades/', {
-            'name':e.target.name.value, 
-            'start_date':e.target.start_date.value,
-            'end_date':e.target.end_date.value,
+            'grade_name':e.target.grade_name.value, 
+            'start_academic_year':e.target.start_academic_year.value,
+            'end_academic_year':e.target.end_academic_year.value,
             'family':families
         },
         {
@@ -66,21 +66,21 @@ export default function AddGrade() {
             <div className="grade-info">
                 <label> 
                     <span>Grade name:</span>
-                    <input type="text" name="name" placeholder="Enter grade" required />
+                    <input type="text" name="grade_name" placeholder="Enter grade" required />
                 </label>
                 <label>
                     <span>Start year:</span>
-                    <input type="text" name="start_date" placeholder="Enter start academic year" required/>
+                    <input type="text" name="start_academic_year" placeholder="Enter start academic year" required/>
                 </label>
                 <label>
                     <span>End year:</span>
-                    <input type="text" name="end_date" placeholder="Enter end academic year" required />
+                    <input type="text" name="end_academic_year" placeholder="Enter end academic year" required />
                 </label>
             </div>
                 <div>
                 {families.map((input, index) => {
                     return (
-                        <label key={index} className="family-info">
+                        <div key={index} className="family-info">
                             <span>Family{index +1}:</span>
                             <div className="family-info-input">
                                 <input
@@ -121,7 +121,7 @@ export default function AddGrade() {
                                 />
                                 <button variant="secondary" onClick={() => handleRemoveFamilies(index)}>Remove</button>
                             </div>
-                        </label>
+                        </div>
                         )
                         })}
                 </div>

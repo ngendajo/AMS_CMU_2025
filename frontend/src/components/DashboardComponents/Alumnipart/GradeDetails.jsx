@@ -28,9 +28,9 @@ export const GradeDetails = ({ id }) => {
         if(response.status === 200){
             const value = [];
             value.push({
-                name: data[0].name, 
-                start_date: data[0].start_date,
-                end_date: data[0].end_date,
+                grade_name: data[0].grade_name, 
+                start_academic_year: data[0].start_academic_year,
+                end_academic_year: data[0].end_academic_year,
             })
             setGrades(value);
             console.log(grades)
@@ -78,9 +78,9 @@ export const GradeDetails = ({ id }) => {
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
         Axios.post('http://127.0.0.1:8000/api/grade/'+id+'/', {
-            'name':values[index]['name'], 
-            'start_date':values[index]['start_date'],
-            'end_date':values[index]['end_date']
+            'grade_name':values[index]['grade_name'], 
+            'start_academic_year':values[index]['start_academic_year'],
+            'end_academic_year':values[index]['end_academic_year']
         },
         {
             headers: {
@@ -111,19 +111,19 @@ export const GradeDetails = ({ id }) => {
                         
                         <label> 
                             Grade:
-                            <input type="text" name="name" value={e.name} placeholder="Enter Email" 
+                            <input type="text" name="grade_name" value={e.grade_name} placeholder="Enter Email" 
                             onChange={(event) =>handleInputChangegrade(i, event)}
                             />
                         </label>
                         <label>
                             Start year:
-                            <input type="text" name="start_date" value={e.start_date} placeholder="Enter first name" 
+                            <input type="text" name="start_academic_year" value={e.start_academic_year} placeholder="Enter first name" 
                             onChange={(event) =>handleInputChangegrade(i, event)}
                             />
                         </label>
                         <label>
                             End year:
-                            <input type="text" name="end_date" value={e.end_date} placeholder="Enter last name" 
+                            <input type="text" name="end_academic_year" value={e.end_academic_year} placeholder="Enter last name" 
                             onChange={(event) =>handleInputChangegrade(i, event)}
                             />
                         </label>
