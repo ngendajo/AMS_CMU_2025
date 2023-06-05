@@ -58,9 +58,9 @@ class Alumni(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
     marital_status= models.CharField(max_length=50)
     gender = models.CharField(max_length=50)
-    Family = models.ForeignKey(Family,realted_name="alumnis",on_delete=models.CASCADE)
-    Combination = models.ForeignKey(Combination,realted_name="alumnis",on_delete=models.CASCADE)
-    Eps = models.ManyToManyField(Ep, related_name="alumnis",on_delete=models.CASCADE)
+    Family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
+    Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
+    Eps = models.ManyToManyField(Ep, related_name="alumnis")
     kids = models.BooleanField
     father = models.CharField(max_length=50)
     mother = models.CharField(max_length=50)
@@ -69,7 +69,7 @@ class Alumni(models.Model):
 
 
 #Opportunity model
-class Opportunity(models.MOdel):
+class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
     title =  models.CharField(max_length=50)
     description = models.CharField(max_length=200)
