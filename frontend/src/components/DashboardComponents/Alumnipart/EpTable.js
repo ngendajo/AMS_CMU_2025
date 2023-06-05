@@ -19,7 +19,6 @@ export const EpTable = ({ mockData }) => {
     getTableProps, 
     getTableBodyProps, 
     headerGroups, 
-    rows, 
     prepareRow,
     setGlobalFilter,
     page,

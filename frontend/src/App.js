@@ -29,10 +29,12 @@ import { Grades } from './components/DashboardComponents/Alumnipart/Grades';
 import AddGrade from './components/DashboardComponents/Alumnipart/AddGrade';
 import EditGrade from './components/DashboardComponents/Alumnipart/EditGrade';
 import { Combinations } from './components/DashboardComponents/Alumnipart/Combinations';
-import { Eps } from './components/DashboardComponents/Alumnipart/Eps';
 import Addcombination from './components/DashboardComponents/Alumnipart/Addcombination';
 import Editcombination from './components/DashboardComponents/Alumnipart/Editcombination';
 import Deletecombination from './components/DashboardComponents/Alumnipart/Deletecombination';
+import { Eps } from './components/DashboardComponents/Alumnipart/Eps';
+import AddEp from './components/DashboardComponents/Alumnipart/AddEp';
+import EditEp from './components/DashboardComponents/Alumnipart/EditEp';
 
 
 function App() {
@@ -87,6 +89,8 @@ function App() {
                     <Route path='add-comb/:id' element={<Editcombination/>}/>
                     <Route path='delete-comb/:id' element={<Deletecombination/>}/>
                     <Route path='eps' element={<Eps />}/>
+                    <Route path='add-ep' element={<AddEp />}/>
+                    <Route path='add-ep/:id' element={<EditEp />}/>
                   </Route>
                 </Route>
 
