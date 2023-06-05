@@ -3,12 +3,11 @@ from import_export import resources
 from import_export.admin import ExportActionMixin
 from .models import User
 from import_export.admin import ImportExportModelAdmin
-from import_export.fields import Field
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from api.models import User
-from userprofile.models import CrcProfile
+from userprofile.models import CrcProfile,Grade,Family,Combination,Ep
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -16,11 +15,6 @@ User = get_user_model()
 # Register your models here.
 
 class PostResource(resources.ModelResource):
-    author = Field()
-    body = Field()
-    liked = Field()
-    created = Field()
-    comments = Field()
     class Meta:
         model = User
         fields = ('email','id','first_name','last_name','phone1','image_url')
@@ -97,3 +91,19 @@ class UserAdmin(ImportExportModelAdmin):
 @admin.register(CrcProfile)
 class CrcAdmin(ImportExportModelAdmin):
     list_display =('user','id','position')
+
+@admin.register(Grade)
+class GradeAdmin(ImportExportModelAdmin):
+    list_display =('grade_name','id','start_academic_year','end_academic_year')
+
+@admin.register(Family)
+class FamilyAdmin(ImportExportModelAdmin):
+    list_display =('family_name','id','grade','family_number','family_mother','family_mother_tel')
+
+@admin.register(Combination)
+class CombinationAdmin(ImportExportModelAdmin):
+    list_display =('id','combination_name')
+
+@admin.register(Ep)
+class EpAdmin(ImportExportModelAdmin):
+    list_display =('id','title','type')

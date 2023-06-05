@@ -67,7 +67,7 @@ export default function Staff() {
           </div>
         </div>
        
-        <div className='results-list-in-table'> 
+        <div className='results-list-in-table alumni-list-body'> 
         <center>
           <table>
             <thead>

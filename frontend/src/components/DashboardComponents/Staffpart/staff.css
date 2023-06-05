@@ -22,15 +22,26 @@
     border: 1px #F49D47 solid;
     border-radius: 3px;
     padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 .add-staff{
     background-color:  #F49D47;
+    color: #FFF; 
     border-radius: 3px;
     padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 .add-staff .link{
     color: #FFF;
     text-decoration: none;
+}
+.addicon{
+    color: #FFF; 
+    font-size: 14px;
 }
 
 .staff-info{

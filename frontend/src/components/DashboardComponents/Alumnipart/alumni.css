@@ -1,0 +1,42 @@
+.alumni-list-heading{
+    background-color: #FFF;
+    width: 98%;
+    margin: 10px 1%;
+    padding: 15px;
+    border-radius: 7px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+.displayed{
+    background-color: #F49D47;
+    color: #FFF;
+    border-radius: 7px;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 7px;
+}
+.notdisplayed{
+    color: #3f3f3f;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.alumni-header-right{
+    float: right;
+    margin-right: 2%;
+}
+.alumni-list-body{
+    background-color: #FFF;
+    border-radius: 7px;
+    width: 98%;
+    margin: 20px 1%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.grades-link{
+    color: #3d3d3d;
+    text-decoration: none;
+}

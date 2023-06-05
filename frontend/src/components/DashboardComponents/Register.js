@@ -193,7 +193,7 @@ const Register = () => {
                                     {selectedFiles && selectedFiles[0].name}
                                     </div>
                                 ) : (
-                                    "Drag and drop image here, or click to select it"
+                                    <span><strong className="browse">Browse</strong> <strong>photo</strong><br/> or drag and drop</span>
                                 )}
                                 </div>
                             </section>

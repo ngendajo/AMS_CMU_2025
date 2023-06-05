@@ -1,16 +1,13 @@
 from django.contrib.auth import logout
-from django.db.models import Count
-from django.db.models import F
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
+from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import CrcSerializer, UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1
-from userprofile.models import CrcProfile
+from .serializer import UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1,GradeSerializer,FamilySerializer,CombinationSerializer,FamilyRegistrationSerializers,CombinationRSerializer,EpRSerializer,EpSerializer,AllGradeSerializer
+from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
 from .models import User
 from django.contrib.auth import get_user_model
 
@@ -68,7 +65,18 @@ class CrcRegistrationView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class GetCrcView(APIView):
+    permission_classes = [IsAuthenticated, ]
     
+    def get(self,request,pk):
+        crc= User.objects.filter(email=pk)
+        print(pk)
+        if crc:
+            serializer = CrcListSerializer1(crc, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)       
 
         
 @api_view(['POST'])
@@ -76,19 +84,6 @@ class CrcRegistrationView(APIView):
 def update_user(request, pk):
     user = User.objects.get(pk=pk)
     data = UpdateUserSerializer(instance=user, data=request.data)
- 
-    if data.is_valid():
-        data.save()
-        return Response(data.data)
-    else:
-        print(data.errors)
-        return Response(status=status.HTTP_404_NOT_FOUND) 
-    
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_user_position(request, pk):
-    user = CrcProfile.objects.get(user_id=pk)
-    data = CrcSerializer(instance=user, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -158,17 +153,6 @@ class ChangePasswordView(APIView):
         request.user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    #reset password
-class ResetPasswordView(APIView):
-    permission_classes = [IsAuthenticated, ]
-
-    def post(self, request):
-        print(request.data)
-        """ 
-        request.user.set_password(serializer.validated_data['new_password'])
-        request.user.save() """
-        return Response("status=status.HTTP_204_NO_CONTENT")
-    
     # End login logout and change password portal
 
 @api_view(['GET'])
@@ -179,3 +163,169 @@ def getRoutes(request):
         '/api/token/refresh/'
     ]
     return Response(routes)
+
+
+#families and grades views
+
+class GradeRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = FamilyRegistrationSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+    def get(self,request):
+        if request.query_params:
+            grades = Grade.objects.filter(**request.query_params.dict())
+        else:
+            grades = Grade.objects.all()
+    
+        # if there is something in items else raise error
+        if grades:
+            serializer = AllGradeSerializer(grades, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_grade(request, pk):
+    grade = Grade.objects.get(pk=pk)
+    data = GradeSerializer(instance=grade, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])    
+@permission_classes([IsAuthenticated])
+def update_family(request, pk):
+    family = Family.objects.get(pk=pk)
+    data = FamilySerializer(instance=family, data=request.data)
+    if data.is_valid():
+        data.save()
+        return Response(data.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(data.errors,status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_grade(request, pk):
+    grade = get_object_or_404(Grade, pk=pk)
+    grade.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#End
+        
+    
+
+    #Ep data means art,sport, sciences and clubs CRUD
+    
+class EpRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = EpRSerializer(data=request.data)
+        # validating for already existing data
+        if Ep.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        """ serializer = EpRSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """ 
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            ep = Ep.objects.filter(**request.query_params.dict())
+        else:
+            ep = Ep.objects.all()
+    
+        # if there is something in items else raise error
+        if ep:
+            serializer = EpSerializer(ep, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        """ grades=Ep.objects.all()
+        serializer = EpSerializer(grades, many=True)
+        return Response(serializer.data) """
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_Ep(request, pk):
+    ep = Ep.objects.get(pk=pk)
+    data = EpRSerializer(instance=ep, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_ep(request, pk):
+    ep = get_object_or_404(Ep, pk=pk)
+    ep.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
+
+# Combination data view
+
+class CombinationRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = CombinationRSerializer(data=request.data)
+        # validating for already existing data
+        if Combination.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            comb = Combination.objects.filter(**request.query_params.dict())
+        else:
+            comb = Combination.objects.all()
+    
+        # if there is something in items else raise error
+        if comb:
+            serializer = CombinationSerializer(comb, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_Comb(request, pk):
+    comb = Combination.objects.get(pk=pk)
+    data = CombinationRSerializer(instance=comb, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_comb(request, pk):
+    comb = get_object_or_404(Combination, pk=pk)
+    comb.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#end
