@@ -9,6 +9,7 @@ class CrcProfile(models.Model):
     def __str__(self):
         return str(self.user)
     
+
 #Grade model
     
 class Grade(models.Model):
@@ -50,3 +51,56 @@ class Ep(models.Model):
     
     def __str__(self):
         return str(self.title)
+    
+#Alumn model
+
+class Alumni(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
+    marital_status= models.CharField(max_length=50)
+    gender = models.CharField(max_length=50)
+    Family = models.ForeignKey(Family,realted_name="alumnis",on_delete=models.CASCADE)
+    Combination = models.ForeignKey(Combination,realted_name="alumnis",on_delete=models.CASCADE)
+    Eps = models.ManyToManyField(Ep, related_name="alumnis",on_delete=models.CASCADE)
+    kids = models.BooleanField
+    father = models.CharField(max_length=50)
+    mother = models.CharField(max_length=50)
+    place_of_birth = models.CharField(max_length=50)
+    CurrResidence = models.CharField(max_length=50)
+
+
+#Opportunity model
+class Opportunity(models.MOdel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
+    title =  models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    approved = models.BooleanField
+    postTime = models.DateTimeField
+
+#Event model
+class Event(models.Model):
+    title= models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    date = models.DateField()
+
+    def __str__(self):
+        return str(self.title)
+    
+
+class Studie(models.Model):
+    alumn = models.OneToOneField(Alumni, on_delete=models.CASCADE, related_name='studie')
+    degree = models.CharField(max_length=50)
+    university = models.CharField(max_length=50)
+    country = models.CharField(max_length=50)
+    Scholarships = (
+		('F', 'Full'),
+		('P', 'Partial'),
+        ('N', 'None'),
+	)
+    scholarship = models.CharField(max_length=2, choices=Scholarships)
+    Statuss = (
+		('D', 'Dropped_Out'),
+		('S', 'Susepended'),
+        ('C', 'Completed'),
+	)
+    status = models.CharField(max_length=2, choices=Statuss)
+
