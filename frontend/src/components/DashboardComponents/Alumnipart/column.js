@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 
 export const COLUMNS = [
   
@@ -20,21 +19,8 @@ export const COLUMNS = [
     accessor: "last_name",
   },
   {
-    Header: "Gender",
-    accessor: "gender",
-    disableFilters: true, 
-  },
-  {
-    Header: "Grade",
-    accessor: "grade_name",
-  },
-  {
-    Header: "Family",
-    accessor: "family_name",
-  },
-  {
-    Header: "Combination",
-    accessor: "combination_name",
+    Header: "Info",
+    accessor: "info",
   },
   {
     Header: "Action",
