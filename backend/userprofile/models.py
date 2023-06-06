@@ -52,6 +52,21 @@ class Ep(models.Model):
     def __str__(self):
         return str(self.title)
     
+
+#Employment model
+class Employment(models.Model):
+    title = models.CharField(max_length=50)
+    emps = (
+		('W', 'working'),
+		('P', 'past'),
+    )
+    status = models.CharField(max_length=2, choices=emps)
+    description = models.CharField(max_length=200)
+    company = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return str(self.title)
+    
 #Alumn model
 
 class Alumni(models.Model):
@@ -61,6 +76,7 @@ class Alumni(models.Model):
     Family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
     Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
     Eps = models.ManyToManyField(Ep, related_name="alumnis")
+    employments= models.ManyToManyField(Employment, related_name="employments")
     kids = models.BooleanField
     father = models.CharField(max_length=50)
     mother = models.CharField(max_length=50)
