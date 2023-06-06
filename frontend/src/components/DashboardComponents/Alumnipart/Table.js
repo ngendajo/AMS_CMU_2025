@@ -19,7 +19,6 @@ export const Table = ({ mockData }) => {
     getTableProps, 
     getTableBodyProps, 
     headerGroups, 
-    rows, 
     prepareRow,
     setGlobalFilter,
     page,
@@ -46,7 +45,7 @@ export const Table = ({ mockData }) => {
   );
   return (
     <>
-      <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
+      <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} className="filterg" />
       {/* apply the table props */}
       <table {...getTableProps()}>
         <thead>

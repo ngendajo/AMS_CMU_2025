@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1,GradeSerializer,FamilySerializer,CombinationSerializer,FamilyRegistrationSerializers,CombinationRSerializer,EpRSerializer,EpSerializer,AllGradeSerializer
+from .serializer import AlumniSerializer,AlumniRegistrationSerializer,CrcSerializer,StaffRegistrationSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,CrcListSerializer1,GradeSerializer,FamilySerializer,CombinationSerializer,FamilyRegistrationSerializers,CombinationRSerializer,EpRSerializer,EpSerializer,AllGradeSerializer
 from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
 from .models import User
 from django.contrib.auth import get_user_model
@@ -24,6 +24,55 @@ class AdminRegistrationView(APIView):
     def post(self, request):
         print(request.data)
         serializer = AdminRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request):
+        if request.query_params:
+            user=User.objects.filter(**request.query_params.dict(),is_alumni=False)
+        else:
+            user = User.objects.filter(is_alumni=False)
+    
+        # if there is something in items else raise error
+        if user:
+            serializer = AdminSerializer(user, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+
+class AluminiRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        print(request.data)
+        serializer = AlumniRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request):
+        if request.query_params:
+            user=User.objects.filter(**request.query_params.dict(),is_alumni=True)
+        else:
+            user = User.objects.filter(is_alumni=True)
+    
+        # if there is something in items else raise error
+        if user:
+            serializer = AlumniSerializer(user, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class StaffRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        print(request.data)
+        serializer = StaffRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -106,6 +155,19 @@ def update_user_image(request, pk):
         print(data.errors)
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_position(request, pk):
+    user = CrcProfile.objects.get(user_id=pk)
+    data = CrcSerializer(instance=user, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        print(data.errors)
+        return Response(status=status.HTTP_404_NOT_FOUND) 
+    
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_user(request, pk):
@@ -168,7 +230,7 @@ def getRoutes(request):
 #families and grades views
 
 class GradeRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = FamilyRegistrationSerializers(data=request.data)
         if serializer.is_valid():

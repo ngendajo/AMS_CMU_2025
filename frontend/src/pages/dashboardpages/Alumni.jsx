@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {FaSearch} from "react-icons/fa";
 import axios from 'axios';
 import '../../components/Header/header.css';
 import '../../components/Header/searchBar.css';
@@ -8,15 +7,14 @@ import '../../components/DashboardComponents/Staffpart/staff.css';
 import '../../components/DashboardComponents/Alumnipart/alumni.css';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { Table } from '../../components/DashboardComponents/Alumnipart/Table';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoIosAdd } from "react-icons/io";
 
 
 export default function Alumni() {
-  const [results, setResults]=useState([]);
-  const [results1, setResults1]=useState([]);
-  const [input, setInput] = useState("");
+  const [data, setData] = useState([]);
   const [category, setCategory] = useState(1);
   const {auth} = useAuth();
 
@@ -24,16 +22,27 @@ export default function Alumni() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/',{
+            const response = await axios.get('http://127.0.0.1:8000/api/registera/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
                 },
                 withCredentials:true
             });
-            console.log(response.data);
-            setResults1(response.data);
-            setResults(response.data);
+            var alumnilist=[]
+            var i=1
+            response.data.forEach(element => {
+              alumnilist.push({
+                id:i,
+                email:element.email,
+                first_name:element.first_name,
+                last_name:element.last_name,
+                info:element.profile==null? "Add Info":"Edit Info",
+                user_id:<button className='updateUser' value={element.id}><BiEditAlt/><RiDeleteBin5Line/></button>
+              })
+              i+=1
+            });
+            setData(alumnilist);
         }catch(err) {
             console.log(err);
         }
@@ -43,28 +52,10 @@ export default function Alumni() {
 
 },[auth])
 
-  const fetchDAta = (value) =>{
-   if(results1.length>0){
-    let results=results1.filter((person) =>
-    person?.first_name.toLowerCase().includes(value.toLowerCase()) || person?.last_name.toLowerCase().includes(value.toLowerCase()) || person?.email.toLowerCase().includes(value.toLowerCase())
-  );
-  setResults(results)
-   }
-    
-      
-    
-  }
-  const handleChange = (value) =>{
-    setInput(value)
-    fetchDAta(value)
-}
   return (
     <div>
         <div className='alumni-list-heading'>
-          <div className='input-wrapper search-staff'>
-              <FaSearch id='search-icon'/>
-              <input placeholder='search staff...' value={input} onChange={(e) =>handleChange(e.target.value)}/>
-          </div>
+         
           <div className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
             <span>Higher Institutions</span>
           </div>
@@ -104,14 +95,8 @@ export default function Alumni() {
                 </div>
               </div>
             </div>
-            <div>
-              {results.length?
-                    <>
-                      {results.map((result, id)=>{
-                        return  <p key={id}>{result.first_name} {result.last_name}</p>
-                      })}
-                      </>:null
-              }
+              <div className="listtable">
+                <Table mockData={data} />
               </div>
       </div>
         

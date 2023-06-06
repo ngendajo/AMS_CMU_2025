@@ -13,6 +13,7 @@ class CrcListSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+
 class CrcSerializer(serializers.ModelSerializer):
     class Meta: 
         model = CrcProfile
@@ -36,6 +37,46 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_superuser(**validated_data)
+        return user
+    
+
+class AlumniListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CrcProfile
+        fields = '__all__'
+        depth = 1
+
+class AlumniSerializer(serializers.ModelSerializer):
+    image_url =serializers.ImageField(required=False)
+    profile = AlumniListSerializer()
+
+    class Meta:
+        model = User
+        fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','profile')
+        extra_kwargs = {'password': {'write_only': True}}
+    
+class AlumniRegistrationSerializer(serializers.ModelSerializer):
+    image_url =serializers.ImageField(required=False)
+
+    class Meta:
+        model = User 
+        fields = ('email','first_name','last_name','phone1', 'password','image_url')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_alumniuser(**validated_data)
+        return user
+    
+class StaffRegistrationSerializer(serializers.ModelSerializer):
+    image_url =serializers.ImageField(required=False)
+
+    class Meta:
+        model = User 
+        fields = ('email','first_name','last_name','phone1', 'password','image_url')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_staffuser(**validated_data)
         return user
 
 class CrcListSerializer1(serializers.ModelSerializer):
