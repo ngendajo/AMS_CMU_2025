@@ -9,7 +9,7 @@
 /coverage
 
 # pycache
-**/__pycache__
+*.pyc 
 # production
 /build
 
