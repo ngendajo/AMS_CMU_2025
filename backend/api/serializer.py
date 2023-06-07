@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
+#User management serializers
 class CrcListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CrcProfile
@@ -78,13 +78,6 @@ class StaffRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_staffuser(**validated_data)
         return user
-
-class CrcListSerializer1(serializers.ModelSerializer):
-    profile = CrcListSerializer()
-    class Meta:
-        model = User
-        fields = ('id','email','first_name','last_name','image_url','phone1', 'password', 'profile')
-        extra_kwargs = {'password': {'write_only': True}}
 
 #Update user
 class UpdateUserSerializer(serializers.ModelSerializer):
