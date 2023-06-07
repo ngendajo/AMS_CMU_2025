@@ -11,6 +11,7 @@ import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
 import { useParams } from 'react-router';
 import "../forms.css";
+import Select, { components } from "react-select";
 
 
 const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
@@ -21,6 +22,65 @@ export default function Alumni() {
   const [userid, setUserid]=useState([]);
   const { auth } = useAuth();
   const params = useParams();
+  let [combination, setCombination] = useState([])
+  let [eps, setEps] = useState([])
+    let [epsdone, setEpsdone] = useState([])
+
+    const [selectedOption, setSelectedOption] = useState("");
+
+    var handleChangeofEp = (selectedOption) => {
+      console.log(selectedOption);
+      setSelectedOption(selectedOption.value);
+      setEpsdone(selectedOption)
+    };
+
+    useEffect(() =>{
+    
+      const geteps = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/ep/',{
+                  headers: {
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              var eplist=[]
+              response.data.forEach(element => {
+                eplist.push(
+                  { value: element.id, label: element.title }
+                )
+              });
+              setEps(eplist)
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      geteps();
+  
+  },[auth])
+
+    useEffect(() =>{
+    
+      const getcombinations = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/combination/',{
+                  headers: {
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              setCombination(response.data);
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      getcombinations();
+  
+  },[auth])
 
   const fatherRef = useRef();
   const motherRef = useRef();
@@ -113,7 +173,7 @@ export default function Alumni() {
           </div>
 
         </div>
-        <div className='alumni-list-body'>
+        <div className='alumni-list-body form'>
           <center>
           {
           userid.map((result, id)=>{
@@ -184,6 +244,65 @@ export default function Alumni() {
                                 2 to 50 characters. <br/>
                                 Letters allowed.
                             </p>
+                        </div>
+
+                        <div className="formpart">
+                            <label htmlFor="last_name">
+                                Marital Status
+                            </label>
+                            <select name="marital_status">
+                              <option value="Single">Single</option>
+                              <option value="Maried">Maried</option>
+                              <option value="Divorced">Divorced</option>
+                              <option value="Widowed">Widowed</option>
+                            </select>
+                        </div>
+                        <div className="formpart">
+                            <label htmlFor="last_name">
+                                Gender
+                            </label>
+                            <select name="gender">
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div className="formpart">
+                            <label htmlFor="last_name">
+                                Place of origin
+                            </label>
+                            <input type="text" name="place_of_birth" />
+                        </div>
+                        <div className="formpart">
+                            <label htmlFor="last_name">
+                                Current Residence
+                            </label>
+                            <input type="text" name="currResidence" />
+                        </div>
+                        <div className="formpart">
+                            <label htmlFor="last_name">
+                                Do you have kids
+                            </label>
+                            <select name="kids">
+                              <option value="yes">Yes</option>
+                              <option value="no">No</option>
+                            </select>
+                        </div>
+                        <div className="formpart">
+                            <label htmlFor="combination">
+                            Combination
+                            </label>
+                            
+                            <select name='combination'>
+                            {combination.map(e => (
+                                <option value={e.id}>{e.combination_name}</option>
+                            ))}
+                            </select>
+                        </div>
+                        <div className="formpart">
+                            <label htmlFor="last_name">
+                                Eps done
+                            </label>
+                            <Select isMulti onChange={handleChangeofEp} options={eps} />
                         </div>
                         
                     </div>
