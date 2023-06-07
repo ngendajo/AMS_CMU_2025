@@ -5,6 +5,9 @@ export const COLUMNS = [
     Header: "id",
     accessor: "id",
     disableFilters: true, 
+  }, {
+    Header: "Image",
+    accessor: "image",
   },
   {
     Header: "Email",
@@ -19,7 +22,7 @@ export const COLUMNS = [
     accessor: "last_name",
   },
   {
-    Header: "Info",
+    Header: "Grade",
     accessor: "info",
   },
   {
