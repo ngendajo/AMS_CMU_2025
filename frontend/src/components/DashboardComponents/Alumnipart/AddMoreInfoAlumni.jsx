@@ -11,7 +11,7 @@ import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
 import { useParams } from 'react-router';
 import "../forms.css";
-import Select, { components } from "react-select";
+import Select from "react-select";
 
 
 const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
@@ -26,11 +26,7 @@ export default function Alumni() {
   let [eps, setEps] = useState([])
     let [epsdone, setEpsdone] = useState([])
 
-    const [selectedOption, setSelectedOption] = useState("");
-
     var handleChangeofEp = (selectedOption) => {
-      console.log(selectedOption);
-      setSelectedOption(selectedOption.value);
       setEpsdone(selectedOption)
     };
 
@@ -293,9 +289,9 @@ export default function Alumni() {
                             </label>
                             
                             <select name='combination'>
-                            {combination.map(e => (
-                                <option value={e.id}>{e.combination_name}</option>
-                            ))}
+                            {combination.map((e,ind) => {
+                              return  <option key={ind} value={e.id}>{e.combination_name}</option>
+                                })}
                             </select>
                         </div>
                         <div className="formpart">
