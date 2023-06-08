@@ -20,14 +20,48 @@ const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
 export default function Alumni() {
   const [category, setCategory] = useState(6);
   const [userid, setUserid]=useState([]);
+  const [gradeSelected, setGradeSelected]=useState(false);
   const { auth } = useAuth();
   const params = useParams();
-  let [combination, setCombination] = useState([])
-  let [eps, setEps] = useState([])
-    let [epsdone, setEpsdone] = useState([])
+  let [combination, setCombination] = useState([]);
+  let [grades, setGrades] = useState([]);
+  let [families, setFamilies] = useState([]);
+  let [eps, setEps] = useState([]);
+    let [epsdone, setEpsdone] = useState([]);
+
+    useEffect(() =>{
+    
+        const getgrades = async () =>{
+            try{
+                const response = await axios.get('http://127.0.0.1:8000/api/grades/',{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                setGrades(response.data)
+            }catch(err) {
+                console.log(err);
+            }
+        }
+    
+        getgrades();
+    
+    },[auth])
+    const getfamilies = (event) => {
+        const id = event.target.value;
+        grades.forEach((grade)=>{
+            if(parseInt(grade.id,10) === parseInt(id,10)){
+                setFamilies(grade.families);
+                setGradeSelected(true);
+            }
+        })
+        
+    }
 
     var handleChangeofEp = (selectedOption) => {
-      setEpsdone(selectedOption)
+      setEpsdone(selectedOption);
     };
 
     useEffect(() =>{
@@ -124,7 +158,6 @@ export default function Alumni() {
                   withCredentials:true
               });
               setUserid(response.data)
-              console.log(response.data)
           }catch(err) {
               console.log(err);
           }
@@ -138,7 +171,6 @@ export default function Alumni() {
     e.preventDefault();
 
   }
-
 
   return (
     <div>
@@ -283,6 +315,28 @@ export default function Alumni() {
                               <option value="no">No</option>
                             </select>
                         </div>
+
+                        <div className="formpart"> 
+                            <label htmlFor="grade">
+                                Grade
+                            </label>     
+                                <select name="grade" onChange={getfamilies}>
+                                    {grades.map((e,ind) => {
+                                        return  <option key={ind} value={e.id}>{e.grade_name}</option>
+                                    })}               
+                                </select> 
+                        </div>
+                        <div className={gradeSelected? "formpart":"hide"}> 
+                        <label htmlFor="family">
+                                Family
+                            </label>      
+                                <select name="family">
+                                    {families.map((e,ind) => {
+                                        return  <option key={ind} value={e.id}>{e.family_name}</option>
+                                    })}               
+                                </select> 
+                        </div>
+
                         <div className="formpart">
                             <label htmlFor="combination">
                             Combination
@@ -301,11 +355,12 @@ export default function Alumni() {
                             <Select isMulti onChange={handleChangeofEp} options={eps} />
                         </div>
                         
+                        
                     </div>
 
                     <center>
                     <button disabled={!validMother ||  !validMother ? true : false }
-                    >Register</button>
+                    >Next</button>
                     </center>
                 </form>
                 </center>

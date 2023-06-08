@@ -23,7 +23,12 @@ export const COLUMNS = [
   },
   {
     Header: "Grade",
-    accessor: "info",
+    accessor: "grade",
+  },
+  
+  {
+    Header: "Family",
+    accessor: "family",
   },
   {
     Header: "Action",

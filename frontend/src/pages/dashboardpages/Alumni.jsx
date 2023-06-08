@@ -39,7 +39,8 @@ export default function Alumni() {
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,
-                info:element.profile==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:"Edit Info",
+                grade:element.profile==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:"Grade",
+                family:element.profile==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:"Family",
                 user_id:<span>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
