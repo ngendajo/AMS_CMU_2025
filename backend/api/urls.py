@@ -12,6 +12,7 @@ urlpatterns = [
     path('registercrc/', views.CrcRegistrationView.as_view(), name='auth_registercrc'),
     path('registeradmin/', views.AdminRegistrationView.as_view(), name='auth_registeradmin'),
     path('registera/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
+    path('registera/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('registerstaff/', views.StaffRegistrationView.as_view(), name='auth_registerstaff'),
     path('deleteuser/<str:pk>/delete/', views.delete_user, name='delete-user'),
     path('updateuser/<str:pk>', views.update_user, name='update-user'),

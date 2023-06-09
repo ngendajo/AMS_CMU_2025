@@ -6,11 +6,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import AlumniSerializer,AlumniRegistrationSerializer,CrcSerializer,StaffRegistrationSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,GradeSerializer,FamilySerializer,CombinationSerializer,FamilyRegistrationSerializers,CombinationRSerializer,EpRSerializer,EpSerializer,AllGradeSerializer
+from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,CrcSerializer,StaffRegistrationSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,GradeSerializer,FamilySerializer,CombinationSerializer,FamilyRegistrationSerializers,CombinationRSerializer,EpRSerializer,EpSerializer,AllGradeSerializer
 from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
 from .models import User
 from django.contrib.auth import get_user_model
-
+from rest_framework.exceptions import NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -67,6 +67,7 @@ class AluminiRegistrationView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
         
 class StaffRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -161,6 +162,22 @@ def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     user.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def create_alumni_info(request):
+    serializer = AlumniInfoRegSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    alumni_info = serializer.save()
+    for ep_id in request.data.get('Eps'):
+        try:
+            ep = Ep.objects.get(id=ep_id)
+            alumni_info.Eps.add(ep)
+        except Ep.DoesNotExist:
+            raise NotFound()
+
+    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         
 #End CRC data 
 
@@ -286,11 +303,7 @@ class EpRegistrationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        """ serializer = EpRSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """ 
+         
     def get(self,request):
          # checking for the parameters from the URL
         if request.query_params:
@@ -304,9 +317,7 @@ class EpRegistrationView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        """ grades=Ep.objects.all()
-        serializer = EpSerializer(grades, many=True)
-        return Response(serializer.data) """
+        
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

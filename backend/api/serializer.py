@@ -1,10 +1,25 @@
 from rest_framework import serializers
 from userprofile.models import CrcProfile
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep
+from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
+
+    #EP data serialisers
+class EpSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ep
+        fields = ('id','title','type')
+
+class EpRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ep
+        fields = ('title','type')
+
+    
+    #end
 
 #User management serializers
 class CrcListSerializer(serializers.ModelSerializer):
@@ -42,9 +57,18 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
 
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CrcProfile
+        model = Alumni
         fields = '__all__'
         depth = 1
+
+        
+
+class AlumniInfoRegSerializer(serializers.ModelSerializer):
+    Eps = EpSerializer(many=True, read_only=True)
+    class Meta:
+        model = Alumni
+        fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
+
 
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
@@ -141,22 +165,6 @@ class CombinationRSerializer(serializers.ModelSerializer):
 #end
     
 
-    #EP data serialisers
-class EpSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ep
-        fields = '__all__'
-
-class EpRSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ep
-        fields = ('title','type')
-
-    """ def create(self, validated_data):
-        ep = Ep.objects.create(**validated_data)
-        return ep """
-    
-    #end
 
 #Grades and families data serializers
 
