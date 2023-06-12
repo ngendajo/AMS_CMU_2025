@@ -45,7 +45,7 @@ class AdminRegistrationView(APIView):
         
 
 class AluminiRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -66,7 +66,7 @@ class AluminiRegistrationView(APIView):
             serializer = AlumniSerializer(user, many=True)
             return Response(serializer.data)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
         
 class StaffRegistrationView(APIView):
@@ -177,7 +177,7 @@ def create_alumni_info(request):
         except Ep.DoesNotExist:
             raise NotFound()
 
-    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    return Response( status=status.HTTP_201_CREATED)
         
 #End CRC data 
 

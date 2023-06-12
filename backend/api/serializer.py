@@ -59,7 +59,7 @@ class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
         fields = '__all__'
-        depth = 1
+        depth = 2
 
         
 
@@ -72,11 +72,11 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
 
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
-    profile = AlumniListSerializer()
+    alumn = AlumniListSerializer()
 
     class Meta:
         model = User
-        fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','profile')
+        fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','alumn')
         extra_kwargs = {'password': {'write_only': True}}
     
 class AlumniRegistrationSerializer(serializers.ModelSerializer):
