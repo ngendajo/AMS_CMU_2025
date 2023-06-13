@@ -121,9 +121,12 @@ export default function AddGrade() {
                                 />
                                 <button variant="secondary" onClick={() => handleRemoveFamilies(index)}>Remove</button>
                             </div>
+
                         </div>
                         )
                         })}
+
+                        
                 </div>
                     <button variant="primary" onClick={() => handleAddFamilies()}>Add a family</button>
                             
