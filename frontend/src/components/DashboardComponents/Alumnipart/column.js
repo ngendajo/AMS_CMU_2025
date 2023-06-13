@@ -22,6 +22,10 @@ export const COLUMNS = [
     accessor: "last_name",
   },
   {
+    Header: "Phone",
+    accessor: "phone",
+  },
+  {
     Header: "Grade",
     accessor: "grade",
   },

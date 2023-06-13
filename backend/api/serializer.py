@@ -13,30 +13,21 @@ class EpSerializer(serializers.ModelSerializer):
         model = Ep
         fields = ('id','title','type')
 
-class EpRSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ep
-        fields = ('title','type')
-
     
     #end
 
 #User management serializers
-class CrcListSerializer(serializers.ModelSerializer):
+class CrcSerializer(serializers.ModelSerializer):
     class Meta:
         model = CrcProfile
         fields = '__all__'
         depth = 1
 
 
-class CrcSerializer(serializers.ModelSerializer):
-    class Meta: 
-        model = CrcProfile
-        fields = ('position',)
 
 class AdminSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
-    profile = CrcListSerializer()
+    profile = CrcSerializer()
 
     class Meta:
         model = User
@@ -84,7 +75,7 @@ class AlumniRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User 
-        fields = ('email','first_name','last_name','phone1', 'password','image_url')
+        fields = ('id','email','first_name','last_name','phone1', 'password','image_url')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -153,14 +144,6 @@ class CombinationSerializer(serializers.ModelSerializer):
         model = Combination
         fields = '__all__'
 
-class CombinationRSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Combination
-        fields = ('combination_name',)
-
-    """ def create(self, validated_data):
-        combination = Combination.objects.create(**validated_data)
-        return combination """
 
 #end
     
@@ -175,7 +158,7 @@ class FamilyRSerializers(serializers.ModelSerializer):
         depth = 1 
         
 
-class FamilyRegistrationSerializers(serializers.ModelSerializer):
+class GradeSerializers(serializers.ModelSerializer):
     family=FamilyRSerializers(many=True,required=False)
 
     class Meta:

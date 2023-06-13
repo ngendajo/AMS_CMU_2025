@@ -39,6 +39,7 @@ export default function Alumni() {
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,
+                phone:element.phone1,
                 grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.grade.grade_name,
                 family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.family_name,
                 user_id:<span>

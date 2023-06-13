@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,CrcSerializer,StaffRegistrationSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,CrcListSerializer,PasswordChangeSerializer,GradeSerializer,FamilySerializer,CombinationSerializer,FamilyRegistrationSerializers,CombinationRSerializer,EpRSerializer,EpSerializer,AllGradeSerializer
+from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,CrcSerializer,StaffRegistrationSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,PasswordChangeSerializer,GradeSerializer,FamilySerializer,CombinationSerializer,GradeSerializers,EpSerializer,AllGradeSerializer
 from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
 from .models import User
 from django.contrib.auth import get_user_model
@@ -111,7 +111,7 @@ class CrcRegistrationView(APIView):
     
         # if there is something in items else raise error
         if crc:
-            serializer = CrcListSerializer(crc, many=True)
+            serializer = CrcSerializer(crc, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -233,10 +233,10 @@ def getRoutes(request):
 
 #families and grades views
 
-class GradeRegistrationView(APIView):
+class GradeView(APIView):
     permission_classes = [IsAuthenticated, ]
     def post(self, request):
-        serializer = FamilyRegistrationSerializers(data=request.data)
+        serializer = GradeSerializers(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -290,10 +290,10 @@ def delete_grade(request, pk):
 
     #Ep data means art,sport, sciences and clubs CRUD
     
-class EpRegistrationView(APIView):
+class EpView(APIView):
     permission_classes = [IsAuthenticated, ]
     def post(self, request):
-        serializer = EpRSerializer(data=request.data)
+        serializer = EpSerializer(data=request.data)
         # validating for already existing data
         if Ep.objects.filter(**request.data).exists():
             raise serializers.ValidationError('This data already exists')
@@ -323,7 +323,7 @@ class EpRegistrationView(APIView):
 @permission_classes([IsAuthenticated])
 def update_Ep(request, pk):
     ep = Ep.objects.get(pk=pk)
-    data = EpRSerializer(instance=ep, data=request.data)
+    data = EpSerializer(instance=ep, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -345,7 +345,7 @@ def delete_ep(request, pk):
 class CombinationRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
     def post(self, request):
-        serializer = CombinationRSerializer(data=request.data)
+        serializer = CombinationSerializer(data=request.data)
         # validating for already existing data
         if Combination.objects.filter(**request.data).exists():
             raise serializers.ValidationError('This data already exists')
@@ -374,7 +374,7 @@ class CombinationRegistrationView(APIView):
 @permission_classes([IsAuthenticated])
 def update_Comb(request, pk):
     comb = Combination.objects.get(pk=pk)
-    data = CombinationRSerializer(instance=comb, data=request.data)
+    data = CombinationSerializer(instance=comb, data=request.data)
  
     if data.is_valid():
         data.save()
