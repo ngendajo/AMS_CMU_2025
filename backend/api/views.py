@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,StaffRoleSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,StaffUserSerializer, StaffUserRegistrationSerializer,PasswordChangeSerializer,FamilySerializer,CombinationSerializer,GradeSerializers,EpSerializer
-from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
+from .serializer import *
+from userprofile.models import *
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
@@ -339,5 +339,172 @@ def update_Comb(request, pk):
 def delete_comb(request, pk):
     comb = get_object_or_404(Combination, pk=pk)
     comb.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#end
+
+
+
+# Event data view
+
+class EventView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = EventSerializer(data=request.data)
+        # validating for already existing data
+        if Event.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            eve = Event.objects.filter(**request.query_params.dict())
+        else:
+            eve = Event.objects.all()
+    
+        # if there is something in items else raise error
+        if eve:
+            serializer = EventSerializer(eve, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_Event(request, pk):
+    eve = Event.objects.get(pk=pk)
+    data = UpdateEventSerializer(instance=eve, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_eve(request, pk):
+    eve = get_object_or_404(Event, pk=pk)
+    eve.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#end
+
+
+
+# Opportunity data view
+class OpportunityView(APIView):
+    def post(self, request):
+        serializer = OppoSerializer(data=request.data)
+        # validating for already existing data
+        if Opportunity.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            oppo = Opportunity.objects.filter(**request.query_params.dict())
+        else:
+            oppo = Opportunity.objects.all()
+    
+        # if there is something in items else raise error
+        if oppo:
+            serializer = OppoSerializer(oppo, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+
+def update_Oppo(request, pk):
+    oppo = Opportunity.objects.get(pk=pk)
+    data = UpdateOppoSerializer(instance=oppo, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def approve_oppo(request, pk):
+    oppo = Opportunity.objects.get(pk=pk)
+    data = ApproveOppoSerializer(instance=oppo, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_oppo(request, pk):
+    oppo = get_object_or_404(Opportunity, pk=pk)
+    oppo.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#end
+
+
+
+
+# Studie data view
+class OpportunityView(APIView):
+    def post(self, request):
+        serializer = StudieSerializer(data=request.data)
+        # validating for already existing data
+        if Studie.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            stud = Studie.objects.filter(**request.query_params.dict())
+        else:
+            stud = Studie.objects.all()
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = StudieSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+
+def update_studie(request, pk):
+    stud = Studie.objects.get(pk=pk)
+    data = UpdateStudieSerializer(instance=stud, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_studie(request, pk):
+    stud = get_object_or_404(Studie, pk=pk)
+    stud.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 #end

@@ -69,6 +69,9 @@ class Alumni(models.Model):
     place_of_birth = models.CharField(max_length=50)
     CurrResidence = models.CharField(max_length=50)
 
+    def __str__(self):
+        return str(self.user)
+
 
 #Employment model
 class Employment(models.Model):
@@ -93,6 +96,9 @@ class Opportunity(models.Model):
     description = models.CharField(max_length=200)
     approved = models.BooleanField
     postTime = models.DateTimeField
+
+    def __str__(self):
+        return str(self.title)
 
 #Event model
 class Event(models.Model):
@@ -121,4 +127,7 @@ class Studie(models.Model):
         ('C', 'Completed'),
 	)
     status = models.CharField(max_length=2, choices=Statuss)
+
+    def __str__(self):
+        return str(self.alumn+self.university)
 

@@ -7,7 +7,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep
+from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Event
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -107,3 +107,7 @@ class CombinationAdmin(ImportExportModelAdmin):
 @admin.register(Ep)
 class EpAdmin(ImportExportModelAdmin):
     list_display =('id','title','type')
+
+@admin.register(Event)
+class EventAdmin(ImportExportModelAdmin):
+    list_display =('id','description','date')

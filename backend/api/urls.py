@@ -27,5 +27,7 @@ urlpatterns = [
     path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
     path('ep/<int:pk>/delete/', views.delete_ep, name='delete-items'),
     path('updateep/<int:pk>/', views.update_Ep, name='update-eps'),
+    path('event/', views.EventView.as_view()),
+    path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
     path('', views.getRoutes)
 ]

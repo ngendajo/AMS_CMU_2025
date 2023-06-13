@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni
+from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni,Event, Opportunity
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -144,7 +144,6 @@ class AlumniRegistrationSerializer(serializers.ModelSerializer):
         return user
     
 
-
 #Update user
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -169,6 +168,43 @@ class PasswordChangeSerializer(serializers.Serializer):
         return value
     
 
-    
+#Event seralizers
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('__all__')
+
+class UpdateEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('title','description','date')
+
+
+
+#Opportunity seralizers
+
+class OppoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ('__all__')
+
+class UpdateOppoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ('description','approved','postTime')
+
+class ApproveOppoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ('approved',)
+
+
+
+
+
+
+
+
 
 
