@@ -12,6 +12,7 @@ export default function AddGrade() {
     const [grade, setGrade]=useState([]);
     const navigate = useNavigate();
     const params = useParams();
+    const [family, setFamily] = useState([])
     const [families, setFamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: '',id:0  }])
     
 
@@ -112,7 +113,6 @@ export default function AddGrade() {
         })
       };
     
-      const [family, setFamily] = useState([{ family: '', number: '',mother: '', mother_tel: ''  }])
       const handleRemoveFamily = (index) => {
         const values = [...family];
         values.splice(index, 1);
@@ -215,7 +215,7 @@ export default function AddGrade() {
                         </label>
                         )
                         })}
-                        {family.map((input, index) => {
+                        {family?.map((input, index) => {
                             return (
                                 <div key={index} className="family-info">
                                     <span>New Family{index +1}:</span>
@@ -256,15 +256,15 @@ export default function AddGrade() {
                                         handleInputChanges(index, event)
                                             }
                                         />
-                                        <button variant="secondary" onClick={() => handleRemoveFamily(index)}>Remove</button>
-                                        <button variant="secondary" onClick={() => handleAddFamily()}>Add a family</button>
+                                        <span className="addfamily" variant="secondary" onClick={() => handleRemoveFamily(index)}>Remove</span>
+                                        
                                     </div>
                                     
                                 </div>
                                 )
                                 })}
                 </div>
-                
+                <span className="addfamily" variant="secondary" onClick={() => handleAddFamily()}>Add a family</span>
             </form>
             <p>
                  <Link onClick={handleDeletegrade} className="line" to="#">Delete Grade</Link>
