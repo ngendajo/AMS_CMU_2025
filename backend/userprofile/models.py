@@ -131,3 +131,10 @@ class Studie(models.Model):
     def __str__(self):
         return str(self.alumn+self.university)
 
+# Story model
+class Story(models.Model):
+    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='studie')
+    description = models.CharField(max_length=5000)
+
+    def __str__(self):
+        return str(self.alumn+"story")
