@@ -13,7 +13,7 @@ export default function AddGrade() {
     const navigate = useNavigate();
     const params = useParams();
     const [families, setFamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: '',id:0  }])
-    const [addfamilies, setAddfamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: ''  }])
+    
 
     
     useEffect(() =>{
@@ -112,27 +112,28 @@ export default function AddGrade() {
         })
       };
     
-      const handleAddFamilies = () => {
-        const values = [...addfamilies];
-        values.push({
-            family_name: '', 
-            family_number: '',
-            family_mother: '', 
-            family_mother_tel: ''
-        });
-        setAddfamilies(values);
-      };
-      const handleRemoveFamilies = (index) => {
-        const values = [...addfamilies];
+      const [family, setFamily] = useState([{ family: '', number: '',mother: '', mother_tel: ''  }])
+      const handleRemoveFamily = (index) => {
+        const values = [...family];
         values.splice(index, 1);
-        setAddfamilies(values); 
+        setFamily(values); 
       };
       const handleInputChanges = (index, event) => {
-        const values = [...addfamilies];
+        const values = [...family];
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
     
-        setAddfamilies(values);
+        setFamily(values);
+      };
+      const handleAddFamily = () => {
+        const values = [...family];
+        values.push({
+            family: '', 
+            number: '',
+            mother: '', 
+            mother_tel: ''
+        });
+        setFamily(values);
       };
   return (
     <div className='alumni-list-body'>
@@ -214,10 +215,10 @@ export default function AddGrade() {
                         </label>
                         )
                         })}
-                        {addfamilies.map((input, index) => {
+                        {family.map((input, index) => {
                             return (
                                 <div key={index} className="family-info">
-                                    <span>Family{index +1}:</span>
+                                    <span>New Family{index +1}:</span>
                                     <div className="family-info-input">
                                         <input
                                         type='text'
@@ -252,16 +253,18 @@ export default function AddGrade() {
                                         placeholder='Family mother tel'
                                         value={input.family_mother_tel}
                                         onChange={(event) =>
-                                        handleInputChange(index, event)
+                                        handleInputChanges(index, event)
                                             }
                                         />
-                                        <button variant="secondary" onClick={() => handleRemoveFamilies(index)}>Remove</button>
+                                        <button variant="secondary" onClick={() => handleRemoveFamily(index)}>Remove</button>
+                                        <button variant="secondary" onClick={() => handleAddFamily()}>Add a family</button>
                                     </div>
                                     
                                 </div>
                                 )
                                 })}
                 </div>
+                
             </form>
             <p>
                  <Link onClick={handleDeletegrade} className="line" to="#">Delete Grade</Link>
