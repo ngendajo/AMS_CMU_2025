@@ -52,10 +52,28 @@ class Ep(models.Model):
     def __str__(self):
         return str(self.title)
     
+    
+#Alumn model
+
+class Alumni(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
+    marital_status= models.CharField(max_length=50)
+    gender = models.CharField(max_length=50)
+    Family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
+    Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
+    Eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
+    #employments= models.ManyToManyField(Employment, related_name="employments")
+    kids = models.BooleanField
+    father = models.CharField(max_length=50)
+    mother = models.CharField(max_length=50)
+    place_of_birth = models.CharField(max_length=50)
+    CurrResidence = models.CharField(max_length=50)
+
 
 #Employment model
 class Employment(models.Model):
     title = models.CharField(max_length=50)
+    alumn = models.OneToOneField(Alumni, on_delete=models.CASCADE, related_name='emproyement')
     emps = (
 		('W', 'working'),
 		('P', 'past'),
@@ -66,22 +84,6 @@ class Employment(models.Model):
     
     def __str__(self):
         return str(self.title)
-    
-#Alumn model
-
-class Alumni(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
-    marital_status= models.CharField(max_length=50)
-    gender = models.CharField(max_length=50)
-    Family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
-    Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
-    Eps = models.ManyToManyField(Ep, related_name="alumnis")
-    employments= models.ManyToManyField(Employment, related_name="employments")
-    kids = models.BooleanField
-    father = models.CharField(max_length=50)
-    mother = models.CharField(max_length=50)
-    place_of_birth = models.CharField(max_length=50)
-    CurrResidence = models.CharField(max_length=50)
 
 
 #Opportunity model

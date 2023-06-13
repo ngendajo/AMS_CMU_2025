@@ -1,11 +1,11 @@
 import {useState,useEffect} from "react";
-import { useParams } from 'react-router'
+import { useParams } from 'react-router';
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Deleteuser = () => {
+const DeleteAlumni = () => {
   const [userid, setUserid]=useState([]);
   const { auth } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Deleteuser = () => {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/registera/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -23,6 +23,7 @@ const Deleteuser = () => {
                     withCredentials:true
                 });
                 setUserid(response.data)
+                console.log(response.data)
             }catch(err) {
                 console.log(err);
             }
@@ -41,7 +42,7 @@ const Deleteuser = () => {
           }
       }
       )
-      navigate("/staff")
+      navigate("/alumni")
     };
     
   return (
@@ -51,7 +52,7 @@ const Deleteuser = () => {
             return <div key={id} className="delete-message"> <h1>Do you want to delete  {result.first_name} {result.last_name} with {result.email} as 
             email?
             </h1>
-            <Link to="/staff" className="not">No</Link> 
+            <Link to="/alumni" className="not">No</Link> 
             <span onClick={()=>handleDelete(result.id)} className="yes">Yes</span>
             </div>
         }
@@ -61,4 +62,4 @@ const Deleteuser = () => {
   )
 }
 
-export default Deleteuser
+export default DeleteAlumni

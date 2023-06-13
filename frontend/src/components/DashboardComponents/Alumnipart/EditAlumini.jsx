@@ -12,13 +12,12 @@ const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
 const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
 
-export default function EditCrc() {
+export default function EditAlumini() {
     const { auth } = useAuth();
     const params = useParams();
     
     const [currentfile, setCurrentfile] = useState();
     const [msg, setMsg] = useState("");
-    const [editposition, setEditposition] = useState(false);
 
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(false);
@@ -42,7 +41,7 @@ export default function EditCrc() {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -56,7 +55,6 @@ export default function EditCrc() {
                     setLast_name(result.last_name);
                     setPhone1(result.phone1);
                     setCurrentfile(result.image_url);
-                    setEditposition(result.profile ? true:false);
                 })
             }catch(err) {
                 console.log(err);
@@ -194,14 +192,8 @@ export default function EditCrc() {
      <section className="form">
         <div className="updateactivities">
             <p>
-                <Link className="lines" to="/staff">Go back</Link>
+                <Link className="lines" to="/alumni">Go back</Link>
             </p>
-            {editposition ?
-                <p>
-                    <Link className="lines" to={'/add-crc/p/'+params.id}>Update Position</Link>
-                </p>
-                :null
-            }
             {/* <p>
                 <Link className="lines" to={'/add-crc/ps/'+params.id}>Update Password</Link>
             </p> */}
