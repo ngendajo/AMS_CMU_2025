@@ -119,7 +119,7 @@ const Registera = () => {
         formData.append('phone1',phone1);
         formData.append('password',"Agahozo@12");
         formData.append('image_url',image.image_url);
-        const response = await axios.post("http://127.0.0.1:8000/api/alumni/",
+        const response = await axios.post("http://127.0.0.1:8000/api/registera/",
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -128,8 +128,8 @@ const Registera = () => {
                 withCredentials:true
             }
             );
-            console.log(response.data.id)
-            navigate("/add-alumni/info/"+response.data.id)
+            console.log(response.data)
+            navigate("/alumni")
             //clear input fields
     }catch(err){
         if (!err?.response) {
@@ -288,7 +288,7 @@ const Registera = () => {
 
                     <center>
                     <button disabled={!validFirst_name || !validEmail || !validLast_name || !validPhone1 ? true : false }
-                    >Save and Continue</button>
+                    >Register</button>
                     </center>
                 </form>
                 <p>

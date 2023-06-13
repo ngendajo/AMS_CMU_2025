@@ -11,7 +11,6 @@ import { Table } from '../../components/DashboardComponents/Alumnipart/Table';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoIosAdd } from "react-icons/io";
-import { AiOutlineFileAdd } from "react-icons/ai";
 
 
 export default function Alumni() {
@@ -23,7 +22,7 @@ export default function Alumni() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
+            const response = await axios.get('http://127.0.0.1:8000/api/registera/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -34,18 +33,12 @@ export default function Alumni() {
             var i=1
             response.data.forEach(element => {
               alumnilist.push({
-                id:i, 
-                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
+                id:i,
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,
-                phone:element.phone1,
-                grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.grade.grade_name,
-                family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.family_name,
-                user_id:<span>
-                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
-                </span>
+                info:element.profile==null? "Add Info":"Edit Info",
+                user_id:<button className='updateUser' value={element.id}><BiEditAlt/><RiDeleteBin5Line/></button>
               })
               i+=1
             });

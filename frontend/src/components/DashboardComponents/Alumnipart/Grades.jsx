@@ -24,6 +24,7 @@ export const Grades = () => {
                     },
                     withCredentials:true
                 });
+                console.log(response.data);
                 setResults1(response.data);
                 setResults(response.data);
             }catch(err) {
@@ -80,7 +81,7 @@ export const Grades = () => {
                     <p>End Academic Year:{result.end_academic_year}</p>
                     <h3>Families</h3>
                     <ol>
-                        {result.families?.map((fa,i)=>{
+                        {result.families.map((fa,i)=>{
                             return <li key={i}>{fa.family_name}
                             <ul className='family-detail'>
                                 <li>Mother:{fa.family_mother}</li>

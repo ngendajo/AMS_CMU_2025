@@ -35,9 +35,6 @@ import Deletecombination from './components/DashboardComponents/Alumnipart/Delet
 import { Eps } from './components/DashboardComponents/Alumnipart/Eps';
 import AddEp from './components/DashboardComponents/Alumnipart/AddEp';
 import EditEp from './components/DashboardComponents/Alumnipart/EditEp';
-import EditAlumini from './components/DashboardComponents/Alumnipart/EditAlumini';
-import DeleteAlumni from './components/DashboardComponents/Alumnipart/DeleteAlumni';
-import AddMoreInfoAlumni from './components/DashboardComponents/Alumnipart/AddMoreInfoAlumni';
 
 
 function App() {
@@ -84,9 +81,6 @@ function App() {
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                     {/* alumni crud */}
                     <Route path='add-alumni' element={<Registera />}/>
-                    <Route path='add-alumni/:id' element={<EditAlumini />}/>
-                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}/>
-                    <Route path='delete-alumni/:id' element={<DeleteAlumni/>}/>
                     <Route path='grades' element={<Grades />}/>
                     <Route path='add-grade' element={<AddGrade />}/>
                     <Route path='add-grade/:id' element={<EditGrade />}/>
