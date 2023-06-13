@@ -21,7 +21,7 @@
 
 .form input[type="text"],
 .form input[type="email"],
-.form input[type="password"], .form button {
+.form input[type="password"], .form button,.form select {
   font-family: 'Nunito', sans-serif;
   font-size: 16px;
   padding: 0.25rem;
@@ -91,4 +91,10 @@
     font-size: 16px;
     padding: 0.3rem;
     border-radius: 5px;
+}
+.level{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

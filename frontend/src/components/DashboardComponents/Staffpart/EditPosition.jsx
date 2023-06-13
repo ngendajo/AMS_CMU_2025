@@ -23,7 +23,7 @@ export default function EditPosition() {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/?id='+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

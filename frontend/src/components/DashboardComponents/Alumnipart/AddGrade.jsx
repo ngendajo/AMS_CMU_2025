@@ -18,7 +18,7 @@ export default function AddGrade() {
             'grade_name':e.target.grade_name.value, 
             'start_academic_year':e.target.start_academic_year.value,
             'end_academic_year':e.target.end_academic_year.value,
-            'family':families
+            'families':families
         },
         {
             headers: {
@@ -121,9 +121,12 @@ export default function AddGrade() {
                                 />
                                 <button variant="secondary" onClick={() => handleRemoveFamilies(index)}>Remove</button>
                             </div>
+
                         </div>
                         )
                         })}
+
+                        
                 </div>
                     <button variant="primary" onClick={() => handleAddFamilies()}>Add a family</button>
                             
