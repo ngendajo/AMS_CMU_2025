@@ -13,6 +13,8 @@ export default function AddGrade() {
     const navigate = useNavigate();
     const params = useParams();
     const [families, setFamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: '',id:0  }])
+    const [addfamilies, setAddfamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: ''  }])
+
     
     useEffect(() =>{
     
@@ -106,11 +108,32 @@ export default function AddGrade() {
         }
         ).then(res =>{
             console.log(res)
-            navigate('/grades')
+            navigate('/grades') 
         })
       };
     
-
+      const handleAddFamilies = () => {
+        const values = [...addfamilies];
+        values.push({
+            family_name: '', 
+            family_number: '',
+            family_mother: '', 
+            family_mother_tel: ''
+        });
+        setAddfamilies(values);
+      };
+      const handleRemoveFamilies = (index) => {
+        const values = [...addfamilies];
+        values.splice(index, 1);
+        setAddfamilies(values); 
+      };
+      const handleInputChanges = (index, event) => {
+        const values = [...addfamilies];
+        const updatedValue = event.target.name;
+        values[index][updatedValue] = event.target.value;
+    
+        setAddfamilies(values);
+      };
   return (
     <div className='alumni-list-body'>
         <p>

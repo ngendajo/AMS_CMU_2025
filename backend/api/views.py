@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,CrcSerializer,StaffRegistrationSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,AdminSerializer,AdminRegistrationSerializer, CrcRegistrationSerializer,PasswordChangeSerializer,GradeSerializer,FamilySerializer,CombinationSerializer,GradeSerializers,EpSerializer,AllGradeSerializer
+from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,StaffRoleSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,StaffUserSerializer, StaffUserRegistrationSerializer,PasswordChangeSerializer,GradeSerializer,FamilySerializer,CombinationSerializer,GradeSerializers,EpSerializer
 from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
 from .models import User
 from django.contrib.auth import get_user_model
@@ -17,32 +17,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 User = get_user_model()
 # Create your views here.
 
-#CRC data
-
-class AdminRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    def post(self, request):
-        print(request.data)
-        serializer = AdminRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self,request):
-        if request.query_params:
-            user=User.objects.filter(**request.query_params.dict(),is_alumni=False)
-        else:
-            user = User.objects.filter(is_alumni=False)
-    
-        # if there is something in items else raise error
-        if user:
-            serializer = AdminSerializer(user, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
+#User data
 
 class AluminiRegistrationView(APIView):
     #permission_classes = [IsAuthenticated, ]
@@ -69,34 +44,11 @@ class AluminiRegistrationView(APIView):
             return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
         
-class StaffRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    def post(self, request):
-        print(request.data)
-        serializer = StaffRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self,request):
-        if request.query_params:
-            user=User.objects.filter(**request.query_params.dict(),is_alumni=False)
-        else:
-            user = User.objects.filter(is_alumni=False)
-    
-        # if there is something in items else raise error
-        if user:
-            serializer = AdminSerializer(user, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
-class CrcRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+class StaffUserView(APIView):
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
-        serializer = CrcRegistrationSerializer(data=request.data)
+        serializer = StaffUserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -105,13 +57,13 @@ class CrcRegistrationView(APIView):
     
     def get(self,request):
         if request.query_params:
-            crc=CrcProfile.objects.filter(**request.query_params.dict())
+            crc=User.objects.filter(**request.query_params.dict(),is_alumni=False)
         else:
-            crc = CrcProfile.objects.all()
+            crc = User.objects.filter(is_alumni=False)
     
         # if there is something in items else raise error
         if crc:
-            serializer = CrcSerializer(crc, many=True)
+            serializer = StaffUserSerializer(crc, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -147,7 +99,7 @@ def update_user_image(request, pk):
 @permission_classes([IsAuthenticated])
 def update_user_position(request, pk):
     user = CrcProfile.objects.get(user_id=pk)
-    data = CrcSerializer(instance=user, data=request.data)
+    data = StaffRoleSerializer(instance=user, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -250,7 +202,7 @@ class GradeView(APIView):
     
         # if there is something in items else raise error
         if grades:
-            serializer = AllGradeSerializer(grades, many=True)
+            serializer = GradeSerializers(grades, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -259,7 +211,7 @@ class GradeView(APIView):
 @permission_classes([IsAuthenticated])
 def update_grade(request, pk):
     grade = Grade.objects.get(pk=pk)
-    data = GradeSerializer(instance=grade, data=request.data)
+    data = GradeSerializers(instance=grade, data=request.data)
  
     if data.is_valid():
         data.save()
