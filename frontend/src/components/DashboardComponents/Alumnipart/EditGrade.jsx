@@ -13,8 +13,6 @@ export default function AddGrade() {
     const navigate = useNavigate();
     const params = useParams();
     const [families, setFamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: '',id:0  }])
-    const [addfamilies, setAddfamilies] = useState([{ family_name: '', family_number: '',family_mother: '', family_mother_tel: ''  }])
-
     
     useEffect(() =>{
     
@@ -108,32 +106,11 @@ export default function AddGrade() {
         }
         ).then(res =>{
             console.log(res)
-            navigate('/grades') 
+            navigate('/grades')
         })
       };
     
-      const handleAddFamilies = () => {
-        const values = [...addfamilies];
-        values.push({
-            family_name: '', 
-            family_number: '',
-            family_mother: '', 
-            family_mother_tel: ''
-        });
-        setAddfamilies(values);
-      };
-      const handleRemoveFamilies = (index) => {
-        const values = [...addfamilies];
-        values.splice(index, 1);
-        setAddfamilies(values); 
-      };
-      const handleInputChanges = (index, event) => {
-        const values = [...addfamilies];
-        const updatedValue = event.target.name;
-        values[index][updatedValue] = event.target.value;
-    
-        setAddfamilies(values);
-      };
+
   return (
     <div className='alumni-list-body'>
         <p>
@@ -214,53 +191,6 @@ export default function AddGrade() {
                         </label>
                         )
                         })}
-                        {addfamilies.map((input, index) => {
-                            return (
-                                <div key={index} className="family-info">
-                                    <span>Family{index +1}:</span>
-                                    <div className="family-info-input">
-                                        <input
-                                        type='text'
-                                        name='family_name'
-                                        placeholder='Family name'
-                                        value={input.family_name}
-                                        onChange={(event) =>
-                                        handleInputChange(index, event)
-                                        }
-                                        />
-                                        <input
-                                        type='number'
-                                        name='family_number'
-                                        placeholder='Family number'
-                                        value={input.family_number}
-                                        onChange={(event) =>
-                                        handleInputChange(index, event)
-                                        }
-                                        />
-                                        <input
-                                        type='text'
-                                        name='family_mother'
-                                        placeholder='Family mother'
-                                        value={input.family_mother}
-                                        onChange={(event) =>
-                                        handleInputChange(index, event)
-                                        }
-                                        />
-                                        <input
-                                        type='text'
-                                        name='family_mother_tel'
-                                        placeholder='Family mother tel'
-                                        value={input.family_mother_tel}
-                                        onChange={(event) =>
-                                        handleInputChange(index, event)
-                                            }
-                                        />
-                                        <button variant="secondary" onClick={() => handleRemoveFamilies(index)}>Remove</button>
-                                    </div>
-                                    
-                                </div>
-                                )
-                                })}
                 </div>
             </form>
             <p>

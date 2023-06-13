@@ -45,9 +45,8 @@ export default function AddEp() {
                 <label>
                     Type:
                     <select name='type'>
-                        <option value="A">Arts</option>
-                        <option value="C">Clubs</option>
-                        <option value="S">Sports</option>
+                        <option value="A">Art</option>
+                        <option value="C">Club</option>
                         <option value="SC">Sciences</option>
                     </select>
                 </label>
