@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { CiCircleRemove } from "react-icons/ci";
 import './register.css'
 
 export default function AddGrade() {
@@ -119,7 +120,7 @@ export default function AddGrade() {
                                 handleInputChange(index, event)
                                     }
                                 />
-                                <button variant="secondary" onClick={() => handleRemoveFamilies(index)}>Remove</button>
+                                <button variant="secondary" onClick={() => handleRemoveFamilies(index)}><CiCircleRemove/></button>
                             </div>
 
                         </div>
