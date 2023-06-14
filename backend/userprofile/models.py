@@ -109,7 +109,7 @@ class Event(models.Model):
     def __str__(self):
         return str(self.title)
     
-
+#Studie model
 class Studie(models.Model):
     alumn = models.OneToOneField(Alumni, on_delete=models.CASCADE, related_name='studie')
     degree = models.CharField(max_length=50)
@@ -133,7 +133,7 @@ class Studie(models.Model):
 
 # Story model
 class Story(models.Model):
-    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='studie')
+    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='stories')
     description = models.CharField(max_length=5000)
 
     def __str__(self):

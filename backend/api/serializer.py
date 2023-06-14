@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni,Event, Opportunity
+from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni,Event, Opportunity, Story
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -115,6 +115,8 @@ class GradeSerializers(serializers.ModelSerializer):
     
 #End of grades andfamilies  
 
+# Alumni data serializers
+
 class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
@@ -181,24 +183,13 @@ class UpdateEventSerializer(serializers.ModelSerializer):
         fields = ('title','description','date')
 
 
+#Story serializers
 
-#Opportunity seralizers
 
-class OppoSerializer(serializers.ModelSerializer):
+class StorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Opportunity
+        model = Story
         fields = ('__all__')
-
-class UpdateOppoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Opportunity
-        fields = ('description','approved','postTime')
-
-class ApproveOppoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Opportunity
-        fields = ('approved',)
-
 
 
 

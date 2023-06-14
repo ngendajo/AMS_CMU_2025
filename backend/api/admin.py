@@ -7,7 +7,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Event
+from userprofile.models import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -56,18 +56,18 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = ('email','id', 'password','first_name','last_name','phone1','image_url')
 
-    def clean_password(self):
-        return self.initial["password"]
+    #def clean_password(self):
+    #    return self.initial["password"]
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('email','id','first_name','last_name','phone1','is_active','is_staff','is_superuser','is_crc','is_alumni','image_url')
+    list_display = ('email','password','id','first_name','last_name','phone1','is_active','is_staff','is_superuser','is_crc','is_alumni','image_url')
     list_filter = ('is_superuser', )
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password',)}),
         ('Permissions', {'fields': ('is_superuser',)}),
         ('First Name', {'fields': ('first_name', )}),
         ('Last Name', {'fields': ('last_name', )}),
@@ -111,3 +111,11 @@ class EpAdmin(ImportExportModelAdmin):
 @admin.register(Event)
 class EventAdmin(ImportExportModelAdmin):
     list_display =('id','description','date')
+
+@admin.register(Story)
+class StoryAdmin(ImportExportModelAdmin):
+    list_display =('id','description')
+
+@admin.register(Alumni)
+class AlumniAdmin(ImportExportModelAdmin):
+    list_display =('id','gender')
