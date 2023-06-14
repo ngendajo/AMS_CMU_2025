@@ -6,6 +6,9 @@ import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import './register.css'
+import { CiCircleRemove } from "react-icons/ci";
+import { BiSave } from "react-icons/bi";
+import { BsFillHouseAddFill } from "react-icons/bs";
 
 export default function AddGrade() {
     const {auth} = useAuth();
@@ -112,11 +115,54 @@ export default function AddGrade() {
             navigate('/grades') 
         })
       };
+
+      const handleRemovesavedFamily =(index,id) =>{
+        axios.delete('http://127.0.0.1:8000/api/family/'+id+'/delete/',
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+        ).then(res =>{
+            console.log(res)
+            const values = [...families];
+            values.splice(index, 1);
+            setFamilies(values); 
+        })
+        
+      };
     
       const handleRemoveFamily = (index) => {
         const values = [...family];
         values.splice(index, 1);
         setFamily(values); 
+      };
+      const handleSaveFamily = () =>{
+        console.log(family);
+        family.forEach((f)=>{
+            axios.post('http://127.0.0.1:8000/api/addfamilies/', {
+                grade:f.grade,
+                family_name:f.family_name,
+                family_number:f.family_number,
+                family_mother:f.family_mother,
+                family_mother_tel:f.family_mother_tel
+            },
+            {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'application/json'
+                }
+            }
+        )
+        .then(res =>{
+            console.log(res)
+            navigate('/grades')
+        })
+        .catch(error => console.log(error))
+        })
+            
+            
       };
       const handleInputChanges = (index, event) => {
         const values = [...family];
@@ -128,10 +174,11 @@ export default function AddGrade() {
       const handleAddFamily = () => {
         const values = [...family];
         values.push({
-            family: '', 
-            number: '',
-            mother: '', 
-            mother_tel: ''
+            grade:params.id,
+            family_name: '', 
+            family_number: '',
+            family_mother: '', 
+            family_mother_tel: ''
         });
         setFamily(values);
       };
@@ -211,6 +258,7 @@ export default function AddGrade() {
                                 handleInputChange(index, event)
                                     }
                                 />
+                                <span className="addfamily" variant="secondary" onClick={() => handleRemovesavedFamily(index,input.id)}><CiCircleRemove className="icons"/></span>
                             </div>
                         </label>
                         )
@@ -226,7 +274,7 @@ export default function AddGrade() {
                                         placeholder='Family name'
                                         value={input.family_name}
                                         onChange={(event) =>
-                                        handleInputChange(index, event)
+                                        handleInputChanges(index, event)
                                         }
                                         />
                                         <input
@@ -235,7 +283,7 @@ export default function AddGrade() {
                                         placeholder='Family number'
                                         value={input.family_number}
                                         onChange={(event) =>
-                                        handleInputChange(index, event)
+                                        handleInputChanges(index, event)
                                         }
                                         />
                                         <input
@@ -244,7 +292,7 @@ export default function AddGrade() {
                                         placeholder='Family mother'
                                         value={input.family_mother}
                                         onChange={(event) =>
-                                        handleInputChange(index, event)
+                                        handleInputChanges(index, event)
                                         }
                                         />
                                         <input
@@ -256,7 +304,7 @@ export default function AddGrade() {
                                         handleInputChanges(index, event)
                                             }
                                         />
-                                        <span className="addfamily" variant="secondary" onClick={() => handleRemoveFamily(index)}>Remove</span>
+                                        <span className="addfamily" variant="secondary" onClick={() => handleRemoveFamily(index)}><CiCircleRemove className="icons"/></span>
                                         
                                     </div>
                                     
@@ -264,7 +312,12 @@ export default function AddGrade() {
                                 )
                                 })}
                 </div>
-                <span className="addfamily" variant="secondary" onClick={() => handleAddFamily()}>Add a family</span>
+                <center className="set-icons">
+                    <span className="addfamily" variant="secondary" onClick={() => handleAddFamily()}><BsFillHouseAddFill className="icons"/></span>
+                    {family.length>0 ?
+                    <span className="addfamily" onClick={handleSaveFamily} ><BiSave className="icons"/></span>
+                :null}
+                </center>
             </form>
             <p>
                  <Link onClick={handleDeletegrade} className="line" to="#">Delete Grade</Link>

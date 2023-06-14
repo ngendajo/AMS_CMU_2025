@@ -91,6 +91,7 @@ class FamilySerializer(serializers.ModelSerializer):
         model = Family
         fields=('__all__')
         depth = 1 
+
         
 
 class GradeSerializers(serializers.ModelSerializer):
@@ -113,7 +114,13 @@ class GradeSerializers(serializers.ModelSerializer):
         )
         return grade
     
-#End of grades andfamilies  
+class AddFamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Family
+        fields=('grade','family_name','family_number','family_mother','family_mother_tel')
+    
+    
+#End of grades and families  
 
 class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)

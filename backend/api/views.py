@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-from .serializer import AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,StaffRoleSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,StaffUserSerializer, StaffUserRegistrationSerializer,PasswordChangeSerializer,FamilySerializer,CombinationSerializer,GradeSerializers,EpSerializer
+from .serializer import AddFamilySerializer,AlumniInfoRegSerializer,AlumniSerializer,AlumniRegistrationSerializer,StaffRoleSerializer,UpdateUserImageUrlSerializer,UpdateUserSerializer,StaffUserSerializer, StaffUserRegistrationSerializer,PasswordChangeSerializer,FamilySerializer,CombinationSerializer,GradeSerializers,EpSerializer
 from userprofile.models import CrcProfile,Grade,Family, Combination, Ep
 from .models import User
 from django.contrib.auth import get_user_model
@@ -46,7 +46,7 @@ class AluminiRegistrationView(APIView):
         
 
 class StaffUserView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StaffUserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -116,7 +116,7 @@ def delete_user(request, pk):
     return Response(status=status.HTTP_202_ACCEPTED)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def create_alumni_info(request):
     serializer = AlumniInfoRegSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -236,6 +236,24 @@ def delete_grade(request, pk):
     grade = get_object_or_404(Grade, pk=pk)
     grade.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_family(request, pk):
+    family = get_object_or_404(Family, pk=pk)
+    family.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_families_to_grade(request):
+    data = AddFamilySerializer(data=request.data)
+    if data.is_valid():
+        data.save()
+        return Response(data.data, status=status.HTTP_201_CREATED)
+    else:
+        print(data.errors)
+        return Response(data.errors,status=status.HTTP_404_NOT_FOUND)
 #End
         
     
