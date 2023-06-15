@@ -52,10 +52,28 @@ class Ep(models.Model):
     def __str__(self):
         return str(self.title)
     
+    
+#Alumn model
+
+class Alumni(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
+    marital_status= models.CharField(max_length=50)
+    gender = models.CharField(max_length=50)
+    Family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
+    Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
+    Eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
+    #employments= models.ManyToManyField(Employment, related_name="employments")
+    kids = models.BooleanField
+    father = models.CharField(max_length=50)
+    mother = models.CharField(max_length=50)
+    place_of_birth = models.CharField(max_length=50)
+    CurrResidence = models.CharField(max_length=50)
+
 
 #Employment model
 class Employment(models.Model):
     title = models.CharField(max_length=50)
+    alumn = models.OneToOneField(Alumni, on_delete=models.CASCADE, related_name='emproyement')
     emps = (
 		('W', 'working'),
 		('P', 'past'),
@@ -63,6 +81,7 @@ class Employment(models.Model):
     status = models.CharField(max_length=2, choices=emps)
     description = models.CharField(max_length=200)
     company = models.CharField(max_length=50)
+    start_date= models.DateField(auto_now_add=True)
     
     def __str__(self):
         return str(self.title)
@@ -89,19 +108,23 @@ class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
     title =  models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    approved = models.BooleanField
-    postTime = models.DateTimeField
+    approved = models.BooleanField(default=False)
+    postTime = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.title)
 
 #Event model
 class Event(models.Model):
     title= models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     date = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
 
     def __str__(self):
         return str(self.title)
     
-
+#Studie model
 class Studie(models.Model):
     alumn = models.OneToOneField(Alumni, on_delete=models.CASCADE, related_name='studie')
     degree = models.CharField(max_length=50)
@@ -120,3 +143,14 @@ class Studie(models.Model):
 	)
     status = models.CharField(max_length=2, choices=Statuss)
 
+    def __str__(self):
+        return str(self.alumn.user.first_name+self.university)
+
+# Story model
+class Story(models.Model):
+    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='stories')
+    description = models.CharField(max_length=5000)
+    displayed=models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.alumn+"story")

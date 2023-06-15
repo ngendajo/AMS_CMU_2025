@@ -10,7 +10,7 @@ import Dropzone from "react-dropzone";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
-const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
+const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
 const Registera = () => {
     const {auth} = useAuth()

@@ -92,3 +92,23 @@
     padding: 0.3rem;
     border-radius: 5px;
 }
+.level{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.addfamily{
+    border-radius: 5px;
+    padding: 5px;
+    width: 40px;
+    cursor: pointer;
+    margin-right: 3px;
+}
+.addfamily .icons{
+    font-size: 20px;
+}
+.set-icons{
+    display: flex;
+    
+}
