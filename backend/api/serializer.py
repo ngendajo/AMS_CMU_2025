@@ -1,42 +1,61 @@
 from rest_framework import serializers
-from userprofile.models import CrcProfile
 from api.models import User
 from userprofile.models import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 #User management serializers
-class CrcListSerializer(serializers.ModelSerializer):
+
+#managing staff serializers
+class StaffRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = CrcProfile
-        fields = '__all__'
-        depth = 1
+        fields = ('__all__')
+        depth = 2
 
-
-class CrcSerializer(serializers.ModelSerializer):
-    class Meta: 
-        model = CrcProfile
-        fields = ('position',)
-
-class AdminSerializer(serializers.ModelSerializer):
+class StaffUserSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
-    profile = CrcListSerializer()
+    profile = StaffRoleSerializer()
 
     class Meta:
         model = User
         fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','profile')
         extra_kwargs = {'password': {'write_only': True}}
-class AdminRegistrationSerializer(serializers.ModelSerializer):
+
+class StaffUserRegistrationSerializer(serializers.ModelSerializer):
+    profile = serializers.CharField()
+    level = serializers.CharField(required=False)
     image_url =serializers.ImageField(required=False)
 
     class Meta:
-        model = User 
-        fields = ('email','first_name','last_name','phone1', 'password','image_url')
+        model = User
+        fields = ('email','first_name','last_name','phone1', 'password','profile','image_url','level')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_superuser(**validated_data)
+        profile_data = validated_data.pop('profile')
+        level_data = validated_data.pop('level')
+        print(level_data)
+        if(level_data=="is_crc"):
+            user = User.objects.create_crcuser(**validated_data)
+            CrcProfile.objects.create(
+                user=user,
+                position=profile_data,
+            )
+        elif(level_data=="is_superuser"):
+            user = User.objects.create_superuser(**validated_data)
+            CrcProfile.objects.create(
+                user=user,
+                position=profile_data,
+            )
+        else:
+            user = User.objects.create_staffuser(**validated_data)
+            CrcProfile.objects.create(
+                user=user,
+                position=profile_data,
+            )
         return user
     
     #End managing staff
@@ -111,11 +130,11 @@ class AlumniListSerializer(serializers.ModelSerializer):
         depth = 2
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
-    profile = AlumniListSerializer()
+    alumn = AlumniListSerializer()
 
     class Meta:
         model = User
-        fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','profile')
+        fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','alumn')
         extra_kwargs = {'password': {'write_only': True}}
     
 class AlumniRegistrationSerializer(serializers.ModelSerializer):
@@ -123,20 +142,13 @@ class AlumniRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User 
-        fields = ('email','first_name','last_name','phone1', 'password','image_url')
+        fields = ('id','email','first_name','last_name','phone1', 'password','image_url')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User.objects.create_alumniuser(**validated_data)
         return user
     
-class StaffRegistrationSerializer(serializers.ModelSerializer):
-    image_url =serializers.ImageField(required=False)
-
-    class Meta:
-        model = User 
-        fields = ('email','first_name','last_name','phone1', 'password','image_url')
-        extra_kwargs = {'password': {'write_only': True}}
 
 #Update user
 class UpdateUserSerializer(serializers.ModelSerializer):
@@ -149,27 +161,6 @@ class UpdateUserImageUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('image_url',)
-
-
-
-class CrcRegistrationSerializer(serializers.ModelSerializer):
-    profile = serializers.CharField()
-    image_url =serializers.ImageField(required=False)
-
-    class Meta:
-        model = User
-        fields = ('email','first_name','last_name','phone1', 'password','profile','image_url')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        profile_data = validated_data.pop('profile')
-        user = User.objects.create_crcuser(**validated_data)
-        CrcProfile.objects.create(
-            user=user,
-            position=profile_data,
-        )
-        return user
-    
 
     #User login serialisers
 
@@ -222,27 +213,3 @@ class EmploymentSerializer(serializers.ModelSerializer):
 
 
 
-class FamilySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Family
-        fields = '__all__'
-        depth = 1 
-
-class GradeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Grade
-        fields = '__all__'
-
-class AllFamilySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Family
-        fields ='__all__'
-        depth=1
-
-class AllGradeSerializer(serializers.ModelSerializer):
-    families=AllFamilySerializer(read_only=True,many=True)
-    class Meta:
-        model = Grade
-        fields ='__all__'
-    
-    #End
