@@ -199,6 +199,14 @@ class StorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Story
         fields = ('__all__')
+
+
+#Opportunity serializers
+
+class OpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ('__all__')
     
 
     

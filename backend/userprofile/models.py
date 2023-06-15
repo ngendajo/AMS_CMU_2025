@@ -95,11 +95,12 @@ class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
     title =  models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    approved = models.BooleanField
-    postTime = models.DateTimeField
+    approved = models.BooleanField(default=False)
+    postTime = models.DateTimeField(auto_now_add=True,null=True)
 
 #Event model
 class Event(models.Model):
+    user = models.ForeignKey(User,default=1, on_delete=models.CASCADE, related_name='event')
     title= models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     date = models.DateField()
