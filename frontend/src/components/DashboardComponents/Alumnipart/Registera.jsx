@@ -119,7 +119,7 @@ const Registera = () => {
         formData.append('phone1',phone1);
         formData.append('password',"Agahozo@12");
         formData.append('image_url',image.image_url);
-        const response = await axios.post("http://127.0.0.1:8000/api/registera/",
+        const response = await axios.post("http://127.0.0.1:8000/api/alumni/",
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),

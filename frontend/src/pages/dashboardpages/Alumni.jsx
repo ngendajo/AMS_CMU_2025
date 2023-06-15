@@ -22,7 +22,7 @@ export default function Alumni() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/registera/',{
+            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
