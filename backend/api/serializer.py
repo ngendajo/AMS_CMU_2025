@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni,Event, Opportunity, Story
+from userprofile.models import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -197,6 +197,16 @@ class StorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Story
         fields = ('__all__')
+
+
+#Employment serializers
+
+class EmploymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('__all__')
+
+
 
 
 

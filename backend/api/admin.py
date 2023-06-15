@@ -119,3 +119,11 @@ class StoryAdmin(ImportExportModelAdmin):
 @admin.register(Alumni)
 class AlumniAdmin(ImportExportModelAdmin):
     list_display =('id','gender')
+
+@admin.register(Studie)
+class StudieAdmin(ImportExportModelAdmin):
+    list_display=('id','university')
+
+@admin.register(Employment)
+class EmploymentAdmin(ImportExportModelAdmin):
+    list_display=('id','title')
