@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import CrcProfile,Grade,Family,Combination,Ep,Alumni
+from userprofile.models import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -77,13 +77,6 @@ class CombinationSerializer(serializers.ModelSerializer):
 
 #end combination serilizer
 
-
-class AlumniListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Alumni
-        fields = '__all__'
-        depth = 2
-
 #Grades and families data serializers
 
 class FamilySerializer(serializers.ModelSerializer):
@@ -128,7 +121,11 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
         model = Alumni
         fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
 
-
+class AlumniListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alumni
+        fields = '__all__'
+        depth = 2
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
     alumn = AlumniListSerializer()
@@ -174,6 +171,34 @@ class PasswordChangeSerializer(serializers.Serializer):
         if not self.context['request'].user.check_password(value):
             raise serializers.ValidationError({'current_password': 'Does not match'})
         return value
+    
+
+#Event seralizers
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('__all__')
+
+class UpdateEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('title','description','date')
+
+#Employment serializers
+
+class EmploymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields = ('__all__')
+
+#Story serializers
+
+
+class StorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = ('__all__')
     
 
     

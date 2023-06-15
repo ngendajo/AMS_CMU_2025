@@ -26,8 +26,13 @@ urlpatterns = [
     path('combination/<int:pk>/delete/', views.delete_comb, name='delete-comb'),
     path('combination/<int:pk>/', views.update_Comb, name='update_comb'),
     path('ep/',views.EpView.as_view()),
-    path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
     path('ep/<int:pk>/delete/', views.delete_ep, name='delete-items'),
     path('updateep/<int:pk>/', views.update_Ep, name='update-eps'),
+    path('employment/',views.EmploymentView.as_view()),
+    path('employment/<int:pk>/delete/', views.delete_employment, name='delete-items'),
+    path('updateemployment/<int:pk>/', views.update_Employment, name='update-employment'),
+    path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
+    path('event/', views.EventView.as_view()),
+    path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
     path('', views.getRoutes)
 ]
