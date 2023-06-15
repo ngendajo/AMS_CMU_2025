@@ -115,6 +115,8 @@ class AddFamilySerializer(serializers.ModelSerializer):
     
 #End of grades and families  
 
+# Alumni data serializers
+
 class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
@@ -147,7 +149,6 @@ class AlumniRegistrationSerializer(serializers.ModelSerializer):
         user = User.objects.create_alumniuser(**validated_data)
         return user
     
-
 
 #Update user
 class UpdateUserSerializer(serializers.ModelSerializer):
@@ -185,12 +186,6 @@ class UpdateEventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('title','description','date')
 
-#Employment serializers
-
-class EmploymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Employment
-        fields = ('__all__')
 
 #Story serializers
 
@@ -201,14 +196,20 @@ class StorySerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 
-#Opportunity serializers
+#Employment serializers
 
-class OpportunitySerializer(serializers.ModelSerializer):
+class EmploymentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Opportunity
-        fields = ('__all__')
-    
+        model = Employment
+        fields=('__all__')
 
-    
+
+
+
+
+
+
+
+
 
 

@@ -8,6 +8,8 @@ from rest_framework import serializers
 from rest_framework.views import APIView 
 from .serializer import *
 from userprofile.models import *
+from .serializer import *
+from userprofile.models import *
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
