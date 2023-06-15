@@ -3,6 +3,8 @@
 # pycache
 *.pyc 
 # production
+/backend/api/migrations
+/backend/userprofile/migrations
 
 
 
