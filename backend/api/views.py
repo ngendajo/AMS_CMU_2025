@@ -20,7 +20,7 @@ User = get_user_model()
 #User data
 
 class AluminiRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -360,12 +360,10 @@ def delete_comb(request, pk):
     return Response(status=status.HTTP_202_ACCEPTED)
 #end
 
-
-
 # Event data view
 
 class EventView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         # validating for already existing data
@@ -392,8 +390,8 @@ class EventView(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['POST','GET'])
-#@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def update_Event(request, pk):
     eve = Event.objects.get(pk=pk)
     data = UpdateEventSerializer(instance=eve, data=request.data)
@@ -405,7 +403,7 @@ def update_Event(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_eve(request, pk):
     eve = get_object_or_404(Event, pk=pk)
     eve.delete()
@@ -462,10 +460,9 @@ def delete_story(request, pk):
     return Response(status=status.HTTP_202_ACCEPTED)
 #end
 
-
-
-# Employment data view
+#Employment view
 class EmploymentView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EmploymentSerializer(data=request.data)
         # validating for already existing data
@@ -477,26 +474,27 @@ class EmploymentView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+         
     def get(self,request):
          # checking for the parameters from the URL
         if request.query_params:
-            emp = Employment.objects.filter(**request.query_params.dict())
+            employment = Employment.objects.filter(**request.query_params.dict())
         else:
-            emp = Employment.objects.all()
+            employment = Employment.objects.all()
     
         # if there is something in items else raise error
-        if emp:
-            serializer = StorySerializer(emp, many=True)
+        if employment:
+            serializer = EmploymentSerializer(employment, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
 
 @api_view(['POST'])
-
-def update_employment(request, pk):
-    emp = Employment.objects.get(pk=pk)
-    data = EmploymentSerializer(instance=emp, data=request.data)
+@permission_classes([IsAuthenticated])
+def update_Employment(request, pk):
+    employment = Employment.objects.get(pk=pk)
+    data = EmploymentSerializer(instance=employment, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -504,11 +502,9 @@ def update_employment(request, pk):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_employment(request, pk):
-    emp = get_object_or_404(Employment, pk=pk)
-    emp.delete()
+    employment = get_object_or_404(Employment, pk=pk)
+    employment.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
-#end

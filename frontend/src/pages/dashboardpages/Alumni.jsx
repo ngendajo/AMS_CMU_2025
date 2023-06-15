@@ -16,7 +16,7 @@ import { AiOutlineFileAdd } from "react-icons/ai";
 
 export default function Alumni() {
   const [data, setData] = useState([]);
-  const [category, setCategory] = useState(1);
+  const [category, setCategory] = useState(7);
   const {auth} = useAuth();
 
   useEffect(() =>{
@@ -62,6 +62,10 @@ export default function Alumni() {
   return (
     <div>
         <div className='alumni-list-heading'>
+
+        <div className={category===7? "displayed":"notdisplayed"} onClick={()=>setCategory(7)}>
+            <span>ASYV Info</span>
+          </div>
          
           <div className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
             <span>Higher Institutions</span>

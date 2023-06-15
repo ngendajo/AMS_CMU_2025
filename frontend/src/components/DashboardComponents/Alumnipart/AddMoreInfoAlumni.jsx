@@ -12,9 +12,10 @@ import axios from "axios";
 import { useParams } from 'react-router';
 import "../forms.css";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 
-const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
+const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
 
 export default function Alumni() {
@@ -28,6 +29,7 @@ export default function Alumni() {
   let [families, setFamilies] = useState([]);
   let [eps, setEps] = useState([]);
     let [epsdone, setEpsdone] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() =>{
     
@@ -122,12 +124,6 @@ export default function Alumni() {
     const [mother, setMother] = useState('');
     const [validMother, setValidMother] = useState(false);
     const [motherFocus, setMotherFocus] = useState(false);  
-
-    /* const [place_of_birth, setPlace_of_birth] = useState('');
-    
-    const [currResidence, setCurrResidence] = useState(''); 
-
-    const [errMsg, setErrMsg] = useState(''); */
     
     useEffect(() => {
         fatherRef.current.focus();
@@ -150,7 +146,7 @@ export default function Alumni() {
     
       const getuser = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/registera/?id='+params.id,{
+              const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -169,9 +165,39 @@ export default function Alumni() {
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
+    let ep_ids=[];
+    epsdone.forEach((ep)=>{
+        ep_ids.push(ep.value)
+    })
+    axios.post('http://127.0.0.1:8000/api/registera/info/', {
+        "user":params.id,
+        "marital_status":e.target.marital_status.value,
+        "gender":e.target.gender.value,
+        "Family":e.target.family.value,
+        "Combination":e.target.combination.value,
+        "Eps":ep_ids,
+        "kids":e.target.kids.value,
+        "father":father,
+        "mother":mother,
+        "place_of_birth":e.target.place_of_birth.value,
+        "CurrResidence":e.target.currResidence.value
+        },
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+    )
+    .then(res =>{
+        console.log(res)
+        alert(" created successfully")
+        navigate('/alumni')
+    })
+    .catch(error => console.log(error.response.data))
+     
 
   }
-
   return (
     <div>
         <div className='alumni-list-heading'>
@@ -205,7 +231,9 @@ export default function Alumni() {
           <center>
           {
           userid.map((result, id)=>{
-              return <div key={id} className="delete-message"> <h1>Add ASYV Info for  {result.first_name} {result.last_name} with {result.email} as 
+              return <div key={id} className="delete-message"> 
+              <img src={"http://localhost:8000"+result.image_url} alt="logo" className="user-image-icon" />
+              <h1>Add ASYV Info for  {result.first_name} {result.last_name} with {result.email} as 
               email
               </h1>
               </div>
@@ -246,7 +274,7 @@ export default function Alumni() {
                             </p>
                         </div>
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="mother_name">
                                 Mother Name
                                 <span className={validMother ? "valid" : "hide"}>
                                     <FontAwesomeIcon icon={faCheck}/>
@@ -263,11 +291,11 @@ export default function Alumni() {
                             onChange={(e) => setMother(e.target.value)}
                             required
                             aria-invalid={validMother? "false":"true"}
-                            aria-describedby="last_namenote"
+                            aria-describedby="mother_namenote"
                             onFocus={() => setMotherFocus(true)}
                             onBlur={() => setMotherFocus(false)}
                             />
-                            <p id="last_namenote" className={motherFocus && mother && !validMother ? "instructions" : "offscreen"}>
+                            <p id="mother_namenote" className={motherFocus && mother && !validMother ? "instructions" : "offscreen"}>
                                 <FontAwesomeIcon icon={faInfoCircle}/>
                                 2 to 50 characters. <br/>
                                 Letters allowed.
@@ -275,7 +303,7 @@ export default function Alumni() {
                         </div>
 
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="marital_status">
                                 Marital Status
                             </label>
                             <select name="marital_status">
@@ -286,7 +314,7 @@ export default function Alumni() {
                             </select>
                         </div>
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="gender">
                                 Gender
                             </label>
                             <select name="gender">
@@ -295,24 +323,24 @@ export default function Alumni() {
                             </select>
                         </div>
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="place_of_birth">
                                 Place of origin
                             </label>
                             <input type="text" name="place_of_birth" />
                         </div>
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="currResidence">
                                 Current Residence
                             </label>
                             <input type="text" name="currResidence" />
                         </div>
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="kids">
                                 Do you have kids
                             </label>
                             <select name="kids">
-                              <option value="yes">Yes</option>
-                              <option value="no">No</option>
+                              <option value="false">Yes</option>
+                              <option value="true">No</option>
                             </select>
                         </div>
 
@@ -349,7 +377,7 @@ export default function Alumni() {
                             </select>
                         </div>
                         <div className="formpart">
-                            <label htmlFor="last_name">
+                            <label htmlFor="eps">
                                 Eps done
                             </label>
                             <Select isMulti onChange={handleChangeofEp} options={eps} />

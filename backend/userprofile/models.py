@@ -78,12 +78,16 @@ class Employment(models.Model):
     title = models.CharField(max_length=50)
     alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='employement')
     emps = (
-		('W', 'working'),
-		('P', 'past'),
+		('F', 'Full-time'),
+		('P', 'Part-time'),
+        ('S', 'Self-employed'),
+        ('I', 'Intern'),
     )
     status = models.CharField(max_length=2, choices=emps)
     description = models.CharField(max_length=200)
     company = models.CharField(max_length=50)
+    start_date = models.CharField(max_length=50,default="")
+    end_date = models.CharField(max_length=50, default="Up to now")
     
     def __str__(self):
         return str(self.title)
@@ -94,14 +98,12 @@ class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
     title =  models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    approved = models.BooleanField(default=False)
-    postTime = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.title)
+    approved = models.BooleanField
+    postTime = models.DateTimeField
 
 #Event model
 class Event(models.Model):
+    user = models.ForeignKey(User,default=1, on_delete=models.CASCADE, related_name='event')
     title= models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     date = models.DateField()
@@ -129,14 +131,6 @@ class Studie(models.Model):
 	)
     status = models.CharField(max_length=2, choices=Statuss)
 
-    def __str__(self):
-        return str(self.alumn.user.first_name+self.university)
-
-# Story model
-class Story(models.Model):
-    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='stories')
-    description = models.CharField(max_length=5000)
-    displayed=models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.alumn+"story")

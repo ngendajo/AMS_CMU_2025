@@ -14,7 +14,6 @@ export default function AddGrade() {
 
     let registerGrade = (e )=> {
         e.preventDefault()
-        console.log(families);
         axios.post('http://127.0.0.1:8000/api/grades/', {
             'grade_name':e.target.grade_name.value, 
             'start_academic_year':e.target.start_academic_year.value,

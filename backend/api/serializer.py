@@ -77,13 +77,6 @@ class CombinationSerializer(serializers.ModelSerializer):
 
 #end combination serilizer
 
-
-class AlumniListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Alumni
-        fields = '__all__'
-        depth = 2
-
 #Grades and families data serializers
 
 class FamilySerializer(serializers.ModelSerializer):
@@ -130,7 +123,11 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
         model = Alumni
         fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
 
-
+class AlumniListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alumni
+        fields = '__all__'
+        depth = 2
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
     alumn = AlumniListSerializer()
