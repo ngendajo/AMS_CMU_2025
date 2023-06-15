@@ -69,9 +69,6 @@ class Alumni(models.Model):
     place_of_birth = models.CharField(max_length=50)
     CurrResidence = models.CharField(max_length=50)
 
-    def __str__(self):
-        return str(self.user)
-
 
 #Employment model
 class Employment(models.Model):
