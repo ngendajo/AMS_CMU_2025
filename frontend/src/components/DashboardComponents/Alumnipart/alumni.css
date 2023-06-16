@@ -16,11 +16,13 @@
     font-size: 13px;
     cursor: pointer;
     padding: 7px;
+    text-decoration: none;
 }
 .notdisplayed{
     color: #3f3f3f;
     font-size: 13px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .alumni-header-right{

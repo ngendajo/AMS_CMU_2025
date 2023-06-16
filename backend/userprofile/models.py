@@ -75,13 +75,19 @@ class Employment(models.Model):
     title = models.CharField(max_length=50)
     alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='employement')
     emps = (
-		('W', 'working'),
-		('P', 'past'),
+		('F', 'Full-time'),
+		('P', 'Part-time'),
+        ('S', 'Self-employed'),
+        ('I', 'Intern'),
     )
     status = models.CharField(max_length=2, choices=emps)
     description = models.CharField(max_length=200)
     company = models.CharField(max_length=50)
-    start_date= models.DateField(auto_now_add=True)
+    start_date = models.CharField(max_length=50,default="")
+    end_date = models.CharField(max_length=50, default="Up to now")
+    
+    def __str__(self):
+        return str(self.title)
     
     def __str__(self):
         return str(self.title)
