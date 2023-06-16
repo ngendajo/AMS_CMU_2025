@@ -190,10 +190,19 @@ class UpdateEventSerializer(serializers.ModelSerializer):
 #Story serializers
 
 
-class StorySerializer(serializers.ModelSerializer):
+class StoryWithAlumnSerializer(serializers.ModelSerializer):
+
+    alumn=AlumniListSerializer(read_only=True)
+    
     class Meta:
         model = Story
-        fields = ('__all__')
+        fields = ('id','alumn','description','displayed')
+
+class StorySerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Story
+        fields = ('id','alumn','description','displayed')
 
 class UpdateStorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -209,9 +218,16 @@ class DisplayStorySerializer(serializers.ModelSerializer):
 
 #Studie serializers
 
-class StudieSerializer(serializers.ModelSerializer):
+class StudieWithAlumnSerializer(serializers.ModelSerializer):
 
     alumn = serializers.StringRelatedField(many=False)
+
+    class Meta:
+        model = Studie
+        fields = ('id','alumn','degree','university','country','scholarship','status')
+
+
+class StudieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Studie

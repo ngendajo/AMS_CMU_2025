@@ -434,7 +434,7 @@ class StoryView(APIView):
     
         # if there is something in items else raise error
         if story:
-            serializer = StorySerializer(story, many=True)
+            serializer = StoryWithAlumnSerializer(story, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -550,7 +550,7 @@ class StudieView(APIView):
     
         # if there is something in items else raise error
         if stud:
-            serializer = StudieSerializer(stud, many=True)
+            serializer = StudieWithAlumnSerializer(stud, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
