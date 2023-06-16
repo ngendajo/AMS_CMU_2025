@@ -169,7 +169,7 @@ export default function Alumni() {
     epsdone.forEach((ep)=>{
         ep_ids.push(ep.value)
     })
-    axios.post('http://127.0.0.1:8000/api/registera/info/', {
+    axios.post('http://127.0.0.1:8000/api/alumni/info/', {
         "user":params.id,
         "marital_status":e.target.marital_status.value,
         "gender":e.target.gender.value,
