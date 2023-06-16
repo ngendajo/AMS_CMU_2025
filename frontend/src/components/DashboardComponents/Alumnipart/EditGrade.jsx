@@ -112,7 +112,7 @@ export default function AddGrade() {
         }
         ).then(res =>{
             console.log(res)
-            navigate('/grades')
+            navigate('/grades') 
         })
       };
 

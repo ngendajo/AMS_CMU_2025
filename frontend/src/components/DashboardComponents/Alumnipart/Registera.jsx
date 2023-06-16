@@ -128,8 +128,8 @@ const Registera = () => {
                 withCredentials:true
             }
             );
-            console.log(response.data)
-            navigate("/alumni")
+            console.log(response.data.id)
+            navigate("/add-alumni/info/"+response.data.id)
             //clear input fields
     }catch(err){
         if (!err?.response) {
@@ -288,7 +288,7 @@ const Registera = () => {
 
                     <center>
                     <button disabled={!validFirst_name || !validEmail || !validLast_name || !validPhone1 ? true : false }
-                    >Register</button>
+                    >Save and Continue</button>
                     </center>
                 </form>
                 <p>

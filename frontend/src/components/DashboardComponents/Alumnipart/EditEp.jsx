@@ -12,7 +12,7 @@ export default function EditEp() {
     const [title, setTitle] = useState("");
     const [type, setType] = useState("");
     const navigate = useNavigate();
-    const [types, setTypes] = useState([{'Art':'A','Clubs':'C','Science':'SC','d':'A'}]);
+    const [types, setTypes] = useState([{'Art':'A','Clubs':'C','Sports':'S','Science':'SC','d':'A'}]);
     let {auth}= useAuth();
     const params = useParams();
 
@@ -64,7 +64,7 @@ export default function EditEp() {
                 let data=response.data;
                 setTitle(data[0].title);
                 setType(data[0].type)
-                setTypes([{'Art':'A','Clubs':'C','Science':'SC','d':data[0].type}])
+                setTypes([{'Art':'A','Clubs':'C','Sports':'S','Science':'SC','d':data[0].type}])
             }catch(err) {
                 console.log(err);
             }
@@ -93,13 +93,16 @@ export default function EditEp() {
                             Ep type:
                             
                                 {types.map((t,i)=>{
-                                   return <select name='type' onChange={event => setType(event.target.value)}>
+                                   return <select key={i} name='type' onChange={event => setType(event.target.value)}>
 
                                         {t.d===t.Art ? <option value={t.Art} selected>Art</option>
                                         :<option value={t.Art}>Art</option>}
 
                                         {t.d===t.Clubs ? <option value={t.Clubs} selected>Clubs</option>
                                         :<option value={t.Clubs}>Clubs</option>}
+
+                                        {t.d===t.Sports ? <option value={t.Sports} selected>Sports</option>
+                                        :<option value={t.Sports}>Sports</option>}
 
                                         {t.d===t.Science ? <option value={t.Science} selected>Science</option>
                                         :<option value={t.Science}>Science</option>}

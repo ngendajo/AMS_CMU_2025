@@ -30,10 +30,14 @@ export const Eps = ({ id }) => {
                 response.data.forEach(e=>{
                 var t=""
                 if(e.type==="A"){
-                    t="Art"
+                    t="Arts"
                 }else if(e.type==="S"){
-                    t="Sport"
-                }else{
+                    t="Sports"
+                }
+                else if(e.type==="C"){
+                    t="Clubs"
+                }
+                else{
                     t="Sciences"
                 }
                 eplist.push({
