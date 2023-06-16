@@ -7,7 +7,7 @@ import "../forms.css";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
+const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
 export default function EditPosition() {
     const { auth } = useAuth();
@@ -23,7 +23,7 @@ export default function EditPosition() {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/?id='+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

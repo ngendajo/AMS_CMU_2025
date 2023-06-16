@@ -10,7 +10,7 @@ import Dropzone from "react-dropzone";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
-const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
+const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 const PWD_REGIX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const Register = () => {
@@ -19,6 +19,13 @@ const Register = () => {
     const [image, setImage] = useState(null);
     const current = new Date();
     const [file, setFile] = useState();
+    const [level, setLevel] = useState("is_staff")
+
+    const onOptionChange = e => {
+        setLevel(e.target.value)
+      }
+
+      console.log(level);
 
     const [selectedFiles, setSelectedFiles] = useState(undefined);
 
@@ -149,7 +156,8 @@ const Register = () => {
         formData.append('password',pwd);
         formData.append('profile',position);
         formData.append('image_url',image.image_url);
-        const response = await axios.post("http://127.0.0.1:8000/api/registercrc/",
+        formData.append('level',level);
+        const response = await axios.post("http://127.0.0.1:8000/api/staff/",
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -179,7 +187,7 @@ const Register = () => {
                 <p ref={errRef} className={errMsg ? "errmsg" :"offscreen"} aria-live="assertive">
                     {errMsg}
                 </p>
-               <center> <h1>Add CRC Staff</h1></center>
+               <center> <h1>Add Staff</h1></center>
                 <form onSubmit={handleSubmit}>
                 <center>
                 <img className="img-for-profile" src={file} alt="" />
@@ -402,6 +410,41 @@ const Register = () => {
                             <FontAwesomeIcon icon={faInfoCircle}/>
                             Must match the password input field.
                         </p>
+                        </div>
+                        <div className="formpart">
+                            <label>Select level</label>
+                            <span className="level">
+                                <input
+                                type="radio"
+                                name="level"
+                                value="is_staff"
+                                id="is_staff"
+                                checked={level === "is_staff"}
+                                onChange={onOptionChange}
+                                />
+                                <label htmlFor="is_staff">Normal Staff</label>
+
+                                <input
+                                type="radio"
+                                name="level"
+                                value="is_crc"
+                                id="is_crc"
+                                checked={level === "is_crc"}
+                                onChange={onOptionChange}
+                                />
+                                <label htmlFor="is_crc">CRC Staff</label>
+
+                                <input
+                                type="radio"
+                                name="level"
+                                value="is_superuser"
+                                id="is_superuser"
+                                checked={level === "is_superuser"}
+                                onChange={onOptionChange}
+                                />
+                                <label htmlFor="is_superuser">Admin</label>
+                            </span>
+
                         </div>
                     </div>
 
