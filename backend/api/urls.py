@@ -11,7 +11,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
     path('alumni/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
-    path('registera/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
+    path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('deleteuser/<str:pk>/delete/', views.delete_user, name='delete-user'),
     path('updateuser/<str:pk>', views.update_user, name='update-user'),
     path('updateuserimage/<str:pk>', views.update_user_image, name='update-userimage'),
@@ -34,7 +34,6 @@ urlpatterns = [
     path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
     path('event/', views.EventView.as_view()),
     path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
-    path('event/', views.EventView.as_view()),
-    path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
+    path('deleteevent/<int:pk>/delete/', views.delete_eve),
     path('', views.getRoutes)
 ]

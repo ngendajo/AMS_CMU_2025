@@ -19,7 +19,7 @@ export default function Staff() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/',{
+            const response = await axios.get('http://127.0.0.1:8000/api/staff/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'

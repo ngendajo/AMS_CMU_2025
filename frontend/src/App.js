@@ -17,7 +17,7 @@ import Profile from './pages/dashboardpages/Profile';
 import Help from './pages/dashboardpages/Help';
 import Register from './components/DashboardComponents/Register';
 import StaffDetails from './components/DashboardComponents/Staffpart/StaffDetails';
-import EditCrc from './components/DashboardComponents/Staffpart/EditCrc';
+import EditStaffUser from './components/DashboardComponents/Staffpart/EditStaffUser';
 import useRefreshToken from './hooks/useRefreshToken';
 import { useEffect } from 'react';
 import useAuth from './hooks/useAuth';
@@ -74,7 +74,7 @@ function App() {
                     <Route path='help' element={<Help />}/>
                     {/* crc crud */}
                     <Route path='add-crc' element={<Register />}/>
-                    <Route path='add-crc/:id' element={<EditCrc />}/>
+                    <Route path='add-crc/:id' element={<EditStaffUser />}/>
                     <Route path='view-crc/:id' element={<StaffDetails />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>

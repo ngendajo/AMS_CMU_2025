@@ -29,7 +29,7 @@ export default function Header() {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/?id='+auth?.user.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+auth?.user.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
