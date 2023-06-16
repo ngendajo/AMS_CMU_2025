@@ -34,7 +34,10 @@ urlpatterns = [
     path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
     path('event/', views.EventView.as_view()),
     path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
-    path('event/', views.EventView.as_view()),
-    path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
+    path('deleteevent/<int:pk>/', views.delete_eve, name='delete-events'),
+    path('story/', views.StoryView.as_view()),
+    path('updatestory/<int:pk>/', views.update_story, name='update-stories'),
+    path('deletestory/<int:pk>/', views.delete_story, name='delete-stories'),
+    path('displaystory/<int:pk>/', views.display_story, name='display-story'),
     path('', views.getRoutes)
 ]

@@ -258,7 +258,7 @@ def add_families_to_grade(request):
         
     
 
-    #Ep data means art,sport, sciences and clubs CRUD
+#Ep data means art,sport, sciences and clubs CRUD
     
 class EpView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -363,7 +363,7 @@ def delete_comb(request, pk):
 # Event data view
 
 class EventView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         # validating for already existing data
@@ -391,7 +391,7 @@ class EventView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def update_Event(request, pk):
     eve = Event.objects.get(pk=pk)
     data = UpdateEventSerializer(instance=eve, data=request.data)
@@ -403,7 +403,7 @@ def update_Event(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def delete_eve(request, pk):
     eve = get_object_or_404(Event, pk=pk)
     eve.delete()
@@ -441,9 +441,24 @@ class StoryView(APIView):
 
 @api_view(['POST'])
 
+#update story is meant for updating the content of the story
+
 def update_story(request, pk):
     story = Story.objects.get(pk=pk)
-    data = StorySerializer(instance=story, data=request.data)
+    data = UpdateStorySerializer(instance=story, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+
+#display story is meant for displaying the story in the front page
+
+def display_story(request, pk):
+    story = Story.objects.get(pk=pk)
+    data = DisplayStorySerializer(instance=story, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -453,7 +468,7 @@ def update_story(request, pk):
     
     
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def delete_story(request, pk):
     story = get_object_or_404(Story, pk=pk)
     story.delete()
@@ -462,7 +477,7 @@ def delete_story(request, pk):
 
 #Employment view
 class EmploymentView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EmploymentSerializer(data=request.data)
         # validating for already existing data

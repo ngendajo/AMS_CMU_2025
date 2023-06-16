@@ -195,6 +195,17 @@ class StorySerializer(serializers.ModelSerializer):
         model = Story
         fields = ('__all__')
 
+class UpdateStorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = ('description',)
+
+class DisplayStorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = ('displayed',)
+
+
 
 #Employment serializers
 
