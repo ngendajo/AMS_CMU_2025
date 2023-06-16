@@ -81,6 +81,7 @@ function App() {
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                     {/* alumni crud */}
                     <Route path='add-alumni' element={<Registera />}/>
+                    <Route path='add-alumni/info/:id' element={<Registera />}/>
                     <Route path='grades' element={<Grades />}/>
                     <Route path='add-grade' element={<AddGrade />}/>
                     <Route path='add-grade/:id' element={<EditGrade />}/>
