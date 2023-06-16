@@ -207,6 +207,22 @@ class DisplayStorySerializer(serializers.ModelSerializer):
 
 
 
+#Studie serializers
+
+class StudieSerializer(serializers.ModelSerializer):
+
+    alumn = serializers.StringRelatedField(many=False)
+
+    class Meta:
+        model = Studie
+        fields = ('id','alumn','degree','university','country','scholarship','status')
+
+class UpdateStudieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Studie
+        fields = ('degree','university','country','scholarship','status')
+
+
 #Employment serializers
 
 class EmploymentSerializer(serializers.ModelSerializer):
