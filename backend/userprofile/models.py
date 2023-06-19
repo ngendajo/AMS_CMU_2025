@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from api.models import User
 
@@ -93,10 +95,10 @@ class Employment(models.Model):
 #Opportunity model
 class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
-    title =  models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     approved = models.BooleanField(default=False)
-    postTime = models.DateTimeField(auto_now_add=True)
+    post_time = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
         return str(self.title)

@@ -7,7 +7,7 @@ class UserManager(BaseUserManager):
 	'''
 	creating a manager for a custom user model
 	'''
-	def create_user(self, email,first_name,last_name,phone1,password,image_url):
+	def create_user(self, email,first_name,last_name,phone1,password=None):
 		"""
 		Create and return a `User` with an email, username and password.
 		"""
@@ -20,20 +20,20 @@ class UserManager(BaseUserManager):
 	        last_name=last_name,
 	        phone1=phone1,
 		)
-		if image_url:
-			user.image_url=image_url
+		# if image_url:
+		# 	user.image_url=image_url
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email,first_name,last_name,phone1,password,image_url):
+	def create_superuser(self, email,first_name,last_name,phone1,password):
 		"""
 		Create and return a `User` with superuser (admin) permissions.
 		"""
 		if password is None:
 			raise TypeError('Superusers must have a password.')
 
-		user = self.create_user(email,first_name,last_name,phone1,password,image_url)
+		user = self.create_user(email,first_name,last_name,phone1,password)
 		user.is_superuser = True
 		user.is_staff = True
 		user.save()

@@ -50,5 +50,11 @@ urlpatterns = [
     path('studie/', views.StudieView.as_view()),
     path('updatestory/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestory/<int:pk>/', views.delete_studie, name='delete-studie'),
+    #opportunity paths
+    path('opportunity/create/', views.create_opportunity, name='create-opportunity'),
+    path('opportunity/', views.read_opportunity, name='read-opportunity'),
+    path('opportunity/<int:pk>/delete/', views.DeleteOpportunityView.as_view(), name='delete-opportunity'),
+    path('opportunity/<int:pk>/update/', views.UpdateOpportunityView.as_view(), name='update-opportunity'),
+    path('opportunity/<int:pk>/approve/', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
     path('', views.getRoutes)
 ]
