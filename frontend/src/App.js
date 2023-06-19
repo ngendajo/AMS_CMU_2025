@@ -40,6 +40,7 @@ import EditAlumini from './components/DashboardComponents/Alumnipart/EditAlumini
 import DeleteAlumni from './components/DashboardComponents/Alumnipart/DeleteAlumni';
 import Employment from './components/DashboardComponents/Alumnipart/alumnireport/Employment';
 import ASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/ASYVInfo';
+import AddASYVInfo from './components/DashboardComponents/Alumnipart/AddASYVInfo';
 
 
 function App() {
@@ -77,6 +78,8 @@ function App() {
                       <Route path='' element={<ASYVInfo />}/>
                       <Route path='employment' element={<Employment />}/>
                       <Route path='grades' element={<Grades />}/>
+                    <Route path='combinations' element={<Combinations />}/>
+                    <Route path='eps' element={<Eps />}/>
                     </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
@@ -90,16 +93,16 @@ function App() {
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                     {/* alumni crud */}
                     <Route path='add-alumni' element={<Registera />}/>
-                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}/>
+                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
+                      <Route path='' element={<AddASYVInfo />}/>
+                    </Route>
                     <Route path='add-alumni/:id' element={<EditAlumini />}/>
                     <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
                     <Route path='add-grade' element={<AddGrade />}/>
                     <Route path='add-grade/:id' element={<EditGrade />}/>
-                    <Route path='combinations' element={<Combinations />}/>
                     <Route path='add-comb' element={<Addcombination />}/>
                     <Route path='add-comb/:id' element={<Editcombination/>}/>
                     <Route path='delete-comb/:id' element={<Deletecombination/>}/>
-                    <Route path='eps' element={<Eps />}/>
                     <Route path='add-ep' element={<AddEp />}/>
                     <Route path='add-ep/:id' element={<EditEp />}/>
                   </Route>

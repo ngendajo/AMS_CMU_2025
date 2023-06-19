@@ -88,9 +88,6 @@ class Employment(models.Model):
     
     def __str__(self):
         return str(self.title)
-    
-    def __str__(self):
-        return str(self.title)
 
 
 #Opportunity model
@@ -129,6 +126,7 @@ class Studie(models.Model):
     Statuss = (
 		('D', 'Dropped_Out'),
 		('S', 'Susepended'),
+        ('O', 'On_going'),
         ('C', 'Completed'),
 	)
     status = models.CharField(max_length=2, choices=Statuss)

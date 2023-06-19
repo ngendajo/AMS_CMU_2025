@@ -112,7 +112,7 @@ export default function AddGrade() {
         }
         ).then(res =>{
             console.log(res)
-            navigate('/grades') 
+            navigate('/alumni/grades') 
         })
       };
 
@@ -157,11 +157,11 @@ export default function AddGrade() {
         )
         .then(res =>{
             console.log(res)
-            navigate('/grades')
+            navigate('/alumni/grades')
         })
         .catch(error => console.log(error))
         })
-            
+             
             
       };
       const handleInputChanges = (index, event) => {
@@ -185,7 +185,7 @@ export default function AddGrade() {
   return (
     <div className='alumni-list-body'>
         <p>
-            <Link className="line" to="/grades">Go back</Link>
+            <Link className="line" to="/alumni/grades">Go back</Link>
         </p>
         <center><h1>Update grade form </h1></center>
         <form className='form-element'>

@@ -68,9 +68,6 @@ export const Eps = ({ id }) => {
                 <div className='add-staff'>
                   <Link to="/add-ep" className='link'>Add Ep</Link><IoIosAdd className='addicon'/>
                 </div>
-                <p>
-                 <Link className="line" to="/alumni">Go back</Link>
-                </p>
               </div>
                 
             <div id='allcombinations'>

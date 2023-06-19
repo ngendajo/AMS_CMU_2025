@@ -24,7 +24,7 @@ export default function AddEp() {
     )
     .then(res =>{
         alert(res.data.title+" created successfully")
-        navigate('/eps')
+        navigate('/alumni/eps')
     })
     .catch(error => console.log(error.response.data))
         
@@ -55,7 +55,7 @@ export default function AddEp() {
                 <center><button type="submit">Save</button></center>
     </form>
     <p>
-        <Link className="line" to="/eps">Go back</Link>
+        <Link className="line" to="/alumni/eps">Go back</Link>
     </p>
     </div>
   )
