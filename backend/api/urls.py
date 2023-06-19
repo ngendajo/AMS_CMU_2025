@@ -48,7 +48,7 @@ urlpatterns = [
     path('displaystory/<int:pk>/', views.display_story, name='display-story'),
     #studie paths
     path('studie/', views.StudieView.as_view()),
-    path('updatestory/<int:pk>/', views.update_studie, name='update-studie'),
-    path('deletestory/<int:pk>/', views.delete_studie, name='delete-studie'),
+    path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
+    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
     path('', views.getRoutes)
 ]
