@@ -78,8 +78,8 @@ function App() {
                       <Route path='' element={<ASYVInfo />}/>
                       <Route path='employment' element={<Employment />}/>
                       <Route path='grades' element={<Grades />}/>
-                    <Route path='combinations' element={<Combinations />}/>
-                    <Route path='eps' element={<Eps />}/>
+                      <Route path='combinations' element={<Combinations />}/>
+                      <Route path='eps' element={<Eps />}/>
                     </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
