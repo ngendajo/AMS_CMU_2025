@@ -187,7 +187,7 @@ const Register = () => {
                 <p ref={errRef} className={errMsg ? "errmsg" :"offscreen"} aria-live="assertive">
                     {errMsg}
                 </p>
-               <center> <h1>Add CRC Staff</h1></center>
+               <center> <h1>Add Staff</h1></center>
                 <form onSubmit={handleSubmit}>
                 <center>
                 <img className="img-for-profile" src={file} alt="" />

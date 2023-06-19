@@ -17,7 +17,7 @@ import Profile from './pages/dashboardpages/Profile';
 import Help from './pages/dashboardpages/Help';
 import Register from './components/DashboardComponents/Register';
 import StaffDetails from './components/DashboardComponents/Staffpart/StaffDetails';
-import EditCrc from './components/DashboardComponents/Staffpart/EditCrc';
+import EditStaffUser from './components/DashboardComponents/Staffpart/EditStaffUser';
 import useRefreshToken from './hooks/useRefreshToken';
 import { useEffect } from 'react';
 import useAuth from './hooks/useAuth';
@@ -35,9 +35,12 @@ import Deletecombination from './components/DashboardComponents/Alumnipart/Delet
 import { Eps } from './components/DashboardComponents/Alumnipart/Eps';
 import AddEp from './components/DashboardComponents/Alumnipart/AddEp';
 import EditEp from './components/DashboardComponents/Alumnipart/EditEp';
+import AddMoreInfoAlumni from './components/DashboardComponents/Alumnipart/AddMoreInfoAlumni';
 import EditAlumini from './components/DashboardComponents/Alumnipart/EditAlumini';
 import DeleteAlumni from './components/DashboardComponents/Alumnipart/DeleteAlumni';
-import AddMoreInfoAlumni from './components/DashboardComponents/Alumnipart/AddMoreInfoAlumni';
+import Employment from './components/DashboardComponents/Alumnipart/alumnireport/Employment';
+import ASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/ASYVInfo';
+import AddASYVInfo from './components/DashboardComponents/Alumnipart/AddASYVInfo';
 
 
 function App() {
@@ -71,30 +74,35 @@ function App() {
                     <Route path='opportunities' element={<Opportunities />}/>
                     <Route path='schedule' element={<Schedule />}/>
                     <Route path='gallery' element={<Gallery />}/>
-                    <Route path='alumni' element={<Alumni />}/>
+                    <Route path='alumni' element={<Alumni />}>
+                      <Route path='' element={<ASYVInfo />}/>
+                      <Route path='employment' element={<Employment />}/>
+                      <Route path='grades' element={<Grades />}/>
+                    <Route path='combinations' element={<Combinations />}/>
+                    <Route path='eps' element={<Eps />}/>
+                    </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
                     <Route path='help' element={<Help />}/>
                     {/* crc crud */}
                     <Route path='add-crc' element={<Register />}/>
-                    <Route path='add-crc/:id' element={<EditCrc />}/>
+                    <Route path='add-crc/:id' element={<EditStaffUser />}/>
                     <Route path='view-crc/:id' element={<StaffDetails />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                     {/* alumni crud */}
                     <Route path='add-alumni' element={<Registera />}/>
+                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
+                      <Route path='' element={<AddASYVInfo />}/>
+                    </Route>
                     <Route path='add-alumni/:id' element={<EditAlumini />}/>
-                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}/>
-                    <Route path='delete-alumni/:id' element={<DeleteAlumni/>}/>
-                    <Route path='grades' element={<Grades />}/>
+                    <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
                     <Route path='add-grade' element={<AddGrade />}/>
                     <Route path='add-grade/:id' element={<EditGrade />}/>
-                    <Route path='combinations' element={<Combinations />}/>
                     <Route path='add-comb' element={<Addcombination />}/>
                     <Route path='add-comb/:id' element={<Editcombination/>}/>
                     <Route path='delete-comb/:id' element={<Deletecombination/>}/>
-                    <Route path='eps' element={<Eps />}/>
                     <Route path='add-ep' element={<AddEp />}/>
                     <Route path='add-ep/:id' element={<EditEp />}/>
                   </Route>

@@ -39,27 +39,27 @@ class UserManager(BaseUserManager):
 		user.save()
 		return user
 
-	def create_crcuser(self,email,first_name,last_name,phone1,image_url,password):
+	def create_crcuser(self,email,first_name,last_name,phone1,password,image_url):
 		if password is None:
 			raise TypeError('CRC staff must have a password')
-		user = self.create_user(email,first_name,last_name,phone1,image_url,password)
+		user = self.create_user(email,first_name,last_name,phone1,password,image_url)
 		user.is_crc = True
 		user.is_staff = True
 		user.save()
 		return user
 
 
-	def create_alumniuser(self,email,first_name,last_name,phone1,image_url,password):
+	def create_alumniuser(self,email,first_name,last_name,phone1,password,image_url):
 		if password is None:
 			raise TypeError('Alumni must have a password')
-		user = self.create_user(email,first_name,last_name,phone1,image_url,password)
+		user = self.create_user(email,first_name,last_name,phone1,password,image_url)
 		user.is_alumni = True
 		user.save()
 		return user
-	def create_staffuser(self,email,first_name,last_name,phone1,image_url,password):
+	def create_staffuser(self,email,first_name,last_name,phone1,password,image_url):
 		if password is None:
 			raise TypeError('Staff must have a password')
-		user = self.create_user(email,first_name,last_name,phone1,image_url,password)
+		user = self.create_user(email,first_name,last_name,phone1,password,image_url)
 		user.is_staff = True
 		user.save()
 		return user

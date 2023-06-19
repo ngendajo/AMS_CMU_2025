@@ -7,7 +7,7 @@ import "../forms.css";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const USER_REGIX = /^[a-zA-Z- ]{2,50}$/;
+const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
 export default function EditPosition() {
     const { auth } = useAuth();

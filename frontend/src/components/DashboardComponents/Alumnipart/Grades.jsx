@@ -65,9 +65,6 @@ export const Grades = () => {
                 <div className='add-staff'>
                   <Link to="/add-grade" className='link'>Add Grade</Link><IoIosAdd className='addicon'/>
                 </div>
-                <p>
-                 <Link className="line" to="/alumni">Go back</Link>
-                </p>
               </div>
             </div>
             <div className='grades-list'>

@@ -26,6 +26,7 @@ export default function Staff() {
                 },
                 withCredentials:true
             });
+            console.log(response.data);
             setResults1(response.data);
             setResults(response.data);
         }catch(err) {
@@ -85,7 +86,7 @@ export default function Staff() {
                       <td>{result.first_name} {result.last_name}</td>
                       <td>{result.email}</td>
                       <td>{result?.phone1}</td>
-                      <td>{result.is_superuser? "Admin":result.is_crc? "CRC Staff":"Normal Staff"}</td>
+                      <td>{result.is_superuser? "Admin":result.is_crc? "CRC Staff":"Unknown"}</td>
                       <td>{result.profile ? result.profile.position:"Owner"}</td>
                       <td><Link to={`/add-crc/${result.id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/delete-user/${result.id}`}>  <RiDeleteBin5Line className='icon'/></Link>

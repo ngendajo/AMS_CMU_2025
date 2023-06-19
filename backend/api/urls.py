@@ -11,7 +11,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
     path('alumni/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
-    path('registera/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
+    path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('deleteuser/<str:pk>/delete/', views.delete_user, name='delete-user'),
     path('updateuser/<str:pk>', views.update_user, name='update-user'),
     path('updateuserimage/<str:pk>', views.update_user_image, name='update-userimage'),
@@ -48,6 +48,7 @@ urlpatterns = [
     path('displaystory/<int:pk>/', views.display_story, name='display-story'),
     #studie paths
     path('studie/', views.StudieView.as_view()),
+
     path('updatestory/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestory/<int:pk>/', views.delete_studie, name='delete-studie'),
     #opportunity paths
@@ -56,5 +57,9 @@ urlpatterns = [
     path('opportunity/<int:pk>/delete/', views.DeleteOpportunityView.as_view(), name='delete-opportunity'),
     path('opportunity/<int:pk>/update/', views.UpdateOpportunityView.as_view(), name='update-opportunity'),
     path('opportunity/<int:pk>/approve/', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
+
+    path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
+    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
+
     path('', views.getRoutes)
 ]

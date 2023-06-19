@@ -20,7 +20,7 @@ export default function Addcombination() {
     )
     .then(res =>{
         alert(res.data.combination_name+" created successfully")
-        navigate('/combinations')
+        navigate('/alumni/combinations')
     })
     .catch(error => alert(error.response.data))
         
@@ -41,7 +41,7 @@ export default function Addcombination() {
             <center><button type="submit">Save</button></center>
         </form>
         <p>
-             <Link className="line" to="/combinations">Go back</Link>
+             <Link className="line" to="/alumni/combinations">Go back</Link>
         </p>
     </div>
   )
