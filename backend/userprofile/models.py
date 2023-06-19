@@ -113,7 +113,7 @@ class Event(models.Model):
     
 #Studie model
 class Studie(models.Model):
-    alumn = models.OneToOneField(Alumni, on_delete=models.CASCADE, related_name='studie')
+    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='studies')
     degree = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
@@ -141,4 +141,4 @@ class Story(models.Model):
     displayed=models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.alumn+"story")
+        return str(self.alumn.user.first_name+"story")
