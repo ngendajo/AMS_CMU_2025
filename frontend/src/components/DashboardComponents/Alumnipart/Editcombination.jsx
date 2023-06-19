@@ -22,7 +22,7 @@ export default function Editcombination() {
         }
         ).then(res =>{
             console.log(res)
-            navigate('/combinations')
+            navigate('/alumni/combinations')
         })
       };
 
@@ -62,7 +62,7 @@ export default function Editcombination() {
     )
     .then(res =>{
         console.log(res)
-        navigate('/combinations')
+        navigate('/alumni/combinations')
     })
     .catch(error => console.log(error))
        
@@ -71,7 +71,7 @@ export default function Editcombination() {
     <div className='alumni-list-body'>
         
         <p>
-             <Link className="line" to="/combinations">Go back</Link>
+             <Link className="line" to="/alumni/combinations">Go back</Link>
         </p>
         <center><h1>Add a new Combination form</h1></center> 
         <form  onSubmit={updatecomb} className='form-element'>

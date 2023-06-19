@@ -27,7 +27,7 @@ export default function EditEp() {
         }
         ).then(res =>{
             console.log(res)
-            navigate('/eps')
+            navigate('/alumni/eps')
         })
       };
 
@@ -45,7 +45,7 @@ export default function EditEp() {
         }
     )
     .then(res =>{
-        navigate('/eps')
+        navigate('/alumni/eps')
     })
     .catch(error => console.log(error))
        
@@ -76,7 +76,7 @@ export default function EditEp() {
   return (
     <div className='alumni-list-body'>
         <p>
-            <Link className="line" to="/eps">Go back</Link>
+            <Link className="line" to="/alumni/eps">Go back</Link>
         </p>
         <center><h1>Update Ep form</h1></center>
             <form onSubmit={updateep} className='form-element'>

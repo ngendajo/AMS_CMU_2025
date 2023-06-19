@@ -48,16 +48,13 @@ export const Combinations = () => {
  
   return (
     <center className='alumni-list-body'>
-            <div className='comb-header'>
+            <div className='staff-header-right alumni-header-right'>
                 <div className='export-staff'>
                   <span>Export xlsx</span><BiExport/>
                 </div>
                 <div className='add-staff'>
                   <Link to="/add-comb" className='link'>Add Combination</Link><IoIosAdd className='addicon'/>
                 </div>
-                <p>
-                 <Link className="line" to="/alumni">Go back</Link>
-                </p>
               </div>
                 
             <div id='allcombinations'>

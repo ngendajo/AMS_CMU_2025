@@ -29,7 +29,7 @@ export default function AddGrade() {
     )
     .then(res =>{
         console.log(res)
-        navigate('/grades')
+        navigate('/alumni/grades')
     })
     .catch(error => console.log(error))
         
@@ -133,7 +133,7 @@ export default function AddGrade() {
                    <center><button type="submit">Save</button></center>
             </form>
             <p>
-                 <Link className="line" to="/grades">Go back</Link>
+                 <Link className="line" to="/alumni/grades">Go back</Link>
             </p>
     </div>
   )

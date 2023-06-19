@@ -1,79 +1,32 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React, {useState} from 'react';
 import '../../components/Header/header.css';
 import '../../components/Header/searchBar.css';
 import '../../components/Header/searchResultsList.css';
 import '../../components/DashboardComponents/Staffpart/staff.css';
 import '../../components/DashboardComponents/Alumnipart/alumni.css';
 import { Link } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
-import { Table } from '../../components/DashboardComponents/Alumnipart/Table';
-import { BiEditAlt,BiExport } from "react-icons/bi";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoIosAdd } from "react-icons/io";
-import { AiOutlineFileAdd } from "react-icons/ai";
+
+import { Outlet } from 'react-router-dom';
 
 
 export default function Alumni() {
-  const [data, setData] = useState([]);
   const [category, setCategory] = useState(7);
-  const {auth} = useAuth();
-
-  useEffect(() =>{
-    
-    const getcrcusers = async () =>{
-        try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
-                headers: {
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'multipart/form-data'
-                },
-                withCredentials:true
-            });
-            var alumnilist=[]
-            var i=1
-            response.data.forEach(element => {
-              alumnilist.push({
-                id:i, 
-                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
-                email:element.email,
-                first_name:element.first_name,
-                last_name:element.last_name,
-                phone:element.phone1,
-                grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.grade.grade_name,
-                family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.family_name,
-                user_id:<span>
-                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
-                </span>
-              })
-              i+=1
-            });
-            setData(alumnilist);
-        }catch(err) {
-            console.log(err);
-        }
-    }
-
-    getcrcusers();
-
-},[auth])
 
   return (
     <div>
         <div className='alumni-list-heading'>
 
-        <div className={category===7? "displayed":"notdisplayed"} onClick={()=>setCategory(7)}>
+        <Link to={"/alumni/"} className={category===7? "displayed":"notdisplayed"} onClick={()=>setCategory(7)}>
             <span>ASYV Info</span>
-          </div>
+          </Link>
          
           <div className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
             <span>Higher Institutions</span>
           </div>
 
-          <div className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
+          <Link to={"/alumni/employment/"} className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
             <span>Employed</span>
-          </div>
+          </Link>
 
           <div className={category===3? "displayed":"notdisplayed"} onClick={()=>setCategory(3)}>
             <span>Scholarship</span>
@@ -83,33 +36,19 @@ export default function Alumni() {
             <span>Dropout</span>
           </div>
 
-          <div className={category===5? "displayed":"notdisplayed"} onClick={()=>setCategory(5)}>
-            <Link className='grades-link' to="/grades">Grades</Link>
-          </div>
+          <Link to="/alumni/grades" className={category===5? "displayed":"notdisplayed"} onClick={()=>setCategory(5)}>
+            <span>Grades</span>
+          </Link>
 
           <div className={category===6? "displayed":"notdisplayed"} onClick={()=>setCategory(6)}>
-            <Link className='grades-link' to="/combinations">Combinations</Link>
+            <Link className='grades-link' to="/alumni/combinations">Combinations</Link>
           </div>
-          <div className={category===6? "displayed":"notdisplayed"} onClick={()=>setCategory(6)}>
-            <Link className='grades-link' to="/eps">Eps</Link>
+          <div className={category===8? "displayed":"notdisplayed"} onClick={()=>setCategory(8)}>
+            <Link className='grades-link' to="/alumni/eps">Eps</Link>
           </div>
 
         </div>
-        <div className='alumni-list-body'>
-            <div>
-              <div className='staff-header-right alumni-header-right'>
-                <div className='export-staff'>
-                  <span>Export xlsx</span><BiExport/>
-                </div>
-                <div className='add-staff'>
-                  <Link to="/add-alumni" className='link'>Add Alumni</Link><IoIosAdd className='addicon'/>
-                </div>
-              </div>
-            </div>
-              <div className="listtable">
-                <Table mockData={data} />
-              </div>
-      </div>
+        <Outlet/>
         
     </div>
   )

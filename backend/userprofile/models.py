@@ -69,17 +69,16 @@ class Alumni(models.Model):
     place_of_birth = models.CharField(max_length=50)
     CurrResidence = models.CharField(max_length=50)
 
-    def __str__(self):
-        return str(self.user)
-
 
 #Employment model
 class Employment(models.Model):
     title = models.CharField(max_length=50)
     alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='employement')
     emps = (
-		('W', 'working'),
-		('P', 'past'),
+		('F', 'Full-time'),
+		('P', 'Part-time'),
+        ('S', 'Self-employed'),
+        ('I', 'Intern'),
     )
     status = models.CharField(max_length=2, choices=emps)
     description = models.CharField(max_length=200)
@@ -127,6 +126,7 @@ class Studie(models.Model):
     Statuss = (
 		('D', 'Dropped_Out'),
 		('S', 'Susepended'),
+        ('O', 'On_going'),
         ('C', 'Completed'),
 	)
     status = models.CharField(max_length=2, choices=Statuss)
