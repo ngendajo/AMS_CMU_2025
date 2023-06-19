@@ -84,7 +84,8 @@ class Employment(models.Model):
     status = models.CharField(max_length=2, choices=emps)
     description = models.CharField(max_length=200)
     company = models.CharField(max_length=50)
-    start_year= models.DateField(auto_now_add=True)
+    start_date = models.CharField(max_length=50,default="")
+    end_date = models.CharField(max_length=50, default="Up to now")
     
     def __str__(self):
         return str(self.title)

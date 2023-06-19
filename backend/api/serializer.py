@@ -228,7 +228,7 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
 
 
 class StudieSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Studie
         fields = ('id','alumn','degree','university','country','scholarship','status')
