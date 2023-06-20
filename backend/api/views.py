@@ -20,7 +20,7 @@ User = get_user_model()
 #User data
 
 class AluminiRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -477,7 +477,7 @@ def delete_story(request, pk):
 
 #Employment view
 class EmploymentView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EmploymentSerializer(data=request.data)
         # validating for already existing data
@@ -519,7 +519,7 @@ def update_Employment(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_employment(request, pk):
     employment = get_object_or_404(Employment, pk=pk)
     employment.delete()
