@@ -115,6 +115,15 @@ class AddFamilySerializer(serializers.ModelSerializer):
     
 #End of grades and families  
 
+
+#Employment serializers
+
+class EmploymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('__all__')
+        depth = 4
+
 # Alumni data serializers
 
 class AlumniInfoRegSerializer(serializers.ModelSerializer):
@@ -239,12 +248,6 @@ class UpdateStudieSerializer(serializers.ModelSerializer):
         fields = ('degree','university','country','scholarship','status')
 
 
-#Employment serializers
-
-class EmploymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Employment
-        fields=('__all__')
 
 
 

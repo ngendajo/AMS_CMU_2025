@@ -21,13 +21,13 @@ export default function Alumni() {
             <span>ASYV Info</span>
           </Link>
          
-          <div className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
+          <Link to="#" className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
             <span>Higher Institutions</span>
-          </div>
+          </Link>
 
-          <div className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
+          <Link to={`/add-alumni/info/${params.id}/addemployment`} className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
             <span>Employed</span>
-          </div>
+          </Link>
 
           <div className={category===3? "displayed":"notdisplayed"} onClick={()=>setCategory(3)}>
             <span>Scholarship</span>

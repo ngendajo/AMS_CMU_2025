@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const DeleteAlumni = () => {
+const DeleteEmployment = () => {
   const [userid, setUserid]=useState([]);
   const { auth } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const DeleteAlumni = () => {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/employment/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -33,7 +33,7 @@ const DeleteAlumni = () => {
     },[auth,params])
     const handleDelete = (event) => {
     
-      axios.delete('http://127.0.0.1:8000/api/deleteuser/'+event+'/delete/',
+      axios.delete('http://127.0.0.1:8000/api/employment/'+event+'/delete/',
       {
           headers: {
               "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -41,17 +41,17 @@ const DeleteAlumni = () => {
           }
       }
       )
-      navigate("/alumni")
+      navigate("/alumni/employment/")
     };
     
   return (
       <center>
         {
         userid.map((result, id)=>{
-            return <div key={id} className="delete-message"> <h1>Do you want to delete  {result.first_name} {result.last_name} with {result.email} as 
+            return <div key={id} className="delete-message"> <h1>Do you want to delete  {result.alumn.user.first_name} {result.alumn.user.last_name} with {result.alumn.user.email} as 
             email?
             </h1>
-            <Link to="/alumni" className="not">No</Link> 
+            <Link to="/alumni/employment/" className="not">No</Link> 
             <span onClick={()=>handleDelete(result.id)} className="yes">Yes</span>
             </div>
         }
@@ -61,4 +61,4 @@ const DeleteAlumni = () => {
   )
 }
 
-export default DeleteAlumni
+export default DeleteEmployment

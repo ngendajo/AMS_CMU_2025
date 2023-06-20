@@ -25,7 +25,6 @@ const Register = () => {
         setLevel(e.target.value)
       }
 
-      console.log(level);
 
     const [selectedFiles, setSelectedFiles] = useState(undefined);
 

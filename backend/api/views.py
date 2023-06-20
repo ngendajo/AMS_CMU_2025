@@ -20,7 +20,7 @@ User = get_user_model()
 #User data
 
 class AluminiRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -391,7 +391,7 @@ class EventView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_Event(request, pk):
     eve = Event.objects.get(pk=pk)
     data = UpdateEventSerializer(instance=eve, data=request.data)
@@ -403,7 +403,7 @@ def update_Event(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_eve(request, pk):
     eve = get_object_or_404(Event, pk=pk)
     eve.delete()
@@ -468,7 +468,7 @@ def display_story(request, pk):
     
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_story(request, pk):
     story = get_object_or_404(Story, pk=pk)
     story.delete()
@@ -488,6 +488,7 @@ class EmploymentView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
          
     def get(self,request):
@@ -518,7 +519,7 @@ def update_Employment(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def delete_employment(request, pk):
     employment = get_object_or_404(Employment, pk=pk)
     employment.delete()
@@ -528,7 +529,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -556,7 +557,7 @@ class StudieView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_studie(request, pk):
     stud = Studie.objects.get(pk=pk)
     data = UpdateStudieSerializer(instance=stud, data=request.data)
@@ -568,7 +569,7 @@ def update_studie(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_studie(request, pk):
     stud = get_object_or_404(Studie, pk=pk)
     stud.delete()
