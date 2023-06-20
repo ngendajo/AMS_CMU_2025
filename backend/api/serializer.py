@@ -122,7 +122,27 @@ class EmploymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employment
         fields=('__all__')
-        depth = 4
+
+class EmploymentDisplayOneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('__all__')
+        depth =4
+
+class DisplayEmploymentSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone1 = serializers.CharField(max_length=30, required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    image_url =serializers.ImageField(required=True)
+    title = serializers.CharField(max_length=200, required=True)
+    status = serializers.CharField(max_length=30, required=True)
+    emp_id = serializers.IntegerField(required=True)
+    end = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'title','status', 'emp_id')
 
 # Alumni data serializers
 

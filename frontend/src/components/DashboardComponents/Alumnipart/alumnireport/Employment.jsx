@@ -28,18 +28,18 @@ export default function Employment() {
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
-                image:<img src={"http://localhost:8000"+element.alumn.user.image_url} alt="logo" className="user-image-icon" />,
-                email:element.alumn.user.email,
-                first_name:element.alumn.user.first_name,
-                last_name:element.alumn.user.last_name,
-                phone:element.alumn.user.phone1,
-                title:element.title,
-                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":"Intern",
-                end:element.end_date,
-                user_id:<span>
+                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
+                email:element.email,
+                first_name:element.first_name,
+                last_name:element.last_name,
+                phone:element.phone1,
+                title:element?.title,
+                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Part Time":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
+                end:element?.end,
+                user_id:element.title?<span>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/alumni/deleteemployment/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
-                </span>
+                      <Link to={`/alumni/deleteemployment/${element.emp_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                </span>:null
               })
               i+=1
             });
