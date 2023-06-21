@@ -21,7 +21,7 @@ export const SidebarData = [
         icon: <MdIcons.MdEmojiEvents />,
       },
       {
-        title: "Chats",
+        title: "Networks",
         path: "/chats",
         icon: <GiIcons.GiConversation />,
       },
