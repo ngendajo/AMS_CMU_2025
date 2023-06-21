@@ -1,5 +1,5 @@
 
-import {useState, useEffect} from "react";
+import {useState, useEffect, useMemo} from "react";
 import '../../../Header/header.css';
 import '../../../Header/searchBar.css';
 import '../../../Header/searchResultsList.css';
@@ -11,6 +11,8 @@ import axios from "axios";
 import { useParams } from 'react-router';
 import "../../forms.css";
 import { useNavigate } from "react-router-dom";
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
 
 
 
@@ -20,6 +22,12 @@ export default function AddEmployment() {
   const params = useParams();
     const navigate = useNavigate();
     const [alumn, setAlumn] = useState()
+    const [value, setValue] = useState('')
+  const options = useMemo(() => countryList().getData(), [])
+
+  const changeHandler = value => {
+    setValue(value)
+  }
 
     useEffect(() =>{
     
@@ -52,7 +60,7 @@ export default function AddEmployment() {
         "degree":e.target.degree.value,
         "university":e.target.university.value,
         "scholarship":e.target.scholarship.value,
-        "country":e.target.country.value,
+        "country":value.label,
         "status":e.target.status.value
         
         },
@@ -121,13 +129,7 @@ export default function AddEmployment() {
                         <label htmlFor="country">
                             Country
                         </label>
-                        <input
-                        type="text"
-                        id="country"
-                        autoComplete="off"
-                        name="country"
-                        required
-                        />
+                        <Select options={options} value={value} onChange={changeHandler} />
                     </div>
                     <div className="formpart">
                         <label htmlFor="status">
@@ -150,6 +152,7 @@ export default function AddEmployment() {
                           <option value="N">None</option>
                         </select>
                     </div>
+                    
                     
                     
                     
