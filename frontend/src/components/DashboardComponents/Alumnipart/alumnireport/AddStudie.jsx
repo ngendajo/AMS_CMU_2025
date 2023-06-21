@@ -19,7 +19,6 @@ export default function AddEmployment() {
   const { auth } = useAuth();
   const params = useParams();
     const navigate = useNavigate();
-    const [end, setEnd] = useState(false)
     const [alumn, setAlumn] = useState()
 
     useEffect(() =>{
@@ -48,14 +47,14 @@ export default function AddEmployment() {
   const handleSubmit = async (e) =>{
     e.preventDefault();
 
-    axios.post('http://127.0.0.1:8000/api/employment/', {
-        "title":e.target.title.value,
-        "status":e.target.status.value,
-        "description":e.target.description.value,
-        "company":e.target.company.value,
+    axios.post('http://127.0.0.1:8000/api/studie/', {
         "alumn":alumn,
-        "start_date":e.target.start_date.value,
-        "end_date":end?"Up to now":e.target.end_date.value
+        "degree":e.target.degree.value,
+        "university":e.target.university.value,
+        "scholarship":e.target.scholarship.value,
+        "country":e.target.country.value,
+        "status":e.target.status.value
+        
         },
         {
             headers: {
@@ -67,7 +66,7 @@ export default function AddEmployment() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
-        navigate('/alumni/employment/')
+        navigate('/alumni/studie/')
     })
     .catch(error => console.log(error.response))
      
@@ -76,13 +75,13 @@ export default function AddEmployment() {
   return (
     <center>
           <p>
-              <Link className="line" to="/alumni/employment/">Go back</Link>
+              <Link className="line" to="/alumni/studie/">Go back</Link>
           </p>
       {
       userid.map((result, id)=>{
           return <div key={id} className="delete-message"> 
           <img src={"http://localhost:8000"+result.image_url} alt="logo" className="user-image-icon" />
-          <h1>Add Employment Status for  {result.first_name} {result.last_name} with {result.email} as 
+          <h1>Add Study Status for  {result.first_name} {result.last_name} with {result.email} as 
           email
           </h1>
           </div>
@@ -95,14 +94,38 @@ export default function AddEmployment() {
                 <div className="form-content">
                     
                     <div className="formpart">
-                        <label htmlFor="title">
-                            Title
+                        <label htmlFor="degree">
+                            Degree
                         </label>
                         <input
                         type="text"
-                        id="title"
+                        id="degree"
                         autoComplete="off"
-                        name="title"
+                        name="degree"
+                        required
+                        />
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="university">
+                            University
+                        </label>
+                        <input
+                        type="text"
+                        id="university"
+                        autoComplete="off"
+                        name="university"
+                        required
+                        />
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="country">
+                            Country
+                        </label>
+                        <input
+                        type="text"
+                        id="country"
+                        autoComplete="off"
+                        name="country"
                         required
                         />
                     </div>
@@ -111,54 +134,23 @@ export default function AddEmployment() {
                             Status
                         </label>
                         <select name="status">
-                          <option value="S">Self-employment</option>
-                          <option value="F">Full-time</option>
-                          <option value="P">Part-time</option>
-                          <option value="I">Intern</option>
+                          <option value="D">Dropped_Out</option>
+                          <option value="S">Suspended</option>
+                          <option value="O">On_Going</option>
+                          <option value="C">Completed</option>
+                        </select>
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="scholarship">
+                        Scholarship
+                        </label>
+                        <select name="scholarship">
+                          <option value="F">Full Scholarship</option>
+                          <option value="P">Partial Scholarship</option>
+                          <option value="N">None</option>
                         </select>
                     </div>
                     
-                    <div className="formpart">
-                        <label htmlFor="description">
-                            Description
-                        </label>
-                        <input type="text" name="description" />
-                    </div>
-                    <div className="formpart">
-                        <label htmlFor="company">
-                            Company
-                        </label>
-                        <input type="text" name="company" />
-                    </div>
-                    <div className="formpart">
-                        <label htmlFor="start-date">
-                            Start Date
-                        </label>
-                        <input type="date" name="start_date" />
-                    </div>
-                    <div className="formpart">
-                              <label></label>
-                              <span className="end">
-                                  <input
-                                  type="checkbox"
-                                  name="end"
-                                  value="true"
-                                  id="end"
-                                  onChange={()=>{setEnd(!end)}}
-                                  />
-                                  <label>Up to now</label>
-                              </span>
-
-                          </div>
-                    {!end?
-                    <div className="formpart">
-                      <label htmlFor="end-date">
-                          End Date
-                      </label>
-                      <input type="date" name="end_date" />
-                    </div>  
-                    :null
-                  }
                     
                     
                 </div>

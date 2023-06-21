@@ -20,21 +20,13 @@ export default function Alumni() {
             <span>ASYV Info</span>
           </Link>
          
-          <div className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
+          <Link to={"/alumni/studie/"} className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
             <span>Higher Institutions</span>
-          </div>
+          </Link>
 
           <Link to={"/alumni/employment/"} className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
             <span>Employed</span>
           </Link>
-
-          <div className={category===3? "displayed":"notdisplayed"} onClick={()=>setCategory(3)}>
-            <span>Scholarship</span>
-          </div>
-
-          <div className={category===4? "displayed":"notdisplayed"} onClick={()=>setCategory(4)}>
-            <span>Dropout</span>
-          </div>
 
           <Link to="/alumni/grades" className={category===5? "displayed":"notdisplayed"} onClick={()=>setCategory(5)}>
             <span>Grades</span>

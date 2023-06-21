@@ -202,7 +202,7 @@ export default function EditAlumini() {
          {errMsg}
      </p>
      <center className="updatemsg">{msg}</center>
-    <center> <h1>Update Staff Info</h1></center>
+    <center> <h1>Update Alumni Info</h1></center>
      <form>
      <center>
      {disiplayfile ? <img className="img-for-profile" src={"http://localhost:8000"+currentfile} alt="" />:

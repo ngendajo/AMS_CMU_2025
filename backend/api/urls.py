@@ -49,6 +49,6 @@ urlpatterns = [
     #studie paths
     path('studie/', views.StudieView.as_view()),
     path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
-    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
+    path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
     path('', views.getRoutes)
 ]

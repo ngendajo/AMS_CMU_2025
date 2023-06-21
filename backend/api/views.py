@@ -531,7 +531,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -547,9 +547,11 @@ class StudieView(APIView):
     def get(self,request):
          # checking for the parameters from the URL
         if request.query_params:
-            stud = Studie.objects.filter(**request.query_params.dict())
+            stud1 = Studie.objects.filter(**request.query_params.dict())
+            serializer = StudyWithAlumnSerializer(stud1, many=True)
+            return Response(serializer.data)
         else:
-            stud = Studie.objects.all()
+            stud = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_studie.degree,userprofile_studie.university,userprofile_studie.country,userprofile_studie.scholarship,userprofile_studie.status,userprofile_studie.id as study_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni=true;")
     
         # if there is something in items else raise error
         if stud:

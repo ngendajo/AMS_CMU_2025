@@ -247,13 +247,32 @@ class DisplayStorySerializer(serializers.ModelSerializer):
 
 #Studie serializers
 
-class StudieWithAlumnSerializer(serializers.ModelSerializer):
-
-    alumn = serializers.StringRelatedField(many=False)
+class StudyWithAlumnSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Studie
-        fields = ('id','alumn','degree','university','country','scholarship','status')
+        fields = ('__all__')
+        depth = 4
+
+class StudieWithAlumnSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone1 = serializers.CharField(max_length=30, required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    image_url =serializers.ImageField(required=True)
+    degree = serializers.CharField(max_length=200, required=True)
+    university = serializers.CharField(max_length=200, required=True)
+    country = serializers.CharField(max_length=200, required=True)
+    scholarship = serializers.CharField(max_length=200, required=True)
+    status = serializers.CharField(max_length=200, required=True)
+    study_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Studie
+        fields = ('id','email','phone1','first_name','last_name','image_url','degree','university','country','scholarship','status','study_id')
+
 
 
 class StudieSerializer(serializers.ModelSerializer):
