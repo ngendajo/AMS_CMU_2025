@@ -3,7 +3,7 @@
 export const COLUMNS = [
   
   {
-    Header: "Grade name",
+    Header: "Combination name",
     accessor: "combination",
   },
   {
