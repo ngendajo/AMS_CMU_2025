@@ -21,7 +21,7 @@ export default function AddEmployment() {
   const { auth } = useAuth();
   const params = useParams();
     const navigate = useNavigate();
-    const [alumn, setAlumn] = useState()
+    const [alumn, setAlumn] = useState(0)
     const [value, setValue] = useState('')
   const options = useMemo(() => countryList().getData(), [])
 
@@ -63,7 +63,7 @@ export default function AddEmployment() {
         "country":value.label,
         "status":e.target.status.value
         
-        },
+        }, 
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -74,7 +74,7 @@ export default function AddEmployment() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
-        navigate('/alumni/studie/')
+        navigate(`/add-alumni/info/${params.id}/addemployment`)
     })
     .catch(error => console.log(error.response))
      
@@ -159,8 +159,10 @@ export default function AddEmployment() {
                 </div>
 
                 <center>
+                {alumn===0?null:
                 <button
-                >Save</button>
+                >Save and continue</button>
+                }
                 </center>
             </form>
             

@@ -26,6 +26,14 @@ export default function AddASYVInfo() {
   let [families, setFamilies] = useState([]);
   let [eps, setEps] = useState([]);
     let [epsdone, setEpsdone] = useState([]);
+    const [marital_status, setMarital_status] = useState('');
+    const [gender, setGender] = useState('');
+    const [place_of_birth, setPlace_of_birth] = useState('');
+    const [currentResident, setCurrentResident] = useState('');
+    const [kids, setKids] = useState('');
+    let [grade, setGrade] = useState([]);
+    let [family, setFamily] = useState([]);
+    let [comb, setComb] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() =>{
@@ -58,6 +66,7 @@ export default function AddASYVInfo() {
         })
         
     }
+    
 
     var handleChangeofEp = (selectedOption) => {
       setEpsdone(selectedOption);
@@ -143,6 +152,15 @@ export default function AddASYVInfo() {
     
       const getuser = async () =>{
           try{
+            const getsavedfamilies = (id) => {
+                grades.forEach((grade)=>{
+                    if(parseInt(grade.id,10) === parseInt(id,10)){
+                        setFamilies(grade.families);
+                        setGradeSelected(true);
+                    }
+                })
+                
+            }
               const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -151,6 +169,26 @@ export default function AddASYVInfo() {
                   withCredentials:true
               });
               setUserid(response.data)
+              response.data.forEach((dat)=>{
+                setFather(dat.alumn.father);
+                setMother(dat.alumn.mother);
+                setMarital_status(dat.alumn.marital_status);
+                setGender(dat.alumn.gender);
+                setKids(dat.alumn.kids);
+                setPlace_of_birth(dat.alumn.place_of_birth);
+                setCurrentResident(dat.alumn.CurrResidence);
+                setFamily(dat.alumn.Family);
+                setGrade(dat.alumn.Family.grade);
+                setComb(dat.alumn.Combination);
+                getsavedfamilies(dat.alumn.Family.grade.id);
+                var eplist=[]
+                dat.alumn.Eps.forEach(element => {
+                eplist.push(
+                  { value: element.id, label: element.title }
+                )
+              });
+              setEpsdone(eplist)
+              })
           }catch(err) {
               console.log(err);
           }
@@ -158,7 +196,7 @@ export default function AddASYVInfo() {
   
       getuser();
   
-  },[auth,params])
+  },[auth,params,grades])
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
@@ -195,6 +233,7 @@ export default function AddASYVInfo() {
      
 
   }
+  console.log(epsdone)
   return (
     <center>
     {
@@ -209,7 +248,7 @@ export default function AddASYVInfo() {
     )}
 
   
-      <form onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
           
               <div className="form-content">
                   
@@ -228,6 +267,7 @@ export default function AddASYVInfo() {
                       id="father"
                       ref={fatherRef}
                       autoComplete="off"
+                      value={father}
                       onChange={(e) => setFather(e.target.value)}
                       required
                       aria-invalid={validFather? "false":"true"}
@@ -255,6 +295,7 @@ export default function AddASYVInfo() {
                       type="text"
                       id="mother"
                       ref={motherRef}
+                      value={mother}
                       autoComplete="off"
                       onChange={(e) => setMother(e.target.value)}
                       required
@@ -275,10 +316,29 @@ export default function AddASYVInfo() {
                           Marital Status
                       </label>
                       <select name="marital_status">
-                        <option value="Single">Single</option>
+                      {marital_status==="Single"?
+                        <><option value="Single" selected>Single</option>
                         <option value="Maried">Maried</option>
                         <option value="Divorced">Divorced</option>
-                        <option value="Widowed">Widowed</option>
+                        <option value="Widowed">Widowed</option></>:
+                        marital_status==="Maried"?
+                        <><option value="Single" selected>Single</option>
+                        <option value="Maried" selected>Maried</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed">Widowed</option></>:
+                        marital_status==="Divorced"?
+                        <><option value="Single" selected>Single</option>
+                        <option value="Maried">Maried</option>
+                        <option value="Divorced" selected>Divorced</option>
+                        <option value="Widowed">Widowed</option></>:
+                        marital_status==="Widowed"?
+                        <><option value="Single">Single</option>
+                        <option value="Maried">Maried</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed" selected>Widowed</option></>:
+                        null
+                        }
+                        
                       </select>
                   </div>
                   <div className="formpart">
@@ -286,29 +346,48 @@ export default function AddASYVInfo() {
                           Gender
                       </label>
                       <select name="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        {gender==="Male"?
+                        <><option value="Male" selected>Male</option>
+                        <option value="Female">Female</option></>:
+                        <><option value="Male">Male</option>
+                        <option value="Female" selected>Female</option></>    
+                    }
+                        
                       </select>
                   </div>
                   <div className="formpart">
                       <label htmlFor="place_of_birth">
                           Place of origin
                       </label>
-                      <input type="text" name="place_of_birth" />
+                      <input 
+                      type="text" 
+                      name="place_of_birth" 
+                      value={place_of_birth}
+                      onChange={(e)=>(setPlace_of_birth(e.target.value))}
+                      />
                   </div>
                   <div className="formpart">
                       <label htmlFor="currResidence">
                           Current Residence
                       </label>
-                      <input type="text" name="currResidence" />
+                      <input 
+                      type="text" 
+                      name="currResidence"
+                      value={currentResident}
+                      onChange={(e)=>(setCurrentResident(e.target.value))}
+                      />
                   </div>
                   <div className="formpart">
                       <label htmlFor="kids">
                           Do you have kids
                       </label>
                       <select name="kids">
-                        <option value="false">Yes</option>
-                        <option value="true">No</option>
+                        {kids?
+                        <><option value="false" selected>Yes</option>
+                        <option value="true">No</option></>:
+                        <><option value="false">Yes</option>
+                        <option value="true" selected>No</option></>
+                        }
                       </select>
                   </div>
 
@@ -319,7 +398,9 @@ export default function AddASYVInfo() {
                           <select name="grade" onChange={getfamilies}>
                             <option value="">select grade</option>
                               {grades.map((e,ind) => {
-                                  return  <option key={ind} value={e.id}>{e.grade_name}</option>
+                                  return grade.id===e.id?
+                                    <option key={ind} value={e.id} selected>{e.grade_name}</option>:
+                                    <option key={ind} value={e.id} >{e.grade_name}</option>
                               })}               
                           </select> 
                   </div>
@@ -329,7 +410,9 @@ export default function AddASYVInfo() {
                       </label>      
                           <select name="family">
                               {families.map((e,ind) => {
-                                  return  <option key={ind} value={e.id}>{e.family_name}</option>
+                                  return  family.id===e.id?
+                                  <option key={ind} value={e.id} selected>{e.family_name}</option>:
+                                  <option key={ind} value={e.id}>{e.family_name}</option>
                               })}               
                           </select> 
                   </div>
@@ -340,9 +423,11 @@ export default function AddASYVInfo() {
                       </label>
                       
                       <select name='combination'>
-                        <option value="">select combination</option>
+                      <option value="">select combination</option>
                       {combination.map((e,ind) => {
-                        return  <option key={ind} value={e.id}>{e.combination_name}</option>
+                        return  comb.id===e.id?
+                        <option key={ind} value={e.id} selected>{e.combination_name}</option>:
+                        <option key={ind} value={e.id}>{e.combination_name}</option>
                           })}
                       </select>
                   </div>

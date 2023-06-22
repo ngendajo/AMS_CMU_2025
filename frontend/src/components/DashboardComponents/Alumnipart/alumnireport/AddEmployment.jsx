@@ -20,7 +20,7 @@ export default function AddEmployment() {
   const params = useParams();
     const navigate = useNavigate();
     const [end, setEnd] = useState(false)
-    const [alumn, setAlumn] = useState()
+    const [alumn, setAlumn] = useState(0)
 
     useEffect(() =>{
     
@@ -67,12 +67,12 @@ export default function AddEmployment() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
-        navigate('/alumni/employment/')
+        navigate('/alumni/')
     })
     .catch(error => console.log(error.response))
      
 
-  }
+  } 
   return (
     <center>
           <p>
@@ -164,8 +164,10 @@ export default function AddEmployment() {
                 </div>
 
                 <center>
+                {alumn===0?null:
                 <button
                 >Save</button>
+                }
                 </center>
             </form>
             

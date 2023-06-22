@@ -63,7 +63,7 @@ class Alumni(models.Model):
     Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
     Eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
     #employments= models.ManyToManyField(Employment, related_name="employments")
-    kids = models.BooleanField
+    kids = models.BooleanField(default=False)
     father = models.CharField(max_length=50)
     mother = models.CharField(max_length=50)
     place_of_birth = models.CharField(max_length=50)
