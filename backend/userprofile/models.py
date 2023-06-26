@@ -142,3 +142,10 @@ class Story(models.Model):
 
     def __str__(self):
         return str(self.alumn.user.first_name+"story")
+    
+
+
+# Gallery model
+class Gallery(models.Model):
+    image=models.ImageField(upload_to='galleries', default='galleries/default.jpg')
+    displayed=models.BooleanField(default=False)

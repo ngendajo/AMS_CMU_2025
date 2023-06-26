@@ -574,3 +574,57 @@ def delete_studie(request, pk):
     stud.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 #end
+
+
+
+
+
+# Gallery data view
+
+class GalleryView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = GallerySerializer(data=request.data)
+        # validating for already existing data
+        if Gallery.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            gall = Gallery.objects.filter(**request.query_params.dict())
+        else:
+            gall = Gallery.objects.all()
+    
+        # if there is something in items else raise error
+        if gall:
+            serializer = GallerySerializer(gall, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_gallery(request, pk):
+    gall = Gallery.objects.get(pk=pk)
+    data = GallerySerializer(instance=gall, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_gallery(request, pk):
+    stud = get_object_or_404(Gallery, pk=pk)
+    stud.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#end

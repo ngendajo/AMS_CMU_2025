@@ -1,9 +1,44 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {Gallery} from 'react-grid-gallery'
+import useAuth from '../../hooks/useAuth';
+import axios from "axios";
 
 
 
 export default function GalleryPage() {
+    let {auth}= useAuth() 
+    var gallerylist=[]
+    useEffect(() =>{
+    
+        const getData = async () =>{
+            try{
+                const response = await axios.get('http://127.0.0.1:8000/api/gallery/',{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                response.data.forEach(e=>{
+                if(e.displayed){
+                    gallerylist.push({
+                     src:"http://localhost:8000"+e.image,
+                     width: 320,
+                     height: 174,
+                    })
+                }
+                
+                })
+                
+            }catch(err) {
+                console.log(err);
+            }
+        }
+    
+        getData();
+    
+    },[auth])
+
 
   const gimages = [
     {
@@ -33,7 +68,7 @@ export default function GalleryPage() {
 
   return (
     <div>
-      <Gallery images={gimages} />
+      <Gallery images={gallerylist} />
     </div>
   );
 }

@@ -250,7 +250,12 @@ class EmploymentSerializer(serializers.ModelSerializer):
 
 
 
+#Gallery serializers
 
+class GallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gallery
+        fields=('__all__')
 
 
 

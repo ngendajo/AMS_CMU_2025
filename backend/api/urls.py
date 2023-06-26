@@ -50,5 +50,9 @@ urlpatterns = [
     path('studie/', views.StudieView.as_view()),
     path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
-    path('', views.getRoutes)
+    path('', views.getRoutes),
+    #gallery paths
+    path('gallery/', views.GalleryView.as_view()),
+    path('updategallery/<int:pk>/', views.update_gallery, name='update-studie'),
+    path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-studie'),
 ]
