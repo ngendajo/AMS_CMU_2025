@@ -254,6 +254,20 @@ class DisplayStorySerializer(serializers.ModelSerializer):
         model = Story
         fields = ('displayed',)
 
+class DisplayAllStoriesSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone1 = serializers.CharField(max_length=30, required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    image_url =serializers.ImageField(required=True)
+    description = serializers.CharField(max_length=1000, required=True)
+    displayed = serializers.BooleanField(required=True)
+
+    class Meta:
+        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'description','displayed')
+
+
 
 
 #Studie serializers

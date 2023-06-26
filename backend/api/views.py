@@ -388,7 +388,7 @@ def delete_comb(request, pk):
 # Event data view
 
 class EventView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         # validating for already existing data
@@ -438,6 +438,7 @@ def delete_eve(request, pk):
 
 # Story data view
 class StoryView(APIView):
+     #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StorySerializer(data=request.data)
         # validating for already existing data
@@ -453,13 +454,16 @@ class StoryView(APIView):
     def get(self,request):
          # checking for the parameters from the URL
         if request.query_params:
-            story = Story.objects.filter(**request.query_params.dict())
+            onestory = Story.objects.filter(**request.query_params.dict())
+            serializer = StoryWithAlumnSerializer(onestory, many=True)
+            return Response(serializer.data)
         else:
-            story = Story.objects.all()
+            story = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true;")
+    
     
         # if there is something in items else raise error
         if story:
-            serializer = StoryWithAlumnSerializer(story, many=True)
+            serializer = DisplayAllStoriesSerializer(story, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
