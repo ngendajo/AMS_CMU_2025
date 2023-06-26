@@ -6,6 +6,7 @@ import axios from "axios";
 
 
 export default function GalleryPage() {
+   const [data, setData] = useState([]);
     let {auth}= useAuth() 
     var gallerylist=[]
     useEffect(() =>{
@@ -29,7 +30,7 @@ export default function GalleryPage() {
                 }
                 
                 })
-                
+                setData(gallerylist)
             }catch(err) {
                 console.log(err);
             }
@@ -68,7 +69,7 @@ export default function GalleryPage() {
 
   return (
     <div>
-      <Gallery images={gallerylist} />
+      <Gallery images={data} />
     </div>
   );
 }
