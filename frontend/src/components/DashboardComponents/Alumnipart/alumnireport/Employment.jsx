@@ -37,7 +37,7 @@ export default function Employment() {
                 status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Part Time":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
                 end:element?.end,
                 user_id:element.title?<span>
-                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
+                  <Link to={`/alumni/updateemployement/${element.emp_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deleteemployment/${element.emp_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>:null
               })

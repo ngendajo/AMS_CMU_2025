@@ -27,6 +27,7 @@ export default function AddASYVInfo() {
   let [eps, setEps] = useState([]);
     let [epsdone, setEpsdone] = useState([]);
     const [marital_status, setMarital_status] = useState('');
+    const [alumn_id, setAlumn_id] = useState(0);
     const [gender, setGender] = useState('');
     const [place_of_birth, setPlace_of_birth] = useState('');
     const [currentResident, setCurrentResident] = useState('');
@@ -35,6 +36,21 @@ export default function AddASYVInfo() {
     let [family, setFamily] = useState([]);
     let [comb, setComb] = useState([]);
     const navigate = useNavigate();
+
+    const setCombinations= (id)=>{
+        combination.forEach((e)=>{
+            if(Number(e.id)===Number(id)){
+                setComb(e);
+            }
+        })
+    }
+    const setFamilie =(id)=>{
+        families.forEach((e)=>{
+            if(Number(e.id)===Number(id)){
+                setFamily(e);
+            }
+        })
+    }
 
     useEffect(() =>{
     
@@ -61,9 +77,11 @@ export default function AddASYVInfo() {
         grades.forEach((grade)=>{
             if(parseInt(grade.id,10) === parseInt(id,10)){
                 setFamilies(grade.families);
+                setGrade(grade)
                 setGradeSelected(true);
             }
         })
+
         
     }
     
@@ -181,6 +199,7 @@ export default function AddASYVInfo() {
                 setGrade(dat.alumn.Family.grade);
                 setComb(dat.alumn.Combination);
                 getsavedfamilies(dat.alumn.Family.grade.id);
+                setAlumn_id(dat.alumn.id);
                 var eplist=[]
                 dat.alumn.Eps.forEach(element => {
                 eplist.push(
@@ -204,18 +223,17 @@ export default function AddASYVInfo() {
     epsdone.forEach((ep)=>{
         ep_ids.push(ep.value)
     })
-    axios.post('http://127.0.0.1:8000/api/alumni/info/', {
-        "user":params.id,
-        "marital_status":e.target.marital_status.value,
-        "gender":e.target.gender.value,
-        "Family":e.target.family.value,
-        "Combination":e.target.combination.value,
+    axios.put('http://127.0.0.1:8000/api/alumni/info/'+alumn_id+"/update/", {
+        "marital_status":marital_status,
+        "gender":gender,
+        "Family":family.id,
+        "Combination":comb.id,
         "Eps":ep_ids,
-        "kids":e.target.kids.value,
+        "kids":kids,
         "father":father,
         "mother":mother,
-        "place_of_birth":e.target.place_of_birth.value,
-        "CurrResidence":e.target.currResidence.value
+        "place_of_birth":place_of_birth,
+        "CurrResidence":currentResident
         },
         {
             headers: {
@@ -226,14 +244,13 @@ export default function AddASYVInfo() {
     )
     .then(res =>{
         console.log(res) 
-        alert(" created successfully")
-        navigate(`/add-alumni/info/${params.id}/study`)
+        alert(" updated successfully")
+        navigate(`/alumni/`)
     })
     .catch(error => console.log(error.response.data))
      
 
   }
-  console.log(epsdone)
   return (
     <center>
     {
@@ -315,44 +332,20 @@ export default function AddASYVInfo() {
                       <label htmlFor="marital_status">
                           Marital Status
                       </label>
-                      <select name="marital_status">
-                      {marital_status==="Single"?
-                        <><option value="Single" selected>Single</option>
+                      <select value={marital_status} defaultValue={marital_status} onChange={(e)=>setMarital_status(e.target.value)} name="marital_status">
+                        <option value="Single">Single</option>
                         <option value="Maried">Maried</option>
                         <option value="Divorced">Divorced</option>
-                        <option value="Widowed">Widowed</option></>:
-                        marital_status==="Maried"?
-                        <><option value="Single" selected>Single</option>
-                        <option value="Maried" selected>Maried</option>
-                        <option value="Divorced">Divorced</option>
-                        <option value="Widowed">Widowed</option></>:
-                        marital_status==="Divorced"?
-                        <><option value="Single" selected>Single</option>
-                        <option value="Maried">Maried</option>
-                        <option value="Divorced" selected>Divorced</option>
-                        <option value="Widowed">Widowed</option></>:
-                        marital_status==="Widowed"?
-                        <><option value="Single">Single</option>
-                        <option value="Maried">Maried</option>
-                        <option value="Divorced">Divorced</option>
-                        <option value="Widowed" selected>Widowed</option></>:
-                        null
-                        }
-                        
+                        <option value="Widowed">Widowed</option>
                       </select>
                   </div>
                   <div className="formpart">
                       <label htmlFor="gender">
                           Gender
                       </label>
-                      <select name="gender">
-                        {gender==="Male"?
-                        <><option value="Male" selected>Male</option>
-                        <option value="Female">Female</option></>:
-                        <><option value="Male">Male</option>
-                        <option value="Female" selected>Female</option></>    
-                    }
-                        
+                      <select value={gender} defaultValue={gender} onChange={(e)=>setGender(e.target.value)} name="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                       </select>
                   </div>
                   <div className="formpart">
@@ -381,13 +374,9 @@ export default function AddASYVInfo() {
                       <label htmlFor="kids">
                           Do you have kids
                       </label>
-                      <select name="kids">
-                        {kids?
-                        <><option value="false" selected>Yes</option>
-                        <option value="true">No</option></>:
-                        <><option value="false">Yes</option>
-                        <option value="true" selected>No</option></>
-                        }
+                      <select value={kids} defaultValue={kids} onChange={(e)=>setKids(e.target.value)} name="kids">
+                        <option value="false">Yes</option>
+                        <option value="true">No</option>
                       </select>
                   </div>
 
@@ -395,12 +384,10 @@ export default function AddASYVInfo() {
                       <label htmlFor="grade">
                           Grade
                       </label>     
-                          <select name="grade" onChange={getfamilies}>
-                            <option value="">select grade</option>
+                          <select value={grade.id} defaultValue={grade.id} name="grade" onChange={getfamilies}>
+                            <option value=""disabled>select grade</option>
                               {grades.map((e,ind) => {
-                                  return grade.id===e.id?
-                                    <option key={ind} value={e.id} selected>{e.grade_name}</option>:
-                                    <option key={ind} value={e.id} >{e.grade_name}</option>
+                                  return <option key={ind} value={e.id} >{e.grade_name}</option>
                               })}               
                           </select> 
                   </div>
@@ -408,11 +395,9 @@ export default function AddASYVInfo() {
                   <label htmlFor="family">
                           Family
                       </label>      
-                          <select name="family">
+                          <select value={family.id} defaultValue={family.id} onChange={(e)=>setFamilie(e.target.value)} name="family">
                               {families.map((e,ind) => {
-                                  return  family.id===e.id?
-                                  <option key={ind} value={e.id} selected>{e.family_name}</option>:
-                                  <option key={ind} value={e.id}>{e.family_name}</option>
+                                  return  <option key={ind} value={e.id}>{e.family_name}</option>
                               })}               
                           </select> 
                   </div>
@@ -422,12 +407,10 @@ export default function AddASYVInfo() {
                       Combination
                       </label>
                       
-                      <select name='combination'>
-                      <option value="">select combination</option>
+                      <select value={comb.id} name='combination' onChange={(e) => setCombinations(e.target.value)} defaultValue={comb.id}>
+                      <option value="" disabled>select combination</option>
                       {combination.map((e,ind) => {
-                        return  comb.id===e.id?
-                        <option key={ind} value={e.id} selected>{e.combination_name}</option>:
-                        <option key={ind} value={e.id}>{e.combination_name}</option>
+                        return <option key={ind} value={e.id}>{e.combination_name}</option>
                           })}
                       </select>
                   </div>
@@ -435,15 +418,14 @@ export default function AddASYVInfo() {
                       <label htmlFor="eps">
                           Eps done
                       </label>
-                      <Select isMulti onChange={handleChangeofEp} options={eps} />
+                      <Select value={epsdone} isMulti onChange={handleChangeofEp} options={eps} />
                   </div>
                   
                   
               </div>
 
               <center>
-              <button disabled={!validMother ||  !validMother ? true : false }
-              >Save and continue</button>
+              <button>Update and continue</button>
               </center>
           </form>
           </center>

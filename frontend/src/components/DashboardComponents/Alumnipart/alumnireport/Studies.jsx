@@ -39,7 +39,7 @@ export default function Studies() {
                 scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="N"?"None":null,
                 status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
                 user_id:element.study_id?<span>
-                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
+                  <Link to={`/alumni/updatestudie/${element.study_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deletestudy/${element.study_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>:null
               })

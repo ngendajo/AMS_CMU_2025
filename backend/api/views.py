@@ -20,7 +20,7 @@ User = get_user_model()
 #User data
 
 class AluminiRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -130,6 +130,31 @@ def create_alumni_info(request):
             raise NotFound()
 
     return Response( status=status.HTTP_201_CREATED)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_alumni_info(request, pk=None):
+    alumn = Alumni.objects.get(pk=pk)
+
+    serializer = AlumniInfoUpdateSerializer(alumn, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+        eps = []
+
+        for ep_id in request.data.get('Eps'):
+            try:
+                ep = Ep.objects.get(id=ep_id)
+                eps.append(ep)
+            except Ep.DoesNotExist:
+                raise NotFound()
+
+        alumn.Eps.set(eps)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    else:
+        print(serializer.errors)
+        return Response(data=serializer.errors, status=status.HTTP_200_OK)
         
 #End CRC data 
 
@@ -512,7 +537,7 @@ class EmploymentView(APIView):
 @permission_classes([IsAuthenticated])
 def update_Employment(request, pk):
     employment = Employment.objects.get(pk=pk)
-    data = EmploymentSerializer(instance=employment, data=request.data)
+    data = EmploymentUpdateSerializer(instance=employment, data=request.data)
  
     if data.is_valid():
         data.save()

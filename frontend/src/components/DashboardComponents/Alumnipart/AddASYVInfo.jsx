@@ -350,15 +350,14 @@ export default function AddASYVInfo() {
                       <label htmlFor="eps">
                           Eps done
                       </label>
-                      <Select isMulti onChange={handleChangeofEp} options={eps} />
+                      <Select value={epsdone} isMulti onChange={handleChangeofEp} options={eps} />
                   </div>
                   
                   
               </div>
 
               <center>
-              <button disabled={!validMother ||  !validMother ? true : false }
-              >Save and continue</button>
+              <button>Save and continue</button>
               </center>
           </form>
           </center>

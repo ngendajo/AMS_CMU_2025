@@ -123,6 +123,11 @@ class EmploymentSerializer(serializers.ModelSerializer):
         model = Employment
         fields=('__all__')
 
+class EmploymentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('title','status','description','company','start_date','end_date')
+
 class EmploymentDisplayOneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employment
@@ -151,6 +156,12 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
         fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
+
+class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
+    Eps = EpSerializer(many=True, read_only=True)
+    class Meta:
+        model = Alumni
+        fields = ('id','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
 
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:

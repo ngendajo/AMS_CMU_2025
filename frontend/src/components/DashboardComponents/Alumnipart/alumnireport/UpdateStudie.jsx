@@ -5,7 +5,6 @@ import '../../../Header/searchBar.css';
 import '../../../Header/searchResultsList.css';
 import '../../Staffpart/staff.css';
 import '../../Alumnipart/alumni.css';
-import { Link } from 'react-router-dom';
 import useAuth from "../../../../hooks/useAuth";
 import axios from "axios";
 import { useParams } from 'react-router';
@@ -16,34 +15,44 @@ import countryList from 'react-select-country-list'
 
 
 
-export default function AddStudie() {
+export default function UpdateStudie() {
   const [userid, setUserid]=useState([]);
   const { auth } = useAuth();
   const params = useParams();
     const navigate = useNavigate();
-    const [alumn, setAlumn] = useState(0)
-    const [value, setValue] = useState('')
-  const options = useMemo(() => countryList().getData(), [])
+    const [degree, setDegree] = useState('');
+    const [university, setUniversity] = useState('');
+    const [country, setCountry] = useState('');
+    const [status, setStatus] = useState('');
+    const [scholarship, setScholarship] = useState('');
+  const options = useMemo(() => countryList().getData(), []);
 
   const changeHandler = value => {
-    setValue(value)
+    setCountry(value)
   }
 
     useEffect(() =>{
     
       const getuser = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+              const response = await axios.get('http://127.0.0.1:8000/api/studie/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
                   },
                   withCredentials:true
               });
-              setUserid(response.data)
-              response.data.forEach((el)=>{
-                setAlumn(el.alumn.id)
+              setUserid(response.data);
+              setDegree(response.data[0].degree);
+              setUniversity(response.data[0].university);
+              options.forEach((e)=>{
+                if(e.label===response.data[0].country){
+                  setCountry(e);
+                } 
               })
+              
+              setScholarship(response.data[0].scholarship);
+              setStatus(response.data[0].status);
           }catch(err) {
               console.log(err);
           }
@@ -51,17 +60,16 @@ export default function AddStudie() {
   
       getuser();
   
-  },[auth,params])
+  },[auth,params,options])
   const handleSubmit = async (e) =>{
     e.preventDefault();
 
-    axios.post('http://127.0.0.1:8000/api/studie/', {
-        "alumn":alumn,
-        "degree":e.target.degree.value,
-        "university":e.target.university.value,
-        "scholarship":e.target.scholarship.value,
-        "country":value.label,
-        "status":e.target.status.value
+    axios.post('http://127.0.0.1:8000/api/updatestudie/'+params.id+'/', {
+        "degree":degree,
+        "university":university,
+        "scholarship":scholarship,
+        "country":country.label,
+        "status":status
         
         }, 
         {
@@ -73,8 +81,8 @@ export default function AddStudie() {
     )
     .then(res =>{
         console.log(res)
-        alert(" created successfully")
-        navigate(`/add-alumni/info/${params.id}/addemployment`)
+        alert(" Updated successfully")
+        navigate(`/alumni/studie/`)
     })
     .catch(error => console.log(error.response))
      
@@ -82,14 +90,11 @@ export default function AddStudie() {
   }
   return (
     <center>
-          <p>
-              <Link className="line" to="/alumni/studie/">Go back</Link>
-          </p>
       {
       userid.map((result, id)=>{
           return <div key={id} className="delete-message"> 
-          <img src={"http://localhost:8000"+result.image_url} alt="logo" className="user-image-icon" />
-          <h1>Add Study Status for  {result.first_name} {result.last_name} with {result.email} as 
+          <img src={"http://localhost:8000"+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
+          <h1>Update Study Status for  {result.alumn.user.first_name} {result.alumn.user.last_name} with {result.alumn.user.email} as 
           email
           </h1>
           </div>
@@ -97,7 +102,7 @@ export default function AddStudie() {
       )}
 
     
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="form">
           
                 <div className="form-content">
                     
@@ -110,6 +115,8 @@ export default function AddStudie() {
                         id="degree"
                         autoComplete="off"
                         name="degree"
+                        value={degree}
+                        onChange={(e)=>setDegree(e.target.value)}
                         required
                         />
                     </div>
@@ -122,6 +129,8 @@ export default function AddStudie() {
                         id="university"
                         autoComplete="off"
                         name="university"
+                        value={university}
+                        onChange={(e)=>setUniversity(e.target.value)}
                         required
                         />
                     </div>
@@ -129,13 +138,13 @@ export default function AddStudie() {
                         <label htmlFor="country">
                             Country
                         </label>
-                        <Select options={options} value={value} onChange={changeHandler} />
+                        <Select options={options} value={country} onChange={changeHandler} />
                     </div>
                     <div className="formpart">
                         <label htmlFor="status">
                             Status
                         </label>
-                        <select name="status">
+                        <select name="status" value={status} defaultValue={status} onChange={(e)=>setStatus(e.target.value)}>
                           <option value="D">Dropped_Out</option>
                           <option value="S">Suspended</option>
                           <option value="O">On_Going</option>
@@ -146,7 +155,7 @@ export default function AddStudie() {
                         <label htmlFor="scholarship">
                         Scholarship
                         </label>
-                        <select name="scholarship">
+                        <select name="scholarship" value={scholarship} defaultValue={scholarship} onChange={(e)=>setScholarship(e.target.value)}>
                           <option value="F">Full Scholarship</option>
                           <option value="P">Partial Scholarship</option>
                           <option value="N">None</option>
@@ -159,10 +168,7 @@ export default function AddStudie() {
                 </div>
 
                 <center>
-                {alumn===0?null:
-                <button
-                >Save and continue</button>
-                }
+                  <button>Save and continue</button>
                 </center>
             </form>
             
