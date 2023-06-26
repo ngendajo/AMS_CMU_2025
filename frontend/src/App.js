@@ -49,6 +49,7 @@ import Deletestudy from './components/DashboardComponents/Alumnipart/Deletestudy
 import UpdateASYVInfo from './components/DashboardComponents/Alumnipart/UpdateASYVInfo';
 import UpdateStudie from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStudie';
 import UpdateEmployment from './components/DashboardComponents/Alumnipart/alumnireport/UpdateEmployment';
+import Stories from './components/DashboardComponents/Alumnipart/alumnireport/Stories';
 
 
 function App() {
@@ -91,6 +92,7 @@ function App() {
                       <Route path='combinations' element={<Combinations />}/>
                       <Route path='eps' element={<Eps />}/>
                       <Route path='studie' element={<Studies />}/>
+                      <Route path='story' element={<Stories />}/>
                       <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
                       <Route path='updatestudie/:id' element={<UpdateStudie />}/>
                       <Route path='updateemployement/:id' element={<UpdateEmployment />}/>

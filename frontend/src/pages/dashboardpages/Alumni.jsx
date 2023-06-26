@@ -27,6 +27,9 @@ export default function Alumni() {
           <Link to={"/alumni/employment/"} className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
             <span>Employed</span>
           </Link>
+          <Link to={"/alumni/story/"} className={category===9? "displayed":"notdisplayed"} onClick={()=>setCategory(9)}>
+            <span>Stories</span>
+          </Link>
 
           <Link to="/alumni/grades" className={category===5? "displayed":"notdisplayed"} onClick={()=>setCategory(5)}>
             <span>Grades</span>
