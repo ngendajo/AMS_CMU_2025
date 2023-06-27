@@ -609,6 +609,15 @@ class GalleryView(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+@api_view(['POST']) 
+def create_gallery(request):
+    serializer = GallerySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def update_gallery(request, pk):

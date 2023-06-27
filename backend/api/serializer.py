@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+
+
 #User management serializers
 
 #managing staff serializers
@@ -256,6 +258,18 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields=('__all__')
+
+ 
+    def create(self, validated_data):
+        image_url = validated_data.get('image_url')
+        displayed = validated_data.get('displayed')
+
+        gallery = Gallery.objects.create(
+            image_url=image_url,
+            displayed=displayed
+        )
+
+        return gallery
 
 
 

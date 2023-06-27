@@ -147,5 +147,5 @@ class Story(models.Model):
 
 # Gallery model
 class Gallery(models.Model):
-    image=models.ImageField(upload_to='galleries', default='galleries/default.jpg')
-    displayed=models.BooleanField(default=False)
+    image_url=models.ImageField(upload_to='galleries', default='galleries/default.jpg')
+    displayed=models.BooleanField(default=True)

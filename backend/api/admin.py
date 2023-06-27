@@ -130,4 +130,4 @@ class EmploymentAdmin(ImportExportModelAdmin):
 
 @admin.register(Gallery)
 class  GalleryAdmin(ImportExportModelAdmin):
-    list_display=('id','image','displayed')
+    list_display=('id','image_url','displayed')
