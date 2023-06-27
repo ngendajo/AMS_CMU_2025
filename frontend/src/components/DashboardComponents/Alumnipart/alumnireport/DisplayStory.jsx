@@ -1,5 +1,5 @@
 
-import {useState, useEffect,useRef } from 'react';
+import {useState, useEffect} from 'react';
 import '../../../Header/header.css';
 import '../../../Header/searchBar.css';
 import '../../../Header/searchResultsList.css';
