@@ -438,7 +438,7 @@ def delete_eve(request, pk):
 
 # Story data view
 class StoryView(APIView):
-     #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StorySerializer(data=request.data)
         # validating for already existing data

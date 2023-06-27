@@ -30,6 +30,10 @@ export const COLUMNS = [
       accessor: "description",
     },
     {
+      Header: "Displayed",
+      accessor: "allowed",
+    },
+    {
       Header: "Action",
       accessor: "user_id",
       disableFilters: true, 

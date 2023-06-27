@@ -6,6 +6,8 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { StoriesTable } from '../StoriesTable';
+import ReactHtmlParser from "react-html-parser";
+import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
 
 export default function Employment() {
   const [data, setData] = useState([]);
@@ -33,10 +35,11 @@ export default function Employment() {
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone:element.phone1,
-                description:element.description===null?<AiOutlineFileAdd/>:element.description,
+                description:element.description===null?<Link to={`/add-alumni/info/${element.id}/story`}><AiOutlineFileAdd className='icon'/></Link>: ReactHtmlParser(element.description),
+                allowed:element.description?element.displayed?<Link to={`/alumni/displaystory/${element.story_id}`}><LiaEyeSolid className='icon'/></Link>:<Link to={`/alumni/displaystory/${element.story_id}`}><LiaEyeSlash className='icon'/></Link>:null,
                 user_id:element.description?<span>
-                  <Link to={`/alumni/updateemployement/${element.emp_id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/alumni/deleteemployment/${element.emp_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                  <Link to={`/alumni/updatestory/${element.story_id}`}><BiEditAlt className='icon'/></Link>
+                      <Link to={`/alumni/deletestory/${element.story_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>:null
               })
               i+=1

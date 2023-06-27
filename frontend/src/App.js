@@ -50,6 +50,10 @@ import UpdateASYVInfo from './components/DashboardComponents/Alumnipart/UpdateAS
 import UpdateStudie from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStudie';
 import UpdateEmployment from './components/DashboardComponents/Alumnipart/alumnireport/UpdateEmployment';
 import Stories from './components/DashboardComponents/Alumnipart/alumnireport/Stories';
+import AddStory from './components/DashboardComponents/Alumnipart/alumnireport/AddStory';
+import UpdateStory from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStory';
+import DeleteStory from './components/DashboardComponents/Alumnipart/alumnireport/DeleteStory';
+import DisplayStory from './components/DashboardComponents/Alumnipart/alumnireport/DisplayStory';
 
 
 function App() {
@@ -96,6 +100,9 @@ function App() {
                       <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
                       <Route path='updatestudie/:id' element={<UpdateStudie />}/>
                       <Route path='updateemployement/:id' element={<UpdateEmployment />}/>
+                      <Route path='updatestory/:id' element={<UpdateStory />}/>
+                      <Route path='deletestory/:id' element={<DeleteStory />}/>
+                      <Route path='displaystory/:id' element={<DisplayStory />}/>
                     </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
@@ -113,6 +120,7 @@ function App() {
                       <Route path='' element={<AddASYVInfo />}/>
                       <Route path='addemployment' element={<AddEmployment />}/>
                       <Route path='study' element={<AddStudie />}/>
+                      <Route path='story' element={<AddStory />}/>
                     </Route>
                     <Route path='add-alumni/:id' element={<EditAlumini />}/>
                     <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
