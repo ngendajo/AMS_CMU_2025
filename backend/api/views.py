@@ -650,6 +650,7 @@ class UpdateOpportunityView(RetrieveUpdateAPIView):
         return Response(serializer.data)
 
 
+
 class ApproveOpportunityView(RetrieveUpdateAPIView):
     queryset = Opportunity.objects.all()
     serializer_class = ApproveOpportunitySerializer

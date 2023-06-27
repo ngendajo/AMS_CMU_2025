@@ -14,7 +14,7 @@ export default function Alumni() {
 
   return (
     <div>
-        <div className='alumni-list-heading'>
+        <div className='alumni-list-heading'>  {/* className属性设置为'alumni-list-heading'，它是一个用于样式设计的类名 */}
 
         <Link to={"/alumni/"} className={category===7? "displayed":"notdisplayed"} onClick={()=>setCategory(7)}>
             <span>ASYV Info</span>
