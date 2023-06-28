@@ -24,6 +24,7 @@ export default function UpdateStudie() {
     const [university, setUniversity] = useState('');
     const [country, setCountry] = useState('');
     const [status, setStatus] = useState('');
+    const [level, setLevel] = useState('');
     const [scholarship, setScholarship] = useState('');
   const options = useMemo(() => countryList().getData(), []);
 
@@ -53,6 +54,7 @@ export default function UpdateStudie() {
               
               setScholarship(response.data[0].scholarship);
               setStatus(response.data[0].status);
+              setLevel(response.data[0].level);
           }catch(err) {
               console.log(err);
           }
@@ -65,6 +67,7 @@ export default function UpdateStudie() {
     e.preventDefault();
 
     axios.post('http://127.0.0.1:8000/api/updatestudie/'+params.id+'/', {
+      "level":level,
         "degree":degree,
         "university":university,
         "scholarship":scholarship,
@@ -105,7 +108,18 @@ export default function UpdateStudie() {
         <form onSubmit={handleSubmit} className="form">
           
                 <div className="form-content">
-                    
+                    <div className="formpart">
+                        <label htmlFor="level">
+                            Status
+                        </label>
+                        <select name="level" value={level} defaultValue={level} onChange={(e)=>setLevel(e.target.value)}>
+                          <option value="A2">Advanced level Certificate</option>
+                          <option value="A1">Advanced diploma</option>
+                          <option value="A0">Bachelors</option>
+                          <option value="M">Masters</option>
+                          <option value="PHD">PHD</option>
+                        </select>
+                    </div>
                     <div className="formpart">
                         <label htmlFor="degree">
                             Degree

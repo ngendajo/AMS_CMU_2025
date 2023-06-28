@@ -57,6 +57,7 @@ export default function AddStudie() {
 
     axios.post('http://127.0.0.1:8000/api/studie/', {
         "alumn":alumn,
+        "level":e.target.level.value,
         "degree":e.target.degree.value,
         "university":e.target.university.value,
         "scholarship":e.target.scholarship.value,
@@ -100,10 +101,22 @@ export default function AddStudie() {
         <form onSubmit={handleSubmit}>
           
                 <div className="form-content">
+                <div className="formpart">
+                        <label htmlFor="level">
+                            Degree
+                        </label>
+                        <select name="level">
+                          <option value="A2">Advanced level Certificate</option>
+                          <option value="A1">Advanced diploma</option>
+                          <option value="A0">Bachelors</option>
+                          <option value="M">Masters</option>
+                          <option value="PHD">PHD</option>
+                        </select>
+                    </div>
                     
                     <div className="formpart">
                         <label htmlFor="degree">
-                            Degree
+                            Field of study
                         </label>
                         <input
                         type="text"

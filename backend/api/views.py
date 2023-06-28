@@ -560,7 +560,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -580,7 +580,7 @@ class StudieView(APIView):
             serializer = StudyWithAlumnSerializer(stud1, many=True)
             return Response(serializer.data)
         else:
-            stud = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_studie.degree,userprofile_studie.university,userprofile_studie.country,userprofile_studie.scholarship,userprofile_studie.status,userprofile_studie.id as study_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni=true;")
+            stud = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_studie.level,userprofile_studie.degree,userprofile_studie.university,userprofile_studie.country,userprofile_studie.scholarship,userprofile_studie.status,userprofile_studie.id as study_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni=true;")
     
         # if there is something in items else raise error
         if stud:
@@ -608,3 +608,43 @@ def delete_studie(request, pk):
     stud.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 #end
+
+
+#Dashboard needed data view
+
+class AlumnReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = User.objects.raw("SELECT 1 as id, COUNT(api_user.id) AS total,COUNT(IF(userprofile_alumni.gender LIKE 'F%',TRUE,NULL)) AS female from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id WHERE api_user.is_alumni;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = AlumnReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        
+class StudyReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = Studie.objects.raw("select 1 as id, count(userprofile_studie.level) as level, userprofile_studie.level as degree from userprofile_studie group by userprofile_studie.level;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = StudyReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class EmploymentReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = Employment.objects.raw("select count(case when userprofile_employment.status not like '%I%' and userprofile_employment.end_date like '%Up to now%'  then 1 end) as employed, count(case when userprofile_employment.status like '%I%' and userprofile_employment.end_date like '%Up to now%' then 1 end) as intern,count(case when userprofile_employment.end_date not like '%Up to now%'  then 1 end) as unemployed from userprofile_employment;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = EmploymentReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)

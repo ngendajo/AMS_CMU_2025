@@ -54,5 +54,10 @@ urlpatterns = [
     path('studie/', views.StudieView.as_view()),
     path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
+
+    #Dashdboard data
+    path('alumnreport/', views.AlumnReportView.as_view()),
+    path('studyreport/', views.StudyReportView.as_view()),
+    path('employmentreport/', views.EmploymentReportView.as_view()),
     path('', views.getRoutes)
 ]

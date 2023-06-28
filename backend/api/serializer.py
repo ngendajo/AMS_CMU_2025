@@ -294,10 +294,11 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
     scholarship = serializers.CharField(max_length=200, required=True)
     status = serializers.CharField(max_length=200, required=True)
     study_id = serializers.IntegerField(required=True)
+    level = serializers.CharField(max_length=50, required=True)
 
     class Meta:
         model = Studie
-        fields = ('id','email','phone1','first_name','last_name','image_url','degree','university','country','scholarship','status','study_id')
+        fields = ('id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id')
 
 
 
@@ -305,12 +306,45 @@ class StudieSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Studie
-        fields = ('id','alumn','degree','university','country','scholarship','status')
+        fields = ('id','alumn','level','degree','university','country','scholarship','status')
 
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
-        fields = ('degree','university','country','scholarship','status')
+        fields = ('level','degree','university','country','scholarship','status')
+
+
+#Dashboard needed data serializer
+class AlumnReportSerializer(serializers.ModelSerializer):
+
+    id= serializers.IntegerField(required=True)
+    total = serializers.IntegerField(required=True)
+    female = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('id','total','female')
+
+class StudyReportSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(required=True)
+    level = serializers.IntegerField(required=True)
+    degree = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = Studie
+        fields = ('id','level','degree')
+
+class EmploymentReportSerializer(serializers.ModelSerializer):
+
+    employed = serializers.IntegerField(required=True)
+    intern = serializers.IntegerField(required=True)
+    unemployed = serializers.IntegerField(required=True)
+
+    class Meta:
+        fields = ('employed','intern','unemployed',)
+
+
 
 
 

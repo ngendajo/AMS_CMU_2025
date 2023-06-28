@@ -35,7 +35,7 @@ const Admin = () => {
                 </div>
                 <div className='item2'>
                   <div className='item2-title'>Alumni</div>
-                  <div className='item2-body'><h2><AiOutlinePlus className='item2-icon'/></h2><h2 className='alumni-number'>1241</h2></div>
+                  <div className='item2-body'><strong><AiOutlinePlus className='item2-icon'/></strong><strong className='alumni-number'>1241</strong></div>
                   <div className='item2-title'>10 Grades</div>
                 </div>
                 <div className='itme3'>

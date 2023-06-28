@@ -14,16 +14,16 @@ export const COLUMNS = [
       accessor: "email",
     },
     {
-      Header: "First Name",
-      accessor: "first_name",
-    },
-    {
-      Header: "Last Name",
-      accessor: "last_name",
+      Header: "Name",
+      accessor: "name",
     },
     {
       Header: "Phone",
       accessor: "phone",
+    },
+    {
+      Header: "Field of Study",
+      accessor: "field",
     },
     {
       Header: "Degree",
