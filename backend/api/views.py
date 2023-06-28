@@ -1,6 +1,7 @@
 from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from django.db.models import Count, Case, When, IntegerField
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
@@ -615,11 +616,11 @@ def delete_studie(request, pk):
 class AlumnReportView(APIView):
     #permission_classes = [IsAuthenticated, ]  
     def get(self,request):
-        stud = User.objects.raw("SELECT 1 as id, COUNT(api_user.id) AS total,COUNT(IF(userprofile_alumni.gender LIKE 'F%',TRUE,NULL)) AS female from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id WHERE api_user.is_alumni;")
-    
+        stud = User.objects.raw("SELECT api_user.id,userprofile_alumni.gender,userprofile_employment.status as employed from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id WHERE api_user.is_alumni;")
+        
         # if there is something in items else raise error
         if stud:
-            serializer = AlumnReportSerializer(stud, many=True)
+            serializer = TotalAlumnReportSerializer(stud, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)

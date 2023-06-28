@@ -29,15 +29,26 @@ export default function Header() {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+auth?.user.id,{
+                if(auth.user.is_alumni){
+                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+auth?.user.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
                     },
                     withCredentials:true
                 });
-                console.log(response.data)
                 setUserid(response.data)
+                }else
+                {
+                    const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+auth?.user.id,{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                setUserid(response.data)
+                }
             }catch(err) {
                 console.log(err);
             }
@@ -46,8 +57,6 @@ export default function Header() {
         getuser();
     
     },[auth])
-
-
       const navigate = useNavigate();
       const logout = useLogout();
   
@@ -91,7 +100,7 @@ export default function Header() {
                 
                 <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
                 <br/>{auth.user.is_superuser? "Admin":
-                auth.user.is_crc? "CRC Staff":auth.user.alumni.grade.name
+                auth.user.is_crc? "CRC Staff":userid[0].alumn.Family.grade.grade_name
                 }</p>
                 <IoIosArrowDropdown className='profile-icon' />
             </div>
