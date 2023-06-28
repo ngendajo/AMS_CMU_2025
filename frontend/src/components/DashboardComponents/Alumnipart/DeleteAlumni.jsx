@@ -23,7 +23,6 @@ const DeleteAlumni = () => {
                     withCredentials:true
                 });
                 setUserid(response.data)
-                console.log(response.data)
             }catch(err) {
                 console.log(err);
             }

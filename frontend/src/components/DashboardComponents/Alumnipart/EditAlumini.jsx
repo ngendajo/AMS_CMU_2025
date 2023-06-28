@@ -7,6 +7,7 @@ import "../forms.css";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Dropzone from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -15,9 +16,10 @@ const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 export default function EditAlumini() {
     const { auth } = useAuth();
     const params = useParams();
-    
+    const navigate = useNavigate();
     const [currentfile, setCurrentfile] = useState();
     const [msg, setMsg] = useState("");
+    const [alum, setAlum] = useState(0);
 
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(false);
@@ -55,6 +57,7 @@ export default function EditAlumini() {
                     setLast_name(result.last_name);
                     setPhone1(result.phone1);
                     setCurrentfile(result.image_url);
+                    setAlum(result.alumn?.id);
                 })
             }catch(err) {
                 console.log(err);
@@ -171,6 +174,11 @@ export default function EditAlumini() {
             }
             );
             console.log(response.data)
+            if(alum>0){
+                navigate(`/alumni/updateasyvinfo/${params.id}`)
+            }else{
+                navigate(`/add-alumni/info/${params.id}`)
+            }
             setMsg("user data updated successfully");
             //clear input fields
     }catch(err){
@@ -202,7 +210,7 @@ export default function EditAlumini() {
          {errMsg}
      </p>
      <center className="updatemsg">{msg}</center>
-    <center> <h1>Update Staff Info</h1></center>
+    <center> <h1>Update Alumni Info</h1></center>
      <form>
      <center>
      {disiplayfile ? <img className="img-for-profile" src={"http://localhost:8000"+currentfile} alt="" />:

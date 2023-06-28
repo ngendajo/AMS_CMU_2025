@@ -187,9 +187,9 @@ export default function AddASYVInfo() {
         }
     )
     .then(res =>{
-        console.log(res)
+        console.log(res) 
         alert(" created successfully")
-        navigate('/alumni')
+        navigate(`/add-alumni/info/${params.id}/study`)
     })
     .catch(error => console.log(error.response.data))
      
@@ -210,7 +210,7 @@ export default function AddASYVInfo() {
 
   
       <form onSubmit={handleSubmit}>
-         
+          
               <div className="form-content">
                   
                   <div className="formpart">
@@ -317,6 +317,7 @@ export default function AddASYVInfo() {
                           Grade
                       </label>     
                           <select name="grade" onChange={getfamilies}>
+                            <option value="">select grade</option>
                               {grades.map((e,ind) => {
                                   return  <option key={ind} value={e.id}>{e.grade_name}</option>
                               })}               
@@ -339,6 +340,7 @@ export default function AddASYVInfo() {
                       </label>
                       
                       <select name='combination'>
+                        <option value="">select combination</option>
                       {combination.map((e,ind) => {
                         return  <option key={ind} value={e.id}>{e.combination_name}</option>
                           })}
@@ -348,15 +350,14 @@ export default function AddASYVInfo() {
                       <label htmlFor="eps">
                           Eps done
                       </label>
-                      <Select isMulti onChange={handleChangeofEp} options={eps} />
+                      <Select value={epsdone} isMulti onChange={handleChangeofEp} options={eps} />
                   </div>
                   
                   
               </div>
 
               <center>
-              <button disabled={!validMother ||  !validMother ? true : false }
-              >Next</button>
+              <button>Save and continue</button>
               </center>
           </form>
           </center>

@@ -41,6 +41,19 @@ import DeleteAlumni from './components/DashboardComponents/Alumnipart/DeleteAlum
 import Employment from './components/DashboardComponents/Alumnipart/alumnireport/Employment';
 import ASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/ASYVInfo';
 import AddASYVInfo from './components/DashboardComponents/Alumnipart/AddASYVInfo';
+import AddEmployment from './components/DashboardComponents/Alumnipart/alumnireport/AddEmployment';
+import DeleteEmployment from './components/DashboardComponents/Alumnipart/DeleteEmployment';
+import Studies from './components/DashboardComponents/Alumnipart/alumnireport/Studies';
+import AddStudie from './components/DashboardComponents/Alumnipart/alumnireport/AddStudie';
+import Deletestudy from './components/DashboardComponents/Alumnipart/Deletestudy';
+import UpdateASYVInfo from './components/DashboardComponents/Alumnipart/UpdateASYVInfo';
+import UpdateStudie from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStudie';
+import UpdateEmployment from './components/DashboardComponents/Alumnipart/alumnireport/UpdateEmployment';
+import Stories from './components/DashboardComponents/Alumnipart/alumnireport/Stories';
+import AddStory from './components/DashboardComponents/Alumnipart/alumnireport/AddStory';
+import UpdateStory from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStory';
+import DeleteStory from './components/DashboardComponents/Alumnipart/alumnireport/DeleteStory';
+import DisplayStory from './components/DashboardComponents/Alumnipart/alumnireport/DisplayStory';
 import AddGallery from './components/GalleryComponents/AddGalleryPhoto'
 
 
@@ -78,9 +91,19 @@ function App() {
                     <Route path='alumni' element={<Alumni />}>
                       <Route path='' element={<ASYVInfo />}/>
                       <Route path='employment' element={<Employment />}/>
+                      <Route path='deleteemployment/:id' element={<DeleteEmployment />}/>
+                      <Route path='deletestudy/:id' element={<Deletestudy />}/>
                       <Route path='grades' element={<Grades />}/>
-                    <Route path='combinations' element={<Combinations />}/>
-                    <Route path='eps' element={<Eps />}/>
+                      <Route path='combinations' element={<Combinations />}/>
+                      <Route path='eps' element={<Eps />}/>
+                      <Route path='studie' element={<Studies />}/>
+                      <Route path='story' element={<Stories />}/>
+                      <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
+                      <Route path='updatestudie/:id' element={<UpdateStudie />}/>
+                      <Route path='updateemployement/:id' element={<UpdateEmployment />}/>
+                      <Route path='updatestory/:id' element={<UpdateStory />}/>
+                      <Route path='deletestory/:id' element={<DeleteStory />}/>
+                      <Route path='displaystory/:id' element={<DisplayStory />}/>
                     </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
@@ -93,9 +116,12 @@ function App() {
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                     {/* alumni crud */}
-                    <Route path='add-alumni' element={<Registera />}/>
+                    <Route path='add-alumni' element={<Registera />}/> 
                     <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
                       <Route path='' element={<AddASYVInfo />}/>
+                      <Route path='addemployment' element={<AddEmployment />}/>
+                      <Route path='study' element={<AddStudie />}/>
+                      <Route path='story' element={<AddStory />}/>
                     </Route>
                     <Route path='add-alumni/:id' element={<EditAlumini />}/>
                     <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>

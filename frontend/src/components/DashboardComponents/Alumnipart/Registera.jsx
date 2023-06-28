@@ -130,7 +130,7 @@ const Registera = () => {
             );
             console.log(response.data.id)
             navigate("/add-alumni/info/"+response.data.id)
-            //clear input fields
+            //clear input fields 
     }catch(err){
         if (!err?.response) {
             setErrMsg('No Server Response'+err);
