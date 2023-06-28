@@ -1,11 +1,11 @@
 import useAuth from '../../../../hooks/useAuth';
-import { Table } from '../Table';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { EmplymentTable } from '../EmploymentTable';
 
 export default function Employment() {
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ export default function Employment() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
+            const response = await axios.get('http://127.0.0.1:8000/api/employment/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -33,12 +33,13 @@ export default function Employment() {
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone:element.phone1,
-                grade:element.employement==null? <Link to={`/add-alumni/employment/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.grade.grade_name,
-                family:element.employement==null? <Link to={`/add-alumni/employment/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.family_name,
-                user_id:<span>
-                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
-                </span>
+                title:element?.title,
+                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Part Time":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
+                end:element?.end,
+                user_id:element.title?<span>
+                  <Link to={`/alumni/updateemployement/${element.emp_id}`}><BiEditAlt className='icon'/></Link>
+                      <Link to={`/alumni/deleteemployment/${element.emp_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                </span>:null
               })
               i+=1
             });
@@ -61,7 +62,7 @@ export default function Employment() {
               </div>
             </div>
               <div className="listtable">
-                <Table mockData={data} />
+                <EmplymentTable mockData={data} />
               </div>
       </div>
   )

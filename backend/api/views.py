@@ -30,7 +30,10 @@ from .serializer import AlumniInfoRegSerializer, AlumniSerializer, AlumniRegistr
     PasswordChangeSerializer, FamilySerializer, CombinationSerializer, GradeSerializers, EpSerializer, \
     OpportunitySerializer, UpdateOpportunitySerializer, ApproveOpportunitySerializer, AddFamilySerializer, \
     EventSerializer, UpdateEventSerializer, StorySerializer, StoryWithAlumnSerializer, UpdateStorySerializer, \
-    DisplayStorySerializer, EmploymentSerializer, StudieSerializer, UpdateStudieSerializer
+    DisplayStorySerializer, EmploymentSerializer, StudieSerializer, UpdateStudieSerializer, EmploymentReportSerializer, \
+    AlumniInfoUpdateSerializer, DisplayAllStoriesSerializer, EmploymentDisplayOneSerializer, \
+    DisplayEmploymentSerializer, StudyWithAlumnSerializer, StudieWithAlumnSerializer, EmploymentUpdateSerializer, \
+    AlumnReportSerializer, StudyReportSerializer
 from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Opportunity, Event, Employment, Studie, Story
 from .models import User
 from django.contrib.auth import get_user_model
@@ -38,6 +41,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from ..userprofile.models import Alumni
 
 User = get_user_model()
 # Create your views here.
@@ -155,6 +159,31 @@ def create_alumni_info(request):
             raise NotFound()
 
     return Response( status=status.HTTP_201_CREATED)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_alumni_info(request, pk=None):
+    alumn = Alumni.objects.get(pk=pk)
+
+    serializer = AlumniInfoUpdateSerializer(alumn, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+        eps = []
+
+        for ep_id in request.data.get('Eps'):
+            try:
+                ep = Ep.objects.get(id=ep_id)
+                eps.append(ep)
+            except Ep.DoesNotExist:
+                raise NotFound()
+
+        alumn.Eps.set(eps)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    else:
+        print(serializer.errors)
+        return Response(data=serializer.errors, status=status.HTTP_200_OK)
         
 #End CRC data 
 
@@ -388,7 +417,7 @@ def delete_comb(request, pk):
 # Event data view
 
 class EventView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         # validating for already existing data
@@ -416,7 +445,7 @@ class EventView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_Event(request, pk):
     eve = Event.objects.get(pk=pk)
     data = UpdateEventSerializer(instance=eve, data=request.data)
@@ -428,7 +457,7 @@ def update_Event(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_eve(request, pk):
     eve = get_object_or_404(Event, pk=pk)
     eve.delete()
@@ -438,6 +467,7 @@ def delete_eve(request, pk):
 
 # Story data view
 class StoryView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StorySerializer(data=request.data)
         # validating for already existing data
@@ -453,13 +483,16 @@ class StoryView(APIView):
     def get(self,request):
          # checking for the parameters from the URL
         if request.query_params:
-            story = Story.objects.filter(**request.query_params.dict())
+            onestory = Story.objects.filter(**request.query_params.dict())
+            serializer = StoryWithAlumnSerializer(onestory, many=True)
+            return Response(serializer.data)
         else:
-            story = Story.objects.all()
+            story = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true;")
+    
     
         # if there is something in items else raise error
         if story:
-            serializer = StoryWithAlumnSerializer(story, many=True)
+            serializer = DisplayAllStoriesSerializer(story, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -493,7 +526,7 @@ def display_story(request, pk):
     
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_story(request, pk):
     story = get_object_or_404(Story, pk=pk)
     story.delete()
@@ -502,7 +535,7 @@ def delete_story(request, pk):
 
 #Employment view
 class EmploymentView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EmploymentSerializer(data=request.data)
         # validating for already existing data
@@ -513,19 +546,22 @@ class EmploymentView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
          
     def get(self,request):
-         # checking for the parameters from the URL
         if request.query_params:
-            employment = Employment.objects.filter(**request.query_params.dict())
+            alumn =Employment.objects.filter(**request.query_params.dict())
+            serializer = EmploymentDisplayOneSerializer(alumn, many=True)
+            return Response(serializer.data)
         else:
-            employment = Employment.objects.all()
+            user = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_employment.title as title,userprofile_employment.end_date as end,userprofile_employment.status as status,userprofile_employment.id as emp_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id WHERE api_user.is_alumni=true;")
     
         # if there is something in items else raise error
-        if employment:
-            serializer = EmploymentSerializer(employment, many=True)
+        if user:
+            serializer = DisplayEmploymentSerializer(user, many=True)
             return Response(serializer.data)
+            
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -534,7 +570,7 @@ class EmploymentView(APIView):
 @permission_classes([IsAuthenticated])
 def update_Employment(request, pk):
     employment = Employment.objects.get(pk=pk)
-    data = EmploymentSerializer(instance=employment, data=request.data)
+    data = EmploymentUpdateSerializer(instance=employment, data=request.data)
  
     if data.is_valid():
         data.save()
@@ -553,7 +589,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -569,9 +605,11 @@ class StudieView(APIView):
     def get(self,request):
          # checking for the parameters from the URL
         if request.query_params:
-            stud = Studie.objects.filter(**request.query_params.dict())
+            stud1 = Studie.objects.filter(**request.query_params.dict())
+            serializer = StudyWithAlumnSerializer(stud1, many=True)
+            return Response(serializer.data)
         else:
-            stud = Studie.objects.all()
+            stud = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_studie.level,userprofile_studie.degree,userprofile_studie.university,userprofile_studie.country,userprofile_studie.scholarship,userprofile_studie.status,userprofile_studie.id as study_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni=true;")
     
         # if there is something in items else raise error
         if stud:
@@ -581,7 +619,7 @@ class StudieView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_studie(request, pk):
     stud = Studie.objects.get(pk=pk)
     data = UpdateStudieSerializer(instance=stud, data=request.data)
@@ -593,12 +631,13 @@ def update_studie(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_studie(request, pk):
     stud = get_object_or_404(Studie, pk=pk)
     stud.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 #end
+
 
 
 # Opportunity model
@@ -655,3 +694,43 @@ class ApproveOpportunityView(RetrieveUpdateAPIView):
     queryset = Opportunity.objects.all()
     serializer_class = ApproveOpportunitySerializer
     lookup_field = 'pk'
+
+#Dashboard needed data view
+
+class AlumnReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = User.objects.raw("SELECT 1 as id, COUNT(api_user.id) AS total,COUNT(IF(userprofile_alumni.gender LIKE 'F%',TRUE,NULL)) AS female from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id WHERE api_user.is_alumni;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = AlumnReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        
+class StudyReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = Studie.objects.raw("select 1 as id, count(userprofile_studie.level) as level, userprofile_studie.level as degree from userprofile_studie group by userprofile_studie.level;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = StudyReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class EmploymentReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = Employment.objects.raw("select count(case when userprofile_employment.status not like '%I%' and userprofile_employment.end_date like '%Up to now%'  then 1 end) as employed, count(case when userprofile_employment.status like '%I%' and userprofile_employment.end_date like '%Up to now%' then 1 end) as intern,count(case when userprofile_employment.end_date not like '%Up to now%'  then 1 end) as unemployed from userprofile_employment;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = EmploymentReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+

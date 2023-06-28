@@ -121,6 +121,40 @@ class AddFamilySerializer(serializers.ModelSerializer):
     
 #End of grades and families  
 
+
+#Employment serializers
+
+class EmploymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('__all__')
+
+class EmploymentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('title','status','description','company','start_date','end_date')
+
+class EmploymentDisplayOneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employment
+        fields=('__all__')
+        depth =4
+
+class DisplayEmploymentSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone1 = serializers.CharField(max_length=30, required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    image_url =serializers.ImageField(required=True)
+    title = serializers.CharField(max_length=200, required=True)
+    status = serializers.CharField(max_length=30, required=True)
+    emp_id = serializers.IntegerField(required=True)
+    end = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'title','status', 'emp_id')
+
 # Alumni data serializers
 
 class AlumniInfoRegSerializer(serializers.ModelSerializer):
@@ -128,6 +162,12 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
         fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
+
+class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
+    Eps = EpSerializer(many=True, read_only=True)
+    class Meta:
+        model = Alumni
+        fields = ('id','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
 
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -220,37 +260,99 @@ class DisplayStorySerializer(serializers.ModelSerializer):
         model = Story
         fields = ('displayed',)
 
+class DisplayAllStoriesSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone1 = serializers.CharField(max_length=30, required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    image_url =serializers.ImageField(required=True)
+    description = serializers.CharField(max_length=1000, required=True)
+    displayed = serializers.BooleanField(required=True)
+    story_id = serializers.IntegerField(required=True)
+ 
+    class Meta:
+        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'description','displayed','story_id')
+
+
 
 
 #Studie serializers
 
-class StudieWithAlumnSerializer(serializers.ModelSerializer):
-
-    alumn = serializers.StringRelatedField(many=False)
+class StudyWithAlumnSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Studie
-        fields = ('id','alumn','degree','university','country','scholarship','status')
+        fields = ('__all__')
+        depth = 4
+
+class StudieWithAlumnSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    phone1 = serializers.CharField(max_length=30, required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    image_url =serializers.ImageField(required=True)
+    degree = serializers.CharField(max_length=200, required=True)
+    university = serializers.CharField(max_length=200, required=True)
+    country = serializers.CharField(max_length=200, required=True)
+    scholarship = serializers.CharField(max_length=200, required=True)
+    status = serializers.CharField(max_length=200, required=True)
+    study_id = serializers.IntegerField(required=True)
+    level = serializers.CharField(max_length=50, required=True)
+
+    class Meta:
+        model = Studie
+        fields = ('id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id')
+
 
 
 class StudieSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Studie
-        fields = ('id','alumn','degree','university','country','scholarship','status')
+        fields = ('id','alumn','level','degree','university','country','scholarship','status')
 
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
-        fields = ('degree','university','country','scholarship','status')
+        fields = ('level','degree','university','country','scholarship','status')
 
 
-#Employment serializers
+#Dashboard needed data serializer
+class AlumnReportSerializer(serializers.ModelSerializer):
 
-class EmploymentSerializer(serializers.ModelSerializer):
+    id= serializers.IntegerField(required=True)
+    total = serializers.IntegerField(required=True)
+    female = serializers.IntegerField(required=True)
+
     class Meta:
-        model = Employment
-        fields=('__all__')
+        model = User
+        fields = ('id','total','female')
+
+class StudyReportSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(required=True)
+    level = serializers.IntegerField(required=True)
+    degree = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = Studie
+        fields = ('id','level','degree')
+
+class EmploymentReportSerializer(serializers.ModelSerializer):
+
+    employed = serializers.IntegerField(required=True)
+    intern = serializers.IntegerField(required=True)
+    unemployed = serializers.IntegerField(required=True)
+
+    class Meta:
+        fields = ('employed','intern','unemployed',)
+
+
+
+
 
 
 class OpportunitySerializer(serializers.ModelSerializer):

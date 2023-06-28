@@ -64,8 +64,7 @@ class Alumni(models.Model):
     Family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
     Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
     Eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
-    #employments= models.ManyToManyField(Employment, related_name="employments")
-    kids = models.BooleanField
+    kids = models.BooleanField(default=False)
     father = models.CharField(max_length=50)
     mother = models.CharField(max_length=50)
     place_of_birth = models.CharField(max_length=50)
@@ -116,6 +115,14 @@ class Event(models.Model):
 #Studie model
 class Studie(models.Model):
     alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='studies')
+    levels = (
+		('A2', 'Advanced level degree'),
+		('A1', 'Advanced diploma'),
+        ('A0', 'Bachelors'),
+        ('M', 'Masters'),
+        ('PHD', 'PHD'),
+	)
+    level =models.CharField(max_length=3, choices=levels,default='A2')
     degree = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
