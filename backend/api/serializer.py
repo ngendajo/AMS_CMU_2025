@@ -329,32 +329,6 @@ class TotalAlumnReportSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','gender','employed','end','degree')
 
-class StudyReportSerializer(serializers.ModelSerializer):
-
-    id = serializers.IntegerField(required=True)
-    level = serializers.IntegerField(required=True)
-    degree = serializers.CharField(max_length=200, required=True)
-
-    class Meta:
-        model = Studie
-        fields = ('id','level','degree')
-
-class EmploymentReportSerializer(serializers.ModelSerializer):
-
-    employed = serializers.IntegerField(required=True)
-    intern = serializers.IntegerField(required=True)
-    unemployed = serializers.IntegerField(required=True)
-
-    class Meta:
-        fields = ('employed','intern','unemployed',)
-
-
-
-
-
-
-
-
 
 #Gallery serializers
 

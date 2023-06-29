@@ -614,7 +614,7 @@ def delete_studie(request, pk):
 #Dashboard needed data view
 
 class AlumnReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
+    permission_classes = [IsAuthenticated, ]  
     def get(self,request):
         stud = User.objects.raw("SELECT api_user.id,userprofile_alumni.gender,userprofile_employment.status as employed,userprofile_employment.end_date as end,userprofile_studie.level as degree from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id LEFT OUTER JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni;")
         
@@ -625,32 +625,6 @@ class AlumnReportView(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        
-class StudyReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
-    def get(self,request):
-        stud = Studie.objects.raw("select 1 as id, count(userprofile_studie.level) as level, userprofile_studie.level as degree from userprofile_studie group by userprofile_studie.level;")
-    
-        # if there is something in items else raise error
-        if stud:
-            serializer = StudyReportSerializer(stud, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
-class EmploymentReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
-    def get(self,request):
-        stud = Employment.objects.raw("select count(case when userprofile_employment.status not like '%I%' and userprofile_employment.end_date like '%Up to now%'  then 1 end) as employed, count(case when userprofile_employment.status like '%I%' and userprofile_employment.end_date like '%Up to now%' then 1 end) as intern,count(case when userprofile_employment.end_date not like '%Up to now%'  then 1 end) as unemployed from userprofile_employment;")
-    
-        # if there is something in items else raise error
-        if stud:
-            serializer = EmploymentReportSerializer(stud, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-
 
 
 # Gallery data view
