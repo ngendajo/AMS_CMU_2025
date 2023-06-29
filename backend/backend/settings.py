@@ -167,7 +167,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'asyvams',
         'USER': 'postgres',
-        'PASSWORD': 'zmjwork',
+        'PASSWORD': 'asyvams',
         'HOST': 'localhost',
         'PORT': '5432',
     }

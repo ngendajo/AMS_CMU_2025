@@ -4,8 +4,8 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from .models import User
-from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story
+from .models import *
+from userprofile.models import *
 from django.contrib.auth import get_user_model
 
 
@@ -343,15 +343,23 @@ class GallerySerializer(serializers.ModelSerializer):
         model = Gallery
         fields=('__all__')
 
+ 
+    def create(self, validated_data):
+        image_url = validated_data.get('image_url')
+        displayed = validated_data.get('displayed')
+
+        gallery = Gallery.objects.create(
+            image_url=image_url,
+            displayed=displayed
+        )
+
+        return gallery
+
 
 class OpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
         fields = ['id', 'user', 'title', 'description', 'approved', 'post_time']
- 
-    def create(self, validated_data):
-        image_url = validated_data.get('image_url')
-        displayed = validated_data.get('displayed')
 
     def create(self, validated_data):
         # 从 validated_data 中获取需要的数据
@@ -360,10 +368,6 @@ class OpportunitySerializer(serializers.ModelSerializer):
         description = validated_data.get('description')
         approved = validated_data.get('approved')
         post_time = validated_data.get('post_time')
-        gallery = Gallery.objects.create(
-            image_url=image_url,
-            displayed=displayed
-        )
 
         # 创建opportunity对象
         opportunity = Opportunity.objects.create(
@@ -376,7 +380,6 @@ class OpportunitySerializer(serializers.ModelSerializer):
 
         return opportunity
 
-        return gallery
 
 class UpdateOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -388,4 +391,3 @@ class ApproveOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
         fields = ['approved']
-

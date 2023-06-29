@@ -64,7 +64,11 @@ urlpatterns = [
 
     path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
-
+    #gallery paths
+    path('gallery/', views.GalleryView.as_view()),
+    path('gallery/create/', views.create_gallery, name='create-gallery'),
+    path('updategallery/<int:pk>/', views.update_gallery, name='update-gallery'),
+    path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-gallery'),
     #Dashdboard data
     path('totalalumnreport/', views.AlumnReportView.as_view()),
     path('', views.getRoutes)
