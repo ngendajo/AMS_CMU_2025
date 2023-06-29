@@ -1,7 +1,13 @@
 from rest_framework import serializers
-from api.models import User
-from userprofile.models import *
+# from api.models import User
+# from userprofile.models import *
 from django.contrib.auth import get_user_model
+
+from rest_framework import serializers
+from .models import User
+from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story
+from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -337,19 +343,49 @@ class GallerySerializer(serializers.ModelSerializer):
         model = Gallery
         fields=('__all__')
 
+
+class OpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ['id', 'user', 'title', 'description', 'approved', 'post_time']
  
     def create(self, validated_data):
         image_url = validated_data.get('image_url')
         displayed = validated_data.get('displayed')
 
+    def create(self, validated_data):
+        # 从 validated_data 中获取需要的数据
+        user = validated_data.get('user')
+        title = validated_data.get('title')
+        description = validated_data.get('description')
+        approved = validated_data.get('approved')
+        post_time = validated_data.get('post_time')
         gallery = Gallery.objects.create(
             image_url=image_url,
             displayed=displayed
         )
 
+        # 创建opportunity对象
+        opportunity = Opportunity.objects.create(
+            user=user,
+            title=title,
+            description=description,
+            approved=approved,
+            post_time=post_time
+        )
+
+        return opportunity
+
         return gallery
 
+class UpdateOpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ['title', 'description']
 
 
-
+class ApproveOpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ['approved']
 

@@ -164,11 +164,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'asyvams',
         'USER': 'postgres',
-        'PASSWORD': 'asyvams',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'zmjwork',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

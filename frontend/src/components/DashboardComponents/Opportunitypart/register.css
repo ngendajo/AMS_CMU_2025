@@ -1,0 +1,48 @@
+.add-opportunity-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+}
+
+.add-opportunity-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.add-opportunity-container form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.add-opportunity-container form input,
+.add-opportunity-container form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.add-opportunity-container form input[type="checkbox"] {
+  margin-top: 5px;
+}
+
+.add-opportunity-container form button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-opportunity-container form button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.add-opportunity-container .error-message {
+  color: red;
+  margin-top: 10px;
+}
