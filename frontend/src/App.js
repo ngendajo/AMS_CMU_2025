@@ -41,6 +41,7 @@ import DeleteAlumni from './components/DashboardComponents/Alumnipart/DeleteAlum
 import Employment from './components/DashboardComponents/Alumnipart/alumnireport/Employment';
 import ASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/ASYVInfo';
 import AddASYVInfo from './components/DashboardComponents/Alumnipart/AddASYVInfo';
+import AddGallery from './components/GalleryComponents/AddGalleryPhoto'
 import AddEmployment from './components/DashboardComponents/Alumnipart/alumnireport/AddEmployment';
 import DeleteEmployment from './components/DashboardComponents/Alumnipart/DeleteEmployment';
 import Studies from './components/DashboardComponents/Alumnipart/alumnireport/Studies';
@@ -131,6 +132,8 @@ function App() {
                     <Route path='delete-comb/:id' element={<Deletecombination/>}/>
                     <Route path='add-ep' element={<AddEp />}/>
                     <Route path='add-ep/:id' element={<EditEp />}/>
+                     {/* gallery route */}
+                    <Route path='add-gallery' element={<AddGallery />}/>
                   </Route>
                 </Route>
 

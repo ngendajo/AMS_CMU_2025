@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
@@ -22,6 +22,7 @@
     "react-active-menu": "^0.0.14",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-google-calendar-api": "^2.2.2",
     "react-grid-gallery": "^1.0.0",
     "react-html-parser": "^2.0.2",
     "react-icons": "^4.10.1",

@@ -127,3 +127,7 @@ class StudieAdmin(ImportExportModelAdmin):
 @admin.register(Employment)
 class EmploymentAdmin(ImportExportModelAdmin):
     list_display=('id','title')
+
+@admin.register(Gallery)
+class  GalleryAdmin(ImportExportModelAdmin):
+    list_display=('id','image_url','displayed')
