@@ -1,56 +1,69 @@
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import {useRef, useState, useEffect} from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import GalleryTable from './GalleryTable';
+import '../../components/DashboardComponents/Opportunitypart/opportunity.css';
+import '../../components/Header/searchBar.css';
+import '../../components/Header/searchResultsList.css';
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
-
-export default function EditGallery() {
-    const {auth} = useAuth();
-    const [image, setImage] = useState(null);
-    const navigate =useNavigate()
-    const [errMsg, setErrMsg] = useState('');
-    const errRef = useRef();
+import { useNavigate } from "react-router-dom";
+//import { Link } from "react-router-dom";
 
 
+function Galleries() {
+  const [galleries ,setGalleries] = useState([]);
+  const { auth } = useAuth();
+  const navigate = useNavigate();
+  var displayStatus=useState();
 
-      const handleSubmit = async (e) =>{
-        e.preventDefault();
-        try{
-            let formData = new FormData();
-            formData.append('image_url',image.image_url);
-            const response = await axios.post("http://127.0.0.1:8000/api/gallery/create/",{
-            'image_url': image.image_url,
-            'displayed': true,
-            },
-            {
-                headers: {
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'multipart/form-data'
-                },
-                withCredentials:true
+  const handleDisplay = async (galleryId) => {
+    const updatedGalleries = galleries.map((gallery) => {
+      if (gallery.id === galleryId) {
+        displayStatus=!gallery.displayed
+        return { ...gallery, displayed: displayStatus};
+      }
+      return gallery;
+    });
+
+    setGalleries(updatedGalleries);
+
+    try {
+      await axios.post("http://localhost:8000/api/updategallery/"+galleryId+"/",
+      { displayed: displayStatus },
+      {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
             }
-            );
-            console.log(response.data)
-            navigate("/gallery")
-            //clear input fields
         }
-        catch(err){
-            if (!err?.response) {
-                setErrMsg('No Server Response'+err);
-            } else if (err.response?.status === 404) {
-                setErrMsg('problem with upload');
-            } else{
-                setErrMsg("Upload Failed"+err)
-                console.log(err)
-            }
-            errRef.current.focus(); 
-        }
-}
+      ).then(res =>{
+        console.log(res)
+        alert("Displayed Changed successfully")
+    })
+    .catch(error => console.log(error.response.data));  
+    } catch (error) {
+    }
 
+  };
+  const fetchGalleries = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/gallery');
+      setGalleries(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGalleries();
+  }, []);
 
   return (
-    <div className='edit-gallery'>
-        <p>test</p>
+    <div className="gallery-table">
+      <h1>Manage Gallery Photos</h1>
+      {/*<button onClick={AddOpportunity}>Add Opportunity</button>*/}
+      <GalleryTable galleries={galleries} onDisplay={handleDisplay} />
     </div>
-  )
+  );
 }
+
+export default Galleries;

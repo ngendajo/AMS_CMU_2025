@@ -373,7 +373,47 @@ class GallerySerializer(serializers.ModelSerializer):
 
         return gallery
 
+class UpdateGallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gallery
+        fields = ['displayed']
 
 
+
+class OpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ['id', 'user', 'title', 'description', 'approved', 'post_time']
+
+    def create(self, validated_data):
+        # 从 validated_data 中获取需要的数据
+        user = validated_data.get('user')
+        title = validated_data.get('title')
+        description = validated_data.get('description')
+        approved = validated_data.get('approved')
+        post_time = validated_data.get('post_time')
+
+        # 创建opportunity对象
+        opportunity = Opportunity.objects.create(
+            user=user,
+            title=title,
+            description=description,
+            approved=approved,
+            post_time=post_time
+        )
+
+        return opportunity
+
+
+class UpdateOpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ['title', 'description']
+
+
+class ApproveOpportunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Opportunity
+        fields = ['approved']
 
 

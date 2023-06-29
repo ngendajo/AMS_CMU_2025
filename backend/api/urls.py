@@ -64,7 +64,14 @@ urlpatterns = [
     
     #gallery paths
     path('gallery/', views.GalleryView.as_view()),
+
     path('gallery/create/', views.create_gallery, name='create-gallery'),
     path('updategallery/<int:pk>/', views.update_gallery, name='update-gallery'),
     path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-gallery'),
+
+    path('opportunity/create/', views.create_opportunity, name='create-opportunity'),
+    path('opportunity/', views.read_opportunity, name='read-opportunity'),
+    path('opportunity/<int:pk>/delete/', views.DeleteOpportunityView.as_view(), name='delete-opportunity'),
+    path('opportunity/<int:pk>/update/', views.UpdateOpportunityView.as_view(), name='update-opportunity'),
+    path('opportunity/<int:pk>/approve', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
 ]
