@@ -4,6 +4,7 @@ import useAuth from '../../hooks/useAuth';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { IoIosAdd } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -11,6 +12,8 @@ export default function GalleryPage() {
    const [data, setData] = useState([]);
     let {auth}= useAuth() 
     var gallerylist=[]
+    const navigate =useNavigate()
+
     useEffect(() =>{
     
         const getData = async () =>{
@@ -28,6 +31,7 @@ export default function GalleryPage() {
                      src:"http://localhost:8000"+e.image_url,
                      width: 320,
                      height: 174,
+                     id: e.id
                     })
                 }
                 
@@ -78,6 +82,12 @@ export default function GalleryPage() {
       <div className='add-galleryphoto'>
         <Link to="/add-gallery" className='link'>Add Photo</Link><IoIosAdd className='addicon'/>
       </div>
+
+      <div className='edit-delete-gallery-photo'>
+        <Link to="/edit-gallery" className='link'>Change Photo in Gallery</Link>
+      </div>
+
+
     </div>
   );
 }

@@ -59,9 +59,9 @@ urlpatterns = [
     path('alumnreport/', views.AlumnReportView.as_view()),
     path('studyreport/', views.StudyReportView.as_view()),
     path('employmentreport/', views.EmploymentReportView.as_view()),
-    path('', views.getRoutes)
-    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
     path('', views.getRoutes),
+    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
+    
     #gallery paths
     path('gallery/', views.GalleryView.as_view()),
     path('gallery/create/', views.create_gallery, name='create-gallery'),
