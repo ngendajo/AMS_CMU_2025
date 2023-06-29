@@ -321,10 +321,11 @@ class TotalAlumnReportSerializer(serializers.ModelSerializer):
     gender = serializers.CharField(max_length=200, required=True)
     employed = serializers.CharField(max_length=200, required=True)
     end = serializers.CharField(max_length=200, required=True)
+    degree = serializers.CharField(max_length=200, required=True)
 
     class Meta:
         model = User
-        fields = ('id','gender','employed','end')
+        fields = ('id','gender','employed','end','degree')
 
 class StudyReportSerializer(serializers.ModelSerializer):
 

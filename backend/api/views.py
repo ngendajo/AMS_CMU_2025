@@ -616,7 +616,7 @@ def delete_studie(request, pk):
 class AlumnReportView(APIView):
     #permission_classes = [IsAuthenticated, ]  
     def get(self,request):
-        stud = User.objects.raw("SELECT api_user.id,userprofile_alumni.gender,userprofile_employment.status as employed,userprofile_employment.end_date as end from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id WHERE api_user.is_alumni;")
+        stud = User.objects.raw("SELECT api_user.id,userprofile_alumni.gender,userprofile_employment.status as employed,userprofile_employment.end_date as end,userprofile_studie.level as degree from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id LEFT OUTER JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni;")
         
         # if there is something in items else raise error
         if stud:

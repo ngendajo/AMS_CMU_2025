@@ -17,7 +17,35 @@ const Admin = () => {
     const [unemploy, setUnemploy] = useState('');
     const [intern, setIntern] = useState('');
     const [others, setOthers] = useState('');
+    const [grades, setGrades] = useState('');
+    const [a2, setA2] = useState('');
+    const [a1, setA1] = useState('');
+    const [m, setM] = useState('');
+    const [phd, setPhd] = useState('');
+    const [Bachelors, setBachelors] = useState('');
+    const [otherdegree, setOtherdegree] = useState('');
     const {auth} = useAuth();
+
+    useEffect(() =>{
+    
+      const getGrades = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/grades/',{
+                  headers: {
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              setGrades(response.data.length);
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      getGrades();
+  
+  },[auth])
 
   useEffect(() =>{
     
@@ -43,6 +71,60 @@ const Admin = () => {
             setMale(
               response.data.filter(element => {
                 if (element.gender==="Male") {
+                  return true;
+                }
+              
+                return false;
+              }).length
+            )
+            setA1(
+              response.data.filter(element => {
+                if (element.degree==="A1") {
+                  return true;
+                }
+              
+                return false;
+              }).length
+            )
+            setA2(
+              response.data.filter(element => {
+                if (element.degree==="A2") {
+                  return true;
+                }
+              
+                return false;
+              }).length
+            )
+            setM(
+              response.data.filter(element => {
+                if (element.degree==="M") {
+                  return true;
+                }
+              
+                return false;
+              }).length
+            )
+            setPhd(
+              response.data.filter(element => {
+                if (element.degree==="PHD") {
+                  return true;
+                }
+              
+                return false;
+              }).length
+            )
+            setBachelors(
+              response.data.filter(element => {
+                if (element.degree==="A0") {
+                  return true;
+                }
+              
+                return false;
+              }).length
+            )
+            setOtherdegree(
+              response.data.filter(element => {
+                if (element.degree===null) {
                   return true;
                 }
               
@@ -111,7 +193,7 @@ let data = [5, 2, 5, 5, 10],
   return (
     <div className="dashboard-container">
         <div className="statistic-part">
-          <div className="statistic-part-left statistic">
+          <Link to={"/alumni/"} className="statistic-part-left statistic">
             <div className='alumni-statistics-title'>
               <h2>Total Alumni</h2>
             </div>
@@ -131,7 +213,7 @@ let data = [5, 2, 5, 5, 10],
                 <div className='item2'>
                   <div className='item2-title'>Alumni</div>
                   <div className='item2-body'><strong><AiOutlinePlus className='item2-icon'/></strong><strong className='alumni-number'>{total}</strong></div>
-                  <div className='item2-title'>10 Grades</div>
+                  <div className='item2-title'>{grades} Grades</div>
                 </div>
                 <div className='itme3'>
                   <div className='item3-top'>
@@ -145,13 +227,13 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>Female</div>
-                      <div className='male-statistics'><strong className='male-number'>{female}</strong><span className='female-percentage'>{Math.round(male===0? 0:(female*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{female}</strong><span className='female-percentage'>{Math.round(female===0? 0:(female*100)/total)}%</span></div>
                     </div>
                   </div>
                 </div>
             </div>
-          </div>
-          <div className="statistic-part-center statistic">
+          </Link>
+          <Link to={'/alumni/studie/'} className="statistic-part-center statistic">
             <div className='education-statistics-title'>
               <h2>Education level</h2>
             </div>
@@ -168,9 +250,57 @@ let data = [5, 2, 5, 5, 10],
                     showLabel={showLabel}
                   />
                 </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>A2 Certificate</div>
+                      <div className='male-statistics'><strong className='male-number'>{a2}</strong><span className='female-percentage'>{Math.round(a2===0? 0:(a2*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>A1 Diploma</div>
+                      <div className='male-statistics'><strong className='male-number'>{a1}</strong><span className='female-percentage'>{Math.round(a1===0? 0:(a1*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Bachelors</div>
+                      <div className='male-statistics'><strong className='male-number'>{Bachelors}</strong><span className='female-percentage'>{Math.round(Bachelors===0? 0:(Bachelors*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Masters</div>
+                      <div className='male-statistics'><strong className='male-number'>{m}</strong><span className='female-percentage'>{Math.round(m===0? 0:(m*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>PHD</div>
+                      <div className='male-statistics'><strong className='male-number'>{phd}</strong><span className='female-percentage'>{Math.round(phd===0? 0:(phd*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Others</div>
+                      <div className='male-statistics'><strong className='male-number'>{otherdegree}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                </div>
             </div>
-          </div>
-          <div className="statistic-part-right statistic">
+          </Link>
+          <Link to={"/alumni/employment/"} className="statistic-part-right statistic">
             <div className='employment-statistics-title'>
               <h2>Employment Rate</h2>
             </div>
@@ -187,8 +317,40 @@ let data = [5, 2, 5, 5, 10],
                     showLabel={showLabel}
                   />
                 </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Employed</div>
+                      <div className='male-statistics'><strong className='male-number'>{employ}</strong><span className='female-percentage'>{Math.round(employ===0? 0:(employ*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Internship</div>
+                      <div className='male-statistics'><strong className='male-number'>{intern}</strong><span className='female-percentage'>{Math.round(intern===0? 0:(intern*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Unemployed</div>
+                      <div className='male-statistics'><strong className='male-number'>{unemploy}</strong><span className='female-percentage'>{Math.round(unemploy===0? 0:(unemploy*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Others</div>
+                      <div className='male-statistics'><strong className='male-number'>{others}</strong><span className='female-percentage'>{Math.round(others===0? 0:(others*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                </div>
             </div>
-          </div>
+          </Link>
         </div>
     </div>
   )
