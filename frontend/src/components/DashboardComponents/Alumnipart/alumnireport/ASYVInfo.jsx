@@ -9,21 +9,23 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function ASYVInfo() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
   
-  const {auth} = useAuth();
+  const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
 
-  useEffect(() =>{
+  useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
-                headers: {
+            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+                headers: { /* 请求头 */
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
                 },
                 withCredentials:true
             });
+
+            /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
             var alumnilist=[]
             var i=1
             response.data.forEach(element => {
@@ -43,7 +45,7 @@ export default function ASYVInfo() {
               })
               i+=1
             });
-            setData(alumnilist);
+            setData(alumnilist); /* 使用 setData 更新了 data 的值为 alumnilist */
         }catch(err) {
             console.log(err);
         }
