@@ -35,6 +35,13 @@ export default function AddASYVInfo() {
     let [grade, setGrade] = useState([]);
     let [family, setFamily] = useState([]);
     let [comb, setComb] = useState([]);
+    
+    const [s4marks, setS4marks] = useState('');
+      const [s5marks, setS5marks] = useState('');
+      const [s6marks, setS6marks] = useState('');
+      const [ne, setNe] = useState('');
+      const [maxforne, setMaxforne] = useState('');
+
     const navigate = useNavigate();
 
     const setCombinations= (id)=>{
@@ -200,6 +207,11 @@ export default function AddASYVInfo() {
                 setComb(dat.alumn.Combination);
                 getsavedfamilies(dat.alumn.Family.grade.id);
                 setAlumn_id(dat.alumn.id);
+                setS4marks(dat.alumn.s4marks)
+                setS5marks(dat.alumn.s5marks)
+                setS6marks(dat.alumn.s6marks)
+                setNe(dat.alumn.ne)
+                setMaxforne(dat.alumn.maxforne)
                 var eplist=[]
                 dat.alumn.Eps.forEach(element => {
                 eplist.push(
@@ -233,7 +245,12 @@ export default function AddASYVInfo() {
         "father":father,
         "mother":mother,
         "place_of_birth":place_of_birth,
-        "CurrResidence":currentResident
+        "CurrResidence":currentResident,
+        "s4marks":s4marks,
+        "s5marks":s5marks,
+        "s6marks":s6marks,
+        "ne":ne,
+        "maxforne":maxforne
         },
         {
             headers: {
@@ -420,7 +437,65 @@ export default function AddASYVInfo() {
                       </label>
                       <Select value={epsdone} isMulti onChange={handleChangeofEp} options={eps} />
                   </div>
-                  
+                  <div className="formpart">
+                      <label htmlFor="eps">
+                          Marks for S4
+                      </label>
+                      <input
+                            type='number'
+                            step="0.1"
+                            min='0'
+                            max='100'
+                            value={s4marks}
+                            onChange={(event) => setS4marks(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          Marks for S5
+                      </label>
+                      <input
+                            type='number'
+                            step="0.1"
+                            min='0'
+                            max='100'
+                            value={s5marks}
+                            onChange={(event) => setS5marks(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          Marks for S6
+                      </label>
+                      <input
+                            type='number'
+                            step="0.1"
+                            min='0'
+                            max='100'
+                            value={s6marks}
+                            onChange={(event) => setS6marks(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          The highest aggregate in national exam
+                      </label>
+                      <input
+                            type='number'
+                            value={maxforne}
+                            onChange={(event) => setMaxforne(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          Your aggregate
+                      </label>
+                      <input
+                            type='number'
+                            value={ne}
+                            onChange={(event) => setNe(event.target.value)}
+                        />
+                 </div>
                   
               </div>
 

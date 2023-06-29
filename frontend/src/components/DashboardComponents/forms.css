@@ -21,6 +21,7 @@
 
 .form input[type="text"],
 .form input[type="email"],
+.form input[type="number"],
 .form input[type="password"], .form button,.form select {
   font-family: 'Nunito', sans-serif;
   font-size: 16px;

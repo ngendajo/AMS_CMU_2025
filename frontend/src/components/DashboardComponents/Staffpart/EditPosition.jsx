@@ -14,7 +14,7 @@ export default function EditPosition() {
     const params = useParams();
     const [msg, setMsg] = useState("");
 
-    const [position, setPosition] = useState('kkj');
+    const [position, setPosition] = useState('');
     const [validPosition, setValidPosition] = useState(false);
     const [positionFocus, setPositionFocus] = useState(false);
 

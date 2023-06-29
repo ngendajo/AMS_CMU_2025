@@ -163,13 +163,13 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
+        fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence','s4marks','s5marks','s6marks','ne','maxforne')
 
 class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence')
+        fields = ('id','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence','s4marks','s5marks','s6marks','ne','maxforne')
 
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:

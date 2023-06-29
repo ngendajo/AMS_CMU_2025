@@ -175,13 +175,6 @@ const Admin = () => {
     getcrcusers();
 
 },[auth])
-console.log(total)
-console.log(male)
-console.log(female)
-console.log(employ)
-console.log(unemploy)
-console.log(intern)
-console.log(others)
 let data = [5, 2, 5, 5, 10],
     subTitle1 = total,
     showLabel = false,

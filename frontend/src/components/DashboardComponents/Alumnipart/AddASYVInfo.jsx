@@ -28,6 +28,12 @@ export default function AddASYVInfo() {
     let [epsdone, setEpsdone] = useState([]);
     const navigate = useNavigate();
 
+    const [s4marks, setS4marks] = useState('');
+      const [s5marks, setS5marks] = useState('');
+      const [s6marks, setS6marks] = useState('');
+      const [ne, setNe] = useState('');
+      const [maxforne, setMaxforne] = useState('');
+
     useEffect(() =>{
     
         const getgrades = async () =>{
@@ -177,7 +183,12 @@ export default function AddASYVInfo() {
         "father":father,
         "mother":mother,
         "place_of_birth":e.target.place_of_birth.value,
-        "CurrResidence":e.target.currResidence.value
+        "CurrResidence":e.target.currResidence.value,
+        's4marks':s4marks,
+        's5marks':s5marks,
+        's6marks':s6marks,
+        'ne':ne,
+        'maxforne':maxforne
         },
         {
             headers: {
@@ -275,6 +286,7 @@ export default function AddASYVInfo() {
                           Marital Status
                       </label>
                       <select name="marital_status">
+                      <option value="" disabled>Select marital status</option>
                         <option value="Single">Single</option>
                         <option value="Maried">Maried</option>
                         <option value="Divorced">Divorced</option>
@@ -286,6 +298,7 @@ export default function AddASYVInfo() {
                           Gender
                       </label>
                       <select name="gender">
+                      <option value="" disabled>Select gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                       </select>
@@ -307,6 +320,7 @@ export default function AddASYVInfo() {
                           Do you have kids
                       </label>
                       <select name="kids">
+                      <option value="" disabled>Select your choice</option>
                         <option value="false">Yes</option>
                         <option value="true">No</option>
                       </select>
@@ -317,7 +331,7 @@ export default function AddASYVInfo() {
                           Grade
                       </label>     
                           <select name="grade" onChange={getfamilies}>
-                            <option value="">select grade</option>
+                            <option value="" disabled>select grade</option>
                               {grades.map((e,ind) => {
                                   return  <option key={ind} value={e.id}>{e.grade_name}</option>
                               })}               
@@ -328,6 +342,7 @@ export default function AddASYVInfo() {
                           Family
                       </label>      
                           <select name="family">
+                          <option value="" disabled>Select your family</option>
                               {families.map((e,ind) => {
                                   return  <option key={ind} value={e.id}>{e.family_name}</option>
                               })}               
@@ -340,7 +355,7 @@ export default function AddASYVInfo() {
                       </label>
                       
                       <select name='combination'>
-                        <option value="">select combination</option>
+                        <option value="" disabled>select combination</option>
                       {combination.map((e,ind) => {
                         return  <option key={ind} value={e.id}>{e.combination_name}</option>
                           })}
@@ -352,8 +367,65 @@ export default function AddASYVInfo() {
                       </label>
                       <Select value={epsdone} isMulti onChange={handleChangeofEp} options={eps} />
                   </div>
-                  
-                  
+                  <div className="formpart">
+                      <label htmlFor="eps">
+                          Marks for S4
+                      </label>
+                      <input
+                            type='number'
+                            step="0.1"
+                            min='0'
+                            max='100'
+                            value={s4marks}
+                            onChange={(event) => setS4marks(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          Marks for S5
+                      </label>
+                      <input
+                            type='number'
+                            step="0.1"
+                            min='0'
+                            max='100'
+                            value={s5marks}
+                            onChange={(event) => setS5marks(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          Marks for S6
+                      </label>
+                      <input
+                            type='number'
+                            step="0.1"
+                            min='0'
+                            max='100'
+                            value={s6marks}
+                            onChange={(event) => setS6marks(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          The highest aggregate in national exam
+                      </label>
+                      <input
+                            type='number'
+                            value={maxforne}
+                            onChange={(event) => setMaxforne(event.target.value)}
+                        />
+                 </div>
+                 <div className="formpart">
+                      <label htmlFor="eps">
+                          Your aggregate
+                      </label>
+                      <input
+                            type='number'
+                            value={ne}
+                            onChange={(event) => setNe(event.target.value)}
+                        />
+                 </div>
               </div>
 
               <center>

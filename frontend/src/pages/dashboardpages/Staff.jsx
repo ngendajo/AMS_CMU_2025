@@ -7,7 +7,7 @@ import '../../components/Header/searchResultsList.css';
 import '../../components/DashboardComponents/Staffpart/staff.css';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { BiEditAlt } from "react-icons/bi";
+import { BiEditAlt,BiStreetView } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 
 export default function Staff() {
@@ -89,7 +89,10 @@ export default function Staff() {
                       <td>{result.is_superuser? "Admin":result.is_crc? "CRC Staff":"Unknown"}</td>
                       <td>{result.profile ? result.profile.position:"Owner"}</td>
                       <td><Link to={`/add-crc/${result.id}`}><BiEditAlt className='icon'/></Link>
+                      <Link to={`/staffprofile/${result.id}`}><BiStreetView className='icon'/></Link>
+                      {auth.user.id===result.id?null:
                       <Link to={`/delete-user/${result.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                      }
                        
                       </td>
                     </tr>

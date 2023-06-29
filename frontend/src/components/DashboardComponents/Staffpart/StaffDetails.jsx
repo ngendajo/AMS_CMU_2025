@@ -14,14 +14,13 @@ export default function StaffDetails() {
     
             const getcrcusers = async () =>{
                 try{
-                    const response = await axios.get('http://127.0.0.1:8000/api/registeradmin/?id='+params.id,{
+                    const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+params.id,{
                         headers: {
                             "Authorization": 'Bearer ' + String(auth.accessToken),
                             "Content-Type": 'multipart/form-data'
                         },
                         withCredentials:true
                     });
-                    console.log(response.data);
                     setCrcUsers(response.data);
                 }catch(err) {
                     console.log(err);
@@ -54,14 +53,14 @@ export default function StaffDetails() {
                         <div className="staff-details-part">
                             <p>Last Name</p>
                             <h3>{user?.last_name}</h3>
-                        </div>
+                        </div> 
                         <div className="staff-details-part">
-                            <p>Phone</p>
-                            <h3>{user?.phone1}</h3>
+                            <p>Staff position</p>
+                            <h3>{user.profile===null?"Owrner":user.profile.position}</h3>
                         </div>
                         
                         <Link className="useredit" to={`/add-crc/${user?.id}`}><span>Edit</span><CiEdit className="useredit-icon"/></Link>
-                        <Link className="useredit" to="/staff">Go back</Link>
+                        <Link className="useredit" to="/staff">See other staff</Link>
                         </center>
                     </div>
                     )}

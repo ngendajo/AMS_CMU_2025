@@ -187,7 +187,7 @@ export default function HomeMenuBar() {
                             Be Part of the Massive Connection of the ASYV Alumni Association.
                         </h1>
                         <p>
-                        More than you may realize exists in the ASYV Alumni Association. Make the world better than you found it by joining the change-makers. Join us and take in the lovely changes we are bringing about.
+                        More than you may Realize Exists in the ASYV Alumni Association. Make the World Better than you Found it by Joining the Change-Makers. Join us and Take in the Lovely Changes we are Bringing About.
                         </p>
                     </div>
                     <div className="helloleftbottom">

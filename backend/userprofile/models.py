@@ -69,6 +69,11 @@ class Alumni(models.Model):
     mother = models.CharField(max_length=50)
     place_of_birth = models.CharField(max_length=50)
     CurrResidence = models.CharField(max_length=50)
+    s4marks =models.FloatField(default=0.0)
+    s5marks =models.FloatField(default=0.0)
+    s6marks =models.FloatField(default=0.0)
+    ne =models.FloatField(default=0.0)
+    maxforne =models.FloatField(default=0.0)
 
 
 #Employment model

@@ -111,7 +111,7 @@ function App() {
                     {/* crc crud */}
                     <Route path='add-crc' element={<Register />}/>
                     <Route path='add-crc/:id' element={<EditStaffUser />}/>
-                    <Route path='view-crc/:id' element={<StaffDetails />}/>
+                    <Route path='staffprofile/:id' element={<StaffDetails />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
