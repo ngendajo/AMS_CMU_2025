@@ -26,13 +26,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework.views import APIView
-from .serializer import AlumniInfoRegSerializer, AlumniSerializer, AlumniRegistrationSerializer, StaffRoleSerializer, \
-    UpdateUserImageUrlSerializer, UpdateUserSerializer, StaffUserSerializer, StaffUserRegistrationSerializer, \
-    PasswordChangeSerializer, FamilySerializer, CombinationSerializer, GradeSerializers, EpSerializer, \
-    OpportunitySerializer, UpdateOpportunitySerializer, ApproveOpportunitySerializer, AddFamilySerializer, \
-    EventSerializer, UpdateEventSerializer, StorySerializer, StoryWithAlumnSerializer, UpdateStorySerializer, \
-    DisplayStorySerializer, EmploymentSerializer, StudieSerializer, UpdateStudieSerializer
-from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Opportunity, Event, Employment, Studie, Story
+from .serializer import *
+from userprofile.models import *
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
