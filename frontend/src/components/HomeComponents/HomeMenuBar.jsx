@@ -184,7 +184,7 @@ export default function HomeMenuBar() {
                 <div className="left">
                     <div className="hellolefttop">
                         <h1>
-                            Be part of the massive connection of the ASYV alumni association.
+                            Be Part of the Massive Connection of the ASYV Alumni Association.
                         </h1>
                         <p>
                         More than you may realize exists in the ASYV Alumni Association. Make the world better than you found it by joining the change-makers. Join us and take in the lovely changes we are bringing about.
