@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import images from '../../Static/Images/images.png'; 
+import images from '../../Static/Images/images.png';
 import { AiOutlinePlusCircle,AiOutlineMessage } from "react-icons/ai";
 import { IoIosNotificationsOutline,IoIosArrowDropdown } from "react-icons/io";
 import { BsDot} from "react-icons/bs";
@@ -26,31 +26,40 @@ export default function Header() {
 
 
       useEffect(() =>{
-    
+
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+auth?.user.id,{
+                if(auth.user.is_alumni){
+                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+auth?.user.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
                     },
                     withCredentials:true
                 });
-                console.log(response.data)
                 setUserid(response.data)
+                }else
+                {
+                    const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+auth?.user.id,{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                setUserid(response.data)
+                }
             }catch(err) {
                 console.log(err);
             }
         }
-    
+
         getuser();
-    
+
     },[auth])
-
-
       const navigate = useNavigate();
       const logout = useLogout();
-  
+
       const signOut = async () => {
           await logout();
           navigate('/home');
@@ -69,7 +78,7 @@ export default function Header() {
         </div>
         <div className='search-bar-container'>
           <SearchBar setResults={setResults}/>
-          <SearchResultsList results={results}/> 
+          <SearchResultsList results={results}/>
         </div>
         <div className='postsmsnotific'>
             <div className='add-post'>
@@ -88,10 +97,10 @@ export default function Header() {
         <div onClick={showprofile}>
             <div className='profile'>
             {userid.map((result, id)=>{return <span key={id}> <img src={"http://localhost:8000"+result.image_url} alt="logo" /></span>})}
-                
+
                 <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
                 <br/>{auth.user.is_superuser? "Admin":
-                auth.user.is_crc? "CRC Staff":auth.user.alumni.grade.name
+                auth.user.is_crc? "CRC Staff":userid[0]?.alumn.Family.grade.grade_name
                 }</p>
                 <IoIosArrowDropdown className='profile-icon' />
             </div>
@@ -106,4 +115,3 @@ export default function Header() {
     </div>
   )
 }
-

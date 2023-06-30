@@ -4,7 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from .models import User
+from api.models import User
 from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story
 from django.contrib.auth import get_user_model
 

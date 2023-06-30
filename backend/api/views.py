@@ -34,14 +34,14 @@ from .serializer import AlumniInfoRegSerializer, AlumniSerializer, AlumniRegistr
     AlumniInfoUpdateSerializer, DisplayAllStoriesSerializer, EmploymentDisplayOneSerializer, \
     DisplayEmploymentSerializer, StudyWithAlumnSerializer, StudieWithAlumnSerializer, EmploymentUpdateSerializer, \
     AlumnReportSerializer, StudyReportSerializer
-from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Opportunity, Event, Employment, Studie, Story
+from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Opportunity, Event, Employment, Studie,Story
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from ..userprofile.models import Alumni
+from userprofile.models import Alumni
 
 User = get_user_model()
 # Create your views here.
@@ -650,6 +650,7 @@ def read_opportunity(request):
 
 @api_view(['POST'])  # 处理POST请求，创建新的Opportunity对象
 def create_opportunity(request):
+    request.data['approved'] = False  # 设置approved字段的默认值为False
     serializer = OpportunitySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import "../forms.css";
-import Dropzone from "react-dropzone"; 
+import Dropzone from "react-dropzone";
 
-// This file is to add Alumni
+// This file is to add alumni
 
-const EMAIL_REGIX =/\S+@\S+\.\S+/; // 定义正则表达式常量, 用于验证邮箱格式
+const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
 const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
@@ -30,7 +30,7 @@ const Registera = () => {
         }
       };
 
-    const errRef = useRef();  // 通过 useRef 定义引用，用于获取表单元素的引用
+    const errRef = useRef();
     const emailRef = useRef();
     const first_nameRef = useRef();
     const last_nameRef = useRef();
@@ -42,26 +42,24 @@ const Registera = () => {
 
     const [first_name, setFirst_name] = useState('');
     const [validFirst_name, setValidFirst_name] = useState(false);
-    const [first_nameFocus, setFirst_nameFocus] = useState(false); 
+    const [first_nameFocus, setFirst_nameFocus] = useState(false);
 
     const [last_name, setLast_name] = useState('');
     const [validLast_name, setValidLast_name] = useState(false);
-    const [last_nameFocus, setLast_nameFocus] = useState(false); 
+    const [last_nameFocus, setLast_nameFocus] = useState(false);
 
     const [phone1, setPhone1] = useState('');
     const [validPhone1, setValidPhone1] = useState(false);
     const [phone1Focus, setPhone1Focus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
-    
+
     useEffect(() => {
-        emailRef.current.focus();  //在组件挂载后自动将焦点设置在邮箱输入框上
+        emailRef.current.focus();
         first_nameRef.current.focus();
         last_nameRef.current.focus();
         phone1Ref.current.focus();
     },[])
-
-    // 以下这堆useEffect用于验证表单字段的值，并更新验证结果的状态
     useEffect(() => {
         const email_result = EMAIL_REGIX.test(email);
 
@@ -85,14 +83,12 @@ const Registera = () => {
         setValidPhone1(phone1_result);
     },[phone1])
 
-    // 用于在表单字段值改变时清除错误消息
+
     useEffect(() => {
         setErrMsg('');
     },[email,first_name,last_name,phone1])
 
 
-   // handleSubmit函数用于处理表单提交事件。该函数会验证表单字段的值，包括邮箱、名字和手机号码的格式。
-   // 如果验证通过，将表单数据和图片文件作为请求的一部分发送到后端API，并根据返回的数据导航到另一个页面
    const handleSubmit = async (e) =>{
     e.preventDefault();
     if (selectedFiles && selectedFiles[0].name){
@@ -108,7 +104,7 @@ const Registera = () => {
     if(!image){
         return;
     }
-    
+
     const v1 = EMAIL_REGIX.test(email);
     const v3 = USER_REGIX.test(first_name);
     const v4 = USER_REGIX.test(last_name);
@@ -118,7 +114,7 @@ const Registera = () => {
     }
     try{
         let formData = new FormData();
-        
+
         formData.append('email',email);
         formData.append('first_name',first_name);
         formData.append('last_name',last_name);
@@ -136,7 +132,7 @@ const Registera = () => {
             );
             console.log(response.data.id)
             navigate("/add-alumni/info/"+response.data.id)
-            //clear input fields 
+            //clear input fields
     }catch(err){
         if (!err?.response) {
             setErrMsg('No Server Response'+err);
@@ -146,7 +142,7 @@ const Registera = () => {
             setErrMsg("Registration Failed"+err)
             console.log(err)
         }
-        errRef.current.focus(); 
+        errRef.current.focus();
     }
    }
 
@@ -159,7 +155,7 @@ const Registera = () => {
                 <form onSubmit={handleSubmit}>
                 <center>
                 <img className="img-for-profile" src={file} alt="" />
-                <Dropzone onDrop={onDrop} multiple={false}>  //onDrop 函数，用于处理文件拖放事件
+                <Dropzone onDrop={onDrop} multiple={false}>
                             {({ getRootProps, getInputProps }) => (
                             <section>
                                 <div {...getRootProps({ className: "dropzone" })}>
@@ -201,7 +197,7 @@ const Registera = () => {
                             />
                             <p id="emailnote" className={EmailFocus && email && !validEmail ? "instructions" : "offscreen"}>
                                 <FontAwesomeIcon icon={faInfoCircle}/>
-                                Provide valid email. 
+                                Provide valid email.
                             </p>
                         </div>
                         <div className="formpart">
@@ -289,7 +285,7 @@ const Registera = () => {
 
                         </div>
 
-                        
+
                     </div>
 
                     <center>
