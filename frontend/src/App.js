@@ -54,8 +54,9 @@ import AddStory from './components/DashboardComponents/Alumnipart/alumnireport/A
 import UpdateStory from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStory';
 import DeleteStory from './components/DashboardComponents/Alumnipart/alumnireport/DeleteStory';
 import DisplayStory from './components/DashboardComponents/Alumnipart/alumnireport/DisplayStory';
-import AddGallery from './components/GalleryComponents/AddGalleryPhoto'
-import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto'
+import AddGallery from './components/GalleryComponents/AddGalleryPhoto';
+import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
+
 
 
 function App() {

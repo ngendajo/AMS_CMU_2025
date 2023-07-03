@@ -53,6 +53,19 @@ function Galleries() {
     }
   };
 
+  const handleDelete = async (event) => {
+    
+    axios.delete('http://127.0.0.1:8000/api/deletegallery/'+event,
+    {
+        headers: {
+            "Authorization": 'Bearer ' + String(auth.accessToken),
+            "Content-Type": 'application/json'
+        }
+    }
+    )
+    navigate("/gallery")
+  };
+
   useEffect(() => {
     fetchGalleries();
   }, []);
@@ -61,7 +74,7 @@ function Galleries() {
     <div className="gallery-table">
       <h1>Manage Gallery Photos</h1>
       {/*<button onClick={AddOpportunity}>Add Opportunity</button>*/}
-      <GalleryTable galleries={galleries} onDisplay={handleDisplay} />
+      <GalleryTable galleries={galleries} onDisplay={handleDisplay} onDelete={handleDelete} />
     </div>
   );
 }
