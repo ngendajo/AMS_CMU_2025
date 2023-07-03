@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import "../forms.css";
-import Dropzone from "react-dropzone"; 
+import Dropzone from "react-dropzone";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -29,6 +29,7 @@ const Registera = () => {
       };
 
     const errRef = useRef();
+    const errRef = useRef();
     const emailRef = useRef();
     const first_nameRef = useRef();
     const last_nameRef = useRef();
@@ -40,19 +41,20 @@ const Registera = () => {
 
     const [first_name, setFirst_name] = useState('');
     const [validFirst_name, setValidFirst_name] = useState(false);
-    const [first_nameFocus, setFirst_nameFocus] = useState(false); 
+    const [first_nameFocus, setFirst_nameFocus] = useState(false);
 
     const [last_name, setLast_name] = useState('');
     const [validLast_name, setValidLast_name] = useState(false);
-    const [last_nameFocus, setLast_nameFocus] = useState(false); 
+    const [last_nameFocus, setLast_nameFocus] = useState(false);
 
     const [phone1, setPhone1] = useState('');
     const [validPhone1, setValidPhone1] = useState(false);
     const [phone1Focus, setPhone1Focus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
-    
+
     useEffect(() => {
+        emailRef.current.focus();
         emailRef.current.focus();
         first_nameRef.current.focus();
         last_nameRef.current.focus();
@@ -82,6 +84,7 @@ const Registera = () => {
     },[phone1])
 
 
+
     useEffect(() => {
         setErrMsg('');
     },[email,first_name,last_name,phone1])
@@ -102,7 +105,7 @@ const Registera = () => {
     if(!image){
         return;
     }
-    
+
     const v1 = EMAIL_REGIX.test(email);
     const v3 = USER_REGIX.test(first_name);
     const v4 = USER_REGIX.test(last_name);
@@ -112,7 +115,7 @@ const Registera = () => {
     }
     try{
         let formData = new FormData();
-        
+
         formData.append('email',email);
         formData.append('first_name',first_name);
         formData.append('last_name',last_name);
@@ -131,6 +134,7 @@ const Registera = () => {
             console.log(response.data.id)
             navigate("/add-alumni/info/"+response.data.id)
             //clear input fields
+            //clear input fields
     }catch(err){
         if (!err?.response) {
             setErrMsg('No Server Response'+err);
@@ -140,7 +144,7 @@ const Registera = () => {
             setErrMsg("Registration Failed"+err)
             console.log(err)
         }
-        errRef.current.focus(); 
+        errRef.current.focus();
     }
    }
 
@@ -153,6 +157,7 @@ const Registera = () => {
                 <form onSubmit={handleSubmit}>
                 <center>
                 <img className="img-for-profile" src={file} alt="" />
+                <Dropzone onDrop={onDrop} multiple={false}>
                 <Dropzone onDrop={onDrop} multiple={false}>
                             {({ getRootProps, getInputProps }) => (
                             <section>
@@ -195,7 +200,7 @@ const Registera = () => {
                             />
                             <p id="emailnote" className={EmailFocus && email && !validEmail ? "instructions" : "offscreen"}>
                                 <FontAwesomeIcon icon={faInfoCircle}/>
-                                Provide valid email. 
+                                Provide valid email.
                             </p>
                         </div>
                         <div className="formpart">
@@ -283,7 +288,7 @@ const Registera = () => {
 
                         </div>
 
-                        
+
                     </div>
 
                     <center>

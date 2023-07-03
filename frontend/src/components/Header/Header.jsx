@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import images from '../../Static/Images/images.png'; 
+import images from '../../Static/Images/images.png';
 import { AiOutlinePlusCircle,AiOutlineMessage } from "react-icons/ai";
 import { IoIosNotificationsOutline,IoIosArrowDropdown } from "react-icons/io";
 import { BsDot} from "react-icons/bs";
@@ -26,7 +26,7 @@ export default function Header() {
 
 
       useEffect(() =>{
-    
+
         const getuser = async () =>{
             try{
                 if(auth.user.is_alumni){
@@ -53,13 +53,13 @@ export default function Header() {
                 console.log(err);
             }
         }
-    
+
         getuser();
-    
+
     },[auth])
       const navigate = useNavigate();
       const logout = useLogout();
-  
+
       const signOut = async () => {
           await logout();
           navigate('/home');
@@ -78,7 +78,7 @@ export default function Header() {
         </div>
         <div className='search-bar-container'>
           <SearchBar setResults={setResults}/>
-          <SearchResultsList results={results}/> 
+          <SearchResultsList results={results}/>
         </div>
         <div className='postsmsnotific'>
             <div className='add-post'>
@@ -97,7 +97,7 @@ export default function Header() {
         <div onClick={showprofile}>
             <div className='profile'>
             {userid.map((result, id)=>{return <span key={id}> <img src={"http://localhost:8000"+result.image_url} alt="logo" /></span>})}
-                
+
                 <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
                 <br/>{auth.user.is_superuser? "Admin":
                 auth.user.is_crc? "CRC Staff":userid[0]?.alumn.Family.grade.grade_name
@@ -115,4 +115,3 @@ export default function Header() {
     </div>
   )
 }
-

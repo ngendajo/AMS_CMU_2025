@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import OpportunityTable from './OpportunityTable';
+import jwtDecode from 'jwt-decode';
+import OpportunityTable from '../../components/DashboardComponents/Opportunitypart/OpportunityTable';
 import '../../components/DashboardComponents/Opportunitypart/opportunity.css';
 import '../../components/Header/searchBar.css';
 import '../../components/Header/searchResultsList.css';
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-//import { Link } from "react-router-dom";
 import AddOpportunity from '../../components/DashboardComponents/Opportunitypart/AddOpportunity';
-
 
 function Opportunities() {
   const [opportunities, setOpportunities] = useState([]);
   const { auth } = useAuth();
   const navigate = useNavigate();
+  const user = jwtDecode(auth.accessToken);
+  // const userRole = user.is_superuser ? "admin" : user.is_crc ? "staff" : "alumni";
+
 
   const handleApprove = async (opportunityId) => {
     // 根据opportunityId更新opportunities数组中相应对象的approved属性
-    const updatedOpportunities = opportunities.map((opportunity) => {
-      if (opportunity.id === opportunityId) {
-        return { ...opportunity, approved: true };
-      }
-      return opportunity;
-    });
+    if (user.is_superuser || user.is_crc) {
+      const updatedOpportunities = opportunities.map((opportunity) => {
+        if (opportunity.id === opportunityId) {
+          return { ...opportunity, approved: true };
+        }
+        return opportunity;
+      });
 
     setOpportunities(updatedOpportunities);
 
@@ -44,23 +47,9 @@ function Opportunities() {
     .catch(error => console.log(error.response.data));  // Update "approved" status
     } catch (error) {
     }
-
+   }
   };
 
-/* 原来：
-  useEffect(() => {  // 副作用函数
-    const fetchOpportunities = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/opportunity'); // axios is for HTTP request
-        setOpportunities(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchOpportunities();
-  }, []);
-*/
   const fetchOpportunities = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/opportunity');
@@ -74,11 +63,21 @@ function Opportunities() {
     fetchOpportunities();
   }, []);
 
+
+  // 根据用户角色过滤机会
+  const filteredOpportunities = opportunities.filter(opportunity => {
+    if (user.is_superuser || user.is_crc) {  // admin和staff可以看到所有机会
+      return true;
+    } else {  // alumni只能看到已经approve的机会
+      return opportunity.approved;
+    }
+  });
+
   return (
     <div className="opportunity-table">
       <h1>Explore Job Opportunities!</h1>
-      {/*<button onClick={AddOpportunity}>Add Opportunity</button>*/}
-      <OpportunityTable opportunities={opportunities} onApprove={handleApprove} /> {/* OpportunityTable: show table; opportunities: the characteristics to pass */}
+      <OpportunityTable opportunities={filteredOpportunities} onApprove={handleApprove} />
+      {/*<OpportunityTable opportunities={opportunities} onApprove={handleApprove} userRole={userRole} />*/}
       <AddOpportunity />
     </div>
   );
