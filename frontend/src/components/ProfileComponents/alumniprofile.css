@@ -1,0 +1,51 @@
+.alumni-profile-main{
+    margin: 1%;
+    width: 98%;
+    display: flex;
+    gap: 10px;
+
+}
+.alumni-profile-top-left{
+    background-color: white;
+    flex: 3;
+    border-radius: 5px;
+    padding: 5px;
+}
+.basic-info{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.alumni-profile-img{
+    width: 10%;
+    border-radius: 50%;
+}
+.alumni-profile-info{
+    width: 89%;
+    margin: 5px;
+}
+.alumni-profile-info-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 2%;
+}
+.message-edit{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 5px;
+    border: solid #939292;
+    padding: 3px 8px;
+}
+.opportinuties-shared{
+    width: 20%;
+    margin-top: 20px;
+    background-color: #EDF6FE;
+    border-radius: 5px;
+}
+.alumni-profile-top-right{
+    background-color: white;
+    flex: 1;
+    border-radius: 5px;
+}

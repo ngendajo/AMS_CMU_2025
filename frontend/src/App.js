@@ -55,6 +55,7 @@ import AddStory from './components/DashboardComponents/Alumnipart/alumnireport/A
 import UpdateStory from './components/DashboardComponents/Alumnipart/alumnireport/UpdateStory';
 import DeleteStory from './components/DashboardComponents/Alumnipart/alumnireport/DeleteStory';
 import DisplayStory from './components/DashboardComponents/Alumnipart/alumnireport/DisplayStory';
+import AlumnProfile from './components/ProfileComponents/AlumnProfile';
 
 
 function App() {
@@ -112,6 +113,7 @@ function App() {
                     <Route path='add-crc' element={<Register />}/>
                     <Route path='add-crc/:id' element={<EditStaffUser />}/>
                     <Route path='staffprofile/:id' element={<StaffDetails />}/>
+                    <Route path='alumniprofile/:id' element={<AlumnProfile />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
                     <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>

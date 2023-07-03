@@ -4,6 +4,7 @@ import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoIosAdd } from "react-icons/io";
 import { AiOutlineFileAdd } from "react-icons/ai";
+import { ImProfile } from "react-icons/im";
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -39,6 +40,7 @@ export default function ASYVInfo() {
                 grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.grade.grade_name,
                 family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.family_name,
                 user_id:<span>
+                  <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>
