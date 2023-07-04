@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 function GalleryTable({ galleries, onDisplay, onDelete }) {
   return (
     <table>
