@@ -85,7 +85,12 @@ export default function UpdateStudie() {
     .then(res =>{
         console.log(res)
         alert(" Updated successfully")
+        if(auth.user.is_alumni){
+          navigate('/')
+      }else{
         navigate(`/alumni/studie/`)
+      }
+        
     })
     .catch(error => console.log(error.response))
      

@@ -68,7 +68,12 @@ export default function AddStory() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
-        navigate('/alumni/story/')
+        if(auth.user.is_alumni){
+            navigate('/')
+        }else{
+            navigate('/alumni/story/')
+        }
+        
     })
     .catch(error => console.log(error.response))
      

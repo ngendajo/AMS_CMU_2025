@@ -1,12 +1,14 @@
 
 import styled from "styled-components";
 import { SidebarData } from "./SidebarData";
+import { SidebarDataforAlumn } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
 import {Link, useNavigate} from 'react-router-dom';
 import useLogout from '../../../hooks/useLogout';
 import { BiLogOut } from "react-icons/bi";
 import sidebarmenufooter from '../../../Static/Images/sidebarmenufooter.JPG';
+import useAuth from "../../../hooks/useAuth";
  
  
 const SidebarNav = styled.nav`
@@ -51,6 +53,7 @@ const Sidebarmenufooter = styled.div`
 
 const Sidebarpart = () => {
   const navigate = useNavigate();
+  const { auth } = useAuth();
   const logout = useLogout();
   const signOut = async () => {
     await logout();
@@ -62,9 +65,14 @@ const Sidebarpart = () => {
       <IconContext.Provider value={{ color: "#615E69" }}>
         <SidebarNav>
           <SidebarWrap>
-            {SidebarData.map((item, index) => {
+            {auth.user.is_alumni?
+            SidebarDataforAlumn.map((item, index) => {
               return <SubMenu item={item} key={index} />;
-            })}
+            }):
+            SidebarData.map((item, index) => {
+              return <SubMenu item={item} key={index} />;
+            })
+            }
               <Link to="#" className='profile-logout-link' onClick={signOut}><BiLogOut/><span>Log Out</span></Link>
             <Sidebarmenufooter>
               <h4>Are you aware of the available opportunities?</h4>

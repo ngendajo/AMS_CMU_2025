@@ -77,7 +77,11 @@ export default function AddEmployment() {
     .then(res =>{
         console.log(res)
         alert(" updated successfully")
-        navigate('/alumni/employment')
+        if(auth.user.is_alumni){
+            navigate('/')
+        }else{
+            navigate('/alumni/employment/')
+        }
     })
     .catch(error => console.log(error.response))
      
