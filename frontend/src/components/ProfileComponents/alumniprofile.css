@@ -50,4 +50,35 @@
     background-color: white;
     flex: 1;
     border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.academic-perfomance{
+    display: flex;
+    justify-content: space-between;
+}
+.alumni-profile-img-same-grade{
+    border-radius: 50%;
+}
+.list-of-alumni-in-the-same-grade{
+    display: flex;
+    align-items: center;
+}
+.list-of-alumni-in-the-same-grade strong{
+    background-color: #D9D9D9;
+    color: #F49D47;
+    padding: 3px;
+    border-radius: 50%;
+}
+.alumni-profile-personal-info{
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 1%;
+    width: 98%;
 }
