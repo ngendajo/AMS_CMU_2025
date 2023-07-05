@@ -321,12 +321,14 @@ class UpdateStudieSerializer(serializers.ModelSerializer):
 class TotalAlumnReportSerializer(serializers.ModelSerializer):
 
     id= serializers.IntegerField(required=True)
-    total = serializers.IntegerField(required=True)
-    female = serializers.IntegerField(required=True)
+    gender = serializers.CharField(max_length=200, required=True)
+    employed = serializers.CharField(max_length=200, required=True)
+    end = serializers.CharField(max_length=200, required=True)
+    degree = serializers.CharField(max_length=200, required=True)
 
     class Meta:
         model = User
-        fields = ('id','total','female')
+        fields = ('id','gender','employed','end','degree')
 
 class StudyReportSerializer(serializers.ModelSerializer):
 
@@ -408,7 +410,7 @@ class UpdateOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
         fields = ['title', 'description']
-
+ 
 
 class ApproveOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
