@@ -4,6 +4,7 @@ from rest_framework import status
 from django.db.models import Count, Case, When, IntegerField
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import PermissionDenied
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
@@ -632,25 +633,18 @@ def read_opportunity(request):
     serializer = OpportunitySerializer(opportunities, many=True)
     return Response(serializer.data)
 
-
 @api_view(['POST'])  # 处理POST请求，创建新的Opportunity对象
 def create_opportunity(request):
     request.data['approved'] = False  # 设置approved字段的默认值为False
     serializer = OpportunitySerializer(data=request.data)
     if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
 #Dashboard needed data view
 
-class AlumnReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
-    def get(self,request):
-        stud = User.objects.raw("SELECT 1 as id, COUNT(api_user.id) AS total,COUNT(IF(userprofile_alumni.gender LIKE 'F%',TRUE,NULL)) AS female from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id WHERE api_user.is_alumni;")
-    
-        # if there is something in items else raise error
-        if stud:
-            serializer = AlumnReportSerializer(stud, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
         
         
 class StudyReportView(APIView):
@@ -664,18 +658,7 @@ class StudyReportView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
-class EmploymentReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
-    def get(self,request):
-        stud = Employment.objects.raw("select count(case when userprofile_employment.status not like '%I%' and userprofile_employment.end_date like '%Up to now%'  then 1 end) as employed, count(case when userprofile_employment.status like '%I%' and userprofile_employment.end_date like '%Up to now%' then 1 end) as intern,count(case when userprofile_employment.end_date not like '%Up to now%'  then 1 end) as unemployed from userprofile_employment;")
-    
-        # if there is something in items else raise error
-        if stud:
-            serializer = EmploymentReportSerializer(stud, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+ 
 
 
 

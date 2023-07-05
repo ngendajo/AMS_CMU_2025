@@ -309,7 +309,7 @@ export default function AlumnProfile() {
             </div>
             <div>
               <p>Scholarship Status</p>
-              <h4>{stu.scholarship=="F"?"Full-Scholarship":stu.scholarship=="P"?"Partial-Scholarship":stu.scholarship=="N"?"None":null}</h4>
+              <h4>{stu.scholarship==="F"?"Full-Scholarship":stu.scholarship==="P"?"Partial-Scholarship":stu.scholarship==="N"?"None":null}</h4>
             </div>
             <div>
               <p>Status</p>
@@ -357,7 +357,7 @@ export default function AlumnProfile() {
             </div>
             <div>
               <p>Status</p>
-              <h4>{employ.status=="F"?"Full-Time":employ.status=="P"?"Part-Time":employ.status=="S"?"Self-Employed":employ.status=="I"?"Intern":null}</h4>
+              <h4>{employ.status==="F"?"Full-Time":employ.status==="P"?"Part-Time":employ.status==="S"?"Self-Employed":employ.status==="I"?"Intern":null}</h4>
             </div>
             <div>
               <p>Company</p>
