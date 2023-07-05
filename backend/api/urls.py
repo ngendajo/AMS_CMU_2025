@@ -52,23 +52,28 @@ urlpatterns = [
     path('displaystory/<int:pk>/', views.display_story, name='display-story'),
     #studie paths
     path('studie/', views.StudieView.as_view()),
+    path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
+    path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
 
-    path('updatestory/<int:pk>/', views.update_studie, name='update-studie'),
-    path('deletestory/<int:pk>/', views.delete_studie, name='delete-studie'),
-    #opportunity paths
+    #Dashdboard data
+    path('alumnreport/', views.AlumnReportView.as_view()),
+    path('studyreport/', views.StudyReportView.as_view()),
+    path('employmentreport/', views.EmploymentReportView.as_view()),
+    path('', views.getRoutes),
+    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
+    
+    #gallery paths
+    path('gallery/', views.GalleryView.as_view()),
+
+    path('gallery/create/', views.create_gallery, name='create-gallery'),
+    path('updategallery/<int:pk>/', views.update_gallery, name='update-gallery'),
+    path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-gallery'),
+
     path('opportunity/create/', views.create_opportunity, name='create-opportunity'),
     path('opportunity/', views.read_opportunity, name='read-opportunity'),
     path('opportunity/<int:pk>/delete/', views.DeleteOpportunityView.as_view(), name='delete-opportunity'),
     path('opportunity/<int:pk>/update/', views.UpdateOpportunityView.as_view(), name='update-opportunity'),
     path('opportunity/<int:pk>/approve', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
-
-    path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
-    path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
-    #gallery paths
-    path('gallery/', views.GalleryView.as_view()),
-    path('gallery/create/', views.create_gallery, name='create-gallery'),
-    path('updategallery/<int:pk>/', views.update_gallery, name='update-gallery'),
-    path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-gallery'),
     #Dashdboard data
     path('totalalumnreport/', views.AlumnReportView.as_view()),
     path('', views.getRoutes)

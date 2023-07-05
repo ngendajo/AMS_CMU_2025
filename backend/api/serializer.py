@@ -1,13 +1,7 @@
 from rest_framework import serializers
-# from api.models import User
-# from userprofile.models import *
-from django.contrib.auth import get_user_model
-
-from rest_framework import serializers
-from .models import *
+from api.models import User
 from userprofile.models import *
 from django.contrib.auth import get_user_model
-
 
 User = get_user_model()
 
@@ -327,14 +321,39 @@ class UpdateStudieSerializer(serializers.ModelSerializer):
 class TotalAlumnReportSerializer(serializers.ModelSerializer):
 
     id= serializers.IntegerField(required=True)
-    gender = serializers.CharField(max_length=200, required=True)
-    employed = serializers.CharField(max_length=200, required=True)
-    end = serializers.CharField(max_length=200, required=True)
-    degree = serializers.CharField(max_length=200, required=True)
+    total = serializers.IntegerField(required=True)
+    female = serializers.IntegerField(required=True)
 
     class Meta:
         model = User
-        fields = ('id','gender','employed','end','degree')
+        fields = ('id','total','female')
+
+class StudyReportSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(required=True)
+    level = serializers.IntegerField(required=True)
+    degree = serializers.CharField(max_length=200, required=True)
+
+class GallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Studie
+        fields = ('id','level','degree')
+
+class EmploymentReportSerializer(serializers.ModelSerializer):
+
+#Gallery serializers
+
+class GallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gallery
+        fields=('__all__')
+
+
+
+
+
+
+
 
 
 #Gallery serializers
@@ -355,6 +374,12 @@ class GallerySerializer(serializers.ModelSerializer):
         )
 
         return gallery
+
+class UpdateGallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gallery
+        fields = ['displayed']
+
 
 
 class OpportunitySerializer(serializers.ModelSerializer):
@@ -392,3 +417,5 @@ class ApproveOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
         fields = ['approved']
+
+

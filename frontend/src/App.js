@@ -56,6 +56,9 @@ import UpdateStory from './components/DashboardComponents/Alumnipart/alumnirepor
 import DeleteStory from './components/DashboardComponents/Alumnipart/alumnireport/DeleteStory';
 import DisplayStory from './components/DashboardComponents/Alumnipart/alumnireport/DisplayStory';
 import AlumnProfile from './components/ProfileComponents/AlumnProfile';
+import AddGallery from './components/GalleryComponents/AddGalleryPhoto';
+import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
+
 
 
 function App() {
@@ -136,6 +139,7 @@ function App() {
                     <Route path='add-ep/:id' element={<EditEp />}/>
                      {/* gallery route */}
                     <Route path='add-gallery' element={<AddGallery />}/>
+                    <Route path='edit-gallery' element={<EditGallery />}/>
                   </Route>
                 </Route>
 

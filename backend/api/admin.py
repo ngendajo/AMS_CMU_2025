@@ -110,7 +110,7 @@ class EpAdmin(ImportExportModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(ImportExportModelAdmin):
-    list_display =('id','description','date')
+    list_display =('id','description')
 
 @admin.register(Story)
 class StoryAdmin(ImportExportModelAdmin):

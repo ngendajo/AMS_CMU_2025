@@ -25,8 +25,7 @@ export default function Events() {
                 
                 eventlist.push({
                     title:e.title, 
-                    description:e.description,
-                    date:e.date
+                    description:e.description
                 })
                 })
                 setData(eventlist)
@@ -56,7 +55,6 @@ export default function Events() {
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
         <h2>{events.title}</h2>
         <p>{events.description}</p>
-        <p>{events.date}</p>
       </div>
     );
   }

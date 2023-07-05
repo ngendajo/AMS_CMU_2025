@@ -3,24 +3,17 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from django.db.models import Count, Case, When, IntegerField
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import  Response
 from rest_framework import serializers
 from rest_framework.views import APIView 
-# from .serializer import *
-# from userprofile.models import *
+from .serializer import *
+from userprofile.models import *
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
-from django.contrib.auth import logout
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -63,7 +56,7 @@ class AluminiRegistrationView(APIView):
             serializer = AlumniSerializer(user, many=True)
             return Response(serializer.data)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
         
 
@@ -643,6 +636,121 @@ def read_opportunity(request):
 @api_view(['POST'])  # 处理POST请求，创建新的Opportunity对象
 def create_opportunity(request):
     request.data['approved'] = False  # 设置approved字段的默认值为False
+    serializer = OpportunitySerializer(data=request.data)
+    if serializer.is_valid():
+#Dashboard needed data view
+
+class AlumnReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = User.objects.raw("SELECT 1 as id, COUNT(api_user.id) AS total,COUNT(IF(userprofile_alumni.gender LIKE 'F%',TRUE,NULL)) AS female from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id WHERE api_user.is_alumni;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = AlumnReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        
+class StudyReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = Studie.objects.raw("select 1 as id, count(userprofile_studie.level) as level, userprofile_studie.level as degree from userprofile_studie group by userprofile_studie.level;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = StudyReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class EmploymentReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = Employment.objects.raw("select count(case when userprofile_employment.status not like '%I%' and userprofile_employment.end_date like '%Up to now%'  then 1 end) as employed, count(case when userprofile_employment.status like '%I%' and userprofile_employment.end_date like '%Up to now%' then 1 end) as intern,count(case when userprofile_employment.end_date not like '%Up to now%'  then 1 end) as unemployed from userprofile_employment;")
+    
+        # if there is something in items else raise error
+        if stud:
+            serializer = EmploymentReportSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+# Gallery data view
+
+class GalleryView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = GallerySerializer(data=request.data)
+        # validating for already existing data
+        if Gallery.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+    
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self,request):
+         # checking for the parameters from the URL
+        if request.query_params:
+            gall = Gallery.objects.filter(**request.query_params.dict())
+        else:
+            gall = Gallery.objects.all()
+    
+        # if there is something in items else raise error
+        if gall:
+            serializer = GallerySerializer(gall, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST']) 
+def create_gallery(request):
+    serializer = GallerySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_gallery(request, pk):
+    gall = Gallery.objects.get(pk=pk)
+    data = UpdateGallerySerializer(instance=gall, data=request.data)
+ 
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_gallery(request, pk):
+    stud = get_object_or_404(Gallery, pk=pk)
+    stud.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+#end
+
+
+
+# Opportunity model
+@api_view(['GET'])  # 处理GET请求，返回所有Opportunity对象的列表
+def read_opportunity(request):
+    opportunities = Opportunity.objects.all()
+    serializer = OpportunitySerializer(opportunities, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])  # 处理POST请求，创建新的Opportunity对象
+def create_opportunity(request):
     serializer = OpportunitySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

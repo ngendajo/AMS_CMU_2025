@@ -111,7 +111,8 @@ class Opportunity(models.Model):
 class Event(models.Model):
     title= models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    date = models.DateField()
+    startDate = models.DateTimeField(auto_now=True)
+    endDate= models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
 
     def __str__(self):

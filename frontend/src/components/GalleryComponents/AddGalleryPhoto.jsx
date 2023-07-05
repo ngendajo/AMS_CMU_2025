@@ -97,15 +97,17 @@ export default function AddGallery() {
             )}
     </Dropzone>
     </center>
+            <center>
             <div className="formpart">
                 <label htmlFor="displayed">
-                            Display this photo?
-                        </label>
-                        <select name="displayed">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
+                    Display this photo?
+                </label>
+                <select name="displayed">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
             </div>
+            </center>
             <center><button type="submit">Save</button></center>
     </form>
     </section>
