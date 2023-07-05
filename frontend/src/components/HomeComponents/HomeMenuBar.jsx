@@ -1,11 +1,10 @@
-
 import images from '../../Static/Images/images.png';
 import { MdCancel } from "react-icons/md"; 
 import { BiMessageRoundedDots } from "react-icons/bi";
 
 import { AiFillPlayCircle,AiOutlineArrowRight } from "react-icons/ai";
-import screen1 from "../../Static/Images/screen1.png"
-import screen2 from "../../Static/Images/creen3.jfif"
+import AlumniBig from "../../Static/Images/AlumniBig.png"
+import AlumniSmall from "../../Static/Images/creen3.jfif"
 import "./hellosection.css"
 
 import { React,useRef,useState, useEffect } from "react"
@@ -35,17 +34,17 @@ export default function HomeMenuBar() {
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
-    useEffect(() =>{
+    useEffect(() => {
         if(seen){
           emailRef.current.focus();
         }
-    },[seen])
+    }, [seen])
 
-    useEffect(() =>{
+    useEffect(() => {
         setErrMsg('');
-    },[email,pwd])
+    }, [email, pwd])
 
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try{
@@ -68,18 +67,18 @@ export default function HomeMenuBar() {
                 setEmail('');
                 setPwd('');
                 navigate(from, {replace:true})
-        }catch(err){
+        } catch(err) {
             if(!err?.response){
                 setErrMsg("Missing Email or Password");
             }else if (err.response?.status === 401){
                 setErrMsg('Unauthorised');
             }else{
-                setErrMsg('Login Failed'+err);
+                setErrMsg('Login Failed: ' + err);
             }
             setErrMsg('Login Failed')
         }
-        if(seen){
-          errRef.current.focus();
+        if(seen) {
+            errRef.current.focus();
         }
     }
 
@@ -87,23 +86,25 @@ export default function HomeMenuBar() {
         setSeen(!seen);
     };
     const [isShown, setIsShown] = useState(false);
-      const toggleMobileMenu = () => {
-        setIsShown(!isShown);
-      };
-      const MobileMenu = () => {
-        return (
-          <div className={'mobile-menu'}>
-            <a onClick={toggleMobileMenu} className="active" href='#home'>Home</a>
-            <a onClick={toggleMobileMenu} href='#about'>About Us</a>
-            <a onClick={toggleMobileMenu} href='#resources'>Resources</a>
-            <a onClick={toggleMobileMenu} href='#news'>News</a>
-            <a onClick={toggleMobileMenu} href='#contact'>Contact</a>
-          </div>
-        );
-      };
-  return (
-    <>
-    <div className='HomeMenuBar topbarWrapper'>
+        const toggleMobileMenu = () => {
+          setIsShown(!isShown);
+        };
+        const MobileMenu = () => {
+            return (
+                <div className={'mobile-menu'}>
+                    <a onClick={toggleMobileMenu} className="active" href='https://www.asyv.org/'>Home</a>
+                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/mission'>About Us</a>
+                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/partners-supporters'>Resources</a>
+                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/blog'>News</a>
+                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/contact-us'>Contact</a>
+                </div>
+            );
+        };
+
+    return (
+        <>
+            {/* --------------------- 1. Top Navigation Bar --------------------- */}
+            <div className='HomeMenuBar topbarWrapper'> {/* container of top navigation bar*/}
                 <div className="left-menu">
                     <img src={images} alt="logo" />
                 </div>
@@ -111,105 +112,111 @@ export default function HomeMenuBar() {
                 <div>
                     {/* Desktop Menu, which only appears on large screens */}
                     <div className='menu'>
-                      <a className="active" href='#home'>Home</a>
-                      <a href='#about'>About Us</a>
-                      <a href='#resources'>Resources</a>
-                      <a  href='#news'>News</a>
-                      <a  href='#contact'>Contact</a>
+                        <a className="active" href='https://www.asyv.org/'>Home</a>
+                        <a href='https://www.asyv.org/mission'>About Us</a>
+                        <a href='https://www.asyv.org/partners-supporters'>Resources</a>
+                        <a href='https://www.asyv.org/blog'>News</a>
+                        <a href='https://www.asyv.org/contact-us'>Contact</a>
                     </div>
 
                     {/* This button only shows up on small screens. It is used to open the mobile menu */}
-                      <button className='show-mobile-menu-button' onClick={toggleMobileMenu}>
+                    <button className='show-mobile-menu-button' onClick={toggleMobileMenu}>
                         &#8801;
-                      </button>
-                      {/* The mobile menu and the close button */}
-                      {isShown && <MobileMenu />}
-                      {isShown && (
+                    </button>
+
+                    {/* The mobile menu and the close button */}
+                    {isShown && <MobileMenu />}
+                    {isShown && (
                         <button className='close-mobile-menu-button' onClick={toggleMobileMenu}>
-                          &times;
+                            &times;
                         </button>
-                      )}
-                  </div>
+                    )}
+                </div>
 
                 <div className="right-menu">
-                  <button onClick={togglePop} className="log logsmall">Login</button>
-                  {seen ? 
-                    <div className="popup" id="closeLogin">
-                      <div className="popup-inner">
-                          <MdCancel className='cancellogin' onClick={togglePop}/>
-                          <div className="left-menu">
-                            <center>  <img src={images} alt="logo" /></center>
-                          </div>
-                          <h3 className="welcomemessage">Welcome back To our alumni system enter your credentials to log in</h3>
-                          <p ref={errRef} className={errMsg ? "errmsg":
-                              "offscreen"} aria-live="assertive">
-                              {errMsg}
-                          </p>
-                          <form onSubmit={handleSubmit}>
-                          <label htmlFor="email">
-                                Email:
-                            
-                            <input
-                                type="email"
-                                id="email"
-                                ref={emailRef}
-                                autoComplete="off"
-                                onChange={(e) => setEmail(e.target.value)}
-                                value={email}
-                                required
-                            />
-                          </label>
+                    <button onClick={togglePop} className="log logsmall">Login</button>
+                    {seen ?
+                        <div className="popup" id="closeLogin">
+                            <div className="popup-inner">
+                                <MdCancel className='cancellogin' onClick={togglePop} />
+                                <div className="left-menu">
+                                    <center>  <img src={images} alt="logo" /></center>
+                                </div>
+                                <h3 className="welcomemessage">Welcome back to our alumni system! Enter your credentials to log in.</h3>
+                                <p ref={errRef} className={errMsg ? "errmsg" :
+                                    "offscreen"} aria-live="assertive">
+                                    {errMsg}
+                                </p>
+                                <form onSubmit={handleSubmit}>
+                                    <label htmlFor="email">
+                                        Email:
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            ref={emailRef}
+                                            autoComplete="off"
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            value={email}
+                                            required
+                                        />
+                                    </label>
 
-                          <label htmlFor="password">
-                                Password:
-                            
-                            <input
-                                type="password"
-                                id="password"
-                                autoComplete="off"
-                                onChange={(e) => setPwd(e.target.value)}
-                                value={pwd}
-                                required
-                            />
-                          </label>
-                          <Link to="/home" className="forgetpass">Forgot password?</Link>
-                          <center><button>Login</button></center>
-                          </form>
-                      </div>
-                    </div>
-                  : null}
+                                    <label htmlFor="password">
+                                        Password:
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            autoComplete="off"
+                                            onChange={(e) => setPwd(e.target.value)}
+                                            value={pwd}
+                                            required
+                                        />
+                                    </label>
+                                    <Link to="/home" className="forgetpass">Forgot password?</Link>
+                                    <center><button>Login</button></center>
+                                </form>
+                            </div>
+                        </div>
+                    : null}
                 </div>
-    </div>
-    <section id="home" className="hellosection">
+            </div>
+
+            {/* --------------------- 2. Middle Hello Section --------------------- */}
+            <section id="home" className="hellosection">
                 <div className="left">
                     <div className="hellolefttop">
                         <h1>
-                            Be Part of the Massive Connection of the ASYV Alumni Association.
+                            Be part of the massive connection of ASYV alumni association!
                         </h1>
+                        <br/>
                         <p>
-                        More than you may Realize Exists in the ASYV Alumni Association. Make the World Better than you Found it by Joining the Change-Makers. Join us and Take in the Lovely Changes we are Bringing About.
+                            More than you may realize exists in the ASYV Alumni Association. Make the world better by joining the change-makers. Join us and take in the lovely changes we are bringing about!
                         </p>
+                        <br/>
                     </div>
+
                     <div className="helloleftbottom">
                         <div className="right-menu">
-                            <button onClick={togglePop} className="log">Get started</button>
+                            <button onClick={togglePop} className="log">Get Started</button>
                         </div>
                         <div className="introvideo">
-                            <AiFillPlayCircle className="icon"/>
-                            <span className="introvideoplay">Play video</span>
+                            <a href="https://www.youtube.com/watch?v=jxT6EIAYbJA" target="_blank" rel="noopener noreferrer">
+                                <AiFillPlayCircle className="icon" />
+                                <span className="introvideoplay">Play Video</span>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div className="right">
-                    <div className="rightimg2">
-                        <img src={screen2} alt="logo" />
+                    <div className="alumniSmall">
+                        <img src={AlumniSmall} alt="AlumniSmall" />
                     </div>
-                    <div className="rightimg1">
-                        <img src={screen1} alt="logo" />
+                    <div className="alumniBig">
+                        <img src={AlumniBig} alt="AlumniBig" />
                     </div>
                     <div className="rightalumninumber">
-                        <span>1200 + Alumni</span>
-                    </div> 
+                        <span>1200+ Alumni</span>
+                    </div>
                     <div className="rightleftbars1">
                     </div>
                     <div className="rightleftbars2">
@@ -219,40 +226,48 @@ export default function HomeMenuBar() {
                     <div className="rightbars2">
                     </div>
                 </div>
-                
+
             </section>
 
             <div className="knowmore">
-                      <div className="school">
-                          Liquidnet Family High School
-                      </div>
-                      <div className="infull">
-                          Liquidnet Family High School education doesn't end after graduation. LFHS offers
-                          programs & resources to alumni at every phase of thier career.
-                      </div>
-                      <div className="rightlink">
-                             <span>Know more</span><AiOutlineArrowRight className="know"/>
-                      </div>
-                      <BiMessageRoundedDots className="sendsms"/>
-              </div>
+                <div className="school">
+                    Liquidnet Family High School
+                </div>
+                <div className="infull">
+                    Liquidnet Family High School education doesn't end after graduation. LFHS offers
+                    programs & resources to alumni at every phase of thier career.
+                </div>
+                <div className="rightlink">
+                    <span>Know more</span><AiOutlineArrowRight className="know" />
+                </div>
+                <BiMessageRoundedDots className="sendsms" />
+            </div>
 
+
+            {/* ------------------- Second Page: About Us -------------------- */}
             <section id="about">
-          <h2>About</h2>
-          
-        </section>
-        <section id="resources">
-          <h2>Resources</h2>
-          
-        </section>
-        <section id="news">
-          <h2>News</h2>
-          
-        </section>
-        <section id="contact">
-          <h2>Contact</h2>
-          
-        </section>
-        
-            </>
-  )
+                <h2>About</h2>
+            </section>
+
+            {/* ------------------- Third Page: Resources -------------------- */}
+            <section id="resources">
+                <h2>Resources</h2>
+            </section>
+
+            {/* ------------------- Forth Page: News -------------------- */}
+            <section id="news">
+                <h2>News</h2>
+                <div id="iframeContainer_News">
+                    <iframe src="https://www.asyv.org/bwiranews" title="News" frameborder="0"></iframe>
+                </div>
+            </section>
+
+            {/* ------------------- Fifth Page: Contact -------------------- */}
+            <section id="contact">
+                <h2>Contact</h2>
+            </section>
+
+        </>
+    );
+
 }

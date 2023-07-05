@@ -15,7 +15,7 @@ function Opportunities() {
   const navigate = useNavigate();
   const user = jwtDecode(auth.accessToken);
   // const userRole = user.is_superuser ? "admin" : user.is_crc ? "staff" : "alumni";
-
+  console.log(auth.user.id);
 
   const handleApprove = async (opportunityId) => {
     // 根据opportunityId更新opportunities数组中相应对象的approved属性

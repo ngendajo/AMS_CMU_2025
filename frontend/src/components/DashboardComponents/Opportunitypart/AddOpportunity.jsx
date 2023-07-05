@@ -20,7 +20,7 @@ export default function AddOpportunity() {
 
         const opportunityData = {
             title: title,
-            user: user,
+            user: auth.user.id,
             description: description,
             post_time: post_time
         };
@@ -61,10 +61,6 @@ export default function AddOpportunity() {
             <input type="text" name="title" value={title} onChange={handleInputChange} />
           </label>
           <label>
-            User
-            <input type="number" name="user" value={user} onChange={handleInputChange} />
-          </label>
-          <label>
             Description
             <textarea name="description" value={description} onChange={handleInputChange} />
           </label>
@@ -74,7 +70,6 @@ export default function AddOpportunity() {
           </label>
           <button type="submit">Submit</button>  {/* 提交按钮，点击该按钮将触发registerOpportunity函数来处理表单的提交事件 */}
         </form>
-
 
       </div>
     );
