@@ -37,6 +37,8 @@
     border-radius: 5px;
     border: solid #939292;
     padding: 3px 8px;
+    text-decoration: none;
+    cursor: pointer;
 }
 .opportinuties-shared{
     width: 20%;

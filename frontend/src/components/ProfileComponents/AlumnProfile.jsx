@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 import { useParams } from 'react-router'
-import { CiEdit } from "react-icons/ci";/* 
-import { Link } from "react-router-dom"; */
+import { CiEdit } from "react-icons/ci";
+import { Link } from "react-router-dom"; 
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import './alumniprofile.css';
@@ -42,10 +42,10 @@ export default function AlumnProfile() {
               <div className="alumni-profile-info">
                 <div className="alumni-profile-info-top">
                   <h2>{use.first_name} {use.last_name}</h2>
-                  <div className="message-edit">
+                  <Link to={`/add-alumni/${use.id}`} className="message-edit">
                     <span>Edit</span>
                     <CiEdit/>
-                  </div>
+                  </Link>
                 </div>
                 <div className="alumni-profile-info-top">
                   <div>
