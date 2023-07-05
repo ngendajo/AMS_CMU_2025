@@ -19,11 +19,11 @@ export const SidebarData = [
         path: "/events",
         icon: <MdIcons.MdEmojiEvents />,
       },
-      {
+      /* {
         title: "Networks",
         path: "/chats",
         icon: <GiIcons.GiConversation />,
-      },
+      }, */
       {
         title: "Opportunities",
         path: "/opportunities",
