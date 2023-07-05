@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {useRef, useState, useEffect} from "react";
+import {useRef, useState} from "react";
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
 import Dropzone from "react-dropzone";
 
 export default function AddGallery() {
