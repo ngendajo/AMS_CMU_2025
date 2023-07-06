@@ -7,13 +7,17 @@ import '../../components/DashboardComponents/Alumnipart/alumni.css';
 import { Link } from 'react-router-dom';
 
 import { Outlet } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 
 export default function Alumni() {
   const [category, setCategory] = useState(7);
+  
+  const {auth} = useAuth();
 
   return (
     <div>
+      {auth.user.is_alumni? null:
         <div className='alumni-list-heading'>  {/* className属性设置为'alumni-list-heading'，它是一个用于样式设计的类名 */}
 
         <Link to={"/alumni/"} className={category===7? "displayed":"notdisplayed"} onClick={()=>setCategory(7)}>
@@ -41,8 +45,12 @@ export default function Alumni() {
           <div className={category===8? "displayed":"notdisplayed"} onClick={()=>setCategory(8)}>
             <Link className='grades-link' to="/alumni/eps">Eps</Link>
           </div>
+          <div className={category===10? "displayed":"notdisplayed"} onClick={()=>setCategory(10)}>
+            <Link className='grades-link' to="/alumni/bulkalumni">Bulk Alumni Registration</Link>
+          </div>
 
         </div>
+        }
         <Outlet/>
         
     </div>
