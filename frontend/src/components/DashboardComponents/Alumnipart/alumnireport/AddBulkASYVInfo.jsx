@@ -2,31 +2,52 @@ import React from 'react';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { BiExport } from "react-icons/bi";
+import { useState } from 'react';
+import * as XLSX from 'xlsx';
+import Dropzone from "react-dropzone"; 
+import "../alumni.css";
 
 const columns = [
-    { header: 'Email', key: 'email' },
-    { header: 'First Name', key: 'first_name' },
-    { header: 'Last Name', key: 'last_name' },
-    { header: 'Phone number', key: 'phone1' },
-    { header: 'Martal Status', key: 'marital_status' },
-    { header: 'Gender', key: 'gender' },
-    { header: 'Kids', key: 'kids' },
-    { header: 'Father', key: 'father' },
-    { header: 'Mother', key: 'mother' },
-    { header: 'Place of Origin', key: 'place_of_birth' },
-    { header: 'Current Residence', key: 'CurrResidence' },
-    { header: 'Grade', key: 'grade_name' },
-    { header: 'Family', key: 'family' },
-    { header: 'Combination', key: 'combination_name' },
-    { header: 'S4 Marks', key: 's4marks' },
-    { header: 'S5 Marks', key: 's5marks' },
-    { header: 'S6 Marks', key: 's6marks' },
-    { header: 'National Exam Result', key: 'ne' },
-    { header: 'Maximum Aggregate in NE', key: 'maxforne' }
+    { header: 'email', key: 'email' },
+    { header: 'first_name', key: 'first_name' },
+    { header: 'last_name', key: 'last_name' },
+    { header: 'phone_number', key: 'phone1' },
+    { header: 'martal_status', key: 'marital_status' },
+    { header: 'gender', key: 'gender' },
+    { header: 'kids', key: 'kids' },
+    { header: 'father', key: 'father' },
+    { header: 'mother', key: 'mother' },
+    { header: 'llace_of_origin', key: 'place_of_birth' },
+    { header: 'current_residence', key: 'CurrResidence' },
+    { header: 'grade', key: 'grade_name' },
+    { header: 'family', key: 'family' },
+    { header: 'combination', key: 'combination_name' },
+    { header: 's4_marks', key: 's4marks' },
+    { header: 's5_marks', key: 's5marks' },
+    { header: 's6_marks', key: 's6marks' },
+    { header: 'national_exam_result', key: 'ne' },
+    { header: 'maximum_aggregate_in_ne', key: 'maxforne' }
   ];
   const workSheetName = 'ASYV_Alumni_Data';
   const workBookName = 'ASYV_Alumni_Data';
 export default function AddBulkASYVInfo() {
+    const [data, setData]= useState([]);
+
+      
+    const handleFileUpload = (files) => {
+      if (files.length > 0) {
+        const reader =new FileReader();
+        reader.readAsBinaryString(files[0]);
+        reader.onload = (e) =>{
+          const data = e.target.result;
+          const workbook=XLSX.read(data, {type: 'binary'});
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const parseData = XLSX.utils.sheet_to_json(sheet);
+          setData(parseData)
+        }
+      }
+    }
     const workbook = new Excel.Workbook();
 
   const saveExcel = async () => {
@@ -61,6 +82,7 @@ export default function AddBulkASYVInfo() {
       workbook.removeWorksheet(workSheetName);
     }
   };
+  console.log(data)
   return (
     <div className='alumni-list-body'>
             <div>
@@ -68,11 +90,42 @@ export default function AddBulkASYVInfo() {
                 <div onClick={saveExcel} className='export-staff'>
                   <span>Export xlsx to use</span><BiExport/>
                 </div>
-                <div className='export-staff'>
-                  <span>Import xlsx</span><BiExport/>
-                </div>
+              </div>
+              <div>
+              <Dropzone onDrop={handleFileUpload} multiple={false}> 
+                            {({ getRootProps, getInputProps }) => (
+                            <section>
+                                <div {...getRootProps({ className: "dropzone" })}>
+                                <input {...getInputProps()} />
+                                
+                                    <span><strong className="browse">Browse</strong> <strong>a excel .xlsx file</strong><br/> or drag and drop</span>
+                                
+                                </div>
+                            </section>
+                            )}
+                        </Dropzone>
               </div>
             </div>
+              {/* {data.length > 0 && (
+                <table>
+                  <thead>
+                    <tr>
+                      {Object.keys(data[0]).map((key) =>(
+                        <th key={key}>{key}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((row, index) =>(
+                      <tr key={index}>
+                        {Object.values(row).map((value, index) => (
+                          <td key={index}>{value}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )} */}
       </div>
   )
 }
