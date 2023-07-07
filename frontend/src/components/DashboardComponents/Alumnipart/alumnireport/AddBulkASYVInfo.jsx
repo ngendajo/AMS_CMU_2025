@@ -22,6 +22,7 @@ const columns = [
     { header: 'grade', key: 'grade_name' },
     { header: 'family', key: 'family' },
     { header: 'combination', key: 'combination_name' },
+    { header: 'eps', key: 'eps' },
     { header: 's4_marks', key: 's4marks' },
     { header: 's5_marks', key: 's5marks' },
     { header: 's6_marks', key: 's6marks' },

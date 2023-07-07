@@ -237,7 +237,7 @@ class GradeView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
     def get(self,request):
         if request.query_params:
-            grades = Grade.objects.filter(**request.query_params.dict())
+            grades = Grade.objects.filter(**request.query_params.dict()).order_by('start_date')
         else:
             grades = Grade.objects.all()
     

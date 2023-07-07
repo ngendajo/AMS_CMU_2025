@@ -27,6 +27,7 @@ const columns = [
   { header: 'Grade', key: 'grade_name' },
   { header: 'Family', key: 'family' },
   { header: 'Combination', key: 'combination_name' },
+  { header: 'Enrishment Programs', key: 'eps' },
   { header: 'S4 Marks', key: 's4marks' },
   { header: 'S5 Marks', key: 's5marks' },
   { header: 'S6 Marks', key: 's6marks' },
@@ -40,6 +41,37 @@ export default function ASYVInfo() {
     const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
     const [datatodownload, setDatatodownload] = useState([]); 
   const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
+
+  function epType(type){
+    if(type==="A")
+    {
+      return "Arts Center";
+    }
+    if(type==="C")
+    {
+      return "Clubs";
+    }
+    if(type==="SC")
+    {
+      return "Science Center";
+    }
+    if(type==="S")
+    {
+      return "Sports";
+    }
+  }
+  function getEps(eps)
+  {
+    var epslist=" ";
+  for(var i=0;i<eps.length;i++){
+    if(i===eps.length-1){
+      epslist+=eps[i].title+" from "+epType(eps[i].type)
+    }else{
+      epslist+=eps[i].title+" from "+epType(eps[i].type)+", "
+    }
+  }
+  return epslist
+  }
 
   useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
     
@@ -89,6 +121,7 @@ export default function ASYVInfo() {
                 grade_name:element.alumn==null?"Null":element.alumn.Family.grade.grade_name,
                 family:element.alumn==null?"Null":element.alumn.Family.family_name,
                 combination_name:element.alumn==null?"Null":element.alumn.Combination.combination_name,
+                eps:element.alumn==null?"Null":element.alumn.Eps.length>0?getEps(element.alumn.Eps):element.alumn.Eps.length,
                 s4marks:element.alumn==null?"Null":element.alumn.s4marks,
                 s5marks:element.alumn==null?"Null":element.alumn.s5marks,
                 s6marks:element.alumn==null?"Null":element.alumn.s6marks,
