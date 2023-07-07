@@ -25,7 +25,9 @@ export default function Events() {
                 
                 eventlist.push({
                     title:e.title, 
-                    description:e.description
+                    description:e.description,
+                    startDate:e.startDate,
+                    image_url:e.image_url
                 })
                 })
                 setData(eventlist)
@@ -40,39 +42,30 @@ export default function Events() {
 
   
   function Card(events) {
-
     const [isClicked, setIsClicked] = useState(false);
-
     function handleClick() {
       setIsClicked(!isClicked);
       
     }
-
-
-
-
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
         <h2>{events.title}</h2>
         <p>{events.description}</p>
+        <div className="imageContainer">
+          <img src={"http://localhost:8000"+events.image_url}  alt='' width={75} height={75} ></img>
+        </div>
       </div>
     );
   }
 
 
   return (
-
-
     
-
     <div className="card-list">
       {data.map((item, index) => (
-        <Card key={index} title={item.title} description={item.description} date={item.date} />
+        <Card key={index} title={item.title} description={item.description} image_url={item.image_url} />
       ))}
     </div>
-
-
-
 
 
   )
