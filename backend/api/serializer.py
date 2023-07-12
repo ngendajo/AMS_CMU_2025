@@ -223,6 +223,26 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('__all__')
+    
+    def create(self, validated_data):
+        image_url = validated_data.get('image_url')
+        title = validated_data.get('title')
+        description = validated_data.get('description')
+        startDate = validated_data.get('startDate')
+        endDate = validated_data.get('endDate')
+        user = validated_data.get('user')
+
+        event = Event.objects.create(
+            image_url=image_url,
+            title=title,
+            description=description,
+            startDate=startDate,
+            endDate=endDate,
+            user=user
+        )
+
+        return event
+
 
 class UpdateEventSerializer(serializers.ModelSerializer):
     class Meta:

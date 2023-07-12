@@ -43,6 +43,7 @@ urlpatterns = [
     path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
     #event paths
     path('event/', views.EventView.as_view()),
+    path('event/create/', views.create_Event, name='create-event'),
     path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
     path('deleteevent/<int:pk>/', views.delete_eve, name='delete-events'),
     #story paths
