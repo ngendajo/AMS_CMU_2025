@@ -17,7 +17,7 @@ const columns = [
     { header: 'kids', key: 'kids' },
     { header: 'father', key: 'father' },
     { header: 'mother', key: 'mother' },
-    { header: 'llace_of_origin', key: 'place_of_birth' },
+    { header: 'place_of_origin', key: 'place_of_birth' },
     { header: 'current_residence', key: 'CurrResidence' },
     { header: 'grade', key: 'grade_name' },
     { header: 'family', key: 'family' },
@@ -27,13 +27,36 @@ const columns = [
     { header: 's5_marks', key: 's5marks' },
     { header: 's6_marks', key: 's6marks' },
     { header: 'national_exam_result', key: 'ne' },
-    { header: 'maximum_aggregate_in_ne', key: 'maxforne' }
+    { header: 'maximum_aggregate_in_ne', key: 'maxforne' },
+    { header: 'job_title', key: 'job_title' },
+    { header: 'job_status', key: 'job_status' },
+    { header: 'description', key: 'description' },
+    { header: 'company', key: 'company' },
+    { header: 'study_level', key: 'study_level' },
+    { header: 'degree', key: 'degree' },
+    { header: 'university', key: 'university' },
+    { header: 'country', key: 'country' },
+    { header: 'scholarship', key: 'scholarship' },
+    { header: 'study_status', key: 'study_status' }
   ];
   const workSheetName = 'ASYV_Alumni_Data';
   const workBookName = 'ASYV_Alumni_Data';
 export default function AddBulkASYVInfo() {
     const [data, setData]= useState([]);
 
+    function findDuplicatesinemail(arr) {
+      //let datatobechecked=[]
+      let index = 0, newArr = [];
+       for (let i = 0; i < arr.length - 1; i++) {
+          for (let j = i + 1; j < arr.length; j++) {
+          if (arr[i].email === arr[j].email) {
+                newArr[index] = arr[i];
+                index++;
+             }
+          }
+       }
+       return [...new Set(newArr)];
+    }
       
     const handleFileUpload = (files) => {
       if (files.length > 0) {
@@ -45,7 +68,7 @@ export default function AddBulkASYVInfo() {
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
           const parseData = XLSX.utils.sheet_to_json(sheet);
-          setData(parseData)
+          setData(findDuplicatesinemail(parseData))
         }
       }
     }
@@ -84,6 +107,8 @@ export default function AddBulkASYVInfo() {
     }
   };
   console.log(data)
+      
+ 
   return (
     <div className='alumni-list-body'>
             <div>
@@ -107,26 +132,16 @@ export default function AddBulkASYVInfo() {
                         </Dropzone>
               </div>
             </div>
-              {/* {data.length > 0 && (
-                <table>
-                  <thead>
-                    <tr>
-                      {Object.keys(data[0]).map((key) =>(
-                        <th key={key}>{key}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((row, index) =>(
-                      <tr key={index}>
-                        {Object.values(row).map((value, index) => (
-                          <td key={index}>{value}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )} */}
+              <div>
+                <div className="errormessage">
+                  {data.length>0? <h1>Duplicate data</h1>:null}
+                  {
+                    data.map((ele,key)=>{
+                      return <p key={key}>{ele.email}, Names {ele.last_name} {ele.first_name}</p>
+                    })
+                  }
+                </div>
+              </div>
       </div>
   )
 }

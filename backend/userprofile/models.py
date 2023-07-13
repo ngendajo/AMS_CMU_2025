@@ -131,7 +131,7 @@ class Studie(models.Model):
     level =models.CharField(max_length=3, choices=levels,default='A2')
     degree = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
+    country = models.CharField(max_length=200)
     Scholarships = (
 		('F', 'Full'),
 		('P', 'Partial'),

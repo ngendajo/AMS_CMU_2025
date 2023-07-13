@@ -122,7 +122,7 @@ class AlumniAdmin(ImportExportModelAdmin):
 
 @admin.register(Studie)
 class StudieAdmin(ImportExportModelAdmin):
-    list_display=('id','university')
+    list_display=('id','university','alumn','level','university','scholarship','country','status')
 
 @admin.register(Employment)
 class EmploymentAdmin(ImportExportModelAdmin):
