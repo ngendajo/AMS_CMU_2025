@@ -35,6 +35,21 @@ User = get_user_model()
 
 #User data
 
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def get_users(request):
+        if request.query_params:
+            user=User.objects.filter(**request.query_params.dict())
+        else:
+            user = User.objects.all()
+    
+        # if there is something in items else raise error
+        if user:
+            serializer = UserSerializer(user, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND) 
+
 class AluminiRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
     def post(self, request):
