@@ -49,8 +49,90 @@ export default function AddBulkASYVInfo() {
     const [data1, setData1]= useState([]);
     const [data2, setData2]= useState([]);
     const [data3, setData3]= useState([]);
+    const [data4, setData4]= useState([]);
+    const [datafinal, setDatafinal]= useState([]);
     const {auth} = useAuth();
     const [users, setUsers]= useState([]);
+    const [families, setFamilies]= useState([]);
+    const [combinations, setCombinations]= useState([]);
+    const [eps, setEps]= useState([]);
+
+    useEffect(() =>{ 
+
+      const geteps = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/ep/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+                  headers: { 
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              setEps(response.data)
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      geteps();
+  
+  },[auth])
+    useEffect(() =>{ 
+
+      const getcombinations = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/combination/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+                  headers: { 
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              setCombinations(response.data)
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      getcombinations();
+  
+  },[auth])
+    useEffect(() =>{ 
+
+      const getfamilies = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/grades/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+                  headers: { 
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              let fam=[]
+              if(response.data.length>0){
+                response.data.forEach((grade)=>{
+                  if(grade.families.length>0){
+                    grade.families.forEach((fami)=>{
+                      fam.push(
+                        {
+                         family_id:fami.id,
+                          family_name:fami.family_name
+                        }
+                      )
+                    })
+                  }
+                  
+                })
+              }
+              setFamilies(fam)
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      getfamilies();
+  
+  },[auth])
     useEffect(() =>{ 
 
     const getcrcusers = async () =>{
@@ -71,6 +153,18 @@ export default function AddBulkASYVInfo() {
     getcrcusers();
 
 },[auth])
+
+    function findemptycell(arr) {
+      
+      let index = 0, newArr = [];
+       for (let i = 0; i < arr.length - 1; i++) {
+          if(arr[i].phone_number==="" || arr[i].first_name==="" || arr[i].last_name==="" || arr[i].gender==="" || arr[i].family==="" || arr[i].combination===""){
+            newArr[index] = arr[i];
+                index++;
+          }
+       }
+       return [...new Set(newArr)];
+    }
 
     function findDuplicatesinemail(arr) {
       
@@ -101,9 +195,15 @@ export default function AddBulkASYVInfo() {
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
           for (let j = 0; j < users.length; j++) {
-          if ((arr[i].phone_number === users[j].phone1) || arr[i].email === users[j].email) {
+          if ((arr[i].phone_number === users[j].phone1)) {
                 newArr[index] = arr[i];
-                index++;
+                alert("This phone number "+arr[i].phone_number+" is already exist")
+              index++;
+             }
+             else if(arr[i].email === users[j].email){
+              newArr[index] = arr[i];
+              alert("This email "+arr[i].email+" is already exist")
+              index++;
              }
           }
        }
@@ -132,6 +232,38 @@ export default function AddBulkASYVInfo() {
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
           const parseData = XLSX.utils.sheet_to_json(sheet);
+          parseData.forEach((ele)=>{
+            families.forEach((fami)=>{
+              if((ele.family)===(fami.family_name)){
+                ele.family=fami.family_id
+              }else{
+                console.log(ele.family+" is not exist in the system.")
+              }
+            })
+          })
+          parseData.forEach((ele)=>{
+            combinations.forEach((comb)=>{
+              if((ele.combination)===(comb.combination_name)){
+                ele.combination=comb.id
+              }else{
+                console.log(ele.combination+" is not exist in the system.")
+              }
+            })
+          })
+          parseData.forEach((ep)=>{
+            let eps=ep.eps
+            eps=eps.split(",")
+            ep.eps=eps
+            ep.eps.forEach((ep)=>{
+              eps.forEach((p)=>{
+                if(ep===p.title){
+                  ep=p.id
+                }
+                
+              })
+            })
+          })
+          setDatafinal(parseData)
           let results =findDuplicatesinemail(parseData)
           results.sort((a, b) => {
             let fa = a.email,
@@ -184,7 +316,21 @@ export default function AddBulkASYVInfo() {
             }
             return 0;
         });
-        setData3(results2)
+        let results4 =findemptycell(parseData)
+          results4.sort((a, b) => {
+            let fa = a.email,
+                fb = b.email;
+        
+            if (fa < fb) {
+                return -1;
+            }
+            if (fa > fb) {
+                return 1;
+            }
+            return 0;
+        });
+        setData4(results4)
+        setData3(results3)
         setData2(results2)
         setData1(results1)
           setData(results)
@@ -225,7 +371,8 @@ export default function AddBulkASYVInfo() {
       workbook.removeWorksheet(workSheetName);
     }
   };
-  console.log(users)
+  console.log(datafinal)
+  console.log(eps)
       
  
   return (
@@ -275,7 +422,7 @@ export default function AddBulkASYVInfo() {
                     :
                     data2.length>0?
                     <>
-                      <h1>Duplicate incorect emails</h1>
+                      <h1>Incorect emails</h1>
                       {
                         data2.map((ele,key)=>{
                           return <p key={key}>{ele.email}, Names {ele.email} {ele.first_name}</p>
@@ -288,11 +435,20 @@ export default function AddBulkASYVInfo() {
                       <h1>Duplicate Exist email or phone</h1>
                       {
                         data3.map((ele,key)=>{
-                          return <p key={key}>{ele.phone_number}, Names {ele.last_name} {ele.first_name}</p>
+                          return <p key={key}>{ele.phone_number}, {ele.email}, Names {ele.last_name} {ele.first_name}</p>
                         })
                       }
                     </>
                     :
+                    data4.length>0?
+                    <>
+                      <h1>unexcepted null values</h1>
+                      {
+                        data4.map((ele,key)=>{
+                          return <p key={key}>{ele.phone_number}, {ele.email}, Names {ele.last_name} {ele.first_name}</p>
+                        })
+                      }
+                    </>:
                     null
 
                   }
