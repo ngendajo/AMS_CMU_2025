@@ -158,7 +158,7 @@ export default function AddBulkASYVInfo() {
       
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
-          if(arr[i].phone_number==="" || arr[i].first_name==="" || arr[i].last_name==="" || arr[i].gender==="" || arr[i].family==="" || arr[i].combination===""){
+          if((arr[i].phone_number=== undefined)? true:(arr[i].phone_number).length<=0 || arr[i].first_name===undefined? true:(arr[i].first_name)<=0 || arr[i].last_name===undefined?true:(arr[i].last_name)<=0 || arr[i].gender===undefined?true:(arr[i].gender)<=0 || arr[i].family===undefined?true:(arr[i].family)<=0 || arr[i].combination===undefined?true:(arr[i].combination)<=0){
             newArr[index] = arr[i];
                 index++;
           }
