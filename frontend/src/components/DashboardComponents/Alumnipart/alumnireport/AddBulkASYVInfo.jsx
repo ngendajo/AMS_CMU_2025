@@ -251,17 +251,27 @@ export default function AddBulkASYVInfo() {
             })
           })
           parseData.forEach((ep)=>{
-            let eps=ep.eps
-            eps=eps.split(",")
-            ep.eps=eps
-            ep.eps.forEach((ep)=>{
+            let eps1=ep.eps
+            eps1=eps1.split(",")
+            ep.eps=eps1
+            for(let i=0;i<eps1.length;i++){
               eps.forEach((p)=>{
-                if(ep===p.title){
-                  ep=p.id
+                if(eps1[i]===p.title){
+                  ep.eps[i]=p.id
                 }
-                
+              })
+            }
+            ep.eps.forEach((e)=>{
+              eps.forEach((p)=>{
+                if(e===p.title){
+                  e=p.id
+                  console.log(e+" "+ep.email)
+                }
               })
             })
+            ep.eps=([...new Set(ep.eps)]).filter((str) => str !== '').filter(x => typeof x === "number") /* remove duplicate and empty values and keep numbers only */
+            console.log(ep.eps)
+            console.log(ep.email)
           })
           setDatafinal(parseData)
           let results =findDuplicatesinemail(parseData)
@@ -372,7 +382,6 @@ export default function AddBulkASYVInfo() {
     }
   };
   console.log(datafinal)
-  console.log(eps)
       
  
   return (
