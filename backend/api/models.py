@@ -8,7 +8,23 @@ class UserManager(BaseUserManager):
 	'''
 	creating a manager for a custom user model
 	'''
+	def create_user1(self, email, first_name, last_name, phone1, password):
+		"""
+		Create and return a `User` with an email, username and password.
+		"""
+		if not email:
+			raise ValueError('Users Must Have an email address')
 
+		user = self.model(
+			email=self.normalize_email(email),
+			first_name=first_name,
+			last_name=last_name,
+			phone1=phone1,
+		)
+		user.set_password(password)
+		user.save(using=self._db)
+		return user
+	
 	def create_user(self, email, first_name, last_name, phone1, password, image_url):
 		"""
 		Create and return a `User` with an email, username and password.
@@ -28,14 +44,14 @@ class UserManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email, first_name, last_name, phone1, password, image_url):
+	def create_superuser(self, email, first_name, last_name, phone1, password):
 		"""
 		Create and return a `User` with superuser (admin) permissions.
 		"""
 		if password is None:
 			raise TypeError('Superusers must have a password.')
 
-		user = self.create_user(email, first_name, last_name, phone1, password, image_url)
+		user = self.create_user1(email, first_name, last_name, phone1, password)
 		user.is_superuser = True
 		user.is_staff = True
 		user.save()
@@ -54,6 +70,14 @@ class UserManager(BaseUserManager):
 		if password is None:
 			raise TypeError('Alumni must have a password')
 		user = self.create_user(email, first_name, last_name, phone1, password, image_url)
+		user.is_alumni = True
+		user.save()
+		return user
+	
+	def create_alumniuserwithoutimage(self, email, first_name, last_name, phone1, password):
+		if password is None:
+			raise TypeError('Alumni must have a password')
+		user = self.create_user1(email, first_name, last_name, phone1, password)
 		user.is_alumni = True
 		user.save()
 		return user

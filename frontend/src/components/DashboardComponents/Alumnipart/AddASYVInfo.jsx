@@ -183,7 +183,7 @@ export default function AddASYVInfo() {
         "father":father,
         "mother":mother,
         "place_of_birth":e.target.place_of_birth.value,
-        "CurrResidence":e.target.currResidence.value,
+        "currresidence":e.target.currResidence.value,
         's4marks':s4marks,
         's5marks':s5marks,
         's6marks':s6marks,
@@ -198,7 +198,7 @@ export default function AddASYVInfo() {
         }
     )
     .then(res =>{
-        console.log(res) 
+        console.log(res.data.id) 
         alert(" created successfully")
         navigate(`/add-alumni/info/${params.id}/study`)
     })
@@ -331,7 +331,7 @@ export default function AddASYVInfo() {
                           Grade
                       </label>     
                           <select name="grade" onChange={getfamilies}>
-                            <option value="" disabled>select grade</option>
+                            <option value="">select grade</option>
                               {grades.map((e,ind) => {
                                   return  <option key={ind} value={e.id}>{e.grade_name}</option>
                               })}               

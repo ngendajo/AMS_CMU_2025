@@ -36,7 +36,7 @@ User = get_user_model()
 #User data
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def get_users(request):
         if request.query_params:
             user=User.objects.filter(**request.query_params.dict())
@@ -49,6 +49,16 @@ def get_users(request):
             return Response(serializer.data)
         else:
             return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND) 
+
+class AluminiBulkRegistrationView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = AlumniBulkRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -153,6 +163,7 @@ def create_alumni_info(request):
     serializer.is_valid(raise_exception=True)
 
     alumni_info = serializer.save()
+    print(alumni_info.id)
     for ep_id in request.data.get('Eps'):
         try:
             ep = Ep.objects.get(id=ep_id)
@@ -160,7 +171,7 @@ def create_alumni_info(request):
         except Ep.DoesNotExist:
             raise NotFound()
 
-    return Response( status=status.HTTP_201_CREATED)
+    return Response(data={"id":alumni_info.id},status=status.HTTP_201_CREATED)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

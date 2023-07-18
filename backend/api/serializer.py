@@ -131,7 +131,7 @@ class EmploymentSerializer(serializers.ModelSerializer):
 class EmploymentUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employment
-        fields=('title','status','description','company','start_date','end_date')
+        fields=('title','status','description','company','start_date','end_date','career')
 
 class EmploymentDisplayOneSerializer(serializers.ModelSerializer):
     class Meta:
@@ -163,13 +163,13 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence','s4marks','s5marks','s6marks','ne','maxforne')
+        fields = ('id','user','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne')
 
 class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','CurrResidence','s4marks','s5marks','s6marks','ne','maxforne')
+        fields = ('id','marital_status','gender','Family','Combination','Eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne')
 
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -184,7 +184,18 @@ class AlumniSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','alumn')
         extra_kwargs = {'password': {'write_only': True}}
-    
+
+class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User 
+        fields = ('id','email','first_name','last_name','phone1', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_alumniuserwithoutimage(**validated_data)
+        return user
+
 class AlumniRegistrationSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
 
@@ -314,12 +325,12 @@ class StudieSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Studie
-        fields = ('id','alumn','level','degree','university','country','scholarship','status')
+        fields = ('id','alumn','level','degree','university','country','scholarship','status','scholarship_details')
 
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
-        fields = ('level','degree','university','country','scholarship','status')
+        fields = ('level','degree','university','country','scholarship','status','scholarship_details')
 
 
 #Dashboard needed data serializer

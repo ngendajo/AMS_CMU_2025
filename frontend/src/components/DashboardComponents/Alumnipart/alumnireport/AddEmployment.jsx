@@ -54,6 +54,7 @@ export default function AddEmployment() {
         "description":e.target.description.value,
         "company":e.target.company.value,
         "alumn":alumn,
+        "career":e.target.career.value,
         "start_date":e.target.start_date.value,
         "end_date":end?"Up to now":e.target.end_date.value
         },
@@ -107,6 +108,18 @@ export default function AddEmployment() {
                         id="title"
                         autoComplete="off"
                         name="title"
+                        required
+                        />
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="career">
+                            Career
+                        </label>
+                        <input
+                        type="text"
+                        id="career"
+                        autoComplete="off"
+                        name="career"
                         required
                         />
                     </div>

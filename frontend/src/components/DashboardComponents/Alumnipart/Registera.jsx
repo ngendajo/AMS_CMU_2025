@@ -128,7 +128,7 @@ const Registera = () => {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
                 },
-                withCredentials:true
+                withCredentials:true 
             }
             );
             console.log(response.data.id)

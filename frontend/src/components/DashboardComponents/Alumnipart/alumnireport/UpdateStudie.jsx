@@ -26,6 +26,7 @@ export default function UpdateStudie() {
     const [status, setStatus] = useState('');
     const [level, setLevel] = useState('');
     const [scholarship, setScholarship] = useState('');
+    const [scholarship_details, setScholarship_details] = useState('');
   const options = useMemo(() => countryList().getData(), []);
 
   const changeHandler = value => {
@@ -72,6 +73,7 @@ export default function UpdateStudie() {
         "university":university,
         "scholarship":scholarship,
         "country":country.label,
+        "scholarship_details":e.target.scholarship_details.value,
         "status":status
         
         }, 
@@ -150,6 +152,20 @@ export default function UpdateStudie() {
                         name="university"
                         value={university}
                         onChange={(e)=>setUniversity(e.target.value)}
+                        required
+                        />
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="scholarship_details">
+                        Scholarship Details
+                        </label>
+                        <input
+                        type="text"
+                        id="scholarship_details"
+                        autoComplete="off"
+                        name="scholarship_details"
+                        value={scholarship_details}
+                        onChange={(e)=>setScholarship_details(e.target.value)}
                         required
                         />
                     </div>

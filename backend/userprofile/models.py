@@ -68,7 +68,7 @@ class Alumni(models.Model):
     father = models.CharField(max_length=50,default="")
     mother = models.CharField(max_length=50,default="")
     place_of_birth = models.CharField(max_length=50,default="")
-    CurrResidence = models.CharField(max_length=50,default="")
+    currresidence = models.CharField(max_length=50,default="")
     s4marks =models.FloatField(default=0.0)
     s5marks =models.FloatField(default=0.0)
     s6marks =models.FloatField(default=0.0)
@@ -87,7 +87,7 @@ class Employment(models.Model):
         ('I', 'Intern'),
     )
     status = models.CharField(max_length=2, choices=emps)
-    career = models.CharField(max_length=200)
+    career = models.CharField(max_length=200, default="")
     description = models.CharField(max_length=200)
     company = models.CharField(max_length=50)
     start_date = models.CharField(max_length=50,default="")
@@ -139,7 +139,7 @@ class Studie(models.Model):
         ('N', 'None'),
 	)
     scholarship = models.CharField(max_length=2, choices=Scholarships)
-    scholarship_details = models.CharField(max_length=200)
+    scholarship_details = models.CharField(max_length=200,default="")
     Statuss = (
 		('D', 'Dropped_Out'),
 		('S', 'Susepended'),

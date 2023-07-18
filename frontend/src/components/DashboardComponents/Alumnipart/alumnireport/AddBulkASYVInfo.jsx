@@ -8,6 +8,7 @@ import Dropzone from "react-dropzone";
 import axios from 'axios';
 import useAuth from '../../../../hooks/useAuth';
 import "../alumni.css";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
     { header: 'email', key: 'email' },
@@ -34,11 +35,13 @@ const columns = [
     { header: 'job_status', key: 'job_status' },
     { header: 'description', key: 'description' },
     { header: 'company', key: 'company' },
+    { header: 'career', key: 'career' },
     { header: 'study_level', key: 'study_level' },
     { header: 'degree', key: 'degree' },
     { header: 'university', key: 'university' },
     { header: 'country', key: 'country' },
     { header: 'scholarship', key: 'scholarship' },
+    { header: 'scholarship_details', key: 'scholarship_details' },
     { header: 'study_status', key: 'study_status' }
   ];
   const workSheetName = 'ASYV_Alumni_Data';
@@ -56,6 +59,8 @@ export default function AddBulkASYVInfo() {
     const [families, setFamilies]= useState([]);
     const [combinations, setCombinations]= useState([]);
     const [eps, setEps]= useState([]);
+    
+    const navigate = useNavigate();
 
     useEffect(() =>{ 
 
@@ -381,7 +386,122 @@ export default function AddBulkASYVInfo() {
       workbook.removeWorksheet(workSheetName);
     }
   };
-  console.log(datafinal)
+  const handleSubmit = async (ele) =>{
+    try{
+      let formData = new FormData();
+      
+      formData.append('email',ele.email);
+      formData.append('first_name',ele.first_name);
+      formData.append('last_name',ele.last_name);
+      formData.append('phone1',ele.phone_number);
+      formData.append('password',"Agahozo@12");
+      const response = await axios.post("http://127.0.0.1:8000/api/bulkalumni/",
+          formData,{
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'multipart/form-data'
+              },
+              withCredentials:true 
+          }
+          );
+          axios.post('http://127.0.0.1:8000/api/alumni/info/', {
+        "user":response.data.id,
+        "marital_status":ele.martal_status,
+        "gender":ele.gender,
+        "Family":ele.family,
+        "Combination":ele.combination,
+        "Eps":ele.eps,
+        "kids":ele.kids==="Yes"?true:false,
+        "father":ele.father===undefined?"none":ele.father,
+        "mother":ele.mother===undefined?"none":ele.mother,
+        "place_of_birth":ele.place_of_origin===undefined?"":ele.place_of_origin,
+        "currcesidence":ele.current_residence===undefined?"":ele.current_residence,
+        's4marks':ele.s4_marks===undefined?0:ele.s4_marks,
+        's5marks':ele.s5_marks===undefined?0:ele.s5_marks,
+        's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
+        'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
+        'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne,
+        },
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+    )
+    .then(res =>{
+        console.log(res.data.id) 
+        let level=ele.study_level,degree=ele.degree,
+        university=ele.university,scholarship=ele.scholarship,
+        country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
+        if(level===undefined?true:!(["A2","A1","A0","M","PHD"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
+        {}
+        else{
+        axios.post('http://127.0.0.1:8000/api/studie/', {
+          "alumn":res.data.id,
+          "level":level,
+          "degree":degree,
+          "university":university,
+          "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":"N",
+          "country":country,
+          "scholarship_details":scholarship_details,
+          "status":status.toUpperCase().startsWith("D",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":"C"
+          
+          }, 
+          {
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'application/json'
+              }
+          }
+      )
+      .then(res1 =>{
+          console.log(res1)
+      })
+      .catch(error => console.log(error.response))
+    }
+    let title=ele.job_title,career=ele.career,description=ele.description,
+          company=ele.company,job_status=ele.job_status;
+        if(title===undefined?true:title===""||company===undefined?true:company===""||career===undefined?true:career===""||job_status===undefined?true:job_status==="")
+        {}
+        else{
+          axios.post('http://127.0.0.1:8000/api/employment/', {
+        "title":title,
+        "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"O":"I",
+        "description":description===undefined?"NS":description,
+        "company":company,
+        "alumn":res.data.id,
+        "career":career===undefined?"":career,
+        "start_date":"NS",
+        "end_date":"Up to now"
+        },
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+    )
+    .then(res =>{
+        console.log(res)
+    })
+    .catch(error => console.log(error.response))
+  }
+    })
+    .catch(error => console.log(error.response.data))
+          //clear input fields 
+          }catch(err){
+              console.log(err)
+          }
+  }
+  function savedata(){
+    if(datafinal.length>0){
+      datafinal.forEach((ele)=>{
+        handleSubmit(ele)
+      })
+      navigate('/alumni/')
+    }
+  }
       
  
   return (
@@ -458,6 +578,11 @@ export default function AddBulkASYVInfo() {
                         })
                       }
                     </>:
+                    datafinal.length>0?
+                    <div className="wellchecked">
+                      <h1>Data well checked</h1>
+                      <h2 onClick={savedata}>comfirm submition</h2>
+                    </div>:
                     null
 
                   }
