@@ -105,10 +105,15 @@ export default function Header() {
                 <IoIosArrowDropdown className='profile-icon' />
             </div>
             {profile ?
+                auth.user.is_alumni?
                 <div className='profile-logout'>
-                    <Link to="/profile" className='profile-logout-link'><CiIcons.CiUser /><span>Profile</span></Link>
+                    <Link to={`/alumniprofile/${auth.user.id}`} className='profile-logout-link'><CiIcons.CiUser /><span>Profile</span></Link>
                     <Link to="#" className='profile-logout-link' onClick={signOut}><BiLogOut/><span>Log Out</span></Link>
-                </div>
+                </div>:
+                    <div className='profile-logout'>
+                    <Link to={`/staffprofile/${auth.user.id}`} className='profile-logout-link'><CiIcons.CiUser /><span>Profile</span></Link>
+                    <Link to="#" className='profile-logout-link' onClick={signOut}><BiLogOut/><span>Log Out</span></Link>
+                </div> 
                 :null
             }
         </div>

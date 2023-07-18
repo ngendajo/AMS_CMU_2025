@@ -25,6 +25,7 @@
     display: flex;
     align-items: center;
     gap: 3px;
+    cursor: pointer;
 }
 .add-staff{
     background-color:  #F49D47;

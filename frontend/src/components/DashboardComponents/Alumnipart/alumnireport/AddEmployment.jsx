@@ -54,6 +54,7 @@ export default function AddEmployment() {
         "description":e.target.description.value,
         "company":e.target.company.value,
         "alumn":alumn,
+        "career":e.target.career.value,
         "start_date":e.target.start_date.value,
         "end_date":end?"Up to now":e.target.end_date.value
         },
@@ -67,7 +68,11 @@ export default function AddEmployment() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
-        navigate('/alumni/')
+        if(auth.user.is_alumni){
+            navigate('/')
+        }else{
+            navigate('/alumni/employment/')
+        }
     })
     .catch(error => console.log(error.response))
      
@@ -103,6 +108,18 @@ export default function AddEmployment() {
                         id="title"
                         autoComplete="off"
                         name="title"
+                        required
+                        />
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="career">
+                            Career
+                        </label>
+                        <input
+                        type="text"
+                        id="career"
+                        autoComplete="off"
+                        name="career"
                         required
                         />
                     </div>

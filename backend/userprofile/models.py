@@ -65,10 +65,10 @@ class Alumni(models.Model):
     Combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
     Eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
     kids = models.BooleanField(default=False)
-    father = models.CharField(max_length=50)
-    mother = models.CharField(max_length=50)
-    place_of_birth = models.CharField(max_length=50)
-    CurrResidence = models.CharField(max_length=50)
+    father = models.CharField(max_length=50,default="")
+    mother = models.CharField(max_length=50,default="")
+    place_of_birth = models.CharField(max_length=50,default="")
+    currresidence = models.CharField(max_length=50,default="")
     s4marks =models.FloatField(default=0.0)
     s5marks =models.FloatField(default=0.0)
     s6marks =models.FloatField(default=0.0)
@@ -87,6 +87,7 @@ class Employment(models.Model):
         ('I', 'Intern'),
     )
     status = models.CharField(max_length=2, choices=emps)
+    career = models.CharField(max_length=200, default="")
     description = models.CharField(max_length=200)
     company = models.CharField(max_length=50)
     start_date = models.CharField(max_length=50,default="")
@@ -132,13 +133,14 @@ class Studie(models.Model):
     level =models.CharField(max_length=3, choices=levels,default='A2')
     degree = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
+    country = models.CharField(max_length=200)
     Scholarships = (
 		('F', 'Full'),
 		('P', 'Partial'),
         ('N', 'None'),
 	)
     scholarship = models.CharField(max_length=2, choices=Scholarships)
+    scholarship_details = models.CharField(max_length=200,default="")
     Statuss = (
 		('D', 'Dropped_Out'),
 		('S', 'Susepended'),

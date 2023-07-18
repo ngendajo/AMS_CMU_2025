@@ -59,6 +59,7 @@ import DeleteStory from './components/DashboardComponents/Alumnipart/alumnirepor
 import DisplayStory from './components/DashboardComponents/Alumnipart/alumnireport/DisplayStory';
 import AlumnProfile from './components/ProfileComponents/AlumnProfile';
 import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
+import AddBulkASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkASYVInfo';
 
 
 
@@ -111,6 +112,7 @@ function App() {
                       <Route path='updatestory/:id' element={<UpdateStory />}/>
                       <Route path='deletestory/:id' element={<DeleteStory />}/>
                       <Route path='displaystory/:id' element={<DisplayStory />}/>
+                      <Route path='bulkalumni' element={<AddBulkASYVInfo />}/>
                     </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>

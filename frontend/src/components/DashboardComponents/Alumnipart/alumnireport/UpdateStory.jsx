@@ -68,7 +68,12 @@ export default function UpdateStory() {
     .then(res =>{
         console.log(res)
         alert(" Updated successfully")
-        navigate('/alumni/story/')
+        if(auth.user.is_alumni){
+            navigate('/')
+        }else{
+            navigate('/alumni/story/')
+        }
+        
     })
     .catch(error => console.log(error.response))
      

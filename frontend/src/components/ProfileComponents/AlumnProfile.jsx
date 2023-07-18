@@ -26,12 +26,22 @@ export default function AlumnProfile() {
                         },
                         withCredentials:true
                     });
-                    setUsers(response.data);
+                    let listusers=[]
+                    let listuser=[]
                     response.data.forEach((one)=>{
                       if(parseInt(params.id)===parseInt(one.id)){
-                        setUser([one]);
+                        listuser.push(one)
                       }
                     })
+                    response.data.forEach((alu)=>{
+                      if(parseInt(listuser[0].alumn.Family.grade.id)===parseInt(alu.alumn.Family.grade.id) && (parseInt(params.id)!==parseInt(alu.id))){
+                        listusers.push(alu);
+                      }
+                    })
+                    setUsers(listusers)
+                    setUser(listuser)
+                    
+                    
                     
                 }catch(err) {
                     console.log(err);
@@ -114,8 +124,7 @@ export default function AlumnProfile() {
       useEffect(() => {
         fetchOpportunities();
       }, [params]);
-      console.log(study)
-      console.log(user)
+      console.log(users)
   return (
     <>
       {user.map((use,i) =>
@@ -127,10 +136,12 @@ export default function AlumnProfile() {
               <div className="alumni-profile-info">
                 <div className="alumni-profile-info-top">
                   <h2>{use.first_name} {use.last_name}</h2>
-                  <Link to={`/add-alumni/${use.id}`} className="message-edit">
+                  {auth.user.is_alumni?
+                    null:<Link to={`/add-alumni/${use.id}`} className="message-edit">
                     <span>Edit</span>
                     <CiEdit/>
                   </Link>
+                    }
                 </div>
                 <div className="alumni-profile-info-top">
                   <div>
@@ -168,7 +179,7 @@ export default function AlumnProfile() {
               <span className="list-of-alumni-in-the-same-grade">
                 {users.map((same,s)=>
                 {
-                  if(s<5 && parseInt(same.id)!==parseInt(params.id)){
+                  if(s<3 && parseInt(same.id)!==parseInt(params.id)){
                     return (parseInt(same.alumn.Family.grade.id)===parseInt(use.alumn.Family.grade.id))?
                   <img key={s} src={"http://localhost:8000"+same?.image_url} alt="profile" width={30} height={30} className="alumni-profile-img-same-grade" />
                   :null
@@ -204,10 +215,13 @@ export default function AlumnProfile() {
         <div className='alumni-profile-personal-info'>
           <div className="alumni-profile-info-top">
               <h2>Personal Information</h2>
-              <Link to={`/add-alumni/${use.id}`} className="message-edit">
-                <span>Edit</span>
-                <CiEdit/>
-              </Link>
+              {auth.user.is_alumni?
+              null:<Link to={`/add-alumni/${use.id}`} className="message-edit">
+              <span>Edit</span>
+              <CiEdit/>
+            </Link>
+              }
+              
           </div>
             <div className="academic-perfomance">
             <div>
@@ -278,16 +292,10 @@ export default function AlumnProfile() {
         <div key={is} className='alumni-profile-personal-info'>
           <div className="alumni-profile-info-top">
               <h2>Edication Progress</h2>
-              {stu.study_id!==null?
                 <Link to={`/alumni/updatestudie/${stu.study_id}`} className="message-edit">
                 <span>Edit</span>
                 <CiEdit/>
-              </Link>:
-              <Link to={`/add-alumni/info/${use.alumn.id}/study`} className="message-edit">
-              <span>Add</span>
-              <CiEdit/>
-            </Link> 
-              }
+              </Link>
           </div>
             <div className="academic-perfomance">
             
@@ -313,7 +321,7 @@ export default function AlumnProfile() {
             </div>
             <div>
               <p>Status</p>
-              <h4>{stu.status}</h4>
+              <h4>{stu.status==="D"?"Dropped_Out":stu.status==="S"?"Susepended":stu.status==="O"?"On_going":stu.status==="C"?"Completed":null}</h4>
             </div>
             </div>
         </div>
@@ -321,8 +329,8 @@ export default function AlumnProfile() {
         <div className='alumni-profile-personal-info'>
           <div className="alumni-profile-info-top">
               <h2>Employment Status</h2>
-              <Link to={`/add-alumni/info/${use.alumn.id}/addemployment`} className="message-edit">
-              <span>Edit</span>
+              <Link to={`/add-alumni/info/${use.alumn.id}/study`} className="message-edit">
+              <span>Add</span>
               <CiEdit/>
             </Link> 
           </div>
@@ -338,16 +346,10 @@ export default function AlumnProfile() {
         <div className='alumni-profile-personal-info'>
           <div className="alumni-profile-info-top">
               <h2>Employment Status</h2>
-              {employ.emp_id!==null?
                 <Link to={`/alumni/updateemployement/${employ.emp_id}`} className="message-edit">
                 <span>Edit</span>
                 <CiEdit/>
-              </Link>:
-              <Link to={`/add-alumni/info/${use.alumn.id}/addemployment`} className="message-edit">
-              <span>Add</span>
-              <CiEdit/>
-            </Link> 
-              }
+              </Link>
           </div>
             <div className="academic-perfomance">
             
@@ -385,7 +387,7 @@ export default function AlumnProfile() {
           <div className="alumni-profile-info-top">
               <h2>Employment Status</h2>
               <Link to={`/add-alumni/info/${use.alumn.id}/addemployment`} className="message-edit">
-              <span>Edit</span>
+              <span>Add</span>
               <CiEdit/>
             </Link> 
           </div>

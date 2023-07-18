@@ -62,7 +62,8 @@ export default function AddStudie() {
         "university":e.target.university.value,
         "scholarship":e.target.scholarship.value,
         "country":value.label,
-        "status":e.target.status.value
+        "scholarship_details":e.target.scholarship_details.value,
+        "status":e.target.status.value 
         
         }, 
         {
@@ -164,6 +165,12 @@ export default function AddStudie() {
                           <option value="P">Partial Scholarship</option>
                           <option value="N">None</option>
                         </select>
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="scholarship_details">
+                        Scholarship Details
+                        </label>
+                        <input type="text" name="scholarship_details" required/>
                     </div>
                     
                     

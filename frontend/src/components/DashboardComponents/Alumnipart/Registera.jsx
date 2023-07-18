@@ -30,7 +30,7 @@ const Registera = () => {
         }
       };
 
-    const errRef = useRef();  
+    const errRef = useRef(); 
     const emailRef = useRef();
     const first_nameRef = useRef();
     const last_nameRef = useRef();
@@ -61,7 +61,6 @@ const Registera = () => {
         phone1Ref.current.focus();
     },[])
 
-
     useEffect(() => {
         const email_result = EMAIL_REGIX.test(email);
 
@@ -85,10 +84,11 @@ const Registera = () => {
         setValidPhone1(phone1_result);
     },[phone1])
 
-    
+  
     useEffect(() => {
         setErrMsg('');
     },[email,first_name,last_name,phone1])
+
 
    const handleSubmit = async (e) =>{
     e.preventDefault();
@@ -128,7 +128,7 @@ const Registera = () => {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
                 },
-                withCredentials:true
+                withCredentials:true 
             }
             );
             console.log(response.data.id)
