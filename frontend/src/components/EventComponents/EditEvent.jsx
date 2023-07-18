@@ -11,9 +11,23 @@ export default function EditEvent() {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [startDate, setStartDate]=useState(null);
+    const [endDate, setEndDate]=useState(null);
     const navigate = useNavigate();
     let {auth}= useAuth();
     const params = useParams();
+
+
+    const formatDateTime = (dateTimeString) => {
+        const date = new Date(dateTimeString);
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const hours = String(date.getUTCHours()).padStart(2, '0');
+        const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+      };
 
     const handleDelete = () => {
         
@@ -53,7 +67,7 @@ export default function EditEvent() {
     
         const getEvent = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/event/'+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/event/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -63,7 +77,10 @@ export default function EditEvent() {
                 let data=response.data;
                 setTitle(data[0].title);
                 setDescription(data[0].description)
-                
+                var sDate=new Date(data[0].startDate)
+                var eDate= new Date(data[0].endDate)
+                setStartDate(formatDateTime(sDate))
+                setEndDate(formatDateTime(eDate))
             }catch(err) {
                 console.log(err);
             }
@@ -96,6 +113,16 @@ export default function EditEvent() {
                             />
                             
                         </label> 
+                        <label>
+                            Start Date
+                            <input type="datetime-local" name="startDate" value={startDate} onChange={event=>setStartDate(event.target.value)} />
+                        </label>
+                        <label>
+                            End Date
+                            <input type="datetime-local" name="endDate" value={endDate} onChange={event=>setEndDate(event.target.value)}/>
+                        </label>
+
+
                     <center><button type="submit">Update</button></center>
         </form>
         

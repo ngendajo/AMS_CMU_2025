@@ -263,7 +263,7 @@ class EventSerializer(serializers.ModelSerializer):
 class UpdateEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('title','description','date')
+        fields = ('title','description','startDate','endDate')
 
 
 #Story serializers

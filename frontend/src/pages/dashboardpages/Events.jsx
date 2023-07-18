@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import useAuth from '../../hooks/useAuth';
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
+import { Link } from "react-router-dom";
 
 import styled from 'styled-components';
 
@@ -68,6 +69,7 @@ export default function Events() {
               var eventlist=[]
               response.data.forEach(e=>{
               eventlist.push({
+                  id:e.id,
                   title:e.title, 
                   description:e.description,
                   startDate:e.startDate,
@@ -95,6 +97,8 @@ export default function Events() {
         </div>
         <h2>{events.title}</h2>
         <p>{events.description}</p>
+        {console.log(events)}
+        <Link to={"/edit-event/"+events.id} className='link'>Edit/Delete event</Link>
       </div>
     );
   }
@@ -124,7 +128,7 @@ export default function Events() {
     <div className="listWithPage">
     <div className="card-list">
       {currentEvents.map((item, index) => (
-        <Card key={index} title={item.title} description={item.description} image_url={item.image_url} />
+        <Card key={index} id={item.id} title={item.title} description={item.description} image_url={item.image_url} />
       ))}
     </div>
 
