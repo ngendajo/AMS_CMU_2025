@@ -14,6 +14,7 @@ export default function AlumnProfile() {
         const [ employment, setEmployment ] = useState([]);
         const [ study, setStudy ] = useState([]);
         const [opportunities, setOpportunities] = useState([]);
+        
     
         useEffect(() =>{
     

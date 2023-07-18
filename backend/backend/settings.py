@@ -226,5 +226,6 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:3000', 
 ]  
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 AUTH_USER_MODEL = 'api.User'

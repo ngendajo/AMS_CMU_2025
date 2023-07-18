@@ -3,10 +3,10 @@ import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as RiIcons from "react-icons/ri";
 import * as MdIcons from "react-icons/md";
-import * as GiIcons from "react-icons/gi";
 import * as TfiIcons from "react-icons/tfi";
 import * as HiIcons from "react-icons/hi";
 import * as FaIcons from "react-icons/fa";
+import { PiPasswordFill } from "react-icons/pi";
  
 export const SidebarData = [
     {
@@ -58,6 +58,11 @@ export const SidebarData = [
         icon: <RiIcons.RiAdminFill />,
       },
     ],
+  },
+  {
+    title: "Change Password",
+    path: "/password",
+    icon: <PiPasswordFill />,
   },
   {
     title: "Help Center",
@@ -116,6 +121,11 @@ export const SidebarDataforAlumn = [
     },
   ],
 }, */
+{
+  title: "Change Password",
+  path: "/password",
+  icon: <PiPasswordFill />,
+},
 {
   title: "Help Center",
   path: "/help",

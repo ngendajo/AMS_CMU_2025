@@ -23,7 +23,6 @@ import { useEffect } from 'react';
 import useAuth from './hooks/useAuth';
 import Deleteuser from './components/DashboardComponents/Staffpart/Deleteuser';
 import EditPosition from './components/DashboardComponents/Staffpart/EditPosition';
-import ChangePassword from './components/DashboardComponents/Staffpart/ChangePassword';
 import Registera from './components/DashboardComponents/Alumnipart/Registera';
 import { Grades } from './components/DashboardComponents/Alumnipart/Grades';
 import AddGrade from './components/DashboardComponents/Alumnipart/AddGrade';
@@ -58,6 +57,7 @@ import DisplayStory from './components/DashboardComponents/Alumnipart/alumnirepo
 import AlumnProfile from './components/ProfileComponents/AlumnProfile';
 import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
 import AddBulkASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkASYVInfo';
+import Password from './pages/dashboardpages/Password';
 
 
 
@@ -92,6 +92,7 @@ function App() {
                     <Route path='opportunities' element={<Opportunities />}/>
                     <Route path='schedule' element={<Schedule />}/>
                     <Route path='gallery' element={<Gallery />}/>
+                    <Route path='password' element={<Password />}/>
                     <Route path='alumni' element={<Alumni />}>
                       <Route path='' element={<ASYVInfo />}/>
                       <Route path='employment' element={<Employment />}/>
@@ -120,7 +121,6 @@ function App() {
                     <Route path='alumniprofile/:id' element={<AlumnProfile />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
-                    <Route path='add-crc/ps/:id' element={<ChangePassword/>}/>
                     {/* alumni crud */}
                     <Route path='add-alumni' element={<Registera />}/> 
                     <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
