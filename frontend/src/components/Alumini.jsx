@@ -31,12 +31,7 @@ export default function AlumnProfile() {
                         listuser.push(one)
                       }
                     })
-                    response.data.forEach((alu)=>{
-                      if(parseInt(listuser[0].alumn.Family.grade.id)===parseInt(alu.alumn.Family.grade.id) && (parseInt(auth.user.id)!==parseInt(alu.id))){
-                        listusers.push(alu);
-                      }
-                    })
-                    setUsers(listusers)
+                    setUsers(response.data)
                     setUser(listuser)
                     
                     
@@ -186,7 +181,7 @@ export default function AlumnProfile() {
                   }
                 }
                 )}
-                <strong>{users.length}+</strong>
+                <strong>0+</strong>
               </span>
             </div>
             <h3>Academic Performance</h3>

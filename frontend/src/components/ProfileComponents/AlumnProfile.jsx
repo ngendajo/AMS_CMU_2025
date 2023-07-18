@@ -10,6 +10,7 @@ export default function AlumnProfile() {
   const params = useParams();
         const [ user, setUser ] = useState([]);
         const [ users, setUsers ] = useState([]);
+        const [ samegrade, setSamegrade ] = useState(0);
         const {auth} = useAuth()
         const [ employment, setEmployment ] = useState([]);
         const [ study, setStudy ] = useState([]);
@@ -34,12 +35,7 @@ export default function AlumnProfile() {
                         listuser.push(one)
                       }
                     })
-                    response.data.forEach((alu)=>{
-                      if(parseInt(listuser[0].alumn.Family.grade.id)===parseInt(alu.alumn.Family.grade.id) && (parseInt(params.id)!==parseInt(alu.id))){
-                        listusers.push(alu);
-                      }
-                    })
-                    setUsers(listusers)
+                    setUsers(response.data)
                     setUser(listuser)
                     
                     
@@ -125,7 +121,7 @@ export default function AlumnProfile() {
       useEffect(() => {
         fetchOpportunities();
       }, [params]);
-      console.log(users)
+      
   return (
     <>
       {user.map((use,i) =>
@@ -180,7 +176,7 @@ export default function AlumnProfile() {
               <span className="list-of-alumni-in-the-same-grade">
                 {users.map((same,s)=>
                 {
-                  if(s<3 && parseInt(same.id)!==parseInt(params.id)){
+                  if(s<4 && parseInt(same.id)!==parseInt(params.id)){
                     return (parseInt(same.alumn.Family.grade.id)===parseInt(use.alumn.Family.grade.id))?
                   <img key={s} src={"http://localhost:8000"+same?.image_url} alt="profile" width={30} height={30} className="alumni-profile-img-same-grade" />
                   :null
@@ -189,7 +185,7 @@ export default function AlumnProfile() {
                   }
                 }
                 )}
-                <strong>{users.length}+</strong>
+                <strong>{samegrade}+</strong>
               </span>
             </div>
             <h3>Academic Performance</h3>
