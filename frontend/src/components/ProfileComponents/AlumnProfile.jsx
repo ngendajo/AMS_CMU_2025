@@ -34,6 +34,9 @@ export default function AlumnProfile() {
                       }
                     })
                     response.data.forEach((alu)=>{
+                      if(alu.alumn==null){
+                        return;
+                      }
                       if(parseInt(listuser[0].alumn.Family.grade.id)===parseInt(alu.alumn.Family.grade.id) && (parseInt(params.id)!==parseInt(alu.id))){
                         listusers.push(alu);
                       }

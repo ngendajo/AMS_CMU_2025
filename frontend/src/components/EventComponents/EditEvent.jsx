@@ -53,7 +53,7 @@ export default function EditEvent() {
     
         const getEvent = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/event/?id='+params.id,{
+                const response = await axios.get('http://127.0.0.1:8000/api/event/'+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
