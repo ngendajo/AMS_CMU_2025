@@ -7,7 +7,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from api.models import User
-from userprofile.models import *
+from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story, Gallery
 from django.contrib.auth import get_user_model
 
 User = get_user_model()

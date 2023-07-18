@@ -1,4 +1,3 @@
-
 import {useState, useEffect} from 'react';
 import '../../../Header/header.css';
 import '../../../Header/searchBar.css';

@@ -229,43 +229,21 @@ export default function HomeMenuBar() {
 
             </section>
 
+            {/* --------------------- 3. Bottom Transition Part --------------------- */}
             <div className="knowmore">
                 <div className="school">
-                    Liquidnet Family High School
+                    Liquid-net-Family High School
                 </div>
                 <div className="infull">
                     Liquidnet Family High School education doesn't end after graduation. LFHS offers
-                    programs & resources to alumni at every phase of thier career.
+                    programs & resources to alumni at every phase of their career.
                 </div>
                 <div className="rightlink">
-                    <span>Know more</span><AiOutlineArrowRight className="know" />
+                    <span>Learn more →</span>
                 </div>
-                <BiMessageRoundedDots className="sendsms" />
+                {/* <BiMessageRoundedDots className="sendsms" /> */}
             </div>
 
-
-            {/* ------------------- Second Page: About Us -------------------- */}
-            <section id="about">
-                <h2>About</h2>
-            </section>
-
-            {/* ------------------- Third Page: Resources -------------------- */}
-            <section id="resources">
-                <h2>Resources</h2>
-            </section>
-
-            {/* ------------------- Forth Page: News -------------------- */}
-            <section id="news">
-                <h2>News</h2>
-                <div id="iframeContainer_News">
-                    <iframe src="https://www.asyv.org/bwiranews" title="News" frameborder="0"></iframe>
-                </div>
-            </section>
-
-            {/* ------------------- Fifth Page: Contact -------------------- */}
-            <section id="contact">
-                <h2>Contact</h2>
-            </section>
 
         </>
     );

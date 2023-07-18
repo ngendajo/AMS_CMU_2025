@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import *
+from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story, Gallery
 from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -395,7 +396,7 @@ class OpportunitySerializer(serializers.ModelSerializer):
         description = validated_data.get('description')
         post_time = validated_data.get('post_time')
 
-        # 创建opportunity对象
+        # create opportunity object
         opportunity = Opportunity.objects.create(
             user=user,
             title=title,
