@@ -38,12 +38,17 @@ export default function AddGallery() {
         }
 
         try{
-            let formData = new FormData();
-            formData.append('image_url',image.image_url);
-            const response = await axios.post("http://127.0.0.1:8000/api/gallery/create/",{
-            'image_url': image.image_url,
-            'displayed': true,
-            },
+            const formData = new FormData();
+
+            formData.append("title", e.target.title.value);
+            formData.append("description", e.target.description.value,);
+            formData.append("startDate", e.target.startDate.value);
+            formData.append("endDate", e.target.endDate.value);
+            formData.append("user",auth.user.id);
+            formData.append("image_url", image.image_url);
+            console.log(formData)
+
+            const response = await axios.post("http://127.0.0.1:8000/api/event/create/",formData,
             {
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -53,7 +58,7 @@ export default function AddGallery() {
             }
             );
             console.log(response.data)
-            navigate("/gallery")
+            navigate("/events")
             //clear input fields
         }
         catch(err){
@@ -75,10 +80,10 @@ export default function AddGallery() {
     <p ref={errRef} className={errMsg ? "errmsg" :"offscreen"} aria-live="assertive">
         {errMsg}
     </p>
-   <center> <h1>Add Gallery photo</h1></center>
+   <center> <h1>Add Event</h1></center>
     <form onSubmit={handleSubmit}>
     <center>
-    <img className="img-for-gallery" src={file} alt="" />
+    <img className="img-for-event" src={file} alt="" />
     <Dropzone onDrop={onDrop} multiple={false}>
             {({ getRootProps, getInputProps }) => (
                 <section>
@@ -98,13 +103,22 @@ export default function AddGallery() {
     </center>
             <center>
             <div className="formpart">
-                <label htmlFor="displayed">
-                    Display this photo?
+                <label>
+                    Title
+                    <input type="text" name="title"/>
                 </label>
-                <select name="displayed">
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                </select>
+                <label>
+                    Description
+                    <textarea name="description" />
+                </label>
+                <label>
+                    Start Date
+                    <input type="datetime-local" name="startDate"  />
+                </label>
+                <label>
+                    End Date
+                    <input type="datetime-local" name="endDate"/>
+                </label>
             </div>
             </center>
             <center><button type="submit">Save</button></center>

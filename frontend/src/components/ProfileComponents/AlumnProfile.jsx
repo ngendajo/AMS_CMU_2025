@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import './alumniprofile.css';
+import { useNavigate } from "react-router-dom";
 
 export default function AlumnProfile() {
   const params = useParams();
@@ -14,6 +15,8 @@ export default function AlumnProfile() {
         const [ study, setStudy ] = useState([]);
         const [opportunities, setOpportunities] = useState([]);
         
+    
+        const navigate = useNavigate();
     
         useEffect(() =>{
     
@@ -32,6 +35,7 @@ export default function AlumnProfile() {
                     
                 }catch(err) {
                     console.log(err);
+                    navigate('/error')
                 }
             }
     

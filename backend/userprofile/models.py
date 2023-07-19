@@ -115,6 +115,7 @@ class Event(models.Model):
     startDate = models.DateTimeField(auto_now=True)
     endDate= models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
+    image_url = models.ImageField(upload_to='events', default='events/default.jpg')
 
     def __str__(self):
         return str(self.title)

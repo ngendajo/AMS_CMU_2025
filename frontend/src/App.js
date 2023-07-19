@@ -7,6 +7,8 @@ import RequireAuth from './components/RequireAuth';
 import Home from './pages/Home/Home';
 import Dashboard from './pages/dashboardpages/Dashboard';
 import Events from './pages/dashboardpages/Events';
+import AddEvent from './components/EventComponents/AddEvent'
+import EditEvent from './components/EventComponents/EditEvent'
 import Chats from './pages/dashboardpages/Chats';
 import Opportunities from './pages/dashboardpages/Opportunities';
 import Schedule from './pages/dashboardpages/Schedule';
@@ -58,6 +60,7 @@ import AlumnProfile from './components/ProfileComponents/AlumnProfile';
 import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
 import AddBulkASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkASYVInfo';
 import Password from './pages/dashboardpages/Password';
+import Error from './pages/dashboardpages/Error';
 
 
 
@@ -82,12 +85,15 @@ function App() {
             <Route path='/' element={<Layout />}>
               {/* public routes*/}
                 <Route path='home' element={<Home />}/>
+                <Route path='error' element={<Error />}/>
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>
                   <Route path='/' element={<MainDashboard />}>
                     <Route path='/' element={<Dashboard />}/>
                     <Route path='events' element={<Events />}/>
+                    <Route path='add-event' element={<AddEvent />}/>
+                    <Route path='edit-event/:id' element={<EditEvent />}/>
                     <Route path='chats' element={<Chats />}/>
                     <Route path='opportunities' element={<Opportunities />}/>
                     <Route path='schedule' element={<Schedule />}/>
