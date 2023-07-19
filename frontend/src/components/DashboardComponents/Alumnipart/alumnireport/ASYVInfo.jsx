@@ -97,8 +97,8 @@ export default function ASYVInfo() {
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone:element.phone1,
-                grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.grade.grade_name,
-                family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.Family.family_name,
+                grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.family.grade.grade_name,
+                family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.family.family_name,
                 user_id:<span>
                   <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
@@ -118,10 +118,10 @@ export default function ASYVInfo() {
                 mother:element.alumn==null?"Null":element.alumn.mother,
                 place_of_birth:element.alumn==null?"Null":element.alumn.place_of_birth,
                 currresidence:element.alumn==null?"Null":element.alumn.currresidence,
-                grade_name:element.alumn==null?"Null":element.alumn.Family.grade.grade_name,
-                family:element.alumn==null?"Null":element.alumn.Family.family_name,
-                combination_name:element.alumn==null?"Null":element.alumn.Combination.combination_name,
-                eps:element.alumn==null?"Null":element.alumn.Eps.length>0?getEps(element.alumn.Eps):element.alumn.Eps.length,
+                grade_name:element.alumn==null?"Null":element.alumn.family.grade.grade_name,
+                family:element.alumn==null?"Null":element.alumn.family.family_name,
+                combination_name:element.alumn==null?"Null":element.alumn.combination.combination_name,
+                eps:element.alumn==null?"Null":element.alumn.eps.length>0?getEps(element.alumn.eps):element.alumn.eps.length,
                 s4marks:element.alumn==null?"Null":element.alumn.s4marks,
                 s5marks:element.alumn==null?"Null":element.alumn.s5marks,
                 s6marks:element.alumn==null?"Null":element.alumn.s6marks,

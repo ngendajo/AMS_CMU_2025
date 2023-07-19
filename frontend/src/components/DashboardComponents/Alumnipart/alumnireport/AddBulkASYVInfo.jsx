@@ -410,7 +410,7 @@ export default function AddBulkASYVInfo() {
         "gender":ele.gender,
         "Family":ele.family,
         "Combination":ele.combination,
-        "Eps":ele.eps,
+        "eps":ele.eps,
         "kids":ele.kids==="Yes"?true:false,
         "father":ele.father===undefined?"none":ele.father,
         "mother":ele.mother===undefined?"none":ele.mother,

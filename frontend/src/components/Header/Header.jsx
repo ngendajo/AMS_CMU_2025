@@ -100,7 +100,7 @@ export default function Header() {
 
                 <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
                 <br/>{auth.user.is_superuser? "Admin":
-                auth.user.is_crc? "CRC Staff":userid[0]?.alumn.Family.grade.grade_name
+                auth.user.is_crc? "CRC Staff":userid[0]?.alumn.family.grade.grade_name
                 }</p>
                 <IoIosArrowDropdown className='profile-icon' />
             </div>

@@ -674,7 +674,7 @@ def create_opportunity(request):
         
         
 class StudyReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
+    permission_classes = [IsAuthenticated, ]  
     def get(self,request):
         stud = Studie.objects.raw("select 1 as id, count(userprofile_studie.level) as level, userprofile_studie.level as degree from userprofile_studie group by userprofile_studie.level;")
     
@@ -819,13 +819,25 @@ class AlumnReportView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class AlumnInGradeReportView(APIView):
+    #permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        stud = User.objects.raw("SELECT api_user.id,userprofile_alumni.gender,userprofile_grade.grade_name as grade from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_family ON userprofile_alumni.Family_id=userprofile_family.id LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id WHERE api_user.is_alumni;")
+        
+        # if there is something in items else raise error
+        if stud:
+            serializer = TotalAlumnGradeSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
 
 
 # Gallery data view
 
 class GalleryView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = GallerySerializer(data=request.data)
         # validating for already existing data

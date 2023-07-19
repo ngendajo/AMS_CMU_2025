@@ -201,11 +201,11 @@ export default function AddASYVInfo() {
                 setGender(dat.alumn.gender);
                 setKids(dat.alumn.kids);
                 setPlace_of_birth(dat.alumn.place_of_birth);
-                setCurrentResident(dat.alumn.CurrResidence);
-                setFamily(dat.alumn.Family);
-                setGrade(dat.alumn.Family.grade);
-                setComb(dat.alumn.Combination);
-                getsavedfamilies(dat.alumn.Family.grade.id);
+                setCurrentResident(dat.alumn.currresidence);
+                setFamily(dat.alumn.family);
+                setGrade(dat.alumn.family.grade);
+                setComb(dat.alumn.combination);
+                getsavedfamilies(dat.alumn.family.grade.id);
                 setAlumn_id(dat.alumn.id);
                 setS4marks(dat.alumn.s4marks)
                 setS5marks(dat.alumn.s5marks)
@@ -238,14 +238,14 @@ export default function AddASYVInfo() {
     axios.put('http://127.0.0.1:8000/api/alumni/info/'+alumn_id+"/update/", {
         "marital_status":marital_status,
         "gender":gender,
-        "Family":family.id,
-        "Combination":comb.id,
-        "Eps":ep_ids,
+        "family":family.id,
+        "combination":comb.id,
+        "eps":ep_ids,
         "kids":kids,
         "father":father,
         "mother":mother,
         "place_of_birth":place_of_birth,
-        "CurrResidence":currentResident,
+        "currresidence":currentResident,
         "s4marks":s4marks,
         "s5marks":s5marks,
         "s6marks":s6marks,

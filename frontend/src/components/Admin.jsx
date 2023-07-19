@@ -7,8 +7,33 @@ import useAuth from '../hooks/useAuth';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {Bar} from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  BarElement,
+  Tooltip,
+  Legend,
+  LinearScale
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend
+);
 
 const Admin = () => {
+
+    const alumni = [
+      {grade:"Urumuri",boy:44,girls:100},
+      {grade:"Indatwa",boy:66,girls:104},
+      {grade:"Isonga",boy:33,girls:77},
+      {grade:"Umurage",boy:24,girls:140},
+      {grade:"Umucyo",boy:59,girls:86},
+    ];
   
     const [total, setTotal] = useState('');
     const [male, setMale] = useState('');
@@ -179,10 +204,10 @@ let data = [5, 2, 5, 5, 10],
     subTitle1 = total,
     showLabel = false,
     colors = ["#F49D47","#42A2EC", "#F9DF5A", "#FF7410", "#4C8061"],
-    radius = 40,
+    radius = 30,
     hole = 25,
     stroke = 1,
-    strokeWidth = 15;
+    strokeWidth = 10;
   return (
     <div className="dashboard-container">
         <div className="statistic-part">
@@ -344,6 +369,26 @@ let data = [5, 2, 5, 5, 10],
                 </div>
             </div>
           </Link>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+           <center><h1>Alumni in Grade</h1></center>
+           <Bar data={{
+            labels:alumni.map(alumn=>alumn.grade),
+            datasets:[
+              {
+                label:"Boys",
+                data:alumni.map(alumn=>alumn.boy),
+                backgroundColor:"#F49D47",
+              },
+              {
+                label:"Girls",
+                data:alumni.map(alumn=>alumn.girls),
+                backgroundColor:"#2b7e40",
+              },
+            ]
+           }} /> 
+          </div>
         </div>
     </div>
   )

@@ -78,5 +78,6 @@ urlpatterns = [
     path('opportunity/<int:pk>/approve', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
     #Dashdboard data
     path('totalalumnreport/', views.AlumnReportView.as_view()),
+    path('lumngradereport/', views.AlumnInGradeReportView.as_view()),
     path('', views.getRoutes)
 ]

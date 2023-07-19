@@ -236,19 +236,19 @@ export default function AlumnProfile() {
             </div>
             <div>
               <p>Grade</p>
-              <h4>{use.alumn.Family.grade.grade_name}</h4>
+              <h4>{use.alumn.family.grade.grade_name}</h4>
             </div>
             <div>
               <p>Family</p>
-              <h4>{use.alumn.Family.family_name}</h4>
+              <h4>{use.alumn.family.family_name}</h4>
             </div>
             <div>
               <p>Combination</p>
-              <h4>{use.alumn.Combination.combination_name}</h4>
+              <h4>{use.alumn.combination.combination_name}</h4>
             </div>
             <div>
               <p>Enrichment Programs</p>
-              {use.alumn.Eps.map((ep)=>{
+              {use.alumn.eps.map((ep)=>{
                 return <p>{ep.title} from <strong>{ep.type==="A"? "Arts Center":ep.type==="S"?"Sports":ep.type==="SC"?"Science Center":"Clubs"}</strong></p>
               })}
             </div>
