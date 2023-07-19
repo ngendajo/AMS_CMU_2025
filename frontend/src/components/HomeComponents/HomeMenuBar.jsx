@@ -239,7 +239,7 @@ export default function HomeMenuBar() {
                     programs & resources to alumni at every phase of their career.
                 </div>
                 <div className="rightlink">
-                    <span>Learn more →</span>
+                    <button onClick={togglePop} className="log" style={{ border: 'none', fontSize: '20px', background: 'transparent' }}>Learn more →</button>
                 </div>
                 {/* <BiMessageRoundedDots className="sendsms" /> */}
             </div>
