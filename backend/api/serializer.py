@@ -153,9 +153,10 @@ class DisplayEmploymentSerializer(serializers.Serializer):
     status = serializers.CharField(max_length=30, required=True)
     emp_id = serializers.IntegerField(required=True)
     end = serializers.CharField(max_length=200, required=True)
+    career = serializers.CharField(max_length=200, required=True)
 
     class Meta:
-        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'title','company','description','start_date','status', 'emp_id')
+        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'title','company','description','start_date','status', 'emp_id','career')
 
 # Alumni data serializers
 
@@ -311,13 +312,14 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
     university = serializers.CharField(max_length=200, required=True)
     country = serializers.CharField(max_length=200, required=True)
     scholarship = serializers.CharField(max_length=200, required=True)
+    scholarship_details = serializers.CharField(max_length=200, required=True)
     status = serializers.CharField(max_length=200, required=True)
     study_id = serializers.IntegerField(required=True)
     level = serializers.CharField(max_length=50, required=True)
 
     class Meta:
         model = Studie
-        fields = ('id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id')
+        fields = ('id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
 
 
 

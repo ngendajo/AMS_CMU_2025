@@ -7,7 +7,6 @@ import './ProfileComponents/alumniprofile.css';
 
 export default function AlumnProfile() {
         const [ user, setUser ] = useState([]);
-        const [ users, setUsers ] = useState([]);
         const {auth} = useAuth()
         const [ employment, setEmployment ] = useState([]);
         const [ study, setStudy ] = useState([]);
@@ -17,22 +16,14 @@ export default function AlumnProfile() {
     
             const getusers = async () =>{
                 try{
-                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
+                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+auth.user.id,{
                         headers: {
                             "Authorization": 'Bearer ' + String(auth.accessToken),
                             "Content-Type": 'multipart/form-data'
                         },
                         withCredentials:true
                     });
-                    let listusers=[]
-                    let listuser=[]
-                    response.data.forEach((one)=>{
-                      if(parseInt(auth.user.id)===parseInt(one.id)){
-                        listuser.push(one)
-                      }
-                    })
-                    setUsers(response.data)
-                    setUser(listuser)
+                    setUser(response.data)
                     
                     
                     
@@ -117,7 +108,7 @@ export default function AlumnProfile() {
       useEffect(() => {
         fetchOpportunities();
       }, []);
-      console.log(users)
+      console.log(employment)
   return (
     <>
       {user.map((use,i) =>
@@ -167,23 +158,7 @@ export default function AlumnProfile() {
             </center>
           </div>
           <div className="alumni-profile-top-right">
-            <div>
-              <p>People from the same Grade</p>
-              <span className="list-of-alumni-in-the-same-grade">
-                {users.map((same,s)=>
-                {
-                  if(s<3 && parseInt(same.id)!==parseInt(auth.user.id)){
-                    return (parseInt(same.alumn.Family.grade.id)===parseInt(use.alumn.Family.grade.id))?
-                  <img key={s} src={"http://localhost:8000"+same?.image_url} alt="profile" width={30} height={30} className="alumni-profile-img-same-grade" />
-                  :null
-                  }else{
-                    return null
-                  }
-                }
-                )}
-                <strong>0+</strong>
-              </span>
-            </div>
+            
             <h3>Academic Performance</h3>
             <div className="academic-perfomance">
             <div>
@@ -309,6 +284,10 @@ export default function AlumnProfile() {
               <h4>{stu.country}</h4>
             </div>
             <div>
+              <p>Scholarship</p>
+              <h4>{stu.scholarship_details}</h4>
+            </div>
+            <div>
               <p>Scholarship Status</p>
               <h4>{stu.scholarship==="F"?"Full-Scholarship":stu.scholarship==="P"?"Partial-Scholarship":stu.scholarship==="N"?"None":null}</h4>
             </div>
@@ -357,6 +336,10 @@ export default function AlumnProfile() {
             <div>
               <p>Company</p>
               <h4>{employ.company}</h4>
+            </div>
+            <div>
+              <p>Career</p>
+              <h4>{employ.career}</h4>
             </div>
             <div>
               <p>Start Date</p>

@@ -9,8 +9,6 @@ import './alumniprofile.css';
 export default function AlumnProfile() {
   const params = useParams();
         const [ user, setUser ] = useState([]);
-        const [ users, setUsers ] = useState([]);
-        const [ samegrade, setSamegrade ] = useState(0);
         const {auth} = useAuth()
         const [ employment, setEmployment ] = useState([]);
         const [ study, setStudy ] = useState([]);
@@ -21,22 +19,14 @@ export default function AlumnProfile() {
     
             const getusers = async () =>{
                 try{
-                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{
-                        headers: {
-                            "Authorization": 'Bearer ' + String(auth.accessToken),
-                            "Content-Type": 'multipart/form-data'
-                        },
-                        withCredentials:true
-                    });
-                    let listusers=[]
-                    let listuser=[]
-                    response.data.forEach((one)=>{
-                      if(parseInt(params.id)===parseInt(one.id)){
-                        listuser.push(one)
-                      }
-                    })
-                    setUsers(response.data)
-                    setUser(listuser)
+                  const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                setUser(response.data)
                     
                     
                     
@@ -171,23 +161,7 @@ export default function AlumnProfile() {
             </center>
           </div>
           <div className="alumni-profile-top-right">
-            <div>
-              <p>People from the same Grade</p>
-              <span className="list-of-alumni-in-the-same-grade">
-                {users.map((same,s)=>
-                {
-                  if(s<4 && parseInt(same.id)!==parseInt(params.id)){
-                    return (parseInt(same.alumn.Family.grade.id)===parseInt(use.alumn.Family.grade.id))?
-                  <img key={s} src={"http://localhost:8000"+same?.image_url} alt="profile" width={30} height={30} className="alumni-profile-img-same-grade" />
-                  :null
-                  }else{
-                    return null
-                  }
-                }
-                )}
-                <strong>{samegrade}+</strong>
-              </span>
-            </div>
+            
             <h3>Academic Performance</h3>
             <div className="academic-perfomance">
             <div>
@@ -311,6 +285,10 @@ export default function AlumnProfile() {
             <div>
               <p>Country</p>
               <h4>{stu.country}</h4>
+            </div>
+            <div>
+              <p>Scholarship</p>
+              <h4>{stu.scholarship_details}</h4>
             </div>
             <div>
               <p>Scholarship Status</p>
