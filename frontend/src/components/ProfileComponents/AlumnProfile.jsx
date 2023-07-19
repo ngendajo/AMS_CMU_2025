@@ -142,7 +142,7 @@ export default function AlumnProfile() {
                   </div>
                   <div>
                     <p>Address</p>
-                    <h4>{use.alumn.CurrResidence}</h4>
+                    <h4>{use.alumn.currresidence}</h4>
                   </div>
                   <div>
                     <p>Email</p>
@@ -221,7 +221,7 @@ export default function AlumnProfile() {
             </div>
             <div>
               <p>Current Residence</p>
-              <h4>{use.alumn.CurrResidence}</h4>
+              <h4>{use.alumn.currresidence}</h4>
             </div>
             </div>
             <div className="academic-perfomance">

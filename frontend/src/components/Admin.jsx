@@ -36,6 +36,7 @@ const Admin = () => {
     ];
   
     const [total, setTotal] = useState('');
+    const [alumni1, setAlumni] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
@@ -50,6 +51,28 @@ const Admin = () => {
     const [Bachelors, setBachelors] = useState('');
     const [otherdegree, setOtherdegree] = useState('');
     const {auth} = useAuth();
+
+    useEffect(() =>{
+    
+      const getAlumni = async () =>{
+          try{
+              const response = await axios.get('http://127.0.0.1:8000/api/lumngradereport/',{
+                  headers: {
+                      "Authorization": 'Bearer ' + String(auth.accessToken),
+                      "Content-Type": 'multipart/form-data'
+                  },
+                  withCredentials:true
+              });
+              console.log(response.data)
+              
+          }catch(err) {
+              console.log(err);
+          }
+      }
+  
+      getAlumni();
+  
+  },[auth])
 
     useEffect(() =>{
     
