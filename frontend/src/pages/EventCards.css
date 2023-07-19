@@ -18,5 +18,14 @@
 
 image {
   width:15%;
-  height:10;
+  height:10%;
+}
+.new-event{
+  width: 70px;
+  background-color: red;
+  color: white;
+  padding: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
 }

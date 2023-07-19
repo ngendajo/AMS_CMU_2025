@@ -240,31 +240,11 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('__all__')
-    
-    def create(self, validated_data):
-        image_url = validated_data.get('image_url')
-        title = validated_data.get('title')
-        description = validated_data.get('description')
-        startDate = validated_data.get('startDate')
-        endDate = validated_data.get('endDate')
-        user = validated_data.get('user')
-
-        event = Event.objects.create(
-            image_url=image_url,
-            title=title,
-            description=description,
-            startDate=startDate,
-            endDate=endDate,
-            user=user
-        )
-
-        return event
-
 
 class UpdateEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('title','description','startDate','endDate')
+        fields = ('title','description','date')
 
 
 #Story serializers
@@ -356,7 +336,6 @@ class UpdateStudieSerializer(serializers.ModelSerializer):
 
 
 #Dashboard needed data serializer
-
 class TotalAlumnReportSerializer(serializers.ModelSerializer):
 
     id= serializers.IntegerField(required=True)
@@ -374,10 +353,11 @@ class TotalAlumnGradeSerializer(serializers.ModelSerializer):
     id= serializers.IntegerField(required=True)
     gender = serializers.CharField(max_length=200, required=True)
     grade = serializers.CharField(max_length=200, required=True)
+    number= serializers.IntegerField(required=True)
 
     class Meta:
         model = User
-        fields = ('id','gender','grade')
+        fields = ('id','gender','grade','number')
 
 class StudyReportSerializer(serializers.ModelSerializer):
 

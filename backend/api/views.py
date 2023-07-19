@@ -834,7 +834,7 @@ class AlumnReportView(APIView):
 class AlumnInGradeReportView(APIView):
     #permission_classes = [IsAuthenticated, ]  
     def get(self,request):
-        stud = User.objects.raw("SELECT api_user.id,userprofile_alumni.gender,userprofile_grade.grade_name as grade from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_family ON userprofile_alumni.Family_id=userprofile_family.id LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id WHERE api_user.is_alumni;")
+        stud = User.objects.raw("SELECT userprofile_grade.id,  userprofile_grade.grade_name as grade,userprofile_alumni.gender,count(*) as number from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_family ON userprofile_alumni.Family_id=userprofile_family.id LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id WHERE api_user.is_alumni group by userprofile_grade.id, userprofile_alumni.gender;")
         
         # if there is something in items else raise error
         if stud:

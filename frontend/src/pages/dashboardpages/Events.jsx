@@ -142,6 +142,7 @@ export default function Events() {
     previousLabel="< previous"
     renderOnZeroPageCount={null}
     />
+    <Link to={'/add-event/'} className='new-event'>Add a New Event</Link>
     </div>
     
   )

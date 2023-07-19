@@ -64,7 +64,15 @@ const Admin = () => {
                   withCredentials:true
               });
               console.log(response.data)
-              
+              const groupedData = response.data.reduce((groups, item) => {
+                const { grade } = item;
+                if (!groups[grade]) {
+                    groups[grade] = [];
+                }
+                groups[grade].push(item);
+                return groups;
+            }, {});
+            console.log(groupedData)
           }catch(err) {
               console.log(err);
           }
