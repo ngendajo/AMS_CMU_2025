@@ -60,6 +60,7 @@ import DisplayStory from './components/DashboardComponents/Alumnipart/alumnirepo
 import AlumnProfile from './components/ProfileComponents/AlumnProfile';
 import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
 import AddBulkASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkASYVInfo';
+import Error from './pages/dashboardpages/Error';
 
 
 
@@ -84,6 +85,7 @@ function App() {
             <Route path='/' element={<Layout />}>
               {/* public routes*/}
                 <Route path='home' element={<Home />}/>
+                <Route path='error' element={<Error />}/>
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>

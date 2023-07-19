@@ -76,6 +76,7 @@ export default function Events() {
                   image_url:e.image_url
               })
               })
+              eventlist.sort((a, b) => b.startDate.localeCompare(a.startDate))
               setData(eventlist)
           }catch(err) {
               console.log(err);

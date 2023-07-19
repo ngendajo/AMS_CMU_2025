@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import './alumniprofile.css';
+import { useNavigate } from "react-router-dom";
 
 export default function AlumnProfile() {
   const params = useParams();
@@ -14,6 +15,7 @@ export default function AlumnProfile() {
         const [ employment, setEmployment ] = useState([]);
         const [ study, setStudy ] = useState([]);
         const [opportunities, setOpportunities] = useState([]);
+        const navigate = useNavigate();
     
         useEffect(() =>{
     
@@ -34,9 +36,7 @@ export default function AlumnProfile() {
                       }
                     })
                     response.data.forEach((alu)=>{
-                      if(alu.alumn==null){
-                        return;
-                      }
+                     
                       if(parseInt(listuser[0].alumn.Family.grade.id)===parseInt(alu.alumn.Family.grade.id) && (parseInt(params.id)!==parseInt(alu.id))){
                         listusers.push(alu);
                       }
@@ -48,6 +48,7 @@ export default function AlumnProfile() {
                     
                 }catch(err) {
                     console.log(err);
+                    navigate('/error')
                 }
             }
     
