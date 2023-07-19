@@ -27,16 +27,9 @@ ChartJS.register(
 
 const Admin = () => {
 
-    const alumni = [
-      {grade:"Urumuri",boy:44,girls:100},
-      {grade:"Indatwa",boy:66,girls:104},
-      {grade:"Isonga",boy:33,girls:77},
-      {grade:"Umurage",boy:24,girls:140},
-      {grade:"Umucyo",boy:59,girls:86},
-    ];
-  
+   
     const [total, setTotal] = useState('');
-    const [alumni1, setAlumni] = useState([]);
+    const [alumni, setAlumni] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
@@ -72,7 +65,25 @@ const Admin = () => {
                 groups[grade].push(item);
                 return groups;
             }, {});
-            console.log(groupedData)
+            let alu=[]
+            Object.entries(groupedData).forEach(([grade, items]) => {
+              if(grade==="null"){
+                alu.push({
+                  "grade":"Others",
+                  "boys":0,
+                  "girls":0,
+                  "others":items[0].number
+                })
+              } else{
+                alu.push({
+                  "grade":grade,
+                  "boys":items[0].gender==="Male"?items[0].number:items[1].number,
+                  "girls":items[0].gender==="Female"?items[0].number:items[1].number,
+                  "others":0
+                })
+              }
+          })
+          setAlumni(alu)
           }catch(err) {
               console.log(err);
           }
@@ -409,13 +420,18 @@ let data = [5, 2, 5, 5, 10],
             datasets:[
               {
                 label:"Boys",
-                data:alumni.map(alumn=>alumn.boy),
+                data:alumni.map(alumn=>alumn.boys),
                 backgroundColor:"#F49D47",
               },
               {
                 label:"Girls",
                 data:alumni.map(alumn=>alumn.girls),
                 backgroundColor:"#2b7e40",
+              },
+              {
+                label:"Others",
+                data:alumni.map(alumn=>alumn.others),
+                backgroundColor:"#FF0000",
               },
             ]
            }} /> 
