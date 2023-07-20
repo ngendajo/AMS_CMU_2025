@@ -7,6 +7,9 @@ import useAuth from '../hooks/useAuth';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import EmploymentGeneralReportChart from './charts/EmploymentGeneralReportChart';
+import FutherStudingGeneralReportChart from './charts/FutherStudingGeneralReportChart';
+import EmployementAndEducation from './charts/EmployementAndEducation';
 import {Bar} from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -27,6 +30,7 @@ ChartJS.register(
 
 const Admin = () => {
 
+  
    
     const [total, setTotal] = useState('');
     const [alumni, setAlumni] = useState([]);
@@ -435,6 +439,21 @@ let data = [5, 2, 5, 5, 10],
               },
             ]
            }} /> 
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <EmploymentGeneralReportChart />
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <FutherStudingGeneralReportChart />
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <EmployementAndEducation />
           </div>
         </div>
     </div>
