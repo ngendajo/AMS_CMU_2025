@@ -101,6 +101,7 @@ export default function Events() {
     const [isClicked, setIsClicked] = useState(false);
     function handleClick() {
       setIsClicked(!isClicked);
+      navigate('/event/'+events.id);
     }
 
     var sDate=formatDateTime(new Date(events.startDate));

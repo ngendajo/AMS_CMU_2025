@@ -7,8 +7,9 @@ import RequireAuth from './components/RequireAuth';
 import Home from './pages/Home/Home';
 import Dashboard from './pages/dashboardpages/Dashboard';
 import Events from './pages/dashboardpages/Events';
-import AddEvent from './components/EventComponents/AddEvent'
-import EditEvent from './components/EventComponents/EditEvent'
+import AddEvent from './components/EventComponents/AddEvent';
+import EditEvent from './components/EventComponents/EditEvent';
+import EventDetail from './components/EventComponents/EventDetail';
 import Chats from './pages/dashboardpages/Chats';
 import Opportunities from './pages/dashboardpages/Opportunities';
 import Schedule from './pages/dashboardpages/Schedule';
@@ -94,6 +95,7 @@ function App() {
                     <Route path='events' element={<Events />}/>
                     <Route path='add-event' element={<AddEvent />}/>
                     <Route path='edit-event/:id' element={<EditEvent />}/>
+                    <Route path='event/:id' element={<EventDetail/>}/>
                     <Route path='chats' element={<Chats />}/>
                     <Route path='opportunities' element={<Opportunities />}/>
                     <Route path='schedule' element={<Schedule />}/>
