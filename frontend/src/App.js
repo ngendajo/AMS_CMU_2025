@@ -61,6 +61,8 @@ import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
 import AddBulkASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkASYVInfo';
 import Password from './pages/dashboardpages/Password';
 import Error from './pages/dashboardpages/Error';
+import ResetPassword from './components/DashboardComponents/Staffpart/ResetPassword';
+import ResetPasswordofAlumn from './components/DashboardComponents/Alumnipart/ResetPasswordofAlumn';
 
 
 
@@ -126,6 +128,8 @@ function App() {
                     <Route path='staffprofile/:id' element={<StaffDetails />}/>
                     <Route path='alumniprofile/:id' element={<AlumnProfile />}/>
                     <Route path='delete-user/:id' element={<Deleteuser/>}/>
+                    <Route path='reset-password/:id' element={<ResetPassword/>}/>
+                    <Route path='reset-alumn-password/:id' element={<ResetPasswordofAlumn/>}/>
                     <Route path='add-crc/p/:id' element={<EditPosition/>}/>
                     {/* alumni crud */}
                     <Route path='add-alumni' element={<Registera />}/> 

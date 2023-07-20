@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
+import { PiPasswordFill } from "react-icons/pi";
 
 const columns = [
   { header: 'No', key: 'no' },
@@ -103,6 +104,7 @@ export default function ASYVInfo() {
                   <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                      <Link to={`/reset-alumn-password/${element.id}`}> <PiPasswordFill className='icon'/></Link>
                 </span>
               })
               alumnilist2.push({

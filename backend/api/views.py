@@ -1,6 +1,10 @@
 from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status,generics, viewsets,response
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.db.models import Count, Case, When, IntegerField
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -200,7 +204,7 @@ def update_alumni_info(request, pk=None):
         
 #End CRC data 
 
-#login logout and change password portal
+#login logout and change and reset password portal
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -237,6 +241,54 @@ class ChangePasswordView(APIView):
         request.user.set_password(serializer.validated_data['new_password'])
         request.user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class PasswordReset(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = EmailSerilizer
+
+    def post(self, request):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data["email"]
+        user = User.objects.filter(email=email).first()
+        if user:
+            encoded_pk = urlsafe_base64_encode(force_bytes(user.pk))
+            token = PasswordResetTokenGenerator().make_token(user)
+
+            reset_url = reverse(
+                "reset-password",
+                kwargs={"encoded_pk":encoded_pk, "token":token}
+            )
+
+
+            return Response(
+                {
+                    "message":reset_url
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                {"message":"User doesn't exists"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+class ResetPassword(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = ResetPasswordSerializer
+
+    def patch(self, request, *args, **kwargs):
+
+        serializer = self.serializer_class(
+            data=request.data, context={"kwargs":kwargs}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        return Response(
+            {"message":"Password reset complete"},
+            status=status.HTTP_200_OK,
+        )
     
     # End login logout and change password portal
 
