@@ -17,10 +17,10 @@ export const COLUMNS = [
       Header: "Name",
       accessor: "name",
     },
-    {
+    /* {
       Header: "Phone",
       accessor: "phone",
-    },
+    }, */
     {
       Header: "Field of Study",
       accessor: "field",
@@ -37,6 +37,10 @@ export const COLUMNS = [
       },{
         Header: "Scholarship",
         accessor: "scholarship",
+      },
+      {
+        Header: "scholarship_details",
+        accessor: "scholarship_details",
       },
     
     {

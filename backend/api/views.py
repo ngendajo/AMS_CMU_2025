@@ -86,7 +86,21 @@ class AluminiRegistrationView(APIView):
             serializer = AlumniSerializer(user, many=True)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class AluminiListView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    
+    def get(self,request):
+        if request.query_params:
+            oneuser=User.objects.filter(**request.query_params.dict(),is_alumni=True)
+            serializer = AlumniSerializer(oneuser, many=True)
+        else:
+            user = User.objects.raw("select api_user.id,api_user.email,  api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_family.family_name from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id where api_user.is_alumni;")
+            serializer = AlumniListsSerializer(user, many=True)
+            return Response(serializer.data)
+        
+        return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
         
 
@@ -168,10 +182,10 @@ def create_alumni_info(request):
 
     alumni_info = serializer.save()
     print(alumni_info.id)
-    for ep_id in request.data.get('Eps'):
+    for ep_id in request.data.get('eps'):
         try:
             ep = Ep.objects.get(id=ep_id)
-            alumni_info.Eps.add(ep)
+            alumni_info.eps.add(ep)
         except Ep.DoesNotExist:
             raise NotFound()
 
@@ -188,14 +202,14 @@ def update_alumni_info(request, pk=None):
 
         eps = []
 
-        for ep_id in request.data.get('Eps'):
+        for ep_id in request.data.get('eps'):
             try:
                 ep = Ep.objects.get(id=ep_id)
                 eps.append(ep)
             except Ep.DoesNotExist:
                 raise NotFound()
 
-        alumn.Eps.set(eps)
+        alumn.eps.set(eps)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     else:
@@ -665,7 +679,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -755,7 +769,7 @@ class StudyReportView(APIView):
 # Gallery data view
 
 class GalleryView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = GallerySerializer(data=request.data)
         # validating for already existing data

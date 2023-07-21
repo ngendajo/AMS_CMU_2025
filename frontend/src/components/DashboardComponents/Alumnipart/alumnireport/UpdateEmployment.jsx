@@ -24,6 +24,7 @@ export default function AddEmployment() {
     const [status, setStatus]=useState('');
     const [description, setDescription]=useState('');
     const [company, setCompany]=useState('');
+    const [career, setCareer]=useState('');
     const [start_date, setStart_date]=useState('');
     const [end_date, setEnd_date]=useState('');
 
@@ -43,6 +44,7 @@ export default function AddEmployment() {
               setStatus(response.data[0].status);
               setDescription(response.data[0].description);
               setCompany(response.data[0].company);
+              setCareer(response.data[0].career)
               setStart_date(response.data[0].start_date);
               setEnd_date(response.data[0].end_date);
               if(response.data[0].end_date==="Up to now"){
@@ -64,6 +66,7 @@ export default function AddEmployment() {
         "status":status,
         "description":description,
         "company":company,
+        "career":career,
         "start_date":start_date,
         "end_date":end?"Up to now":end_date
         },
@@ -145,6 +148,20 @@ export default function AddEmployment() {
                             Company
                         </label>
                         <input type="text" name="company" value={company} onChange={(e)=>setCompany(e.target.value)} />
+                    </div>
+                    <div className="formpart">
+                        <label htmlFor="career">
+                            Career
+                        </label>
+                        <input
+                        type="text"
+                        id="career"
+                        autoComplete="off"
+                        name="career"
+                        value={career}
+                        onChange={(e)=>setCareer(e.target.value)}
+                        required
+                        />
                     </div>
                     <div className="formpart">
                         <label htmlFor="start-date">

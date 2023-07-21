@@ -14,13 +14,10 @@ export const COLUMNS = [
       accessor: "email",
     },
     {
-      Header: "First Name",
-      accessor: "first_name",
+      Header: "Name",
+      accessor: "name",
     },
-    {
-      Header: "Last Name",
-      accessor: "last_name",
-    },
+    
     {
       Header: "Phone",
       accessor: "phone",
@@ -33,6 +30,9 @@ export const COLUMNS = [
     {
       Header: "Status",
       accessor: "status",
+    },{
+      Header: "Career",
+      accessor: "career",
     },
     {
         Header: "End Time",

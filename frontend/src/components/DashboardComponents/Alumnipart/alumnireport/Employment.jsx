@@ -7,8 +7,28 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { EmplymentTable } from '../EmploymentTable';
 
+import Excel from 'exceljs';
+import { saveAs } from 'file-saver';
+
+const columns = [
+  { header: 'No', key: 'no' },
+  { header: 'Email', key: 'email' },
+  { header: 'Name', key: 'name' },
+  { header: 'Phone number', key: 'phone' },
+  { header: 'Title', key: 'title' },
+  { header: 'Company', key: 'company' },
+  { header: 'Description', key: 'description' },
+  { header: 'Status', key: 'status' },
+  { header: 'Start Date', key: 'start_date' },
+  { header: 'End Date', key: 'end' },
+  { header: 'Career', key: 'career' }
+];
+const workSheetName = 'Alumni_Study_Report';
+const workBookName = 'Alumni_Study_Report';
+
 export default function Employment() {
   const [data, setData] = useState([]);
+  const [datatodownload, setDatatodownload] = useState([]);
   
   const {auth} = useAuth();
 
@@ -24,17 +44,31 @@ export default function Employment() {
                 withCredentials:true
             });
             var alumnilist=[]
+            var alumnilist2=[]
             var i=1
             response.data.forEach(element => {
+              alumnilist2.push({
+                no:i, 
+                email:element.email,
+                name:element.first_name+" "+element.last_name,
+                phone:element.phone1,
+                title:element?.title,
+                company:element?.company,
+                description:element?.description,
+                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Part Time":null,
+                career:element?.career,
+                start_date:element?.start_date,
+                end:element?.end
+              })
               alumnilist.push({
                 id:i, 
                 image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
-                first_name:element.first_name,
-                last_name:element.last_name,
+                name:element.first_name+" "+element.last_name,
                 phone:element.phone1,
                 title:element?.title,
                 status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Part Time":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
+                career:element?.career,
                 end:element?.end,
                 user_id:element.title?<span>
                   <Link to={`/alumni/updateemployement/${element.emp_id}`}><BiEditAlt className='icon'/></Link>
@@ -44,6 +78,7 @@ export default function Employment() {
               i+=1
             });
             setData(alumnilist);
+            setDatatodownload(alumnilist2)
         }catch(err) {
             console.log(err);
         }
@@ -52,11 +87,73 @@ export default function Employment() {
     getcrcusers();
 
 },[auth])
+
+const workbook = new Excel.Workbook();
+
+  const saveExcel = async () => {
+    try {
+      const fileName = workBookName;
+
+      // creating one worksheet in workbook
+      const worksheet = workbook.addWorksheet(workSheetName);
+
+      // add worksheet columns
+      // each columns contains header and its mapping key from data
+      worksheet.columns = columns;
+
+      // updated the font for first row.
+      worksheet.getRow(1).font = { bold: true };
+
+      // loop through all of the columns and set the alignment with width.
+      worksheet.columns.forEach(column => {
+        column.width = column.header.length + 5;
+        column.alignment = { horizontal: 'center' };
+      });
+
+      // loop through data and add each one to worksheet
+      datatodownload.forEach(singleData => {
+        worksheet.addRow(singleData);
+      });
+
+      // loop through all of the rows and set the outline style.
+      worksheet.eachRow({ includeEmpty: false }, row => {
+        // store each cell to currentCell
+        const currentCell = row._cells;
+
+        // loop through currentCell to apply border only for the non-empty cell of excel
+        currentCell.forEach(singleCell => {
+          // store the cell address i.e. A1, A2, A3, B1, B2, B3, ...
+          const cellAddress = singleCell._address;
+
+          // apply border
+          worksheet.getCell(cellAddress).border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+        });
+      });
+
+      // write the content using writeBuffer
+      const buf = await workbook.xlsx.writeBuffer();
+
+      // download the processed file
+      saveAs(new Blob([buf]), `${fileName}.xlsx`);
+    } catch (error) {
+      console.error('<<<ERRROR>>>', error);
+      console.error('Something Went Wrong', error.message);
+    } finally {
+      // removing worksheet's instance to create new one
+      workbook.removeWorksheet(workSheetName);
+    }
+  };
+
   return (
     <div className='alumni-list-body'>
             <div>
               <div className='staff-header-right alumni-header-right'>
-                <div className='export-staff'>
+                <div onClick={saveExcel} className='export-staff'>
                   <span>Export xlsx</span><BiExport/>
                 </div>
               </div>

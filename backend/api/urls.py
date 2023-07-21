@@ -18,6 +18,7 @@ urlpatterns = [
     path('users/', views.get_users, name="users"),
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
     path('alumni/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
+    path('alumnilist/', views.AluminiListView.as_view(), name='alumini'),
     path('bulkalumni/', views.AluminiBulkRegistrationView.as_view(), name='auth_bulkregisteralumini'),
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),

@@ -188,6 +188,21 @@ class AlumniSerializer(serializers.ModelSerializer):
         fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','alumn')
         extra_kwargs = {'password': {'write_only': True}}
 
+class AlumniListsSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    image_url =serializers.ImageField(required=False)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    phone1 = serializers.CharField(max_length=200, required=True)
+    grade_name = serializers.CharField(max_length=200, required=True)
+    family_name = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = User
+        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','family_name')
+        
+
 class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
