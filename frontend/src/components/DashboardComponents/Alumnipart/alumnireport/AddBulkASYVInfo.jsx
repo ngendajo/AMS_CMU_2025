@@ -76,6 +76,7 @@ export default function AddBulkASYVInfo() {
               setEps(response.data)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -96,6 +97,7 @@ export default function AddBulkASYVInfo() {
               setCombinations(response.data)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -132,6 +134,7 @@ export default function AddBulkASYVInfo() {
               setFamilies(fam)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -152,6 +155,7 @@ export default function AddBulkASYVInfo() {
             setUsers(response.data)
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 
@@ -381,6 +385,7 @@ export default function AddBulkASYVInfo() {
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);
+      navigate('/error');
     } finally {
       // removing worksheet's instance to create new one
       workbook.removeWorksheet(workSheetName);
@@ -491,7 +496,8 @@ export default function AddBulkASYVInfo() {
     .catch(error => console.log(error.response.data))
           //clear input fields 
           }catch(err){
-              console.log(err)
+              console.log(err);
+              navigate('/error');
           }
   }
   function savedata(){

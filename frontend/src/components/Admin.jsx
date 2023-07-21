@@ -8,6 +8,7 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {Bar} from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,6 +25,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+const navigate=useNavigate();
 
 const Admin = () => {
 
@@ -75,6 +77,7 @@ const Admin = () => {
             console.log(groupedData)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -96,6 +99,7 @@ const Admin = () => {
               setGrades(response.data.length);
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -225,6 +229,7 @@ const Admin = () => {
             )
         }catch(err) {
             console.log(err);
+            navigate('error');
         }
     }
 

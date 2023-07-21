@@ -58,6 +58,7 @@ export default function UpdateStudie() {
               setLevel(response.data[0].level);
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   

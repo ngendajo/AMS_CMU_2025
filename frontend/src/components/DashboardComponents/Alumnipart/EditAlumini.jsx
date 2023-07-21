@@ -61,6 +61,7 @@ export default function EditAlumini() {
                 })
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     
@@ -106,6 +107,7 @@ export default function EditAlumini() {
                     console.log(err)
                 }
                 errRef.current.focus(); 
+                navigate('/error');
             }
         }
       };
@@ -191,6 +193,7 @@ export default function EditAlumini() {
             console.log(err)
         }
         errRef.current.focus(); 
+        navigate('/error');
     }
 
   }

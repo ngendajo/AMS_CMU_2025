@@ -4,12 +4,14 @@ import useAuth from '../../hooks/useAuth';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { IoIosAdd } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function GalleryPage() {
    const [data, setData] = useState([]);
     let {auth}= useAuth() 
     var gallerylist=[]
+    const navigate=useNavigate();
 
     useEffect(() =>{
     
@@ -36,6 +38,7 @@ export default function GalleryPage() {
                 setData(gallerylist)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

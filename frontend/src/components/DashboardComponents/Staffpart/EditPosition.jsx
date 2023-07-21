@@ -6,6 +6,7 @@ import axios from "axios";
 import "../forms.css";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 
 const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
@@ -17,6 +18,8 @@ export default function EditPosition() {
     const [position, setPosition] = useState('');
     const [validPosition, setValidPosition] = useState(false);
     const [positionFocus, setPositionFocus] = useState(false);
+
+    const navigate=useNavigate();
 
 
     useEffect(() =>{
@@ -36,6 +39,7 @@ export default function EditPosition() {
                 })
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     
@@ -98,6 +102,7 @@ export default function EditPosition() {
             console.log(err)
         }
         errRef.current.focus(); 
+        navigate('/error');
     }
    }
 

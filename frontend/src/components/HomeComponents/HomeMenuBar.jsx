@@ -75,7 +75,8 @@ export default function HomeMenuBar() {
             }else{
                 setErrMsg('Login Failed: ' + err);
             }
-            setErrMsg('Login Failed')
+            setErrMsg('Login Failed');
+            navigate('/error');
         }
         if(seen) {
             errRef.current.focus();

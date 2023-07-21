@@ -46,6 +46,7 @@ export default function AddStudie() {
               })
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   

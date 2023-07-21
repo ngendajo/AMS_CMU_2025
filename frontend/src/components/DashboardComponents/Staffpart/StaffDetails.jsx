@@ -4,11 +4,13 @@ import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function StaffDetails() {
     const params = useParams();
         const [ crcUsers, setCrcUsers ] = useState();
         const {auth} = useAuth()
+        const navigate=useNavigate();
     
         useEffect(() =>{
     
@@ -24,6 +26,7 @@ export default function StaffDetails() {
                     setCrcUsers(response.data);
                 }catch(err) {
                     console.log(err);
+                    navigate('/error');
                 }
             }
     

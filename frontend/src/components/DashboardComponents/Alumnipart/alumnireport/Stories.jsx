@@ -8,11 +8,14 @@ import axios from 'axios';
 import { StoriesTable } from '../StoriesTable';
 import ReactHtmlParser from "react-html-parser";
 import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
+import { useNavigate } from 'react-router-dom';
 
 export default function Employment() {
   const [data, setData] = useState([]);
   
   const {auth} = useAuth();
+
+  const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -47,6 +50,7 @@ export default function Employment() {
             setData(alumnilist);
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 

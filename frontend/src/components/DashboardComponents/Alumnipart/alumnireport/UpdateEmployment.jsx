@@ -50,6 +50,7 @@ export default function AddEmployment() {
               }
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   

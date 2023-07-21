@@ -5,12 +5,14 @@ import { useCallback } from 'react';
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Schedule() {
     const [data, setData] = useState([]);
     let {auth}= useAuth() 
     var eventlist=[]
+    const navigate=useNavigate();
 
   const localizer = momentLocalizer(moment)
 
@@ -46,6 +48,7 @@ export default function Schedule() {
         setData(eventlist);
       } catch (error) {
         console.log(error);
+        navigate('/error');
       }
     };
 

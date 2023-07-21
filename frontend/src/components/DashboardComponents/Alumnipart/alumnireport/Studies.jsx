@@ -6,11 +6,14 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { StudieTable } from '../StudieTable';
+import { useNavigate } from 'react-router-dom';
 
 export default function Studies() {
   const [data, setData] = useState([]);
   
   const {auth} = useAuth();
+
+  const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -48,6 +51,7 @@ export default function Studies() {
             setData(alumnilist);
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 

@@ -7,6 +7,7 @@ import "../forms.css";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Dropzone from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -36,7 +37,7 @@ export default function EditCrc() {
     const [validPhone1, setValidPhone1] = useState(false);
     const [phone1Focus, setPhone1Focus] = useState(false);
 
-
+    const navigate=useNavigate();
 
     useEffect(() =>{
     
@@ -60,6 +61,7 @@ export default function EditCrc() {
                 })
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     
@@ -105,6 +107,7 @@ export default function EditCrc() {
                     console.log(err)
                 }
                 errRef.current.focus(); 
+                navigate('/error');
             }
         }
       };
@@ -185,6 +188,7 @@ export default function EditCrc() {
             console.log(err)
         }
         errRef.current.focus(); 
+        navigate('/error');
     }
 
   }

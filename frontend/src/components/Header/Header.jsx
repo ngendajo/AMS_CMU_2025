@@ -20,6 +20,7 @@ export default function Header() {
     const [profile, setProfile] = useState(false);
     const { auth } = useAuth();
     const current = new Date();
+    const navigate = useNavigate();
     const showprofile = () => {
         setProfile(!profile);
       }
@@ -51,13 +52,14 @@ export default function Header() {
                 }
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
 
         getuser();
 
     },[auth])
-      const navigate = useNavigate();
+      
       const logout = useLogout();
 
       const signOut = async () => {

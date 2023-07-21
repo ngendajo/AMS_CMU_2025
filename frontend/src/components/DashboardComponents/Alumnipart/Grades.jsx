@@ -28,6 +28,7 @@ export const Grades = () => {
                 setResults(response.data);
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

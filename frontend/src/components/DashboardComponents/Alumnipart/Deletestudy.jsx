@@ -25,6 +25,7 @@ const Deletestudy = () => {
                 setUserid(response.data)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

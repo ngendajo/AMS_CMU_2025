@@ -55,6 +55,7 @@ export default function AddGrade() {
                 setGrade(value)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

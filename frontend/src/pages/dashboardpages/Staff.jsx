@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { BiEditAlt,BiStreetView } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { useNavigate } from 'react-router-dom';
 
 export default function Staff() {
   const [results, setResults]=useState([]);
   const [results1, setResults1]=useState([]);
   const [input, setInput] = useState("");
   const {auth} = useAuth()
+  const navigate=useNavigate();
   useEffect(() =>{
     
     const getcrcusers = async () =>{
@@ -31,6 +33,7 @@ export default function Staff() {
             setResults(response.data);
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 

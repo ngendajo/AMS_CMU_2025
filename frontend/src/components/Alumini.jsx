@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
 import './ProfileComponents/alumniprofile.css';
+import { useNavigate } from "react-router-dom";
 
 export default function AlumnProfile() {
         const [ user, setUser ] = useState([]);
@@ -11,6 +12,7 @@ export default function AlumnProfile() {
         const [ employment, setEmployment ] = useState([]);
         const [ study, setStudy ] = useState([]);
         const [opportunities, setOpportunities] = useState([]);
+        const navigate=useNavigate();
     
         useEffect(() =>{
     
@@ -25,10 +27,9 @@ export default function AlumnProfile() {
                     });
                     setUser(response.data)
                     
-                    
-                    
                 }catch(err) {
                     console.log(err);
+                    navigate('/error');
                 }
             }
     
@@ -54,6 +55,7 @@ export default function AlumnProfile() {
                   
               }catch(err) {
                   console.log(err);
+                  navigate('/error');
               }
           }
       
@@ -80,6 +82,7 @@ export default function AlumnProfile() {
               
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -102,6 +105,7 @@ export default function AlumnProfile() {
           
         } catch (error) {
           console.log(error);
+          navigate('/error');
         }
       };
     

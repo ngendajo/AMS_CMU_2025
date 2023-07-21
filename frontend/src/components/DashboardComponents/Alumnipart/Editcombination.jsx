@@ -41,6 +41,7 @@ export default function Editcombination() {
                 setCombination_name(data[0].combination_name)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

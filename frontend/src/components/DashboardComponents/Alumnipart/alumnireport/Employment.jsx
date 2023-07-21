@@ -6,11 +6,14 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { EmplymentTable } from '../EmploymentTable';
+import { useNavigate } from 'react-router-dom';
 
 export default function Employment() {
   const [data, setData] = useState([]);
   
   const {auth} = useAuth();
+
+  const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -46,6 +49,7 @@ export default function Employment() {
             setData(alumnilist);
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 

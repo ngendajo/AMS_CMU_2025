@@ -66,6 +66,7 @@ export default function AddGallery() {
                 console.log(err)
             }
             errRef.current.focus(); 
+            navigate('/error');
         }
 }
 
