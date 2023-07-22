@@ -5,10 +5,27 @@
     padding: 16px;
     margin: 16px;
     text-align: center;
+    width: 30%;
+    height: 20%;
   }
 
 .card-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
+
+}
+
+image {
+  width:15%;
+  height:10%;
+}
+.new-event{
+  width: 70px;
+  background-color: orange;
+  color: white;
+  padding: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
 }

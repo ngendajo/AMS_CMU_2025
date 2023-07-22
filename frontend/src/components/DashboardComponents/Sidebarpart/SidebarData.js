@@ -40,6 +40,11 @@ export const SidebarData = [
         path: "/gallery",
         icon: <TfiIcons.TfiGallery />,
       },
+      {
+        title: "News",
+        path: "/news",
+        icon: <FaIcons.FaNewspaper />,
+      },
   {
     title: "Users",
     path: "/alumni",

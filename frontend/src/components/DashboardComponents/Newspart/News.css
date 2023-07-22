@@ -1,0 +1,82 @@
+/* News.css */
+
+.news-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.news-card {
+  position: relative;
+  width: 22%;
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.news-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.news-card h2 {
+  font-size: 17px;
+  margin-bottom: 7px;
+}
+
+.news-card p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.news-card span {
+  font-size: 12px;
+  color: #888;
+}
+
+.news-card button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.description-box {
+  position: absolute;
+  top: 2/5;
+  left: 25%;
+  width: 200px;
+  background-color: #aaaaaa;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.description-box p {
+  font-size: 14px;
+  color: white;
+  line-height: 1.5;
+}
+
+.description-box button {
+  color: white;
+  background-color: orange;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}

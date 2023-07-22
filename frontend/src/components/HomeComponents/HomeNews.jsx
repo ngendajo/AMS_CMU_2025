@@ -108,6 +108,8 @@ const HomeNews = () => {
       });
   }, []);
 
+  // Display the latest four news
+  const lastFourNews = newsData.slice(Math.max(newsData.length - 4, 0));
 
   return (
     <div>
@@ -126,8 +128,8 @@ const HomeNews = () => {
       </h1>
 
       {/* -------------- Cards -------------- */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', margin: '0 6%', }}>
-        {newsData.map((news) => (
+      <div style={{ display: 'flex', justifyContent: 'space-between', margin: '0 6%', flexWrap: 'wrap',}}>
+        {lastFourNews.map((news) => (
           <NewsCard
             key={news.id}
             imageSrc={`http://localhost:8000${news.image_url}`}
