@@ -172,7 +172,7 @@ const HomeAlumni = () => {
 
 
   if (imageData.length === 0) {
-    // render a loading state here if needed
+    // render loading state here if needed
     return <p>Loading...</p>;
   }
 

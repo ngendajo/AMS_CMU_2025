@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework.views import APIView
+from rest_framework import generics
 from .serializer import AlumniInfoRegSerializer, AlumniSerializer, AlumniRegistrationSerializer, StaffRoleSerializer, \
     UpdateUserImageUrlSerializer, UpdateUserSerializer, StaffUserSerializer, StaffUserRegistrationSerializer, \
     PasswordChangeSerializer, FamilySerializer, CombinationSerializer, GradeSerializers, EpSerializer, \
@@ -16,9 +17,9 @@ from .serializer import AlumniInfoRegSerializer, AlumniSerializer, AlumniRegistr
     DisplayStorySerializer, EmploymentSerializer, StudieSerializer, UpdateStudieSerializer, \
     AlumniInfoUpdateSerializer, DisplayAllStoriesSerializer, EmploymentDisplayOneSerializer, \
     DisplayEmploymentSerializer, StudyWithAlumnSerializer, StudieWithAlumnSerializer, EmploymentUpdateSerializer, \
-    TotalAlumnReportSerializer, StudyReportSerializer, GallerySerializer, UpdateGallerySerializer
+    TotalAlumnReportSerializer, StudyReportSerializer, GallerySerializer, UpdateGallerySerializer, NewsSerializer
 from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Opportunity, Event, Employment, Studie, \
-    Story, Gallery
+    Story, Gallery, News
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
@@ -915,3 +916,45 @@ def delete_gallery(request, pk):
     stud.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 # end
+
+
+# News
+@api_view(['POST'])
+def create_news(request):
+    serializer = NewsSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+def news_list(request):
+    news = News.objects.all()
+    serializer = NewsSerializer(news, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+def update_news(request, pk):
+    try:
+        news = News.objects.get(pk=pk)
+    except News.DoesNotExist:
+        return Response(status=404)
+
+    serializer = NewsSerializer(news, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['DELETE'])
+def delete_news(request, pk):
+    try:
+        news = News.objects.get(pk=pk)
+    except News.DoesNotExist:
+        return Response(status=404)
+
+    news.delete()
+    return Response(status=204)

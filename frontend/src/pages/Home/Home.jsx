@@ -5,6 +5,7 @@ import HomeMenuBar from '../../components/HomeComponents/HomeMenuBar'
 import HomeStory from '../../components/HomeComponents/HomeStory'
 import HomeAlumni from '../../components/HomeComponents/HomeAlumni'
 import HomeMission from '../../components/HomeComponents/HomeMission'
+import HomeNews from '../../components/HomeComponents/HomeNews'
 
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
         <HomeAlumni/>
         <HomeStory/>
         <HomeMission/>
+        <HomeNews/>
     </div>
   )
 }

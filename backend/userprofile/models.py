@@ -166,3 +166,15 @@ class Story(models.Model):
 class Gallery(models.Model):
     image_url = models.ImageField(upload_to='galleries', default='galleries/default.jpg')
     displayed = models.BooleanField(default=True)
+
+
+# News model
+class News(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now=True)
+    image_url = models.ImageField(upload_to='news', default='news/default.jpg')
+
+    def __str__(self):
+        return self.title
+

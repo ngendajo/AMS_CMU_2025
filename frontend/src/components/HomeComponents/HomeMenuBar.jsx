@@ -186,7 +186,7 @@ export default function HomeMenuBar() {
                 <div className="left">
                     <div className="hellolefttop">
                         <h1>
-                            Be part of the massive connection of ASYV alumni association!
+                            Be part of the massive connection of ASYV Alumni Association!
                         </h1>
                         <br/>
                         <p>
@@ -243,7 +243,6 @@ export default function HomeMenuBar() {
                 </div>
                 {/* <BiMessageRoundedDots className="sendsms" /> */}
             </div>
-
 
         </>
     );

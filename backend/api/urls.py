@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView, 
 )
 
+
 urlpatterns = [
     # user paths
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -65,7 +66,7 @@ urlpatterns = [
     path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
 
-    # Dashdboard data
+    # Dashboard data
     path('alumnreport/', views.AlumnReportView.as_view()),
     path('studyreport/', views.StudyReportView.as_view()),
     path('', views.getRoutes),
@@ -84,7 +85,14 @@ urlpatterns = [
     path('opportunity/<int:pk>/update/', views.UpdateOpportunityView.as_view(), name='update-opportunity'),
     path('opportunity/<int:pk>/approve', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
 
-    # Dashdboard data
+    # Dashboard data
     path('totalalumnreport/', views.AlumnReportView.as_view()),
-    path('', views.getRoutes)
+    path('', views.getRoutes),
+
+    # News paths
+    path('news/', views.news_list, name='news-list'),
+    path('news/create/', views.create_news, name='news-create'),
+    path('news/<int:pk>/update/', views.update_news, name='news-update'),
+    path('news/<int:pk>/delete/', views.delete_news, name='news-delete'),
+
 ]
