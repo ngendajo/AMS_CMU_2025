@@ -36,7 +36,7 @@ export default function HomeMenuBar() {
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
-    const [videoIsOpen, setVideoIsOpen] = useState(false); 
+    const [videoIsOpen, setVideoIsOpen] = useState(false);
 
     useEffect(() => {
         if(seen){

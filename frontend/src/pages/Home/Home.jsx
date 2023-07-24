@@ -6,6 +6,7 @@ import HomeStory from '../../components/HomeComponents/HomeStory'
 import HomeAlumni from '../../components/HomeComponents/HomeAlumni'
 import HomeMission from '../../components/HomeComponents/HomeMission'
 import HomeNews from '../../components/HomeComponents/HomeNews'
+import HomeFooter from '../../components/HomeComponents/HomeFooter'
 
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         <HomeStory/>
         <HomeMission/>
         <HomeNews/>
+        <HomeFooter/>
     </div>
   )
 }

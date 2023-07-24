@@ -73,9 +73,9 @@ const NewsCard = ({ imageSrc, title, description, time }) => {
         <div
           style={{
             position: 'absolute',
-            top: '2/5', // Adjust as needed
-            left: '25%', // Adjust as needed
-            width: '200px', // Adjust the width as needed
+            top: '2/5',
+            left: '25%',
+            width: '200px',
             backgroundColor: '#aaaaaa',
             borderRadius: '8px',
             padding: '10px',
