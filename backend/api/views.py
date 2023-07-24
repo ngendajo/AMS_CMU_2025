@@ -655,6 +655,19 @@ class EmploymentView(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
+class GradesAndFamiliesView(APIView):
+    permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        user = User.objects.raw("select userprofile_family.id,userprofile_family.family_name,userprofile_grade.grade_name,userprofile_grade.start_academic_year, userprofile_grade.end_academic_year from userprofile_grade inner join userprofile_family on userprofile_grade.id=userprofile_family.grade_id order by userprofile_grade.start_academic_year;")
+    
+        # if there is something in items else raise error
+        if user:
+            serializer = GradesAndFamiliesSerializer(user, many=True)
+            return Response(serializer.data)
+            
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
