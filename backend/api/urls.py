@@ -37,6 +37,7 @@ urlpatterns = [
     path('family/<int:pk>/delete/', views.delete_family),
     path('family/<int:pk>/', views.update_family),
     path('addfamilies/', views.add_families_to_grade),
+    path('families/', views.GradesAndFamiliesView.as_view()),
     #combination paths
     path('combination/',views.CombinationRegistrationView.as_view()),
     path('combination/<int:pk>/delete/', views.delete_comb, name='delete-comb'),

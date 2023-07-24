@@ -66,20 +66,27 @@
     
 }
 .grade-details:hover{
-    background-color: rgb(112, 125, 139);
+    background-color: rgb(238, 240, 241);
     transition: 250ms;
 }
 .grade-details{
-    background-color: rgb(150, 144, 144);
+    background-color: rgb(242, 239, 239);
     color: rgb(16, 18, 55);
-    text-decoration: none;
+    
     padding: 20px;
     border-radius: 5px;
     font-size: 14px;
     -webkit-box-shadow: 5px 1px 5px -2px rgba(158,158,158,0.77);
     -moz-box-shadow: 5px 1px 5px -2px rgba(158,158,158,0.77);
     box-shadow: 5px 1px 5px -2px rgba(158,158,158,0.77);
+    
+}
+.edit-grade{
     cursor: pointer;
+    text-decoration: none;
+    padding: 30px;
+    text-align: center;
+    color: red;
 }
 .family-detail li{
     text-decoration: none;

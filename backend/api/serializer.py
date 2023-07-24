@@ -406,6 +406,19 @@ class TotalAlumnGradeSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','gender','grade','number')
 
+
+class GradesAndFamiliesSerializer(serializers.ModelSerializer):
+
+    id= serializers.IntegerField(required=True)
+    family_name = serializers.CharField(max_length=200, required=True)
+    grade_name = serializers.CharField(max_length=200, required=True)
+    start_academic_year = serializers.CharField(max_length=200, required=True)
+    end_academic_year = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = User
+        fields = ('id','family_name','grade_name','start_academic_year','end_academic_year')
+
 class StudyReportSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=True)
