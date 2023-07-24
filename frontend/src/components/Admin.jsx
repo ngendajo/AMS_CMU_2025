@@ -28,11 +28,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const navigate=useNavigate();
 
 const Admin = () => {
-
-  
    
     const [total, setTotal] = useState('');
     const [alumni, setAlumni] = useState([]);
@@ -50,6 +47,7 @@ const Admin = () => {
     const [Bachelors, setBachelors] = useState('');
     const [otherdegree, setOtherdegree] = useState('');
     const {auth} = useAuth();
+    const navigate=useNavigate();
 
     useEffect(() =>{
     
