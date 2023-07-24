@@ -171,18 +171,22 @@ export const Grades = () => {
                     <>
                       {results.map((result, id)=>{
                         return <div className='grade-details' key={id}>
-                    <p>Grade: {result.grade_name}</p>
-                    <p>Start Academic Year:{result.start_academic_year}</p>
-                    <p>End Academic Year:{result.end_academic_year}</p>
-                    <h3>Families</h3>
+                    <Link className='view-grade-alumni' to={`/gradealumni/${result.id}`}>
+                      <p>Grade: {result.grade_name}</p>
+                      <p>Start Academic Year:{result.start_academic_year}</p>
+                      <p>End Academic Year:{result.end_academic_year}</p>
+                      <h3>Families</h3>
+                    </Link>
                     <ol>
                         {result.families?.map((fa,i)=>{
-                            return <li key={i}>{fa.family_name}
-                            <ul className='family-detail'>
-                                <li>Mother:{fa.family_mother}</li>
-                                <li>Mother Tel:{fa.family_mother_tel}</li>
-                            </ul>
-                        </li>
+                            return <Link className='view-family-alumni' to={`/familyalumni/${fa.id}`} key={i}> <li key={i}>{fa.family_name}
+                                <ul className='family-detail'>
+                                    <li>Mother:{fa.family_mother}</li>
+                                    <li>Mother Tel:{fa.family_mother_tel}</li>
+                                
+                                </ul>
+                            </li>
+                            </Link>
                         })}
                         
                     </ol>

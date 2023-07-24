@@ -96,3 +96,18 @@
 .errormessage{
     color:red;
 }
+
+.view-grade-alumni, .view-family-alumni{
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    
+}
+.view-grade-alumni:hover{
+    color: rgb(58, 58, 56);
+    background-color: green;
+}
+.view-family-alumni:hover{
+    color: rgb(60, 63, 62);
+    background-color: black;
+}
