@@ -96,13 +96,12 @@ class AluminiListView(APIView):
             oneuser=User.objects.filter(**request.query_params.dict(),is_alumni=True)
             serializer = AlumniSerializer(oneuser, many=True)
         else:
-            user = User.objects.raw("select api_user.id,api_user.email,  api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_family.family_name from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id where api_user.is_alumni;")
+            user = User.objects.raw("select api_user.id,api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_grade.id as grade_id,userprofile_family.family_name, userprofile_family.id as family_id from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id where api_user.is_alumni;")
             serializer = AlumniListsSerializer(user, many=True)
             return Response(serializer.data)
         
         return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
-        
-        
+   
 
 class StaffUserView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -819,7 +818,7 @@ def create_gallery(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_gallery(request, pk):
     gall = Gallery.objects.get(pk=pk)
     data = UpdateGallerySerializer(instance=gall, data=request.data)
@@ -831,7 +830,7 @@ def update_gallery(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_gallery(request, pk):
     stud = get_object_or_404(Gallery, pk=pk)
     stud.delete()
@@ -911,13 +910,26 @@ class AlumnReportView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 class AlumnInGradeReportView(APIView):
-    #permission_classes = [IsAuthenticated, ]  
+    permission_classes = [IsAuthenticated, ]  
     def get(self,request):
         stud = User.objects.raw("SELECT userprofile_grade.id,  userprofile_grade.grade_name as grade,userprofile_alumni.gender,count(*) as number from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_family ON userprofile_alumni.Family_id=userprofile_family.id LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id WHERE api_user.is_alumni group by userprofile_grade.id, userprofile_alumni.gender;")
         
         # if there is something in items else raise error
         if stud:
             serializer = TotalAlumnGradeSerializer(stud, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+
+class EmploymentStudieReportView(APIView):
+    permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        empstud = User.objects.raw("SELECT alumni.gender,grade.grade_name,employment.id as emp,studie.id as stu,alumni.id FROM userprofile_alumni AS alumni LEFT JOIN userprofile_employment AS employment ON employment.alumn_id = alumni.id LEFT JOIN userprofile_studie AS studie ON studie.alumn_id=alumni.id JOIN userprofile_family AS family ON alumni.family_id= family.id JOIN userprofile_grade AS grade ON family.grade_id=grade.id;")
+        
+        # if there is something in items else raise error
+        if empstud:
+            serializer = EmploymentAndStudieSerializer(empstud, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)

@@ -19,6 +19,7 @@ import {
   Legend,
   LinearScale
 } from 'chart.js';
+import { map } from 'highcharts';
 
 ChartJS.register(
   CategoryScale,
@@ -34,6 +35,8 @@ const Admin = () => {
    
     const [total, setTotal] = useState('');
     const [alumni, setAlumni] = useState([]);
+    const [empStuReport, setEmpStuReport] = useState(new Map());
+    const [empStugrade, setEmpStugrade] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
@@ -60,7 +63,6 @@ const Admin = () => {
                   },
                   withCredentials:true
               });
-              console.log(response.data)
               const groupedData = response.data.reduce((groups, item) => {
                 const { grade } = item;
                 if (!groups[grade]) {
@@ -117,6 +119,60 @@ const Admin = () => {
       getGrades();
   
   },[auth])
+
+  useEffect(() =>{
+    
+    const getEmpStu = async () =>{
+        try{
+            const response = await axios.get('http://127.0.0.1:8000/api/empstureport/',{
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials:true
+            });
+            let empstu=new Map();
+            let grades= new Set();
+
+            response.data.forEach((empst)=>{
+              grades.add(empst.grade_name)
+              empstu.set(empst.grade_name+"Male"+"noEmp"+"noStu",0);
+              empstu.set(empst.grade_name+"Male"+"noEmp"+"Stu",0);
+              empstu.set(empst.grade_name+"Male"+"Emp"+"noStu",0);
+              empstu.set(empst.grade_name+"Male"+"Emp"+"Stu",0);
+              empstu.set(empst.grade_name+"Female"+"noEmp"+"noStu",0);
+              empstu.set(empst.grade_name+"Female"+"noEmp"+"Stu",0);
+              empstu.set(empst.grade_name+"Female"+"Emp"+"noStu",0);
+              empstu.set(empst.grade_name+"Female"+"Emp"+"Stu",0);
+            })
+            setEmpStugrade(Array.from(grades))
+            response.data.forEach((empst)=>{
+              let key=empst.grade_name+empst.gender;
+           
+              if(empst.emp===null){
+                key+="noEmp";
+              }
+              else{
+                key+="Emp";
+              }
+              if(empst.stu===null){
+                key+="noStu";
+              }
+              else{
+                key+="Stu";
+              }
+              empstu.set(key,empstu.get(key)+1);
+            })
+            setEmpStuReport(empstu)
+         
+        }catch(err) {
+            console.log(err);
+        }
+    }
+
+    getEmpStu();
+
+},[auth])
 
   useEffect(() =>{
     
@@ -443,17 +499,17 @@ let data = [5, 2, 5, 5, 10],
         </div>
         <div className="staff-data">
           <div className='results-list-in-table alumni-list-body'>
-              <EmploymentGeneralReportChart />
+              <EmploymentGeneralReportChart data={empStuReport} grades={empStugrade} />
           </div>
         </div>
         <div className="staff-data">
           <div className='results-list-in-table alumni-list-body'>
-              <FutherStudingGeneralReportChart />
+              <FutherStudingGeneralReportChart data={empStuReport} grades={empStugrade} />
           </div>
         </div>
         <div className="staff-data">
           <div className='results-list-in-table alumni-list-body'>
-              <EmployementAndEducation />
+              <EmployementAndEducation data={empStuReport} grades={empStugrade} />
           </div>
         </div>
     </div>

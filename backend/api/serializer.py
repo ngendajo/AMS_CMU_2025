@@ -197,10 +197,12 @@ class AlumniListsSerializer(serializers.ModelSerializer):
     phone1 = serializers.CharField(max_length=200, required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
     family_name = serializers.CharField(max_length=200, required=True)
+    family_id = serializers.IntegerField(required=True)
+    grade_id=serializers.IntegerField(required=True)
 
     class Meta:
         model = User
-        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','family_name')
+        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id')
         
 
 class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):
@@ -418,6 +420,19 @@ class GradesAndFamiliesSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','family_name','grade_name','start_academic_year','end_academic_year')
+
+class EmploymentAndStudieSerializer(serializers.ModelSerializer):
+
+    gender = serializers.CharField(max_length=200, required=True)
+    grade_name = serializers.CharField(max_length=200, required=True)
+    emp= serializers.IntegerField(required=True)
+    stu= serializers.IntegerField(required=True)
+    id= serializers.IntegerField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('gender','grade_name','emp','stu','id')
+
 
 class StudyReportSerializer(serializers.ModelSerializer):
 
