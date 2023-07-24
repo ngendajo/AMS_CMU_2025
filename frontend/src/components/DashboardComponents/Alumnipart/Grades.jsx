@@ -5,7 +5,7 @@ import { IoIosAdd } from "react-icons/io";
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
-
+import { useNavigate } from 'react-router-dom';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 
@@ -28,6 +28,7 @@ export const Grades = () => {
     const [results1, setResults1]=useState([]);
     const [input, setInput] = useState("");
     const {auth} = useAuth();
+    const navigate=useNavigate();
 
     useEffect(() =>{
     
@@ -65,6 +66,7 @@ export const Grades = () => {
               setDatatodownload(response.data)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -127,6 +129,7 @@ export const Grades = () => {
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);
+      navigate('error/');
     } finally {
       // removing worksheet's instance to create new one
       workbook.removeWorksheet(workSheetName);
