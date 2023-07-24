@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from api.models import User
 from userprofile.models import *
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -186,6 +188,21 @@ class AlumniSerializer(serializers.ModelSerializer):
         fields = ('id','is_crc','is_superuser','email','first_name','last_name','phone1', 'password','image_url','alumn')
         extra_kwargs = {'password': {'write_only': True}}
 
+class AlumniListsSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=True)
+    email = serializers.EmailField(required=True)
+    image_url =serializers.ImageField(required=False)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+    phone1 = serializers.CharField(max_length=200, required=True)
+    grade_name = serializers.CharField(max_length=200, required=True)
+    family_name = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = User
+        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','family_name')
+        
+
 class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -232,6 +249,36 @@ class PasswordChangeSerializer(serializers.Serializer):
         if not self.context['request'].user.check_password(value):
             raise serializers.ValidationError({'current_password': 'Does not match'})
         return value
+
+#reset password
+class EmailSerilizer(serializers.Serializer):
+    email = serializers.EmailField()
+    class Meta:
+        fields = ('email',)
+
+class ResetPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        fields = ("password",)
+
+    def validate(self, data):
+        password = data.get("password")
+        token = self.context.get("kwargs").get("token")
+        encoded_pk = self.context.get("kwargs").get("encoded_pk")
+        
+        if token is None or encoded_pk is None:
+            serializers.ValidationError("Missing data")
+
+        pk = urlsafe_base64_decode(encoded_pk).decode()
+        user = User.objects.get(pk=pk)
+
+        if not PasswordResetTokenGenerator().check_token(user, token):
+            raise serializers.ValidationError("The token is invalid")
+        
+        user.set_password(password)
+        user.save()
+        return data
     
 
 #Event seralizers

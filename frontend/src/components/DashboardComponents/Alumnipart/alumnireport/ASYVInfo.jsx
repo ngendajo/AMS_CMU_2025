@@ -11,6 +11,7 @@ import axios from 'axios';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useNavigate } from 'react-router-dom';
+import { PiPasswordFill } from "react-icons/pi";
 
 const columns = [
   { header: 'No', key: 'no' },
@@ -77,7 +78,51 @@ export default function ASYVInfo() {
 
   useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
     
-    const getcrcusers = async () =>{
+    const getalumniusers = async () =>{
+        try{
+            const response = await axios.get('http://127.0.0.1:8000/api/alumnilist/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+                headers: { /* 请求头 */
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials:true
+            });
+
+            /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
+            var alumnilist=[]
+            var i=1
+            response.data.forEach(element => {
+              alumnilist.push({
+                id:i, 
+                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
+                email:element.email,
+                first_name:element.first_name,
+                last_name:element.last_name,
+                phone:element.phone1,
+                grade:element.grade_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.grade_name,
+                family:element.family_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.family_name,
+                user_id:<span>
+                  <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
+                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
+                      <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                      <Link to={`/reset-alumn-password/${element.id}`}> <PiPasswordFill className='icon'/></Link>
+                </span>
+              })
+              i+=1
+            });
+            setData(alumnilist); /* 使用 setData 更新了 data 的值为 alumnilist */
+        }catch(err) {
+            console.log(err);
+        }
+    }
+
+    getalumniusers();
+
+},[auth])
+
+  useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
+    
+    const getusers = async () =>{
         try{
             const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { /* 请求头 */
@@ -88,25 +133,10 @@ export default function ASYVInfo() {
             });
 
             /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
-            var alumnilist=[]
+            
             var alumnilist2=[]
             var i=1
             response.data.forEach(element => {
-              alumnilist.push({
-                id:i, 
-                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
-                email:element.email,
-                first_name:element.first_name,
-                last_name:element.last_name,
-                phone:element.phone1,
-                grade:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.family.grade.grade_name,
-                family:element.alumn==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.alumn.family.family_name,
-                user_id:<span>
-                  <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
-                  <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
-                </span>
-              })
               alumnilist2.push({
                no:i,
                email:element.email,
@@ -132,7 +162,6 @@ export default function ASYVInfo() {
               })
               i+=1
             });
-            setData(alumnilist); /* 使用 setData 更新了 data 的值为 alumnilist */
             setDatatodownload(alumnilist2);
             console.log(alumnilist2)
         }catch(err) {
@@ -141,7 +170,7 @@ export default function ASYVInfo() {
         }
     }
 
-    getcrcusers();
+    getusers();
 
 },[auth])
 

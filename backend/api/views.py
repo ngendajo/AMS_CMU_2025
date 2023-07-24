@@ -1,6 +1,10 @@
 from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status,generics, viewsets,response
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.db.models import Count, Case, When, IntegerField
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -82,7 +86,21 @@ class AluminiRegistrationView(APIView):
             serializer = AlumniSerializer(user, many=True)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class AluminiListView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    
+    def get(self,request):
+        if request.query_params:
+            oneuser=User.objects.filter(**request.query_params.dict(),is_alumni=True)
+            serializer = AlumniSerializer(oneuser, many=True)
+        else:
+            user = User.objects.raw("select api_user.id,api_user.email,  api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_family.family_name from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id where api_user.is_alumni;")
+            serializer = AlumniListsSerializer(user, many=True)
+            return Response(serializer.data)
+        
+        return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         
         
 
@@ -164,10 +182,10 @@ def create_alumni_info(request):
 
     alumni_info = serializer.save()
     print(alumni_info.id)
-    for ep_id in request.data.get('Eps'):
+    for ep_id in request.data.get('eps'):
         try:
             ep = Ep.objects.get(id=ep_id)
-            alumni_info.Eps.add(ep)
+            alumni_info.eps.add(ep)
         except Ep.DoesNotExist:
             raise NotFound()
 
@@ -184,14 +202,14 @@ def update_alumni_info(request, pk=None):
 
         eps = []
 
-        for ep_id in request.data.get('Eps'):
+        for ep_id in request.data.get('eps'):
             try:
                 ep = Ep.objects.get(id=ep_id)
                 eps.append(ep)
             except Ep.DoesNotExist:
                 raise NotFound()
 
-        alumn.Eps.set(eps)
+        alumn.eps.set(eps)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     else:
@@ -200,7 +218,7 @@ def update_alumni_info(request, pk=None):
         
 #End CRC data 
 
-#login logout and change password portal
+#login logout and change and reset password portal
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -237,6 +255,54 @@ class ChangePasswordView(APIView):
         request.user.set_password(serializer.validated_data['new_password'])
         request.user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class PasswordReset(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = EmailSerilizer
+
+    def post(self, request):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data["email"]
+        user = User.objects.filter(email=email).first()
+        if user:
+            encoded_pk = urlsafe_base64_encode(force_bytes(user.pk))
+            token = PasswordResetTokenGenerator().make_token(user)
+
+            reset_url = reverse(
+                "reset-password",
+                kwargs={"encoded_pk":encoded_pk, "token":token}
+            )
+
+
+            return Response(
+                {
+                    "message":reset_url
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                {"message":"User doesn't exists"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+class ResetPassword(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = ResetPasswordSerializer
+
+    def patch(self, request, *args, **kwargs):
+
+        serializer = self.serializer_class(
+            data=request.data, context={"kwargs":kwargs}
+        )
+        serializer.is_valid(raise_exception=True)
+
+        return Response(
+            {"message":"Password reset complete"},
+            status=status.HTTP_200_OK,
+        )
     
     # End login logout and change password portal
 
@@ -613,7 +679,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -703,7 +769,7 @@ class StudyReportView(APIView):
 # Gallery data view
 
 class GalleryView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = GallerySerializer(data=request.data)
         # validating for already existing data

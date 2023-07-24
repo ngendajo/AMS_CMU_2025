@@ -10,6 +10,7 @@ import useAuth from '../../hooks/useAuth';
 import { BiEditAlt,BiStreetView } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
+import { PiPasswordFill } from "react-icons/pi";
 
 export default function Staff() {
   const [results, setResults]=useState([]);
@@ -94,7 +95,10 @@ export default function Staff() {
                       <td><Link to={`/add-crc/${result.id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/staffprofile/${result.id}`}><BiStreetView className='icon'/></Link>
                       {auth.user.id===result.id?null:
-                      <Link to={`/delete-user/${result.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                        <>
+                          <Link to={`/delete-user/${result.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                          <Link to={`/reset-password/${result.id}`}>  <PiPasswordFill className='icon'/></Link>
+                        </>
                       }
                        
                       </td>

@@ -7,6 +7,9 @@ import useAuth from '../hooks/useAuth';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import EmploymentGeneralReportChart from './charts/EmploymentGeneralReportChart';
+import FutherStudingGeneralReportChart from './charts/FutherStudingGeneralReportChart';
+import EmployementAndEducation from './charts/EmployementAndEducation';
 import {Bar} from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -29,16 +32,10 @@ const navigate=useNavigate();
 
 const Admin = () => {
 
-    const alumni = [
-      {grade:"Urumuri",boy:44,girls:100},
-      {grade:"Indatwa",boy:66,girls:104},
-      {grade:"Isonga",boy:33,girls:77},
-      {grade:"Umurage",boy:24,girls:140},
-      {grade:"Umucyo",boy:59,girls:86},
-    ];
   
+   
     const [total, setTotal] = useState('');
-    const [alumni1, setAlumni] = useState([]);
+    const [alumni, setAlumni] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
@@ -74,7 +71,25 @@ const Admin = () => {
                 groups[grade].push(item);
                 return groups;
             }, {});
-            console.log(groupedData)
+            let alu=[]
+            Object.entries(groupedData).forEach(([grade, items]) => {
+              if(grade==="null"){
+                alu.push({
+                  "grade":"Others",
+                  "boys":0,
+                  "girls":0,
+                  "others":items[0].number
+                })
+              } else{
+                alu.push({
+                  "grade":grade,
+                  "boys":items[0].gender==="Male"?items[0].number:items[1].number,
+                  "girls":items[0].gender==="Female"?items[0].number:items[1].number,
+                  "others":0
+                })
+              }
+          })
+          setAlumni(alu)
           }catch(err) {
               console.log(err);
               navigate('/error');
@@ -414,7 +429,7 @@ let data = [5, 2, 5, 5, 10],
             datasets:[
               {
                 label:"Boys",
-                data:alumni.map(alumn=>alumn.boy),
+                data:alumni.map(alumn=>alumn.boys),
                 backgroundColor:"#F49D47",
               },
               {
@@ -422,8 +437,28 @@ let data = [5, 2, 5, 5, 10],
                 data:alumni.map(alumn=>alumn.girls),
                 backgroundColor:"#2b7e40",
               },
+              {
+                label:"Others",
+                data:alumni.map(alumn=>alumn.others),
+                backgroundColor:"#FF0000",
+              },
             ]
            }} /> 
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <EmploymentGeneralReportChart />
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <FutherStudingGeneralReportChart />
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <EmployementAndEducation />
           </div>
         </div>
     </div>
