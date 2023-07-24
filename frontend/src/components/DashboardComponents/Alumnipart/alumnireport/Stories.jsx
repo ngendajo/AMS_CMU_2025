@@ -9,8 +9,23 @@ import { StoriesTable } from '../StoriesTable';
 import ReactHtmlParser from "react-html-parser";
 import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
 
+import Excel from 'exceljs';
+import { saveAs } from 'file-saver';
+
+const columns = [
+  { header: 'No', key: 'no' },
+  { header: 'Email', key: 'email' },
+  { header: 'Name', key: 'name' },
+  { header: 'Phone number', key: 'phone' },
+  { header: 'Description', key: 'description' },
+  { header: 'Allowed to display it', key: 'allowed' }
+];
+const workSheetName = 'Alumni_Story_Report';
+const workBookName = 'Alumni_Story_Report';
+
 export default function Employment() {
   const [data, setData] = useState([]);
+  const [datatodownload, setDatatodownload] = useState([]);
   
   const {auth} = useAuth();
 
@@ -26,6 +41,7 @@ export default function Employment() {
                 withCredentials:true
             });
             var alumnilist=[]
+            var alumnilist2=[]
             var i=1
             response.data.forEach(element => {
               alumnilist.push({
@@ -41,6 +57,15 @@ export default function Employment() {
                   <Link to={`/alumni/updatestory/${element.story_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deletestory/${element.story_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>:null
+              })
+              alumnilist2.push({
+                no:i,
+                email:element.email,
+                name:element.name,
+                phone:element.phone1,
+                description:element.description===null?null: ReactHtmlParser(element.description),
+                allowed:element.displayed?"Yes":null,
+               
               })
               i+=1
             });
