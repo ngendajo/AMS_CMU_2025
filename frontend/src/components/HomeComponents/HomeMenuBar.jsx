@@ -13,10 +13,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
 import axios from "../../api/axios";
+import Modal from 'react-modal';
 const LOGIN_URL = '/token/';
 
 // Define MobileMenu component
 
+Modal.setAppElement('#root'); // 确定应用的根节点 ------
 
 export default function HomeMenuBar() {
     const [seen, setSeen] = useState(false)
@@ -33,6 +35,8 @@ export default function HomeMenuBar() {
     const [email, setEmail] = useState('');
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
+
+    const [videoIsOpen, setVideoIsOpen] = useState(false); // 控制视频窗口是否打开 ------
 
     useEffect(() => {
         if(seen){
@@ -199,12 +203,14 @@ export default function HomeMenuBar() {
                         <div className="right-menu">
                             <button onClick={togglePop} className="log">Get Started</button>
                         </div>
+
                         <div className="introvideo">
-                            <a href="https://www.youtube.com/watch?v=jxT6EIAYbJA" target="_blank" rel="noopener noreferrer">
+                            <button onClick={() => setVideoIsOpen(true)}>
                                 <AiFillPlayCircle className="icon" />
                                 <span className="introvideoplay">Play Video</span>
-                            </a>
+                            </button>
                         </div>
+
                     </div>
                 </div>
                 <div className="right">
@@ -226,8 +232,26 @@ export default function HomeMenuBar() {
                     <div className="rightbars2">
                     </div>
                 </div>
-
             </section>
+
+            {/* Use Modal to show video window */}
+            <Modal
+                isOpen={videoIsOpen}
+                onRequestClose={() => setVideoIsOpen(false)}
+                overlayClassName="modal-overlay"
+                className="modal-content"
+            >
+                <iframe
+
+                    src="https://www.youtube.com/embed/jxT6EIAYbJA"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+                <button onClick={() => setVideoIsOpen(false)} className="close-video-button">Close</button>
+            </Modal>
+
 
             {/* --------------------- 3. Bottom Transition Part --------------------- */}
             <div className="knowmore">
