@@ -18,7 +18,7 @@ const LOGIN_URL = '/token/';
 
 // Define MobileMenu component
 
-Modal.setAppElement('#root'); // 确定应用的根节点 ------
+Modal.setAppElement('#root'); // Define application root
 
 export default function HomeMenuBar() {
     const [seen, setSeen] = useState(false)
@@ -36,7 +36,7 @@ export default function HomeMenuBar() {
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
-    const [videoIsOpen, setVideoIsOpen] = useState(false); // 控制视频窗口是否打开 ------
+    const [videoIsOpen, setVideoIsOpen] = useState(false); 
 
     useEffect(() => {
         if(seen){
