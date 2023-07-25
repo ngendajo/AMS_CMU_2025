@@ -197,12 +197,14 @@ class AlumniListsSerializer(serializers.ModelSerializer):
     phone1 = serializers.CharField(max_length=200, required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
     family_name = serializers.CharField(max_length=200, required=True)
+    combination_name = serializers.CharField(max_length=200, required=True)
     family_id = serializers.IntegerField(required=True)
     grade_id=serializers.IntegerField(required=True)
+    combination_id = serializers.IntegerField(required=True)
 
     class Meta:
         model = User
-        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id')
+        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id')
         
 
 class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):

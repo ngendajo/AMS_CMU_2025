@@ -35,6 +35,10 @@ export const COLUMNS = [
     accessor: "family",
   },
   {
+    Header: "Combination",
+    accessor: "combination",
+  },
+  {
     Header: "Action",
     accessor: "user_id",
     disableFilters: true, 

@@ -41,7 +41,7 @@ const workBookName = 'Alumni_Report';
 export default function ASYVInfo() {
     const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
     const [datatodownload, setDatatodownload] = useState([]); 
-  const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
+    const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
 
   function epType(type){
     if(type==="A")
@@ -99,7 +99,8 @@ export default function ASYVInfo() {
                 phone:element.phone1,
                 grade:element.grade_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.grade_name,
                 family:element.family_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.family_name,
-                user_id:<span>
+                combination:element.combination_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.combination_name,
+                user_id:<span> 
                   <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
