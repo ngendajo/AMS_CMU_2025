@@ -97,7 +97,7 @@ export default function Events() {
       getData();
   },[auth])
 
-  function Card(events) {
+  function CardSmall(events) {
     const [isClicked, setIsClicked] = useState(false);
     function handleClick() {
       setIsClicked(!isClicked);
@@ -105,7 +105,6 @@ export default function Events() {
     }
 
     var sDate=formatDateTime(new Date(events.startDate));
-
 
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
@@ -147,7 +146,9 @@ export default function Events() {
         <center><Link to={'/add-event/'} className='new-event'>Add a New Event</Link></center>
     <div className="card-list">
       {currentEvents.map((item, index) => (
-        <Card key={index} id={item.id} title={item.title} startDate={item.startDate} description={item.description} image_url={item.image_url} />
+        <div className="CardSmall">
+        <CardSmall key={index} id={item.id} title={item.title} startDate={item.startDate} description={item.description} image_url={item.image_url} />
+        </div>
       ))}
     </div>
 

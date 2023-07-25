@@ -1,4 +1,4 @@
-.card {
+.CardSmall {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
@@ -11,7 +11,7 @@
 
 .card-list {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap:wrap;
     justify-content: space-evenly;
     
 }
