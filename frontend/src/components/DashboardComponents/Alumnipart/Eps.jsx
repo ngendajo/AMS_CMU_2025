@@ -1,6 +1,7 @@
 
 import React, {useState, useEffect} from 'react'
 import useAuth from '../../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { EpTable } from './EpTable';
 import { Link } from 'react-router-dom';
@@ -13,6 +14,7 @@ import './combinations.css';
 export const Eps = ({ id }) => {
     const [data, setData] = useState([]);
     let {auth}= useAuth() 
+    const navigate = useNavigate()
 
     
     useEffect(() =>{
