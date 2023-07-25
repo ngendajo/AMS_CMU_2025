@@ -28,19 +28,19 @@ function Galleries() {
 
     try {
       await axios.post("http://localhost:8000/api/updategallery/"+galleryId+"/",
-      { displayed: displayStatus },
-      {
-            headers: {
-                "Authorization": 'Bearer ' + String(auth.accessToken),
-                "Content-Type": 'application/json'
-            }
-        }
-      ).then(res =>{
-        console.log(res)
-        alert("Displayed Changed successfully")
-    })
-    .catch(error => console.log(error.response.data));  
-    } catch (error) {
+        { displayed: displayStatus },
+        {
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'application/json'
+              }
+          }
+        ).then(res =>{
+          console.log(res)
+          alert("Displayed Changed successfully")
+      })
+      } catch (error) {
+        navigate('/error');
     }
 
   };
@@ -50,6 +50,7 @@ function Galleries() {
       setGalleries(response.data);
     } catch (error) {
       console.log(error);
+      navigate('/error');
     }
   };
 

@@ -83,6 +83,7 @@ export default function EditEvent() {
                 setEndDate(formatDateTime(eDate))
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

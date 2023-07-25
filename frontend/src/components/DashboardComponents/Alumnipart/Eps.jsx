@@ -51,6 +51,7 @@ export const Eps = ({ id }) => {
                 setData(eplist)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

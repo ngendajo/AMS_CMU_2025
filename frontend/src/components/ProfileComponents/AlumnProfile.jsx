@@ -35,7 +35,7 @@ export default function AlumnProfile() {
                     
                 }catch(err) {
                     console.log(err);
-                    navigate('/error')
+                    navigate('/error');
                 }
             }
     
@@ -61,6 +61,7 @@ export default function AlumnProfile() {
                   
               }catch(err) {
                   console.log(err);
+                  navigate('/error');
               }
           }
       
@@ -87,6 +88,7 @@ export default function AlumnProfile() {
               
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -109,6 +111,7 @@ export default function AlumnProfile() {
           
         } catch (error) {
           console.log(error);
+          navigate('/error');
         }
       };
     

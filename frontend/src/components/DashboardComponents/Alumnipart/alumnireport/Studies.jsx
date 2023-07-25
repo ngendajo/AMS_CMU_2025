@@ -6,6 +6,7 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { StudieTable } from '../StudieTable';
+import { useNavigate } from 'react-router-dom';
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -31,6 +32,8 @@ export default function Studies() {
   const [datatodownload, setDatatodownload] = useState([]);
   
   const {auth} = useAuth();
+
+  const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -85,6 +88,7 @@ export default function Studies() {
             setDatatodownload(alumnilist2);
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 

@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
+import { useNavigate } from 'react-router-dom';
 import { PiPasswordFill } from "react-icons/pi";
 
 const columns = [
@@ -42,6 +43,7 @@ export default function ASYVInfo() {
     const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
     const [datatodownload, setDatatodownload] = useState([]); 
     const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
+  const navigate=useNavigate();
 
   function epType(type){
     if(type==="A")
@@ -165,6 +167,7 @@ export default function ASYVInfo() {
             console.log(alumnilist2)
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 
@@ -228,6 +231,7 @@ const workbook = new Excel.Workbook();
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);
+      navigate('/error');
     } finally {
       // removing worksheet's instance to create new one
       workbook.removeWorksheet(workSheetName);

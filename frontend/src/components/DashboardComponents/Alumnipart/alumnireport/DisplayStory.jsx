@@ -38,6 +38,7 @@ export default function UpdateStory() {
               })
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   

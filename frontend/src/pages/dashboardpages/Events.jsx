@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 import useAuth from '../../hooks/useAuth';
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import styled from 'styled-components';
 
@@ -55,6 +55,17 @@ export default function Events() {
 
   const [data, setData] = useState([]);
   let {auth}= useAuth() 
+  const navigate = useNavigate();
+  const formatDateTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
     
   useEffect(() =>{
       const getData = async () =>{
@@ -80,17 +91,21 @@ export default function Events() {
               setData(eventlist)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
       getData();
   },[auth])
 
-  function Card(events) {
+  function CardSmall(events) {
     const [isClicked, setIsClicked] = useState(false);
     function handleClick() {
       setIsClicked(!isClicked);
-      
+      navigate('/event/'+events.id);
     }
+
+    var sDate=formatDateTime(new Date(events.startDate));
+
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
         <div className="imageContainer">
@@ -98,6 +113,7 @@ export default function Events() {
         </div>
         <h2>{events.title}</h2>
         <p>{events.description}</p>
+        <p>{sDate}</p>
         {console.log(events)}
         <Link to={"/edit-event/"+events.id} className='link'>Edit/Delete event</Link>
       </div>
@@ -127,9 +143,12 @@ export default function Events() {
 
   return (
     <div className="listWithPage">
+        <center><Link to={'/add-event/'} className='new-event'>Add a New Event</Link></center>
     <div className="card-list">
       {currentEvents.map((item, index) => (
-        <Card key={index} id={item.id} title={item.title} description={item.description} image_url={item.image_url} />
+        <div className="CardSmall">
+        <CardSmall key={index} id={item.id} title={item.title} startDate={item.startDate} description={item.description} image_url={item.image_url} />
+        </div>
       ))}
     </div>
 
@@ -142,7 +161,7 @@ export default function Events() {
     previousLabel="< previous"
     renderOnZeroPageCount={null}
     />
-    <Link to={'/add-event/'} className='new-event'>Add a New Event</Link>
+  
     </div>
     
   )

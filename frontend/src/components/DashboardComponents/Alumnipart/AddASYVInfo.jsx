@@ -48,6 +48,7 @@ export default function AddASYVInfo() {
                 setGrades(response.data)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     
@@ -89,6 +90,7 @@ export default function AddASYVInfo() {
               setEps(eplist)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -110,6 +112,7 @@ export default function AddASYVInfo() {
               setCombination(response.data);
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -159,6 +162,7 @@ export default function AddASYVInfo() {
               setUserid(response.data)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -202,7 +206,8 @@ export default function AddASYVInfo() {
         alert(" created successfully")
         navigate(`/add-alumni/info/${params.id}/study`)
     })
-    .catch(error => console.log(error.response.data))
+    .catch(error => console.log(error.response.data),navigate('/error')
+    )
      
 
   }

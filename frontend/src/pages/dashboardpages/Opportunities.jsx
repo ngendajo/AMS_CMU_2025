@@ -43,11 +43,11 @@ function Opportunities() {
         console.log(res)
         alert("Approved successfully")
         navigate('/opportunities')
-    })
-    .catch(error => console.log(error.response.data));  // Update "approved" status
-    } catch (error) {
+      })  // Update "approved" status
+      } catch (error) {
+      }
+      navigate('/error');
     }
-   }
   };
 
   const fetchOpportunities = async () => {
@@ -56,6 +56,7 @@ function Opportunities() {
       setOpportunities(response.data);
     } catch (error) {
       console.log(error);
+      navigate('/error');
     }
   };
 

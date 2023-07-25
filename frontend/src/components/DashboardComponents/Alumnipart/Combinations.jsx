@@ -8,10 +8,12 @@ import { BiExport } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import './combinations.css';
+import { useNavigate } from 'react-router-dom';
 
 export const Combinations = () => {
     const [data, setData] = useState([]);
     let {auth} = useAuth();
+    const navigate=useNavigate();
 
 
     useEffect(() =>{
@@ -37,6 +39,7 @@ export const Combinations = () => {
                 setData(combinationlist);
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

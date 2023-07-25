@@ -70,6 +70,7 @@ export default function Password() {
                 console.log(err)
             }
             errRef.current.focus(); 
+            navigate('/error');
         }
        }
   return (

@@ -144,6 +144,7 @@ const Registera = () => {
             console.log(err)
         }
         errRef.current.focus(); 
+        navigate('/error');
     }
    }
 

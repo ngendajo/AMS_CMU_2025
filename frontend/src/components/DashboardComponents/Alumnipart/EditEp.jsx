@@ -67,6 +67,7 @@ export default function EditEp() {
                 setTypes([{'Art':'A','Clubs':'C','Sports':'S','Science':'SC','d':data[0].type}])
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     

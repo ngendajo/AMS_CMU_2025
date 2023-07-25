@@ -73,6 +73,7 @@ export default function AddASYVInfo() {
                 setGrades(response.data)
             }catch(err) {
                 console.log(err);
+                navigate('/error');
             }
         }
     
@@ -117,6 +118,7 @@ export default function AddASYVInfo() {
               setEps(eplist)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -138,6 +140,7 @@ export default function AddASYVInfo() {
               setCombination(response.data);
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -222,6 +225,7 @@ export default function AddASYVInfo() {
               })
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   

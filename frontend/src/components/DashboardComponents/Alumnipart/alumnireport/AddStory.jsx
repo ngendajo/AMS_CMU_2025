@@ -40,6 +40,7 @@ export default function AddStory() {
               })
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   

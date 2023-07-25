@@ -7,6 +7,7 @@ import axios from 'axios';
 import { StoriesTable } from '../StoriesTable';
 import ReactHtmlParser from "react-html-parser";
 import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
+import { useNavigate } from 'react-router-dom';
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -26,6 +27,8 @@ export default function Employment() {
   const [datatodownload, setDatatodownload] = useState([]);
   
   const {auth} = useAuth();
+
+  const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -70,6 +73,7 @@ export default function Employment() {
             setDatatodownload(alumnilist2)
         }catch(err) {
             console.log(err);
+            navigate('/error');
         }
     }
 

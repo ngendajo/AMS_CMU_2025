@@ -11,6 +11,7 @@ import EmploymentGeneralReportChart from './charts/EmploymentGeneralReportChart'
 import FutherStudingGeneralReportChart from './charts/FutherStudingGeneralReportChart';
 import EmployementAndEducation from './charts/EmployementAndEducation';
 import {Bar} from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,8 +31,6 @@ ChartJS.register(
 );
 
 const Admin = () => {
-
-  
    
     const [total, setTotal] = useState('');
     const [alumni, setAlumni] = useState([]);
@@ -51,6 +50,7 @@ const Admin = () => {
     const [Bachelors, setBachelors] = useState('');
     const [otherdegree, setOtherdegree] = useState('');
     const {auth} = useAuth();
+    const navigate=useNavigate();
 
     useEffect(() =>{
     
@@ -73,6 +73,8 @@ const Admin = () => {
             }, {});
             let alu=[]
             Object.entries(groupedData).forEach(([grade, items]) => {
+              console.log(grade);
+              console.log(items);
               if(grade==="null"){
                 alu.push({
                   "grade":"Others",
@@ -80,18 +82,30 @@ const Admin = () => {
                   "girls":0,
                   "others":items[0].number
                 })
+
               } else{
-                alu.push({
-                  "grade":grade,
-                  "boys":items[0].gender==="Male"?items[0].number:items[1].number,
-                  "girls":items[0].gender==="Female"?items[0].number:items[1].number,
-                  "others":0
-                })
+                if(items.length==1){
+                  alu.push({
+                    "grade":grade,
+                    "boys":items[0].gender==="Male"?items[0].number:0,
+                    "girls":items[0].gender==="Female"?items[0].number:0,
+                    "others":0
+                  })
+                }else{
+                  alu.push({
+                    "grade":grade,
+                    "boys":items[0].gender==="Male"?items[0].number:items[1].number,
+                    "girls":items[0].gender==="Female"?items[0].number:items[1].number,
+                    "others":0
+                  })
+                }
+                
               }
           })
           setAlumni(alu)
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -113,6 +127,7 @@ const Admin = () => {
               setGrades(response.data.length);
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
@@ -296,6 +311,7 @@ const Admin = () => {
             )
         }catch(err) {
             console.log(err);
+            navigate('error');
         }
     }
 
