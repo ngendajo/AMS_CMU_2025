@@ -43,7 +43,7 @@ export const Eps = ({ id }) => {
                     t="Sciences"
                 }
                 eplist.push({
-                    title:e.title, 
+                    title:<Link className='comb_name' to={`/epalumn/${e.id}`}>{e.title}</Link>, 
                     type:t,
                     ep_id:<span>
                         <Link to={`/add-ep/${e.id}`}><BiEditAlt className='icon'/></Link>

@@ -4,7 +4,6 @@ import { Table } from "./Table";
 import { useParams } from 'react-router';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoIosAdd } from "react-icons/io";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { ImProfile } from "react-icons/im";
 import React, {useState, useEffect} from 'react';
@@ -44,6 +43,8 @@ export default function FamilyAlumni() {
   const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
   const [datatodownload, setDatatodownload] = useState([]); 
   const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
+  const [g, setG] = useState("");
+  const [f, setF] = useState("");
   
   const params = useParams();
 
@@ -93,7 +94,13 @@ export default function FamilyAlumni() {
             /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
             var alumnilist=[]
             var i=1
+            var grad=""
+            var famil=""
             response.data.forEach(element => {
+              if(i===1){
+                grad=element.grade_name;
+                famil=element.family_name;
+              }
               alumnilist.push({
                 id:i, 
                 image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
@@ -114,6 +121,8 @@ export default function FamilyAlumni() {
               i+=1
             });
             setData(alumnilist); /* 使用 setData 更新了 data 的值为 alumnilist */
+            setG(grad);
+            setF(famil)
         }catch(err) {
             console.log(err);
         }
@@ -170,6 +179,7 @@ export default function FamilyAlumni() {
                 }
               }
             });
+            setDatatodownload(alumnilist2)
         }catch(err) {
             console.log(err);
         }
@@ -249,6 +259,7 @@ const workbook = new Excel.Workbook();
     <div className='alumni-list-body'>
             <div>
               <div className='staff-header-right alumni-header-right'>
+                <h1>List of alumni from {f} family in {g} grade</h1>
                 <div onClick={saveExcel} className='export-staff'>
                   <span>Export xlsx</span><BiExport/>
                 </div>

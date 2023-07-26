@@ -4,7 +4,6 @@ import { Table } from "./Table";
 import { useParams } from 'react-router';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoIosAdd } from "react-icons/io";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { ImProfile } from "react-icons/im";
 import React, {useState, useEffect} from 'react';
@@ -17,36 +16,23 @@ import { PiPasswordFill } from "react-icons/pi";
 const columns = [
   { header: 'No', key: 'no' },
   { header: 'Email', key: 'email' },
-  { header: 'First Name', key: 'first_name' },
-  { header: 'Last Name', key: 'last_name' },
+  { header: 'Name', key: 'name' },,
   { header: 'Phone number', key: 'phone1' },
-  { header: 'Martal Status', key: 'marital_status' },
-  { header: 'Gender', key: 'gender' },
-  { header: 'Kids', key: 'kids' },
-  { header: 'Father', key: 'father' },
-  { header: 'Mother', key: 'mother' },
-  { header: 'Place of Origin', key: 'place_of_birth' },
-  { header: 'Current Residence', key: 'currresidence' },
   { header: 'Grade', key: 'grade_name' },
   { header: 'Family', key: 'family' },
   { header: 'Combination', key: 'combination_name' },
-  { header: 'Enrishment Programs', key: 'eps' },
-  { header: 'S4 Marks', key: 's4marks' },
-  { header: 'S5 Marks', key: 's5marks' },
-  { header: 'S6 Marks', key: 's6marks' },
-  { header: 'National Exam Result', key: 'ne' },
-  { header: 'Maximum Aggregate in NE', key: 'maxforne' }
+  { header: 'Enrishment Program', key: 'ep' }
 ];
 const workSheetName = 'Alumni_Report';
 const workBookName = 'Alumni_Report';
 
-export default function GradeAlumni() {
+export default function EpAlumni() {
   const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
   const [datatodownload, setDatatodownload] = useState([]); 
   const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
+  const [ep, setEp] = useState("");
   
   const params = useParams();
-  const [g, setG] = useState("");
 
   function epType(type){
     if(type==="A")
@@ -83,7 +69,7 @@ export default function GradeAlumni() {
     
     const getalumniusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumnilist/?grade_id='+params.id,{ /* 用 axios 库发送了一个异步 GET 请求*/
+            const response = await axios.get('http://127.0.0.1:8000/api/alumnilistbyep/?ep_id='+params.id,{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { /* 请求头 */
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -93,18 +79,19 @@ export default function GradeAlumni() {
 
             /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
             var alumnilist=[]
+            var alumnilist2=[]
             var i=1
-            var grad=""
+            var e=""
             response.data.forEach(element => {
               if(i===1){
-                grad=element.grade_name;
+                e=element.ep_title;
               }
               alumnilist.push({
                 id:i, 
                 image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 first_name:element.first_name,
-                last_name:element.last_name,
+                 last_name:element.last_name,
                 phone:element.phone1,
                 grade:element.grade_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.grade_name,
                 family:element.family_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.family_name,
@@ -116,10 +103,22 @@ export default function GradeAlumni() {
                       <Link to={`/reset-alumn-password/${element.id}`}> <PiPasswordFill className='icon'/></Link>
                 </span>
               })
+              alumnilist2.push({
+                no:i,
+                email:element.email,
+                 name:element.first_name+" "+element.last_name,
+                 phone1:element.phone1, 
+                 grade_name:element.grade_name,
+                 family:element.family_name,
+                 combination_name:element.combination_name,
+                 ep:element.ep_title
+               })
               i+=1
             });
-            setG(grad)
+            
             setData(alumnilist); /* 使用 setData 更新了 data 的值为 alumnilist */
+            setEp(e)
+            setDatatodownload(alumnilist2)
         }catch(err) {
             console.log(err);
         }
@@ -129,67 +128,12 @@ export default function GradeAlumni() {
 
 },[auth])
 
-  useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
-    
-    const getusers = async () =>{
-        try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
-                headers: { /* 请求头 */
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'multipart/form-data'
-                },
-                withCredentials:true
-            });
-
-            /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
-            
-            var alumnilist2=[]
-            var i=1
-            response.data.forEach(element => {
-              if(element.alumn){
-                if(parseInt(element.alumn.family.grade.id)===parseInt(params.id)){
-                  console.log(element)
-                  alumnilist2.push({
-                    no:i,
-                    email:element.email,
-                     first_name:element.first_name,
-                     last_name:element.last_name,
-                     phone1:element.phone1, 
-                     marital_status:element.alumn==null?"Null":element.alumn.marital_status,
-                     gender:element.alumn==null?"Null":element.alumn.gender,
-                     kids:element.alumn==null?"Null":element.alumn.kids?"Yes":"No",
-                     father:element.alumn==null?"Null":element.alumn.father,
-                     mother:element.alumn==null?"Null":element.alumn.mother,
-                     place_of_birth:element.alumn==null?"Null":element.alumn.place_of_birth,
-                     currresidence:element.alumn==null?"Null":element.alumn.currresidence,
-                     grade_name:element.alumn==null?"Null":element.alumn.family.grade.grade_name,
-                     family:element.alumn==null?"Null":element.alumn.family.family_name,
-                     combination_name:element.alumn==null?"Null":element.alumn.combination.combination_name,
-                     eps:element.alumn==null?"Null":element.alumn.eps.length>0?getEps(element.alumn.eps):element.alumn.eps.length,
-                     s4marks:element.alumn==null?"Null":element.alumn.s4marks,
-                     s5marks:element.alumn==null?"Null":element.alumn.s5marks,
-                     s6marks:element.alumn==null?"Null":element.alumn.s6marks,
-                     ne:element.alumn==null?"Null":element.alumn.ne,
-                     maxforne:element.alumn==null?"Null":element.alumn.maxforne
-                   })
-                   i+=1
-                }
-              }
-            });
-            setDatatodownload(alumnilist2);
-        }catch(err) {
-            console.log(err);
-        }
-    }
-
-    getusers();
-
-},[auth])
 const workbook = new Excel.Workbook();
 
   const saveExcel = async () => {
     try {
-      const fileName = workBookName;
+      if(datatodownload.length>0){
+        const fileName = workBookName;
 
       // creating one worksheet in workbook
       const worksheet = workbook.addWorksheet(workSheetName);
@@ -237,6 +181,9 @@ const workbook = new Excel.Workbook();
 
       // download the processed file
       saveAs(new Blob([buf]), `${fileName}.xlsx`);
+      }else{
+        alert("Please Wait for 2 minutes....")
+      }
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);
@@ -251,12 +198,12 @@ const workbook = new Excel.Workbook();
     <div className='alumni-list-body'>
             <div>
               <div className='staff-header-right alumni-header-right'>
-                <h1>Alumni from {g} Grade.</h1>
+                <h1>List of alumni from {ep} Enrishment Program</h1>
                 <div onClick={saveExcel} className='export-staff'>
                   <span>Export xlsx</span><BiExport/>
                 </div>
                 <div className='add-staff'>
-                  <Link to="/alumni/grades/" className='link'>Go Back</Link>
+                  <Link to="/alumni/combinations/" className='link'>Go Back</Link>
                 </div>
               </div>
             </div>

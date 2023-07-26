@@ -66,6 +66,8 @@ import ResetPassword from './components/DashboardComponents/Staffpart/ResetPassw
 import ResetPasswordofAlumn from './components/DashboardComponents/Alumnipart/ResetPasswordofAlumn';
 import GradeAlumni from './components/DashboardComponents/Alumnipart/GradeAlumni';
 import FamilyAlumni from './components/DashboardComponents/Alumnipart/FamilyAlumni';
+import CombinationAlumni from './components/DashboardComponents/Alumnipart/CombinationAlumni';
+import EpAlumni from './components/DashboardComponents/Alumnipart/EpAlumni';
 
 
 
@@ -149,6 +151,8 @@ function App() {
                     <Route path='add-grade/:id' element={<EditGrade />}/>
                     <Route path='gradealumni/:id' element={<GradeAlumni />}/>
                     <Route path='familyalumni/:id' element={<FamilyAlumni />}/>
+                    <Route path='combalumn/:id' element={<CombinationAlumni />}/>
+                    <Route path='epalumn/:id' element={<EpAlumni />}/>
                     <Route path='add-comb' element={<Addcombination />}/>
                     <Route path='add-comb/:id' element={<Editcombination/>}/>
                     <Route path='delete-comb/:id' element={<Deletecombination/>}/>

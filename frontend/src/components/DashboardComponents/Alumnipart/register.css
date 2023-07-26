@@ -111,3 +111,10 @@
     color: rgb(60, 63, 62);
     background-color: black;
 }
+.comb_name{
+    text-decoration: none;
+    color: black;
+}
+.comb_name:hover{
+    color: red;
+}

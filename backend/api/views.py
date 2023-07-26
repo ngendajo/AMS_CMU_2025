@@ -65,7 +65,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -112,6 +112,19 @@ class AluminiListView(APIView):
         
         return Response(status=status.HTTP_404_NOT_FOUND)
    
+class AluminiListByEyView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    
+    def get(self,request):
+        if request.query_params:
+            if(list(request.query_params.keys())[0]=="ep_id"):
+                user = User.objects.raw('''select api_user.id,api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_grade.id as grade_id,userprofile_family.family_name, userprofile_family.id as family_id,userprofile_combination.combination_name,userprofile_combination.id as combination_id,userprofile_ep.id as ep_id,userprofile_ep.title as ep_title from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id left outer join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id left outer join userprofile_alumni_eps on userprofile_alumni.id=userprofile_alumni_eps.alumni_id left outer join userprofile_ep on userprofile_ep.id=userprofile_alumni_eps.ep_id where api_user.is_alumni and userprofile_ep.id=%s;''',[request.query_params.dict()["ep_id"]])
+                serializer = AlumniListbyEPSerializer(user, many=True)
+                return Response(serializer.data)
+            
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
 
 class StaffUserView(APIView):
     permission_classes = [IsAuthenticated, ]
