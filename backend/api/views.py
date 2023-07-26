@@ -65,7 +65,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -89,7 +89,7 @@ class AluminiRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
 class AluminiListView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     
     def get(self,request):
         if request.query_params:
@@ -505,7 +505,7 @@ def delete_comb(request, pk):
 # Event data view
 
 class EventView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         # validating for already existing data
@@ -701,7 +701,7 @@ def delete_employment(request, pk):
 # Studie data view
 
 class StudieView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudieSerializer(data=request.data)
         # validating for already existing data
@@ -986,7 +986,7 @@ def create_gallery(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_gallery(request, pk):
     gall = Gallery.objects.get(pk=pk)
     data = GallerySerializer(instance=gall, data=request.data)
@@ -998,7 +998,7 @@ def update_gallery(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_gallery(request, pk):
     stud = get_object_or_404(Gallery, pk=pk)
     stud.delete()

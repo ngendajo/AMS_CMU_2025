@@ -38,7 +38,7 @@ export default function GalleryPage() {
                 setData(gallerylist)
             }catch(err) {
                 console.log(err);
-                navigate('/error');
+                //navigate('/error');
             }
         }
     
