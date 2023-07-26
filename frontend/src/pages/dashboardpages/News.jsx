@@ -71,7 +71,7 @@ const CreateNewsForm = ({ onCreate }) => {
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
       </label>
       <label>
-        Description&nbsp;&nbsp;&nbsp;&nbsp;
+        Description (maximum character: 200)
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
       </label>
       <MyDropzone onDrop={onDrop} />
@@ -85,6 +85,7 @@ const CreateNewsForm = ({ onCreate }) => {
 const EditNewsForm = ({ news, onEdit, onDelete, setNewsData, setIsEditing }) => {
   const [title, setTitle] = useState(news.title);
   const [description, setDescription] = useState(news.description);
+  const [pinned, setPinned] = useState(news.pinned);
   // const [imageUrl, setImageUrl] = useState(news.image_url);
 
   const handleSubmit = (event) => {
@@ -93,21 +94,26 @@ const EditNewsForm = ({ news, onEdit, onDelete, setNewsData, setIsEditing }) => 
     axios.put(`http://127.0.0.1:8000/api/news/${news.id}/update/`, {
       title,
       description,
+      pinned
       //image_url: imageUrl,
     })
     .then((response) => {
-    // After the news has been successfully updated, fetch the news data again from the server
-    axios.get('http://127.0.0.1:8000/api/news/')
-      .then(response => {
-        setNewsData(response.data);
-        setIsEditing(false);
-      })
-      .catch(error => {
-        console.error('Error fetching News data:', error);
-      });
+      // After the news has been successfully updated, fetch the news data again from the server
+      axios.get('http://127.0.0.1:8000/api/news/')
+        .then(response => {
+          setNewsData(response.data);
+          setIsEditing(false);
+        })
+        .catch(error => {
+          console.error('Error fetching News data:', error);
+        });
     })
     .catch((error) => {
-      console.error('Error updating news:', error);
+        if (error.response && error.response.data.error) {
+            alert(error.response.data.error); // alert to show pin more than 4 news
+        } else {
+            console.error('Error updating news:', error);
+        }
     });
   };
 
@@ -132,6 +138,14 @@ const EditNewsForm = ({ news, onEdit, onDelete, setNewsData, setIsEditing }) => 
         <label>
           Description
           <textarea value={description} onChange={e => setDescription(e.target.value)} />
+        </label>
+        <label>
+          Pin&nbsp;
+          <input
+            type="checkbox"
+            checked={pinned}
+            onChange={(e) => setPinned(e.target.checked)}
+          />
         </label>
         <div className="edit-form-buttons">
           <input className="submit-button" type="submit" value="Submit" />
@@ -216,10 +230,18 @@ const News = () => {
     setNewsData(newNewsData);
   };
 
+  // Separate pinned news and the latest news
+  const pinnedNews = newsData.filter((news) => news.pinned);
+  const notPinnedNews = newsData.filter((news) => !news.pinned);
+  notPinnedNews.sort((a, b) => new Date(b.date) - new Date(a.date)); // sort by date in descending order
+
+  // Combine pinned news and the latest news
+  const allOrderedNews = [...pinnedNews, ...notPinnedNews];
+
   return (
     <div className="news-container">
       <button className="add-news-button" onClick={() => setIsCreating(true)}>&nbsp;ADD NEWS 👈🏿&nbsp;</button>
-      {newsData.map((news) => (
+      {allOrderedNews.map((news) => (
         <NewsCard
           key={news.id}
           news={news}

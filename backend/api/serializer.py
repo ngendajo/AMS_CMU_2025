@@ -424,5 +424,5 @@ class NewsSerializer(serializers.ModelSerializer):
 class UpdateNewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = ('title', 'description', 'date')
+        fields = ('title', 'description', 'date', 'pinned')
 

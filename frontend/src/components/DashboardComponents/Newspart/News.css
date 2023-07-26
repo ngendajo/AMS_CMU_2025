@@ -2,17 +2,18 @@
 
 .news-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin-top: 38px;
   margin-bottom: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 15px;
 }
 
 .news-card {
   position: relative;
-  width: 22%;
+  width: 20%;
+  margin-right: 2%;
+  margin-left: 2.5%;
   margin-bottom: 30px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -162,7 +163,7 @@
 .add-news-button {
   position: absolute;
   top: 81px;
-  left: 174px;
+  left: 177px;
   font-size: 14px;
   font-weight: bold;
   background-color: orange;

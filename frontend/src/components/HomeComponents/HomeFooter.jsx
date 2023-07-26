@@ -35,8 +35,7 @@ const HomeFooter = () => {
       </div>
 
       <div style={copyRight}>
-
-        @Copyright ASYV 2023
+        © Copyright ASYV 2023
       </div>
 
     </div>

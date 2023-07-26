@@ -108,8 +108,14 @@ const HomeNews = () => {
       });
   }, []);
 
-  // Display the latest four news
-  const lastFourNews = newsData.slice(Math.max(newsData.length - 4, 0));
+  // Separate pinned news and the latest news
+  const pinnedNews = newsData.filter((news) => news.pinned);
+  const notPinnedNews = newsData.filter((news) => !news.pinned);
+  notPinnedNews.sort((a, b) => new Date(b.date) - new Date(a.date)); // sort by date in descending order
+
+  // Combine pinned news and the latest news
+  const allOrderedNews = [...pinnedNews, ...notPinnedNews];
+  const displayNews = allOrderedNews.slice(0, 4); // display in front page
 
   return (
     <div>
@@ -129,7 +135,7 @@ const HomeNews = () => {
 
       {/* -------------- Cards -------------- */}
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '0 6%', flexWrap: 'wrap',}}>
-        {lastFourNews.map((news) => (
+        {displayNews.map((news) => (
           <NewsCard
             key={news.id}
             imageSrc={`http://localhost:8000${news.image_url}`}

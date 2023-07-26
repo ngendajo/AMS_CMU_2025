@@ -174,6 +174,7 @@ class News(models.Model):
     description = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
     image_url = models.ImageField(upload_to='news', default='news/default.jpg')
+    pinned = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

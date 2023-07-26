@@ -942,6 +942,11 @@ def update_news(request, pk):
     except News.DoesNotExist:
         return Response(status=404)
 
+    if request.data.get('pinned', False):  # if the news is to be pinned
+        pinned_news_count = News.objects.filter(pinned=True).count()
+        if pinned_news_count > 4:  # if there are already 4 pinned news
+            return Response({'error': 'Cannot pin more than 4 news.'}, status=400)  # reject the request
+
     serializer = NewsSerializer(news, data=request.data)
     if serializer.is_valid():
         serializer.save()
