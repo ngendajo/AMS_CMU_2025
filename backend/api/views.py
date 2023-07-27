@@ -781,33 +781,14 @@ class StudyReportView(APIView):
 
 # Gallery data view
 
-class GalleryView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    def post(self, request):
-        serializer = GallerySerializer(data=request.data)
-        # validating for already existing data
-        if Gallery.objects.filter(**request.data).exists():
-            raise serializers.ValidationError('This data already exists')
-    
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def get(self,request):
-         # checking for the parameters from the URL
-        if request.query_params:
-            gall = Gallery.objects.filter(**request.query_params.dict())
-        else:
-            gall = Gallery.objects.all()
-    
-        # if there is something in items else raise error
-        if gall:
-            serializer = GallerySerializer(gall, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])  
+def read_gallery(request):
+    try:
+        galleries = Gallery.objects.all()
+        serializer = GallerySerializer(galleries, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST']) 

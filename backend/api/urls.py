@@ -73,8 +73,7 @@ urlpatterns = [
     path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
     
     #gallery paths
-    path('gallery/', views.GalleryView.as_view()),
-
+    path('gallery/', views.read_gallery,name='read-gallery'),
     path('gallery/create/', views.create_gallery, name='create-gallery'),
     path('updategallery/<int:pk>/', views.update_gallery, name='update-gallery'),
     path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-gallery'),

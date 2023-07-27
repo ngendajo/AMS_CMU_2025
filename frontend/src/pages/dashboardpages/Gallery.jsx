@@ -6,15 +6,14 @@ import { Link } from "react-router-dom";
 import { IoIosAdd } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 
-
 export default function GalleryPage() {
    const [data, setData] = useState([]);
     let {auth}= useAuth() 
+    var isEmpty=false
     var gallerylist=[]
     const navigate=useNavigate();
 
     useEffect(() =>{
-    
         const getData = async () =>{
             try{
                 const response = await axios.get('http://127.0.0.1:8000/api/gallery/',{
@@ -36,6 +35,9 @@ export default function GalleryPage() {
                 
                 })
                 setData(gallerylist)
+                if(gallerylist.length==0){
+                  isEmpty=true;
+                }
             }catch(err) {
                 console.log(err);
                 navigate('/error');
@@ -46,23 +48,21 @@ export default function GalleryPage() {
     
     },[auth])
 
-
   return (
     <div id= 'AddPhoto'>
-      <div>
-        <Gallery images={data} />
-      </div>
-
-      <center><div className='add-galleryphoto'>
-        <Link to="/add-gallery" className='link'>Add Photo</Link><IoIosAdd className='addicon'/>
-      </div>
-      </center>
-
-      <center><div className='edit-delete-gallery-photo'>
-        <Link to="/edit-gallery" className='link'>Change Photo in Gallery</Link>
-      </div>
-      </center>
-
+      {isEmpty?
+        null:<div><Gallery images={data} /> </div>
+      }
+      {auth.user.is_alumni?
+         null:<center><div className='add-galleryphoto'>
+            <Link to="/add-gallery" className='link'>Add Photo</Link><IoIosAdd className='addicon'/>
+          </div></center>
+      }
+      {auth.user.is_alumni?
+         null: <center><div className='edit-delete-gallery-photo'>
+          <Link to="/edit-gallery" className='link'>Change Photo in Gallery</Link>
+        </div></center>
+      } 
     </div>
   );
 }

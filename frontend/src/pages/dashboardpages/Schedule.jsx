@@ -7,7 +7,6 @@ import axios from "axios";
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function Schedule() {
     const [data, setData] = useState([]);
     let {auth}= useAuth() 
@@ -21,7 +20,6 @@ export default function Schedule() {
     []
   )
 
-
   useEffect(() =>{
     const fetchEvents = async () => {
       try {
@@ -33,28 +31,22 @@ export default function Schedule() {
           withCredentials:true
         });
         response.data.forEach(e=>{
-
           eventlist.push({
           id:e.id,
           title:e.title,
           start: new Date(e.startDate),
           end: new Date(e.endDate),
           desc: e.description
-          
           })
-          console.log(eventlist)
         })
-        
         setData(eventlist);
       } catch (error) {
         console.log(error);
         navigate('/error');
       }
     };
-
     fetchEvents();
   },[auth])
-
 
   return (
     <div>

@@ -105,6 +105,7 @@ export default function Events() {
     }
 
     var sDate=formatDateTime(new Date(events.startDate));
+    
 
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
@@ -114,8 +115,7 @@ export default function Events() {
         <h2>{events.title}</h2>
         <p>{events.description}</p>
         <p>{sDate}</p>
-        {console.log(events)}
-        <Link to={"/edit-event/"+events.id} className='link'>Edit/Delete event</Link>
+       <Link to={"/event/"+events.id} className='link'>Event Detail</Link>
       </div>
     );
   }

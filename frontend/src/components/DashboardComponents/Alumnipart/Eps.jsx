@@ -8,13 +8,13 @@ import { BiExport } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import './combinations.css';
+import { useNavigate } from 'react-router-dom';
 
 
 export const Eps = ({ id }) => {
     const [data, setData] = useState([]);
     let {auth}= useAuth() 
-
-    
+    const navigate=useNavigate();
     useEffect(() =>{
     
         const getData = async () =>{
@@ -58,8 +58,6 @@ export const Eps = ({ id }) => {
         getData();
     
     },[auth])
-
-
   return (
     <center className='alumni-list-body'>
             <div className='comb-header'>

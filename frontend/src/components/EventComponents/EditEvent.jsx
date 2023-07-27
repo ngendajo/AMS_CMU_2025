@@ -126,8 +126,9 @@ export default function EditEvent() {
 
                     <center><button type="submit">Update</button></center>
         </form>
-        
-        <Link onClick={handleDelete} className="line" to="#">Delete Event</Link>
+        {auth.user.is_crc?
+            null: <Link onClick={handleDelete} className="line" to="#">Delete Event</Link>
+        }
     </div>
   )
 }
