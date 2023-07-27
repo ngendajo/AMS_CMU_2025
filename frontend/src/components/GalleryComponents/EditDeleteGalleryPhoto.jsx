@@ -74,7 +74,7 @@ function Galleries() {
   return (
     <div className="gallery-table">
       <h1>Manage Gallery Photos</h1>
-      {/*<button onClick={AddOpportunity}>Add Opportunity</button>*/}
+      
       <GalleryTable galleries={galleries} onDisplay={handleDisplay} onDelete={handleDelete} />
     </div>
   );

@@ -48,9 +48,6 @@ const MyPaginate = styled(ReactPaginate).attrs({
   }
 `;
 
-
-
-
 export default function Events() {
 
   const [data, setData] = useState([]);
@@ -63,6 +60,7 @@ export default function Events() {
     const day = String(date.getUTCDate()).padStart(2, '0');
     const hours = String(date.getUTCHours()).padStart(2, '0');
     const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  }
 
     
     useEffect(() =>{
@@ -95,14 +93,13 @@ export default function Events() {
     },[auth])
 
   function CardSmall(events) {
-    const [isClicked, setIsClicked] = useState(false);
-    function handleClick() {
-      setIsClicked(!isClicked);
-      navigate('/event/'+events.id);
-    }
-
     var sDate=formatDateTime(new Date(events.startDate));
+    const [isClicked, setIsClicked] = useState(false);
     
+    function handleClick() {
+        setIsClicked(!isClicked);
+        navigate('/event/'+events.id);
+    }
 
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
@@ -148,7 +145,7 @@ export default function Events() {
         </div>
       ))}
     </div>
-
+    
     <MyPaginate
     breakLabel="..."
     nextLabel="next >"
@@ -158,8 +155,6 @@ export default function Events() {
     previousLabel="< previous"
     renderOnZeroPageCount={null}
     />
-  
     </div>
-    
   )
 }

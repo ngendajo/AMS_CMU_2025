@@ -14,17 +14,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializer import AlumniInfoRegSerializer, AlumniSerializer, AlumniRegistrationSerializer, StaffRoleSerializer, \
-    UpdateUserImageUrlSerializer, UpdateUserSerializer, StaffUserSerializer, StaffUserRegistrationSerializer, \
-    PasswordChangeSerializer, FamilySerializer, CombinationSerializer, GradeSerializers, EpSerializer, \
-    OpportunitySerializer, UpdateOpportunitySerializer, ApproveOpportunitySerializer, AddFamilySerializer, \
-    EventSerializer, UpdateEventSerializer, StorySerializer, StoryWithAlumnSerializer, UpdateStorySerializer, \
-    DisplayStorySerializer, EmploymentSerializer, StudieSerializer, UpdateStudieSerializer, \
-    AlumniInfoUpdateSerializer, DisplayAllStoriesSerializer, EmploymentDisplayOneSerializer, \
-    DisplayEmploymentSerializer, StudyWithAlumnSerializer, StudieWithAlumnSerializer, EmploymentUpdateSerializer, \
-    TotalAlumnReportSerializer, StudyReportSerializer, GallerySerializer, UpdateGallerySerializer, NewsSerializer
-from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Opportunity, Event, Employment, Studie, \
-    Story, Gallery, News
+from .serializer import *
+from userprofile.models import *
 from .models import User
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
@@ -622,20 +613,14 @@ class StoryView(APIView):
 class StoryHomeView(APIView):
     def get(self, request):
         # checking for the parameters from the URL
-
         story = User.objects.raw(
                 "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true and userprofile_Story.displayed=true;")
-
         # if there is something in items else raise error
         if story:
             serializer = DisplayAllStoriesSerializer(story, many=True)
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-
-
 
 @api_view(['POST'])
 # update story is meant for updating the content of the story
