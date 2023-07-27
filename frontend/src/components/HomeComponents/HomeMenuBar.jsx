@@ -105,6 +105,23 @@ export default function HomeMenuBar() {
             );
         };
 
+    function AlumniCount() {
+        const [alumniCount, setAlumniCount] = useState(0);
+
+        useEffect(() => {
+            axios.get('http://127.0.0.1:8000/api/alumni_count/')
+                .then(response => {
+                    setAlumniCount(response.data.count);
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
+        }, []);
+
+        return alumniCount;
+    }
+    const alumniCount = AlumniCount();
+
     return (
         <>
             {/* --------------------- 1. Top Navigation Bar --------------------- */}
@@ -221,7 +238,7 @@ export default function HomeMenuBar() {
                         <img src={AlumniBig} alt="AlumniBig" />
                     </div>
                     <div className="rightalumninumber">
-                        <span>1200+ Alumni</span>
+                        <span>{alumniCount} Alumni</span>
                     </div>
                     <div className="rightleftbars1">
                     </div>

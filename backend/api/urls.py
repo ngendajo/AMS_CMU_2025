@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView, 
 )
 
+from .views import alumni_count
 
 urlpatterns = [
     # user paths
@@ -95,4 +96,6 @@ urlpatterns = [
     path('news/<int:pk>/update/', views.update_news, name='news-update'),
     path('news/<int:pk>/delete/', views.delete_news, name='news-delete'),
 
+    # alumni count path
+    path('alumni_count/', alumni_count),
 ]

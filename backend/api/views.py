@@ -28,6 +28,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from userprofile.models import Alumni
 
+from django.http import JsonResponse
+
 User = get_user_model()
 
 
@@ -963,3 +965,10 @@ def delete_news(request, pk):
 
     news.delete()
     return Response(status=204)
+
+
+# Count alumni to show in front page
+def alumni_count(request):
+    count = Alumni.objects.count()  # count Alumni number
+    return JsonResponse({"count": count})  # response JSON
+

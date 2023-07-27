@@ -126,10 +126,11 @@
     border-radius: 8px;
     margin: 10 10px;
     padding: 10px;
-    width: 126px;
+    width: 115px;
     position: relative;
     bottom: 68px;
     left: 79%;
+    text-align: center;
 }
 .rightalumninumber span{
     font-size: 16px;
