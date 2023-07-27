@@ -64,38 +64,35 @@ export default function Events() {
     const hours = String(date.getUTCHours()).padStart(2, '0');
     const minutes = String(date.getUTCMinutes()).padStart(2, '0');
 
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
     
-  useEffect(() =>{
-      const getData = async () =>{
-          try{
-              const response = await axios.get('http://127.0.0.1:8000/api/event/',{
-                  headers: {
-                      "Authorization": 'Bearer ' + String(auth.accessToken),
-                      "Content-Type": 'multipart/form-data'
-                  },
-                  withCredentials:true
-              });
-              var eventlist=[]
-              response.data.forEach(e=>{
-              eventlist.push({
-                  id:e.id,
-                  title:e.title, 
-                  description:e.description,
-                  startDate:e.startDate,
-                  image_url:e.image_url
-              })
-              })
-              eventlist.sort((a, b) => b.startDate.localeCompare(a.startDate))
-              setData(eventlist)
-          }catch(err) {
-              console.log(err);
-              navigate('/error');
-          }
-      }
-      getData();
-  },[auth])
+    useEffect(() =>{
+    
+        const getData = async () =>{
+            try{
+                const response = await axios.get('http://127.0.0.1:8000/api/event/',{
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials:true
+                });
+                var eventlist=[]
+                response.data.forEach(e=>{
+                
+                eventlist.push({
+                    title:e.title, 
+                    description:e.description
+                })
+                })
+                setData(eventlist)
+            }catch(err) {
+                console.log(err);
+            }
+        }
+    
+        getData();
+    
+    },[auth])
 
   function CardSmall(events) {
     const [isClicked, setIsClicked] = useState(false);

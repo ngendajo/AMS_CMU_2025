@@ -10,6 +10,7 @@ import Events from './pages/dashboardpages/Events';
 import AddEvent from './components/EventComponents/AddEvent';
 import EditEvent from './components/EventComponents/EditEvent';
 import EventDetail from './components/EventComponents/EventDetail';
+import News from './pages/dashboardpages/News';
 import Chats from './pages/dashboardpages/Chats';
 import Opportunities from './pages/dashboardpages/Opportunities';
 import Schedule from './pages/dashboardpages/Schedule';
@@ -100,6 +101,7 @@ function App() {
                     <Route path='add-event' element={<AddEvent />}/>
                     <Route path='edit-event/:id' element={<EditEvent />}/>
                     <Route path='event/:id' element={<EventDetail/>}/>
+                    <Route path='news' element={<News />}/>
                     <Route path='chats' element={<Chats />}/>
                     <Route path='opportunities' element={<Opportunities />}/>
                     <Route path='schedule' element={<Schedule />}/>

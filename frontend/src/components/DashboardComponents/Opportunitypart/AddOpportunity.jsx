@@ -9,7 +9,7 @@ export default function AddOpportunity() {
     const {auth} = useAuth(); // 获取auth对象，用于身份验证
     const navigate = useNavigate() // 用于导航到其他页面
     const [title, setTitle] = useState("");  // 定义状态变量并给初始值
-    const [user, setUser] = useState("");
+    const [setUser] = useState("");
     const [description, setDescription] = useState("");
     const [post_time, setPost_time] = useState("");
     //const [showOpportunityList, setShowOpportunityList] = useState(false);  // 来跟踪是否点击按钮

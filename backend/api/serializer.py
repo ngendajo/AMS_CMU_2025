@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import *
+from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story, Gallery, News
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -376,6 +377,7 @@ class StudieSerializer(serializers.ModelSerializer):
         model = Studie
         fields = ('id','alumn','level','degree','university','country','scholarship','status','scholarship_details')
 
+
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
@@ -385,7 +387,7 @@ class UpdateStudieSerializer(serializers.ModelSerializer):
 #Dashboard needed data serializer
 class TotalAlumnReportSerializer(serializers.ModelSerializer):
 
-    id= serializers.IntegerField(required=True)
+    id = serializers.IntegerField(required=True)
     gender = serializers.CharField(max_length=200, required=True)
     employed = serializers.CharField(max_length=200, required=True)
     end = serializers.CharField(max_length=200, required=True)
@@ -419,11 +421,13 @@ class GradesAndFamiliesSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','family_name','grade_name','start_academic_year','end_academic_year')
 
+
 class StudyReportSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=True)
     level = serializers.IntegerField(required=True)
     degree = serializers.CharField(max_length=200, required=True)
+
 
 class GallerySerializer(serializers.ModelSerializer):
     class Meta:
@@ -437,14 +441,6 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields=('__all__')
-
-
-
-
-
-
-
-
 
 #Gallery serializers
 
@@ -465,11 +461,11 @@ class GallerySerializer(serializers.ModelSerializer):
 
         return gallery
 
+
 class UpdateGallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields = ['displayed']
-
 
 
 class OpportunitySerializer(serializers.ModelSerializer):
@@ -478,13 +474,13 @@ class OpportunitySerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'title', 'description', 'post_time']
 
     def create(self, validated_data):
-        # 从 validated_data 中获取需要的数据
+        # obtain data from validated_data
         user = validated_data.get('user')
         title = validated_data.get('title')
         description = validated_data.get('description')
         post_time = validated_data.get('post_time')
 
-        # 创建opportunity对象
+        # create opportunity object
         opportunity = Opportunity.objects.create(
             user=user,
             title=title,
@@ -506,4 +502,16 @@ class ApproveOpportunitySerializer(serializers.ModelSerializer):
         model = Opportunity
         fields = ['approved']
 
+
+# News
+class NewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = '__all__'
+
+
+class UpdateNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ('title', 'description', 'date', 'pinned')
 

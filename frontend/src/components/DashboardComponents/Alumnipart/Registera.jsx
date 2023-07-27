@@ -61,6 +61,7 @@ const Registera = () => {
         phone1Ref.current.focus();
     },[])
 
+    // useEffect for check value and update
     useEffect(() => {
         const email_result = EMAIL_REGIX.test(email);
 

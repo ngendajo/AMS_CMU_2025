@@ -13,10 +13,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
 import axios from "../../api/axios";
+import Modal from 'react-modal';
 const LOGIN_URL = '/token/';
 
 // Define MobileMenu component
 
+Modal.setAppElement('#root'); // Define application root
 
 export default function HomeMenuBar() {
     const [seen, setSeen] = useState(false)
@@ -33,6 +35,8 @@ export default function HomeMenuBar() {
     const [email, setEmail] = useState('');
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
+
+    const [videoIsOpen, setVideoIsOpen] = useState(false);
 
     useEffect(() => {
         if(seen){
@@ -101,6 +105,23 @@ export default function HomeMenuBar() {
                 </div>
             );
         };
+
+    function AlumniCount() {
+        const [alumniCount, setAlumniCount] = useState(0);
+
+        useEffect(() => {
+            axios.get('http://127.0.0.1:8000/api/alumni_count/')
+                .then(response => {
+                    setAlumniCount(response.data.count);
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
+        }, []);
+
+        return alumniCount;
+    }
+    const alumniCount = AlumniCount();
 
     return (
         <>
@@ -187,7 +208,7 @@ export default function HomeMenuBar() {
                 <div className="left">
                     <div className="hellolefttop">
                         <h1>
-                            Be part of the massive connection of ASYV alumni association!
+                            Be part of the massive connection of ASYV Alumni Association!
                         </h1>
                         <br/>
                         <p>
@@ -200,12 +221,14 @@ export default function HomeMenuBar() {
                         <div className="right-menu">
                             <button onClick={togglePop} className="log">Get Started</button>
                         </div>
+
                         <div className="introvideo">
-                            <a href="https://www.youtube.com/watch?v=jxT6EIAYbJA" target="_blank" rel="noopener noreferrer">
+                            <button onClick={() => setVideoIsOpen(true)}>
                                 <AiFillPlayCircle className="icon" />
                                 <span className="introvideoplay">Play Video</span>
-                            </a>
+                            </button>
                         </div>
+
                     </div>
                 </div>
                 <div className="right">
@@ -216,7 +239,7 @@ export default function HomeMenuBar() {
                         <img src={AlumniBig} alt="AlumniBig" />
                     </div>
                     <div className="rightalumninumber">
-                        <span>1200+ Alumni</span>
+                        <span>{alumniCount} Alumni</span>
                     </div>
                     <div className="rightleftbars1">
                     </div>
@@ -227,46 +250,41 @@ export default function HomeMenuBar() {
                     <div className="rightbars2">
                     </div>
                 </div>
-
             </section>
 
+            {/* Use Modal to show video window */}
+            <Modal
+                isOpen={videoIsOpen}
+                onRequestClose={() => setVideoIsOpen(false)}
+                overlayClassName="modal-overlay"
+                className="modal-content"
+            >
+                <iframe
+
+                    src="https://www.youtube.com/embed/jxT6EIAYbJA"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                ></iframe>
+                <button onClick={() => setVideoIsOpen(false)} className="close-video-button">Close</button>
+            </Modal>
+
+
+            {/* --------------------- 3. Bottom Transition Part --------------------- */}
             <div className="knowmore">
                 <div className="school">
-                    Liquidnet Family High School
+                    Liquid-net-Family High School
                 </div>
                 <div className="infull">
                     Liquidnet Family High School education doesn't end after graduation. LFHS offers
-                    programs & resources to alumni at every phase of thier career.
+                    programs & resources to alumni at every phase of their career.
                 </div>
                 <div className="rightlink">
-                    <span>Know more</span><AiOutlineArrowRight className="know" />
+                    <button onClick={togglePop} className="log" style={{ border: 'none', fontSize: '20px', background: 'transparent' }}>Learn more →</button>
                 </div>
-                <BiMessageRoundedDots className="sendsms" />
+                {/* <BiMessageRoundedDots className="sendsms" /> */}
             </div>
-
-
-            {/* ------------------- Second Page: About Us -------------------- */}
-            <section id="about">
-                <h2>About</h2>
-            </section>
-
-            {/* ------------------- Third Page: Resources -------------------- */}
-            <section id="resources">
-                <h2>Resources</h2>
-            </section>
-
-            {/* ------------------- Forth Page: News -------------------- */}
-            <section id="news">
-                <h2>News</h2>
-                <div id="iframeContainer_News">
-                    <iframe src="https://www.asyv.org/bwiranews" title="News" frameborder="0"></iframe>
-                </div>
-            </section>
-
-            {/* ------------------- Fifth Page: Contact -------------------- */}
-            <section id="contact">
-                <h2>Contact</h2>
-            </section>
 
         </>
     );
