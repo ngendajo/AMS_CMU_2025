@@ -203,7 +203,7 @@ export default function EditAlumini() {
      <section className="form">
         <div className="updateactivities">
             <p>
-                <Link className="lines" to="/alumni">Go back</Link>
+            <Link className="lines" to={auth.user.is_alumni?"/":"/alumni"}>Go back</Link>
             </p>
             {/* <p>
                 <Link className="lines" to={'/add-crc/ps/'+params.id}>Update Password</Link>
@@ -259,6 +259,7 @@ export default function EditAlumini() {
                  aria-describedby="emailnote"
                  onFocus={() => setEmailFocus(true)}
                  onBlur={() => setEmailFocus(false)}
+                 disabled={auth.user.is_alumni?true:false}
                  />
                  
                  <p id="emailnote" className={EmailFocus && email && !validEmail ? "instructions" : "offscreen"}>
@@ -288,6 +289,7 @@ export default function EditAlumini() {
                  aria-describedby="first_namenote"
                  onFocus={() => setFirst_nameFocus(true)}
                  onBlur={() => setFirst_nameFocus(false)}
+                 disabled={auth.user.is_alumni?true:false}
                  />
                  <p id="first_namenote" className={first_nameFocus && first_name && !validFirst_name ? "instructions" : "offscreen"}>
                      <FontAwesomeIcon icon={faInfoCircle}/>
@@ -317,6 +319,7 @@ export default function EditAlumini() {
                  aria-describedby="last_namenote"
                  onFocus={() => setLast_nameFocus(true)}
                  onBlur={() => setLast_nameFocus(false)}
+                 disabled={auth.user.is_alumni?true:false}
                  />
                  <p id="last_namenote" className={last_nameFocus && last_name && !validLast_name ? "instructions" : "offscreen"}>
                      <FontAwesomeIcon icon={faInfoCircle}/>
@@ -346,6 +349,7 @@ export default function EditAlumini() {
              aria-describedby="phone1note"
              onFocus={() => setPhone1Focus(true)}
              onBlur={() => setPhone1Focus(false)}
+             disabled={auth.user.is_alumni?true:false}
              />
              <p id="phone1note" className={phone1Focus && phone1 && !validPhone1 ? "instructions" : "offscreen"}>
                  <FontAwesomeIcon icon={faInfoCircle}/>
@@ -354,11 +358,12 @@ export default function EditAlumini() {
 
              </div>
          </div>
-
+        {auth.user.is_alumni?null:
          <center>
          {((EMAIL_REGIX.test(email)) && (USER_REGIX.test(first_name)) && (USER_REGIX.test(first_name)) && (PHONE_REGIX.test(phone1)))?<center onClick={updateEmail}><h1 className="saveemail">Update</h1></center>:null}
          
          </center>
+         }
      </form>
  </section>
   )

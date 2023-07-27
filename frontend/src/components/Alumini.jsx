@@ -124,12 +124,11 @@ export default function AlumnProfile() {
               <div className="alumni-profile-info">
                 <div className="alumni-profile-info-top">
                   <h2>{use.first_name} {use.last_name}</h2>
-                  {auth.user.is_alumni?
-                    null:<Link to={`/add-alumni/${use.id}`} className="message-edit">
+                  <Link to={`/add-alumni/${use.id}`} className="message-edit">
                     <span>Edit</span>
                     <CiEdit/>
                   </Link>
-                    }
+                    
                 </div>
                 <div className="alumni-profile-info-top">
                   <div>
