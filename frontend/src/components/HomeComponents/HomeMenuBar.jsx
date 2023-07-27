@@ -36,6 +36,8 @@ export default function HomeMenuBar() {
     const [ pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
+    const [accessToken, setAccessToken] = useState(null); //-----
+
     const [videoIsOpen, setVideoIsOpen] = useState(false);
 
     useEffect(() => {
@@ -62,6 +64,7 @@ export default function HomeMenuBar() {
                 }
                 );
                 const accessToken = response?.data.access;
+                setAccessToken(accessToken); //-------
                 const refresh = response?.data.refresh;
                 const user =jwtDecode(accessToken); 
                 const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": null
@@ -85,6 +88,42 @@ export default function HomeMenuBar() {
             errRef.current.focus();
         }
     }
+
+
+
+
+
+    function AlumniCount() {
+      const [alumniCount, setAlumniCount] = useState(0);
+
+      useEffect(() => {
+        const user =jwtDecode(accessToken);
+        const headers = {
+          "Authorization": 'Bearer ' + String(user.accessToken),
+          "Content-Type": 'application/json'
+        };
+
+        axios.get('http://127.0.0.1:8000/api/alumni/', { headers: headers })
+          .then(response => {
+            // 假设数据在response.data中，并且是一个数组
+            setAlumniCount(response.data.length);
+          })
+          .catch(error => {
+            console.error('There was an error!', error);
+          });
+      }, [accessToken]);
+
+      return <span>{alumniCount}</span>;
+    }
+
+
+
+
+
+
+
+
+
 
     function togglePop () {
         setSeen(!seen);
@@ -221,7 +260,7 @@ export default function HomeMenuBar() {
                         <img src={AlumniBig} alt="AlumniBig" />
                     </div>
                     <div className="rightalumninumber">
-                        <span>1200+ Alumni</span>
+                        {accessToken && <AlumniCount accessToken={accessToken} />}
                     </div>
                     <div className="rightleftbars1">
                     </div>
