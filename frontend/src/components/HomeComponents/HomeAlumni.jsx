@@ -1,13 +1,6 @@
-import { React, useRef, useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import Alu1 from "../../Static/Images/Alu1.png"
-import Alu2 from "../../Static/Images/Alu2.png"
-import Alu3 from "../../Static/Images/Alu3.png"
-import Alu4 from "../../Static/Images/Alu4.png"
-import Alu5 from "../../Static/Images/Alu5.png"
-import Alu6 from "../../Static/Images/Alu6.png"
+import { React, useState, useEffect } from 'react';
 
-const styles = {
+const staticStyles = {
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -75,22 +68,43 @@ const styles = {
     alignItems: 'flex-end',
     position: 'relative', // enable absolute positioning
   },
+};
 
-  topImageL: {
+
+// This is generate random index for image, so as to avoid repetition in images
+const getUniqueRandomIndices = (length, num) => {
+  const indices = Array.from({ length }, (_, i) => i);
+  const result = [];
+
+  for(let i = 0; i < num; i++) {
+    const randomIndex = Math.floor(Math.random() * indices.length);
+    result.push(indices[randomIndex]);
+    indices.splice(randomIndex, 1);
+  }
+
+  return result;
+}
+
+// This is to random generate image from database
+const getDynamicStyles = (imageData) => {
+  const randomIndices = getUniqueRandomIndices(imageData.length, 6);
+
+  return {
+    topImageL: {
+      width: '75px',
+      height: '75px',
+      borderRadius: '50%',
+      backgroundImage: `url(http://localhost:8000${imageData[randomIndices[0]].image_url})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      marginBottom: '20px',
+    },
+
+    topImageR: {
     width: '75px',
     height: '75px',
     borderRadius: '50%',
-    backgroundImage: `url(${Alu1})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    marginBottom: '20px',
-  },
-
-  topImageR: {
-    width: '75px',
-    height: '75px',
-    borderRadius: '50%',
-    backgroundImage: `url(${Alu6})`,
+    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[1]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     marginBottom: '20px',
@@ -100,7 +114,7 @@ const styles = {
     width: '65px',
     height: '65px',
     borderRadius: '70%',
-    backgroundImage: `url(${Alu5})`,
+    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[2]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'absolute', // Use absolute positioning to overlap
@@ -112,7 +126,7 @@ const styles = {
     width: '65px',
     height: '65px',
     borderRadius: '70%',
-    backgroundImage: `url(${Alu4})`,
+    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[3]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'absolute', // Use absolute positioning to overlap
@@ -124,7 +138,7 @@ const styles = {
     width: '70px',
     height: '70px',
     borderRadius: '50%',
-    backgroundImage: `url(${Alu2})`,
+    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[4]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     marginTop: '40px',
@@ -135,12 +149,14 @@ const styles = {
     width: '70px',
     height: '70px',
     borderRadius: '50%',
-    backgroundImage: `url(${Alu3})`,
+    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[5]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     marginTop: '40px',
     top: 'calc(50% - 45px)',
   },
+
+  };
 };
 
 
@@ -154,6 +170,8 @@ const getDescriptionText = (description) => {
 const HomeAlumni = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [imageData, setImageData] = useState([]);
+//  const dynamicStyles = getDynamicStyles(imageData);
+//  const styles = { ...staticStyles, ...dynamicStyles };
 
   useEffect(() => {
     const fetchImageData = async () => {
@@ -170,11 +188,13 @@ const HomeAlumni = () => {
   }, []);
 
 
-
-  if (imageData.length === 0) {
-    // render loading state here if needed
+  if (imageData.length < 6) {
+    // render loading state (need at least 6 alumni images)
     return <p>Loading...</p>;
   }
+
+  const dynamicStyles = getDynamicStyles(imageData);
+  const styles = { ...staticStyles, ...dynamicStyles };
 
   const handleLeftArrowClick = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageData.length - 1 : prevIndex - 1));

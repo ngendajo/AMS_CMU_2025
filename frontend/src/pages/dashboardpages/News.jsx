@@ -171,6 +171,7 @@ const NewsCard = ({ news, onEdit, onDelete, setNewsData }) => {
 
   const { id, title, description, image_url, date } = news;
 
+
   if (isEditing) {
     return <EditNewsForm news={news} onEdit={onEdit} onDelete={onDelete} setNewsData={setNewsData} setIsEditing={setIsEditing} />;
   }
