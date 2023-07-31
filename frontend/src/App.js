@@ -67,6 +67,10 @@ import ResetPassword from './components/DashboardComponents/Staffpart/ResetPassw
 import ResetPasswordofAlumn from './components/DashboardComponents/Alumnipart/ResetPasswordofAlumn';
 import GradeAlumni from './components/DashboardComponents/Alumnipart/GradeAlumni';
 import FamilyAlumni from './components/DashboardComponents/Alumnipart/FamilyAlumni';
+import CombinationAlumni from './components/DashboardComponents/Alumnipart/CombinationAlumni';
+import EpAlumni from './components/DashboardComponents/Alumnipart/EpAlumni';
+import AuthCheck from './context/AuthCheck';
+import Unauthorized from './pages/Unauthorized';
 
 
 
@@ -92,6 +96,7 @@ function App() {
               {/* public routes*/}
                 <Route path='home' element={<Home />}/>
                 <Route path='error' element={<Error />}/>
+                <Route path='unauthorized' element={<Unauthorized />}/>
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>
@@ -108,7 +113,9 @@ function App() {
                     <Route path='gallery' element={<Gallery />}/>
                     <Route path='password' element={<Password />}/>
                     <Route path='alumni' element={<Alumni />}>
-                      <Route path='' element={<ASYVInfo />}/>
+                      <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                        <Route path='' element={<ASYVInfo />}/>
+                      </Route>
                       <Route path='employment' element={<Employment />}/>
                       <Route path='deleteemployment/:id' element={<DeleteEmployment />}/>
                       <Route path='deletestudy/:id' element={<Deletestudy />}/>
@@ -151,6 +158,8 @@ function App() {
                     <Route path='add-grade/:id' element={<EditGrade />}/>
                     <Route path='gradealumni/:id' element={<GradeAlumni />}/>
                     <Route path='familyalumni/:id' element={<FamilyAlumni />}/>
+                    <Route path='combalumn/:id' element={<CombinationAlumni />}/>
+                    <Route path='epalumn/:id' element={<EpAlumni />}/>
                     <Route path='add-comb' element={<Addcombination />}/>
                     <Route path='add-comb/:id' element={<Editcombination/>}/>
                     <Route path='delete-comb/:id' element={<Deletecombination/>}/>

@@ -40,7 +40,7 @@ export default function GalleryPage() {
                 }
             }catch(err) {
                 console.log(err);
-                navigate('/error');
+                //navigate('/error');
             }
         }
     

@@ -22,6 +22,7 @@ urlpatterns = [
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
     path('alumni/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
     path('alumnilist/', views.AluminiListView.as_view(), name='alumini'),
+    path('alumnilistbyep/', views.AluminiListByEyView.as_view(), name='aluminiep'),
     path('bulkalumni/', views.AluminiBulkRegistrationView.as_view(), name='auth_bulkregisteralumini'),
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
@@ -105,5 +106,6 @@ urlpatterns = [
     # Dashboard data
     path('totalalumnreport/', views.AlumnReportView.as_view()),
     path('lumngradereport/', views.AlumnInGradeReportView.as_view()),
+    path('empstureport/', views.EmploymentStudieReportView.as_view()),
     path('', views.getRoutes)
 ]

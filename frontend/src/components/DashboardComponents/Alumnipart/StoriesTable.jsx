@@ -45,7 +45,11 @@ export const StoriesTable = ({ mockData }) => {
   );
   return (
     <>
-      <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} className="filterg" />
+      
+      <div className="filterg">
+        <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
+      </div>
+      
       {/* apply the table props */}
       <table {...getTableProps()}>
         <thead>

@@ -1,6 +1,7 @@
 
 import React, {useState, useEffect} from 'react'
 import useAuth from '../../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { EpTable } from './EpTable';
 import { Link } from 'react-router-dom';
@@ -14,7 +15,9 @@ import { useNavigate } from 'react-router-dom';
 export const Eps = ({ id }) => {
     const [data, setData] = useState([]);
     let {auth}= useAuth() 
-    const navigate=useNavigate();
+    const navigate = useNavigate()
+
+    
     useEffect(() =>{
     
         const getData = async () =>{
@@ -41,7 +44,7 @@ export const Eps = ({ id }) => {
                     t="Sciences"
                 }
                 eplist.push({
-                    title:e.title, 
+                    title:<Link className='comb_name' to={`/epalumn/${e.id}`}>{e.title}</Link>, 
                     type:t,
                     ep_id:<span>
                         <Link to={`/add-ep/${e.id}`}><BiEditAlt className='icon'/></Link>

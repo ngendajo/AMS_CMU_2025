@@ -30,7 +30,7 @@ export const Combinations = () => {
                 var combinationlist=[]
                 response.data.forEach(e=>{
                     combinationlist.push({
-                    combination:e.combination_name,
+                    combination:<Link className='comb_name' to={`/combalumn/${e.id}`}>{e.combination_name}</Link>,
                     combination_id:<span>
                         <Link to={`/add-comb/${e.id}`}><BiEditAlt className='icon'/></Link>
                     </span>
