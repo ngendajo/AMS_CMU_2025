@@ -18,27 +18,37 @@ function Opportunities() {
   console.log(auth.user.id);
 
   const handleApprove = async (opportunityId) => {
-    // 根据opportunityId更新opportunities数组中相应对象的approved属性
     if (user.is_superuser || user.is_crc) {
+      const opportunity = opportunities.find(op => op.id === opportunityId);
+      const approved = !opportunity.approved;
+
       const updatedOpportunities = opportunities.map((opportunity) => {
         if (opportunity.id === opportunityId) {
-          return { ...opportunity, approved: true };
+          return { ...opportunity, approved };
         }
         return opportunity;
       });
 
-    setOpportunities(updatedOpportunities);
+      setOpportunities(updatedOpportunities);
 
-    // 发送approve请求到后端
-    try {
-      await axios.patch("http://localhost:8000/api/opportunity/"+opportunityId+"/approve",
-      { approved: true },
-      {
-            headers: {
-                "Authorization": 'Bearer ' + String(auth.accessToken),
-                "Content-Type": 'application/json'
-            }
+      try {
+        await axios.patch("http://localhost:8000/api/opportunity/"+opportunityId+"/approve",
+        { approved },
+        {
+          headers: {
+            "Authorization": 'Bearer ' + String(auth.accessToken),
+            "Content-Type": 'application/json'
+          }
         }
+        ).then(res => {
+          console.log(res);
+          alert(approved ? "Approved successfully!" : "Disapproved successfully!");
+          navigate('/opportunities');
+        })
+        .catch(error => console.log(error.response.data));
+      } catch (error) {
+      }
+    }
       ).then(res =>{
         console.log(res)
         alert("Approved successfully")
@@ -50,9 +60,11 @@ function Opportunities() {
     }
   };
 
+
   const fetchOpportunities = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/opportunity');
+      console.log(response.data);
       setOpportunities(response.data);
     } catch (error) {
       console.log(error);
@@ -65,20 +77,19 @@ function Opportunities() {
   }, []);
 
 
-  // 根据用户角色过滤机会
+  // Filter opportunities based on user identity
   const filteredOpportunities = opportunities.filter(opportunity => {
-    if (user.is_superuser || user.is_crc) {  // admin和staff可以看到所有机会
-      return true;
-    } else {  // alumni只能看到已经approve的机会
-      return opportunity.approved;
+    if (user.is_superuser || user.is_crc) {
+      return true;  // admin and staff can see all opportunities
+    } else {
+      return opportunity.approved;  // alumni can only see the approved ones
     }
   });
 
   return (
     <div className="opportunity-table">
       <h1>Explore Job Opportunities!</h1>
-      <OpportunityTable opportunities={filteredOpportunities} onApprove={handleApprove} />
-      {/*<OpportunityTable opportunities={opportunities} onApprove={handleApprove} userRole={userRole} />*/}
+      <OpportunityTable opportunities={filteredOpportunities} onApprove={handleApprove}/>
       <AddOpportunity />
     </div>
   );

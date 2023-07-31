@@ -6,17 +6,17 @@ import useAuth from "../../../hooks/useAuth";
 import './register.css'
 
 export default function AddOpportunity() {
-    const {auth} = useAuth(); // 获取auth对象，用于身份验证
-    const navigate = useNavigate() // 用于导航到其他页面
-    const [title, setTitle] = useState("");  // 定义状态变量并给初始值
+    const {auth} = useAuth(); // get auth object，to check identity
+    const navigate = useNavigate()
+    const [title, setTitle] = useState("");
     const [setUser] = useState("");
     const [description, setDescription] = useState("");
     const [post_time, setPost_time] = useState("");
-    //const [showOpportunityList, setShowOpportunityList] = useState(false);  // 来跟踪是否点击按钮
+    //const [showOpportunityList, setShowOpportunityList] = useState(false); // track if button is clicked
 
-    // registerOpportunity函数处理表单提交事件
+    // registerOpportunity for form submit event
     let registerOpportunity = (e)=> {
-        e.preventDefault()  // 阻止默认的表单提交行为，不然直接刷新页面了
+        e.preventDefault()  // prevent the default submission behavior, otherwise will refresh the page
 
         const opportunityData = {
             title: title,
@@ -26,23 +26,23 @@ export default function AddOpportunity() {
         };
 
         axios.post('http://127.0.0.1:8000/api/opportunity/create/', opportunityData, {
-            headers: {  // 请求头
-                    "Authorization": 'Bearer ' + String(auth.accessToken),  // 验证身份
-                    "Content-Type": 'application/json'  // 指定了请求的内容类型为JSON格式
+            headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),  // check identity
+                    "Content-Type": 'application/json'  // Specifies the request is in JSON format
             }
         })
         .then(res => {
-            console.log(res); // 输出响应数据
-            navigate('/')  // 导航到这个页面
+            console.log(res); // output response data
+            navigate('/')
         })
         .catch(error => console.log(error))
     };
 
-      // handleInputChange函数处理输入框的值变化事件
+      // handleInputChange is to handle the input box value change event
       const handleInputChange = (event) => {
           const { name, value } = event.target;
           if (name === "title") {
-            setTitle(value);  // 用set..函数将更新后的数组赋值给相对应的状态变量
+            setTitle(value);  // assigns the updated array to the corresponding state variable
           } else if (name === "user") {
             setUser(value);
           } else if (name === "description") {
@@ -68,7 +68,7 @@ export default function AddOpportunity() {
             Post Time
             <input type="date" name="post_time" value={post_time} onChange={handleInputChange} />
           </label>
-          <button type="submit">Submit</button>  {/* 提交按钮，点击该按钮将触发registerOpportunity函数来处理表单的提交事件 */}
+          <button type="submit">Submit</button>  {/* invoke registerOpportunity function to handle form submit event */}
         </form>
 
       </div>

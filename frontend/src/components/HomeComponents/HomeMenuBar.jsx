@@ -1,8 +1,7 @@
 import images from '../../Static/Images/images.png';
-import { MdCancel } from "react-icons/md"; 
-import { BiMessageRoundedDots } from "react-icons/bi";
+import { MdCancel } from "react-icons/md";
 
-import { AiFillPlayCircle,AiOutlineArrowRight } from "react-icons/ai";
+import { AiFillPlayCircle} from "react-icons/ai";
 import AlumniBig from "../../Static/Images/AlumniBig.png"
 import AlumniSmall from "../../Static/Images/creen3.jfif"
 import "./hellosection.css"
