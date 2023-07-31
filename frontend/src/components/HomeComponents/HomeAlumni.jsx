@@ -226,7 +226,13 @@ const HomeAlumni = () => {
 
           <div style={styles.rightArrow} onClick={handleRightArrowClick}>{'>'}</div>
 
-          <p style={styles.textStyle}>{getDescriptionText(imageData[currentIndex].description)}</p>
+          <p style={{...styles.textStyle, fontWeight: 'bold'}}>
+            {`${imageData[currentIndex].first_name} ${imageData[currentIndex].last_name}`}
+          </p><br/>
+
+          <p style={styles.textStyle}>
+            {getDescriptionText(imageData[currentIndex].description)}
+          </p>
         </div>
 
 
