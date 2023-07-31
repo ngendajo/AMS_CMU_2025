@@ -382,7 +382,7 @@ class UpdateGallerySerializer(serializers.ModelSerializer):
 class OpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
-        fields = ['id', 'user', 'title', 'description', 'post_time']
+        fields = '__all__'
 
     def create(self, validated_data):
         # obtain data from validated_data
