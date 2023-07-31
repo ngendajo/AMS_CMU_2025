@@ -119,8 +119,10 @@ function App() {
                         <Route path='' element={<ASYVInfo />}/>
                       </Route>
                       <Route path='employment' element={<Employment />}/>
-                      <Route path='deleteemployment/:id' element={<DeleteEmployment />}/>
-                      <Route path='deletestudy/:id' element={<Deletestudy />}/>
+                      <Route element={<AuthCheck allowedRoles={["superuser"]} />}>
+                        <Route path='deleteemployment/:id' element={<DeleteEmployment />}/>
+                        <Route path='deletestudy/:id' element={<Deletestudy />}/>
+                      </Route>
                       <Route path='grades' element={<Grades />}/>
                       <Route path='combinations' element={<Combinations />}/>
                       <Route path='eps' element={<Eps />}/>
@@ -140,39 +142,46 @@ function App() {
                         <Route path='bulkalumni' element={<AddBulkASYVInfo />}/>
                       </Route>
                     </Route>
+                    
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
                     <Route path='help' element={<Help />}/>
                     {/* crc crud */}
-                    <Route path='add-crc' element={<Register />}/>
-                    <Route path='add-crc/:id' element={<EditStaffUser />}/>
-                    <Route path='staffprofile/:id' element={<StaffDetails />}/>
-                    <Route path='alumniprofile/:id' element={<AlumnProfile />}/>
-                    <Route path='delete-user/:id' element={<Deleteuser/>}/>
-                    <Route path='reset-password/:id' element={<ResetPassword/>}/>
-                    <Route path='reset-alumn-password/:id' element={<ResetPasswordofAlumn/>}/>
-                    <Route path='add-crc/p/:id' element={<EditPosition/>}/>
-                    {/* alumni crud */}
-                    <Route path='add-alumni' element={<Registera />}/> 
-                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
-                      <Route path='' element={<AddASYVInfo />}/>
-                      <Route path='addemployment' element={<AddEmployment />}/>
-                      <Route path='study' element={<AddStudie />}/>
-                      <Route path='story' element={<AddStory />}/>
+                    <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                      <Route path='add-crc' element={<Register />}/>
+                      <Route path='add-crc/:id' element={<EditStaffUser />}/>
+                      <Route path='staffprofile/:id' element={<StaffDetails />}/>
+                      <Route path='alumniprofile/:id' element={<AlumnProfile />}/>
+                      <Route path='delete-user/:id' element={<Deleteuser/>}/>
+                      <Route path='reset-password/:id' element={<ResetPassword/>}/>
+                      <Route path='reset-alumn-password/:id' element={<ResetPasswordofAlumn/>}/>
+                      <Route path='add-crc/p/:id' element={<EditPosition/>}/>
+                    
+                      {/* alumni crud */}
+                      <Route path='add-alumni' element={<Registera />}/> 
+                      <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
+                        <Route path='' element={<AddASYVInfo />}/>
+                        <Route path='addemployment' element={<AddEmployment />}/>
+                        <Route path='study' element={<AddStudie />}/>
+                        <Route path='story' element={<AddStory />}/>
+                      </Route>
+                      <Route path='add-alumni/:id' element={<EditAlumini />}/>
+                      <Route path='add-grade' element={<AddGrade />}/>
+                      <Route path='add-grade/:id' element={<EditGrade />}/>
+                      <Route path='gradealumni/:id' element={<GradeAlumni />}/>
+                      <Route path='familyalumni/:id' element={<FamilyAlumni />}/>
+                      <Route path='combalumn/:id' element={<CombinationAlumni />}/>
+                      <Route path='epalumn/:id' element={<EpAlumni />}/>
+                      <Route path='add-comb' element={<Addcombination />}/>
+                      <Route path='add-comb/:id' element={<Editcombination/>}/>
+                      <Route path='add-ep' element={<AddEp />}/>
+                      <Route path='add-ep/:id' element={<EditEp />}/>
                     </Route>
-                    <Route path='add-alumni/:id' element={<EditAlumini />}/>
-                    <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
-                    <Route path='add-grade' element={<AddGrade />}/>
-                    <Route path='add-grade/:id' element={<EditGrade />}/>
-                    <Route path='gradealumni/:id' element={<GradeAlumni />}/>
-                    <Route path='familyalumni/:id' element={<FamilyAlumni />}/>
-                    <Route path='combalumn/:id' element={<CombinationAlumni />}/>
-                    <Route path='epalumn/:id' element={<EpAlumni />}/>
-                    <Route path='add-comb' element={<Addcombination />}/>
-                    <Route path='add-comb/:id' element={<Editcombination/>}/>
-                    <Route path='delete-comb/:id' element={<Deletecombination/>}/>
-                    <Route path='add-ep' element={<AddEp />}/>
-                    <Route path='add-ep/:id' element={<EditEp />}/>
+
+                    <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                      <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
+                      <Route path='delete-comb/:id' element={<Deletecombination/>}/>
+                    </Route>
                      {/* gallery route */}
                      <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
                       <Route path='add-gallery' element={<AddGallery />}/>
