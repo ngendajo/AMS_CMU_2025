@@ -1,5 +1,4 @@
-/* News.css */
-
+/******************* Container *******************/
 .news-container {
   display: flex;
   justify-content: flex-start;
@@ -9,6 +8,8 @@
   margin-left: 15px;
 }
 
+
+/******************* News Card *******************/
 .news-card {
   position: relative;
   width: 20%;
@@ -56,6 +57,8 @@
   cursor: pointer;
 }
 
+
+/******************* News Description *******************/
 .description-box {
   position: absolute;
   top: 2/5;
@@ -83,8 +86,7 @@
 }
 
 
-
-
+/******************* Edit and Delete *******************/
 .edit-form-container {
   display: flex;
   justify-content: center;
@@ -158,8 +160,7 @@
 }
 
 
-
-
+/******************* Create News *******************/
 .add-news-button {
   position: absolute;
   top: 81px;
@@ -208,6 +209,8 @@ button {
   cursor: pointer;
 }
 
+
+/******************* Dropzone *******************/
 .dropzone {
   border: 2px dashed #0087F7;
   border-radius: 5px;
@@ -221,5 +224,36 @@ button {
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
+}
+
+
+/******************* Flip Page *******************/
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  position: fixed;
+  width: fit-content;
+  left: 0; /* with right: 0 to center the position */
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.pageItem {
+  list-style: none;
+  margin: 0 10px;
+}
+
+.pageLink {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+}
+
+.activeLink {
+  color: blue;
 }
 

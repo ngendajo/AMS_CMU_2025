@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import jwtDecode from 'jwt-decode';
+import ReactPaginate from 'react-paginate';
 import '../../components/DashboardComponents/Newspart/News.css';
 
 // Dropzone for file upload --------------------------------
@@ -171,7 +172,7 @@ const formatDate = (dateString) => {
 const NewsCard = ({ news, onEdit, onDelete, setNewsData }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const { id, title, description, image_url, date } = news;
+  const { title, description, date } = news;
 
 
   if (isEditing) {
@@ -200,10 +201,14 @@ const News = () => {
   const navigate = useNavigate();
   const user = jwtDecode(auth.accessToken);
 
+  // Set page size to paginate news
+  const [currentPage, setCurrentPage] = useState(0);
+  const PAGE_SIZE = 12;
+
   // This useEffect will run regardless of the user's permissions
   useEffect(() => {
     // Check the user's permissions inside the effect
-    if (!auth || !user.is_superuser && !user.is_crc) {
+    if (!auth || (!user.is_superuser && !user.is_crc)) {
       navigate('/');
       return;
     }
@@ -251,10 +256,19 @@ const News = () => {
   // Combine pinned news and the latest news
   const allOrderedNews = [...pinnedNews, ...notPinnedNews];
 
+  // Paginate news
+  const handlePageClick = (data) => {
+    let selected = data.selected;
+    setCurrentPage(selected);
+  };
+  const offset = currentPage * PAGE_SIZE;
+  const paginatedNews = allOrderedNews.slice(offset, offset + PAGE_SIZE);
+
   return (
     <div className="news-container">
       <button className="add-news-button" onClick={() => setIsCreating(true)}>&nbsp;ADD NEWS 👈🏿&nbsp;</button>
-      {allOrderedNews.map((news) => (
+
+      {paginatedNews.map((news) => (
         <NewsCard
           key={news.id}
           news={news}
@@ -263,6 +277,26 @@ const News = () => {
           setNewsData={setNewsData}
         />
       ))}
+      <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        breakLabel={'...'}
+        pageCount={Math.ceil(allOrderedNews.length / PAGE_SIZE)}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageClick}
+        containerClassName={'pagination'}
+        pageClassName={'pageItem'}
+        previousClassName={'pageItem'}
+        nextClassName={'pageItem'}
+        breakClassName={'pageItem'}
+        activeClassName={'active'}
+        activeLinkClassName={'activeLink'}
+        previousLinkClassName={'pageLink'}
+        nextLinkClassName={'pageLink'}
+        pageLinkClassName={'pageLink'}
+      />
+
     </div>
   );
 };
