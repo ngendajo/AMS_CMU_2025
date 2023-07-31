@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import jwtDecode from 'jwt-decode';
 import '../../components/DashboardComponents/Newspart/News.css';
 
 // Dropzone for file upload --------------------------------
@@ -194,8 +196,18 @@ const NewsCard = ({ news, onEdit, onDelete, setNewsData }) => {
 const News = () => {
   const [newsData, setNewsData] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
+  const { auth } = useAuth();
+  const navigate = useNavigate();
+  const user = jwtDecode(auth.accessToken);
 
+  // This useEffect will run regardless of the user's permissions
   useEffect(() => {
+    // Check the user's permissions inside the effect
+    if (!auth || !user.is_superuser && !user.is_crc) {
+      navigate('/');
+      return;
+    }
+
     axios.get('http://127.0.0.1:8000/api/news/')
       .then(response => {
         setNewsData(response.data);
@@ -203,7 +215,7 @@ const News = () => {
       .catch(error => {
         console.error('Error fetching News data:', error);
       });
-  }, []);
+  }, [auth, navigate, user]);
 
   // Create News Part
   const handleCreate = (newNews) => {
