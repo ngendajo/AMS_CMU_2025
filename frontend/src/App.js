@@ -103,8 +103,10 @@ function App() {
                   <Route path='/' element={<MainDashboard />}>
                     <Route path='/' element={<Dashboard />}/>
                     <Route path='events' element={<Events />}/>
-                    <Route path='add-event' element={<AddEvent />}/>
-                    <Route path='edit-event/:id' element={<EditEvent />}/>
+                    <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                      <Route path='add-event' element={<AddEvent />}/>
+                      <Route path='edit-event/:id' element={<EditEvent />}/>
+                    </Route>
                     <Route path='event/:id' element={<EventDetail/>}/>
                     <Route path='news' element={<News />}/>
                     <Route path='chats' element={<Chats />}/>
@@ -124,13 +126,19 @@ function App() {
                       <Route path='eps' element={<Eps />}/>
                       <Route path='studie' element={<Studies />}/>
                       <Route path='story' element={<Stories />}/>
-                      <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
-                      <Route path='updatestudie/:id' element={<UpdateStudie />}/>
-                      <Route path='updateemployement/:id' element={<UpdateEmployment />}/>
-                      <Route path='updatestory/:id' element={<UpdateStory />}/>
-                      <Route path='deletestory/:id' element={<DeleteStory />}/>
-                      <Route path='displaystory/:id' element={<DisplayStory />}/>
-                      <Route path='bulkalumni' element={<AddBulkASYVInfo />}/>
+                      <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                        <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
+                        <Route path='updatestudie/:id' element={<UpdateStudie />}/>
+                        <Route path='updateemployement/:id' element={<UpdateEmployment />}/>
+                        <Route path='updatestory/:id' element={<UpdateStory />}/>
+                      </Route>
+                      <Route element={<AuthCheck allowedRoles={["superuser"]} />}>
+                        <Route path='deletestory/:id' element={<DeleteStory />}/>
+                      </Route>
+                      <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                        <Route path='displaystory/:id' element={<DisplayStory />}/>
+                        <Route path='bulkalumni' element={<AddBulkASYVInfo />}/>
+                      </Route>
                     </Route>
                     <Route path='staff' element={<Staff />}/>
                     <Route path='profile' element={<Profile />}/>
@@ -166,8 +174,10 @@ function App() {
                     <Route path='add-ep' element={<AddEp />}/>
                     <Route path='add-ep/:id' element={<EditEp />}/>
                      {/* gallery route */}
-                    <Route path='add-gallery' element={<AddGallery />}/>
-                    <Route path='edit-gallery' element={<EditGallery />}/>
+                     <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                      <Route path='add-gallery' element={<AddGallery />}/>
+                      <Route path='edit-gallery' element={<EditGallery />}/>
+                    </Route>
                   </Route>
                 </Route>
 

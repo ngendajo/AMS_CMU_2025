@@ -35,12 +35,12 @@ export default function GalleryPage() {
                 
                 })
                 setData(gallerylist)
-                if(gallerylist.length==0){
+                if(gallerylist.length===0){
                   isEmpty=true;
                 }
             }catch(err) {
                 console.log(err);
-                //navigate('/error');
+                navigate('/error');
             }
         }
     

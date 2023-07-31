@@ -79,7 +79,11 @@ export default function Events() {
                 
                 eventlist.push({
                     title:e.title, 
-                    description:e.description
+                    description:e.description,
+                    id:e.id,
+                    image_url:e.image_url,
+                    startDate:e.startDate,
+                    endDate:e.endDate
                 })
                 })
                 setData(eventlist)
@@ -97,6 +101,7 @@ export default function Events() {
     const [isClicked, setIsClicked] = useState(false);
     
     function handleClick() {
+        console.log(events);
         setIsClicked(!isClicked);
         navigate('/event/'+events.id);
     }
@@ -145,7 +150,7 @@ export default function Events() {
         </div>
       ))}
     </div>
-    
+
     <MyPaginate
     breakLabel="..."
     nextLabel="next >"
