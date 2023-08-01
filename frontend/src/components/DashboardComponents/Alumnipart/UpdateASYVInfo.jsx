@@ -216,7 +216,7 @@ export default function AddASYVInfo() {
                 setNe(dat.alumn.ne)
                 setMaxforne(dat.alumn.maxforne)
                 var eplist=[]
-                dat.alumn.Eps.forEach(element => {
+                dat.alumn.eps.forEach(element => {
                 eplist.push(
                   { value: element.id, label: element.title }
                 )

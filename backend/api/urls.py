@@ -107,5 +107,8 @@ urlpatterns = [
     path('totalalumnreport/', views.AlumnReportView.as_view()),
     path('lumngradereport/', views.AlumnInGradeReportView.as_view()),
     path('empstureport/', views.EmploymentStudieReportView.as_view()),
+
+    path('alumni_count',alumni_count),
+
     path('', views.getRoutes)
 ]

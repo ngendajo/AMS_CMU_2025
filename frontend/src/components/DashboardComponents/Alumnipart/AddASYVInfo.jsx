@@ -27,6 +27,9 @@ export default function AddASYVInfo() {
   let [eps, setEps] = useState([]);
     let [epsdone, setEpsdone] = useState([]);
     const navigate = useNavigate();
+    const [marital_status, setMarital_status] = useState('');
+    const [gender, setGender] = useState('')
+    const [kids, setKids] = useState('')
 
     const [s4marks, setS4marks] = useState('');
       const [s5marks, setS5marks] = useState('');
@@ -178,12 +181,12 @@ export default function AddASYVInfo() {
     })
     axios.post('http://127.0.0.1:8000/api/alumni/info/', {
         "user":params.id,
-        "marital_status":e.target.marital_status.value,
-        "gender":e.target.gender.value,
+        "marital_status":marital_status,
+        "gender":gender,
         "family":e.target.family.value,
         "combination":e.target.combination.value,
         "eps":ep_ids,
-        "kids":e.target.kids.value,
+        "kids":kids,
         "father":father,
         "mother":mother,
         "place_of_birth":e.target.place_of_birth.value,
@@ -290,7 +293,7 @@ export default function AddASYVInfo() {
                       <label htmlFor="marital_status">
                           Marital Status
                       </label>
-                      <select name="marital_status">
+                      <select name="marital_status" value={marital_status} onChange={(event) => setMarital_status(event.target.value)}>
                       <option value="" disabled>Select marital status</option>
                         <option value="Single">Single</option>
                         <option value="Maried">Maried</option>
@@ -302,7 +305,7 @@ export default function AddASYVInfo() {
                       <label htmlFor="gender">
                           Gender
                       </label>
-                      <select name="gender">
+                      <select name="gender" value={gender} onChange={(event) => setGender(event.target.value)}>
                       <option value="" disabled>Select gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -324,7 +327,7 @@ export default function AddASYVInfo() {
                       <label htmlFor="kids">
                           Do you have kids
                       </label>
-                      <select name="kids">
+                      <select name="kids" value={kids} onChange={(event) => setKids(event.target.value)}>
                       <option value="" disabled>Select your choice</option>
                         <option value="false">Yes</option>
                         <option value="true">No</option>

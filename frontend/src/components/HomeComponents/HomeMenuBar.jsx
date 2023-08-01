@@ -109,7 +109,7 @@ export default function HomeMenuBar() {
         const [alumniCount, setAlumniCount] = useState(0);
 
         useEffect(() => {
-            axios.get('http://127.0.0.1:8000/api/alumni_count/')
+            axios.get('http://127.0.0.1:8000/api/alumni_count')
                 .then(response => {
                     setAlumniCount(response.data.count);
                 })
