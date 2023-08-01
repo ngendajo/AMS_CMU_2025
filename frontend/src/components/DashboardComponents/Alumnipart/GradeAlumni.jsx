@@ -189,7 +189,8 @@ const workbook = new Excel.Workbook();
 
   const saveExcel = async () => {
     try {
-      const fileName = workBookName;
+      if(datatodownload.length>0){
+        const fileName = workBookName;
 
       // creating one worksheet in workbook
       const worksheet = workbook.addWorksheet(workSheetName);
@@ -237,6 +238,9 @@ const workbook = new Excel.Workbook();
 
       // download the processed file
       saveAs(new Blob([buf]), `${fileName}.xlsx`);
+      }else{
+        alert("Please Wait for 2 minutes....")
+      }
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);

@@ -209,7 +209,7 @@ export default function AddASYVInfo() {
         alert(" created successfully")
         navigate(`/add-alumni/info/${params.id}/study`)
     })
-    .catch(error => console.log(error.response.data),navigate('/error')
+    .catch(error => console.log(error.response.data)
     )
      
 
