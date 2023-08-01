@@ -6,7 +6,7 @@ import axios from "axios";
 import "../forms.css";
 import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Dropzone from "react-dropzone";
+import Dropzone from "react-dropzone"; 
 import { useNavigate } from "react-router-dom";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;

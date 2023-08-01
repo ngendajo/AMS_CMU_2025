@@ -117,23 +117,21 @@ function App() {
                     <Route path='alumni' element={<Alumni />}>
                       <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
                         <Route path='' element={<ASYVInfo />}/>
+                        <Route path='employment' element={<Employment />}/>
+                        <Route path='grades' element={<Grades />}/>
+                        <Route path='combinations' element={<Combinations />}/>
+                        <Route path='eps' element={<Eps />}/>
+                        <Route path='studie' element={<Studies />}/>
+                        <Route path='story' element={<Stories />}/>
                       </Route>
-                      <Route path='employment' element={<Employment />}/>
                       <Route element={<AuthCheck allowedRoles={["superuser"]} />}>
                         <Route path='deleteemployment/:id' element={<DeleteEmployment />}/>
                         <Route path='deletestudy/:id' element={<Deletestudy />}/>
                       </Route>
-                      <Route path='grades' element={<Grades />}/>
-                      <Route path='combinations' element={<Combinations />}/>
-                      <Route path='eps' element={<Eps />}/>
-                      <Route path='studie' element={<Studies />}/>
-                      <Route path='story' element={<Stories />}/>
-                      <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
-                        <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
-                        <Route path='updatestudie/:id' element={<UpdateStudie />}/>
-                        <Route path='updateemployement/:id' element={<UpdateEmployment />}/>
-                        <Route path='updatestory/:id' element={<UpdateStory />}/>
-                      </Route>
+                      <Route path='updateasyvinfo/:id' element={<UpdateASYVInfo />}/>
+                      <Route path='updatestudie/:id' element={<UpdateStudie />}/>
+                      <Route path='updateemployement/:id' element={<UpdateEmployment />}/>
+                      <Route path='updatestory/:id' element={<UpdateStory />}/>
                       <Route element={<AuthCheck allowedRoles={["superuser"]} />}>
                         <Route path='deletestory/:id' element={<DeleteStory />}/>
                       </Route>
@@ -142,9 +140,10 @@ function App() {
                         <Route path='bulkalumni' element={<AddBulkASYVInfo />}/>
                       </Route>
                     </Route>
-                    
-                    <Route path='staff' element={<Staff />}/>
-                    <Route path='profile' element={<Profile />}/>
+                    <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                      <Route path='staff' element={<Staff />}/>
+                      <Route path='profile' element={<Profile />}/>
+                    </Route>
                     <Route path='help' element={<Help />}/>
                     {/* crc crud */}
                     <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
@@ -159,13 +158,7 @@ function App() {
                     
                       {/* alumni crud */}
                       <Route path='add-alumni' element={<Registera />}/> 
-                      <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
-                        <Route path='' element={<AddASYVInfo />}/>
-                        <Route path='addemployment' element={<AddEmployment />}/>
-                        <Route path='study' element={<AddStudie />}/>
-                        <Route path='story' element={<AddStory />}/>
-                      </Route>
-                      <Route path='add-alumni/:id' element={<EditAlumini />}/>
+                      
                       <Route path='add-grade' element={<AddGrade />}/>
                       <Route path='add-grade/:id' element={<EditGrade />}/>
                       <Route path='gradealumni/:id' element={<GradeAlumni />}/>
@@ -177,6 +170,15 @@ function App() {
                       <Route path='add-ep' element={<AddEp />}/>
                       <Route path='add-ep/:id' element={<EditEp />}/>
                     </Route>
+                    <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
+                        <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                          <Route path='' element={<AddASYVInfo />}/>
+                        </Route>
+                        <Route path='addemployment' element={<AddEmployment />}/>
+                        <Route path='study' element={<AddStudie />}/>
+                        <Route path='story' element={<AddStory />}/>
+                      </Route>
+                      <Route path='add-alumni/:id' element={<EditAlumini />}/>
 
                     <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
                       <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
