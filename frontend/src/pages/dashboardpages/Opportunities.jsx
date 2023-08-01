@@ -49,15 +49,6 @@ function Opportunities() {
       } catch (error) {
       }
     }
-      ).then(res =>{
-        console.log(res)
-        alert("Approved successfully")
-        navigate('/opportunities')
-      })  // Update "approved" status
-      } catch (error) {
-      }
-      navigate('/error');
-    }
   };
 
 
