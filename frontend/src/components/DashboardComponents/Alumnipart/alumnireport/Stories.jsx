@@ -8,6 +8,7 @@ import { StoriesTable } from '../StoriesTable';
 import ReactHtmlParser from "react-html-parser";
 import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
 import { useNavigate } from 'react-router-dom';
+import { AiOutlineFileAdd } from "react-icons/ai";
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -52,6 +53,7 @@ export default function Employment() {
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone:element.phone1,
+                description:element.description===null?<Link to={`/add-alumni/info/${element.id}/story`}><AiOutlineFileAdd className='icon'/></Link>: ReactHtmlParser(element.description),
                 allowed:element.description?element.displayed?<Link to={`/alumni/displaystory/${element.story_id}`}><LiaEyeSolid className='icon'/></Link>:<Link to={`/alumni/displaystory/${element.story_id}`}><LiaEyeSlash className='icon'/></Link>:null,
                 user_id:element.description?<span>
                   <Link to={`/alumni/updatestory/${element.story_id}`}><BiEditAlt className='icon'/></Link>
