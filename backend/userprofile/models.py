@@ -174,7 +174,7 @@ class Gallery(models.Model):
 # News model
 class News(models.Model):
     title = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=5000)
     date = models.DateTimeField(auto_now=True)
     image_url = models.ImageField(upload_to='news', default='news/default.jpg')
     pinned = models.BooleanField(default=False)

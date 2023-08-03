@@ -98,11 +98,11 @@ urlpatterns = [
     path('opportunity/<int:pk>/approve', views.ApproveOpportunityView.as_view(), name='approve-opportunity'),
 
     # News paths
-    path('news/', views.news_list, name='news-list'),
+    path('news/', views.newsView.as_view(), name='news-list'),
     path('news/create/', views.create_news, name='news-create'),
     path('news/<int:pk>/update/', views.update_news, name='news-update'),
     path('news/<int:pk>/delete/', views.delete_news, name='news-delete'),
-
+ 
     # Dashboard data
     path('totalalumnreport/', views.AlumnReportView.as_view()),
     path('lumngradereport/', views.AlumnInGradeReportView.as_view()),

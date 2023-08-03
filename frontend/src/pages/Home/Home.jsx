@@ -18,7 +18,7 @@ export default function Home() {
         <HomeStory/>
         <HomeMission/>
         <HomeNews/>
-        <HomeFooter/>
+        <HomeFooter/> 
     </div>
   )
 }

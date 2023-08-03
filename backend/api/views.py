@@ -1054,11 +1054,28 @@ def create_news(request):
     return Response(serializer.errors, status=400)
 
 
-@api_view(['GET'])
+class newsView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    
+    def get(self, request):
+        # checking for the parameters from the URL
+        if request.query_params:
+            news = News.objects.filter(**request.query_params.dict())
+        else:
+            news = News.objects.all()
+
+        # if there is something in items else raise error
+        if news:
+            serializer = NewsSerializer(news, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+""" @api_view(['GET'])
 def news_list(request):
     news = News.objects.all()
     serializer = NewsSerializer(news, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data) """
 
 
 @api_view(['PUT'])

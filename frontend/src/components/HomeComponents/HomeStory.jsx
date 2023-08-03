@@ -1,5 +1,5 @@
 import React from 'react';
-import Front_Story1 from "../../Static/Images/Front_Story1.jpg"
+import Front_Story1 from "../../Static/Images/Front_Story1.jfif"
 import Front_Story2 from "../../Static/Images/Front_Story2.jpg"
 import Front_Story3 from "../../Static/Images/Front_Story3.jpg"
 import Front_Story4 from "../../Static/Images/Front_Story4.jpg"
