@@ -167,7 +167,7 @@ export default function ASYVInfo() {
             console.log(alumnilist2)
         }catch(err) {
             console.log(err);
-            navigate('/error');
+            // navigate('/error');
         }
     }
 
@@ -231,7 +231,7 @@ const workbook = new Excel.Workbook();
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);
-      navigate('/error');
+      // navigate('/error');
     } finally {
       // removing worksheet's instance to create new one
       workbook.removeWorksheet(workSheetName);
