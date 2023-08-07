@@ -9,6 +9,8 @@ import ReactHtmlParser from "react-html-parser";
 import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineFileAdd } from "react-icons/ai";
+import baseUrl from '../../../../api/baseUrl';
+import baseUrlforImg from '../../../../api/baseUrlforImg';
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -35,7 +37,7 @@ export default function Employment() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/story/',{
+            const response = await axios.get(baseUrl+'/story/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -48,7 +50,7 @@ export default function Employment() {
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
-                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
+                image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,

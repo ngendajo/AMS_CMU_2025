@@ -6,6 +6,7 @@ import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import baseUrl from '../../api/baseUrl';
 
 export default function Schedule() {
     const [data, setData] = useState([]);
@@ -23,7 +24,7 @@ export default function Schedule() {
   useEffect(() =>{
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/event/',{
+        const response = await axios.get(baseUrl+'/event/',{
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
                 "Content-Type": 'multipart/form-data'

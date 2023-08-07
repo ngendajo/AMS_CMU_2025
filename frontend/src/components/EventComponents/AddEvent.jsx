@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {useRef, useState} from "react";
 import useAuth from "../../hooks/useAuth";
 import Dropzone from "react-dropzone";
+import baseUrl from "../../api/baseUrl";
 
 export default function AddGallery() {
     const {auth} = useAuth();
@@ -48,7 +49,7 @@ export default function AddGallery() {
             formData.append("image_url", image.image_url);
             console.log(formData)
 
-            const response = await axios.post("http://127.0.0.1:8000/api/event/create/",formData,
+            const response = await axios.post(baseUrl+"/event/create/",formData,
             {
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),

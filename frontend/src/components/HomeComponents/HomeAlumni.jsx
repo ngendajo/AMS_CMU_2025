@@ -1,4 +1,6 @@
 import { React, useState, useEffect } from 'react';
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 const staticStyles = {
   container: {
@@ -94,7 +96,7 @@ const getDynamicStyles = (imageData) => {
       width: '75px',
       height: '75px',
       borderRadius: '50%',
-      backgroundImage: `url(http://localhost:8000${imageData[randomIndices[0]].image_url})`,
+      backgroundImage: `url(${baseUrlforImg+imageData[randomIndices[0]].image_url})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       marginBottom: '20px',
@@ -104,7 +106,7 @@ const getDynamicStyles = (imageData) => {
     width: '75px',
     height: '75px',
     borderRadius: '50%',
-    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[1]].image_url})`,
+    backgroundImage: `url(${baseUrlforImg+imageData[randomIndices[1]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     marginBottom: '20px',
@@ -114,7 +116,7 @@ const getDynamicStyles = (imageData) => {
     width: '65px',
     height: '65px',
     borderRadius: '70%',
-    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[2]].image_url})`,
+    backgroundImage: `url(${baseUrlforImg+imageData[randomIndices[2]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'absolute', // Use absolute positioning to overlap
@@ -126,7 +128,7 @@ const getDynamicStyles = (imageData) => {
     width: '65px',
     height: '65px',
     borderRadius: '70%',
-    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[3]].image_url})`,
+    backgroundImage: `url(${baseUrlforImg+imageData[randomIndices[3]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'absolute', // Use absolute positioning to overlap
@@ -138,7 +140,7 @@ const getDynamicStyles = (imageData) => {
     width: '70px',
     height: '70px',
     borderRadius: '50%',
-    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[4]].image_url})`,
+    backgroundImage: `url(${baseUrlforImg+imageData[randomIndices[4]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     marginTop: '40px',
@@ -149,7 +151,7 @@ const getDynamicStyles = (imageData) => {
     width: '70px',
     height: '70px',
     borderRadius: '50%',
-    backgroundImage: `url(http://localhost:8000${imageData[randomIndices[5]].image_url})`,
+    backgroundImage: `url(${baseUrlforImg+imageData[randomIndices[5]].image_url})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     marginTop: '40px',
@@ -176,7 +178,7 @@ const HomeAlumni = () => {
   useEffect(() => {
     const fetchImageData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/storyhomeview/');
+        const response = await fetch(baseUrl+'/storyhomeview/');
         const data = await response.json();
         setImageData(data);
       } catch (error) {
@@ -221,7 +223,7 @@ const HomeAlumni = () => {
           <div style={styles.leftArrow} onClick={handleLeftArrowClick}>{'<'}</div>
 
           <div style={styles.centerCircle}>
-            <img src={`http://localhost:8000${imageData[currentIndex].image_url}`} alt="" style={{ borderRadius: '50%', width: '100%', height: '100%' }} />
+            <img src={`${baseUrlforImg+imageData[currentIndex].image_url}`} alt="" style={{ borderRadius: '50%', width: '100%', height: '100%' }} />
           </div>
 
           <div style={styles.rightArrow} onClick={handleRightArrowClick}>{'>'}</div>

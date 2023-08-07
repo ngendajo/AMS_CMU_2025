@@ -1,7 +1,7 @@
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { useHistory } from 'react-router-dom'
 import React, {useState, useEffect, useContext} from 'react'
 import AuthContext from '../../context/AuthContext'
+import baseUrl from '../../../api/baseUrl';
 
 export const Clubs = ({ id }) => {
     const [data, setData] = useState([]);
@@ -12,7 +12,7 @@ export const Clubs = ({ id }) => {
     }, [])
 
     let getData = async() =>{
-        let response = await fetch('http://127.0.0.1:8000/api/onealumni/'+id+"/", {
+        let response = await fetch(baseUrl+'/onealumni/'+id+"/", {
             method:'GET',
             headers:{
                 'Content-Type':'application/json',

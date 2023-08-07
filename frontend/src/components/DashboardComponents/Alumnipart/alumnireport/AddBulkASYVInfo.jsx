@@ -9,6 +9,7 @@ import axios from 'axios';
 import useAuth from '../../../../hooks/useAuth';
 import "../alumni.css";
 import { useNavigate } from "react-router-dom";
+import baseUrl from '../../../../api/baseUrl';
 
 const columns = [
     { header: 'email', key: 'email' },
@@ -66,7 +67,7 @@ export default function AddBulkASYVInfo() {
 
       const geteps = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/ep/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+              const response = await axios.get(baseUrl+'/ep/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                   headers: { 
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -87,7 +88,7 @@ export default function AddBulkASYVInfo() {
 
       const getcombinations = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/combination/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+              const response = await axios.get(baseUrl+'/combination/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                   headers: { 
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -108,7 +109,7 @@ export default function AddBulkASYVInfo() {
 
       const getfamilies = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/grades/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+              const response = await axios.get(baseUrl+'/grades/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                   headers: { 
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -145,7 +146,7 @@ export default function AddBulkASYVInfo() {
 
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/users/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+            const response = await axios.get(baseUrl+'/users/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { 
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -400,7 +401,7 @@ export default function AddBulkASYVInfo() {
       formData.append('last_name',ele.last_name);
       formData.append('phone1',ele.phone_number);
       formData.append('password',"Agahozo@12");
-      const response = await axios.post("http://127.0.0.1:8000/api/bulkalumni/",
+      const response = await axios.post(baseUrl+"/bulkalumni/",
           formData,{
               headers: {
                   "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -409,7 +410,7 @@ export default function AddBulkASYVInfo() {
               withCredentials:true 
           }
           );
-          axios.post('http://127.0.0.1:8000/api/alumni/info/', {
+          axios.post(baseUrl+'/alumni/info/', {
         "user":response.data.id,
         "marital_status":ele.martal_status,
         "gender":ele.gender,
@@ -442,7 +443,7 @@ export default function AddBulkASYVInfo() {
         if(level===undefined?true:!(["A2","A1","A0","M","PHD"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
         {}
         else{
-        axios.post('http://127.0.0.1:8000/api/studie/', {
+        axios.post(baseUrl+'/studie/', {
           "alumn":res.data.id,
           "level":level,
           "degree":degree,
@@ -470,7 +471,7 @@ export default function AddBulkASYVInfo() {
         if(title===undefined?true:title===""||company===undefined?true:company===""||career===undefined?true:career===""||job_status===undefined?true:job_status==="")
         {}
         else{
-          axios.post('http://127.0.0.1:8000/api/employment/', {
+          axios.post(baseUrl+'/employment/', {
         "title":title,
         "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"O":"I",
         "description":description===undefined?"NS":description,

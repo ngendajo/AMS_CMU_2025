@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
 import './register.css'
+import baseUrl from '../../../api/baseUrl';
 
 export default function AddOpportunity() {
     const {auth} = useAuth(); // get auth object，to check identity
@@ -25,7 +26,7 @@ export default function AddOpportunity() {
             post_time: post_time
         };
 
-        axios.post('http://127.0.0.1:8000/api/opportunity/create/', opportunityData, {
+        axios.post(baseUrl+'/opportunity/create/', opportunityData, {
             headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),  // check identity
                     "Content-Type": 'application/json'  // Specifies the request is in JSON format

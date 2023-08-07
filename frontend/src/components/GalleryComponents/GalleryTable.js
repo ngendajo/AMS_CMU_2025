@@ -1,4 +1,5 @@
 import React from 'react';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 function GalleryTable({ galleries, onDisplay, onDelete }) {
   return (
@@ -15,7 +16,7 @@ function GalleryTable({ galleries, onDisplay, onDelete }) {
         {galleries.map((gallery) => (
           <tr key={gallery.id}>
             <td>{gallery.id}</td>
-            <td role="cell"><img src={"http://localhost:8000"+gallery.image_url} width={75} height={75}   /></td>
+            <td role="cell"><img src={baseUrlforImg+gallery.image_url} width={75} height={75}   /></td>
      
             <td>
               {gallery.displayed ? ( 

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import baseUrl from "../../../api/baseUrl";
+import baseUrlforImg from "../../../api/baseUrlforImg";
 
 export default function ResetPasswordofAlumn() {
     const [userid, setUserid]=useState([]);
@@ -17,7 +19,7 @@ export default function ResetPasswordofAlumn() {
       
           const getuser = async () =>{
               try{
-                  const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+                  const response = await axios.get(baseUrl+'/alumni/?id='+params.id,{
                       headers: {
                           "Authorization": 'Bearer ' + String(auth.accessToken),
                           "Content-Type": 'multipart/form-data'
@@ -39,7 +41,7 @@ export default function ResetPasswordofAlumn() {
             let formData = new FormData();
             
             formData.append('email',email);
-            const response = await axios.post("http://127.0.0.1:8000/api/password-reset/",
+            const response = await axios.post(baseUrl+"/password-reset/",
                 formData,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -50,7 +52,7 @@ export default function ResetPasswordofAlumn() {
                 );
                 let formData2 = new FormData();
                 formData2.append('password',"Agahozo@12");
-                const response2 = await axios.patch("http://127.0.0.1:8000/"+response.data.message,
+                const response2 = await axios.patch(baseUrlforImg+"/"+response.data.message,
                 formData2,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),

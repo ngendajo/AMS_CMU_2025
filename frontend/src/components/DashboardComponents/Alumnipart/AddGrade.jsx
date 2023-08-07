@@ -6,6 +6,7 @@ import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { CiCircleRemove } from "react-icons/ci";
 import './register.css'
+import baseUrl from "../../../api/baseUrl";
 
 export default function AddGrade() {
     const {auth} = useAuth();
@@ -14,7 +15,7 @@ export default function AddGrade() {
 
     let registerGrade = (e )=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/grades/', {
+        axios.post(baseUrl+'/grades/', {
             'grade_name':e.target.grade_name.value, 
             'start_academic_year':e.target.start_academic_year.value,
             'end_academic_year':e.target.end_academic_year.value,

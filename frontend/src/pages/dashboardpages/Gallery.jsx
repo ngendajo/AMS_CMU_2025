@@ -5,6 +5,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { IoIosAdd } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 export default function GalleryPage() {
    const [data, setData] = useState([]);
@@ -16,7 +18,7 @@ export default function GalleryPage() {
     useEffect(() =>{
         const getData = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/gallery/',{
+                const response = await axios.get(baseUrl+'/gallery/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -26,7 +28,7 @@ export default function GalleryPage() {
                 response.data.forEach(e=>{
                 if(e.displayed){
                     gallerylist.push({
-                     src:"http://localhost:8000"+e.image_url,
+                     src:baseUrlforImg+e.image_url,
                      width: 320,
                      height: 174,
                      id: e.id

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import baseUrl from "../../api/baseUrl";
 
 
 const PWD_REGIX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -48,7 +49,7 @@ export default function Password() {
 
             formData.append('new_password',pwd);
             formData.append('current_password',current_password);
-            const response = await axios.post("http://127.0.0.1:8000/api/changepassword/",
+            const response = await axios.post(baseUrl+"/changepassword/",
                 formData,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),

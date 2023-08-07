@@ -11,6 +11,8 @@ import axios from "axios";
 import { useParams } from 'react-router';
 import "../../forms.css";
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../../../../api/baseUrl";
+import baseUrlforImg from "../../../../api/baseUrlforImg";
 
 
 
@@ -32,7 +34,7 @@ export default function AddEmployment() {
     
       const getuser = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/employment/?id='+params.id,{
+              const response = await axios.get(baseUrl+'/employment/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -62,7 +64,7 @@ export default function AddEmployment() {
   const handleSubmit = async (e) =>{
     e.preventDefault();
 
-    axios.post(`http://127.0.0.1:8000/api/updateemployment/${params.id}/`, {
+    axios.post(`${baseUrl}/updateemployment/${params.id}/`, {
         "title":title,
         "status":status,
         "description":description,
@@ -99,7 +101,7 @@ export default function AddEmployment() {
       {
       userid.map((result, id)=>{
           return <div key={id} className="delete-message"> 
-          <img src={"http://localhost:8000"+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
+          <img src={baseUrlforImg+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
           <h1>Update Employment Status for  {result.alumn.user.first_name} {result.alumn.user.last_name} with {result.alumn.user.email} as 
           email
           </h1>

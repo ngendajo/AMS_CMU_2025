@@ -12,6 +12,8 @@ import axios from "axios";
 import { useParams } from 'react-router';
 import "../../forms.css";
 import { useNavigate } from "react-router-dom";
+import baseUrl from '../../../../api/baseUrl';
+import baseUrlforImg from '../../../../api/baseUrlforImg';
 
 
 
@@ -28,7 +30,7 @@ export default function UpdateStory() {
     
       const getuser = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/story/?id='+params.id,{
+              const response = await axios.get(baseUrl+'/story/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -55,7 +57,7 @@ export default function UpdateStory() {
         console.log(editorRef.current.getContent());
       
 
-    axios.post('http://127.0.0.1:8000/api/updatestory/'+params.id+"/", {
+    axios.post(baseUrl+'/updatestory/'+params.id+"/", {
         "description":editorRef.current.getContent()
         
         },
@@ -88,7 +90,7 @@ export default function UpdateStory() {
       {
       userid.map((result, id)=>{
           return <div key={id} className="delete-message"> 
-          <img src={"http://localhost:8000"+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
+          <img src={baseUrlforImg+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
           <h1>Update a story for  {result.alumn.user.first_name} {result.alumn.user.last_name} with {result.alumn.user.email} as 
           email
           </h1>

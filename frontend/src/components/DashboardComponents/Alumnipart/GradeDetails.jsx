@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import React, {useState, useEffect, useContext} from 'react'
 import AuthContext from '../../context/AuthContext'
 import Axios from "axios";
+import baseUrl from '../../../api/baseUrl';
 
 export const GradeDetails = ({ id }) => {
     const [grades, setGrades] = useState([]);
@@ -16,7 +17,7 @@ export const GradeDetails = ({ id }) => {
     }, [])
 
     let getData = async() =>{
-        let response = await fetch('http://127.0.0.1:8000/api/allgrades/?id='+id, {
+        let response = await fetch(baseUrl+'/allgrades/?id='+id, {
             method:'GET',
             headers:{
                 'Content-Type':'application/json',
@@ -58,7 +59,7 @@ export const GradeDetails = ({ id }) => {
         setFamily(values);
         console.log(values[index][updatedValue])
         console.log(values[index]["id"])
-        Axios.post('http://127.0.0.1:8000/api/family/'+values[index]["id"]+'/', {
+        Axios.post(baseUrl+'/family/'+values[index]["id"]+'/', {
             family_name:values[index]["family_name"], 
             family_number:values[index]["family_number"],
             family_mother:values[index]["family_mother"], 
@@ -77,7 +78,7 @@ export const GradeDetails = ({ id }) => {
         const values = [...grades];
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
-        Axios.post('http://127.0.0.1:8000/api/grade/'+id+'/', {
+        Axios.post(baseUrl+'/grade/'+id+'/', {
             'grade_name':values[index]['grade_name'], 
             'start_academic_year':values[index]['start_academic_year'],
             'end_academic_year':values[index]['end_academic_year']

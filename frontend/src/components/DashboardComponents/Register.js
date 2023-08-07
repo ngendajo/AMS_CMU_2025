@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import "./forms.css";
 import Dropzone from "react-dropzone";
+import baseUrl from "../../api/baseUrl";
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -156,7 +157,7 @@ const Register = () => {
         formData.append('profile',position);
         formData.append('image_url',image.image_url);
         formData.append('level',level);
-        const response = await axios.post("http://127.0.0.1:8000/api/staff/",
+        const response = await axios.post(baseUrl+"/staff/",
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),

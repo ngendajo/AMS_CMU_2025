@@ -9,6 +9,7 @@ import { BiExport } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import './combinations.css';
+import baseUrl from '../../../api/baseUrl';
 
 export const Eps = ({ id }) => {
     const [data, setData] = useState([]);
@@ -19,7 +20,7 @@ export const Eps = ({ id }) => {
     
         const getData = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/ep/',{
+                const response = await axios.get(baseUrl+'/ep/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

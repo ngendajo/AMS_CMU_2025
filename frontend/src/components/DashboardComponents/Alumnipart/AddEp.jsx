@@ -5,13 +5,14 @@ import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import './register.css'
+import baseUrl from "../../../api/baseUrl";
 
 export default function AddEp() {
     const {auth} = useAuth();
     const navigate =useNavigate()
     let registerEp = (e )=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/ep/', {
+        axios.post(baseUrl+'/ep/', {
             'title':e.target.title.value,
             'type':e.target.type.value
         },

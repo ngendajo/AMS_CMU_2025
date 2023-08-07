@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { EmplymentTable } from '../EmploymentTable';
 import { useNavigate } from 'react-router-dom';
+import baseUrl from '../../../../api/baseUrl';
+import baseUrlforImg from '../../../../api/baseUrlforImg';
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -39,7 +41,7 @@ export default function Employment() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/employment/',{
+            const response = await axios.get(baseUrl+'/employment/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -65,7 +67,7 @@ export default function Employment() {
               })
               alumnilist.push({
                 id:i, 
-                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
+                image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 name:element.first_name+" "+element.last_name,
                 phone:element.phone1,

@@ -12,6 +12,8 @@ import { useParams } from 'react-router';
 import "../forms.css";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../../../api/baseUrl";
+import baseUrlforImg from "../../../api/baseUrlforImg";
 
 
 const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
@@ -41,7 +43,7 @@ export default function AddASYVInfo() {
     
         const getgrades = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/grades/',{
+                const response = await axios.get(baseUrl+'/grades/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -77,7 +79,7 @@ export default function AddASYVInfo() {
     
       const geteps = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/ep/',{
+              const response = await axios.get(baseUrl+'/ep/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -105,7 +107,7 @@ export default function AddASYVInfo() {
     
       const getcombinations = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/combination/',{
+              const response = await axios.get(baseUrl+'/combination/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -155,7 +157,7 @@ export default function AddASYVInfo() {
     
       const getuser = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+              const response = await axios.get(baseUrl+'/alumni/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -179,7 +181,7 @@ export default function AddASYVInfo() {
     epsdone.forEach((ep)=>{
         ep_ids.push(ep.value)
     })
-    axios.post('http://127.0.0.1:8000/api/alumni/info/', {
+    axios.post(baseUrl+'/alumni/info/', {
         "user":params.id,
         "marital_status":marital_status,
         "gender":gender,
@@ -219,7 +221,7 @@ export default function AddASYVInfo() {
     {
     userid.map((result, id)=>{
         return <div key={id} className="delete-message"> 
-        <img src={"http://localhost:8000"+result.image_url} alt="logo" className="user-image-icon" />
+        <img src={baseUrlforImg+result.image_url} alt="logo" className="user-image-icon" />
         <h1>Add ASYV Info for  {result.first_name} {result.last_name} with {result.email} as 
         email
         </h1>

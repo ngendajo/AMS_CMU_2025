@@ -2,13 +2,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import baseUrl from "../../../api/baseUrl";
 
 export default function Addcombination() {
     const {auth} = useAuth();
     const navigate =useNavigate()
     let registerCombination = (e )=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/combination/', {
+        axios.post(baseUrl+'/combination/', {
             'combination_name':e.target.combination_name.value,
         },
         {

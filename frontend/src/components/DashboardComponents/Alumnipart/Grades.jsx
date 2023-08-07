@@ -8,6 +8,7 @@ import useAuth from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
+import baseUrl from '../../../api/baseUrl';
 
 const columns = [
   { header: 'No', key: 'id' },
@@ -34,7 +35,7 @@ export const Grades = () => {
     
         const getGrades = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/grades/',{
+                const response = await axios.get(baseUrl+'/grades/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -56,7 +57,7 @@ export const Grades = () => {
     
       const getFamilies = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/families/',{
+              const response = await axios.get(baseUrl+'/families/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'

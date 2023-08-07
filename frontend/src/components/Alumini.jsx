@@ -5,6 +5,8 @@ import axios from "axios";
 import useAuth from "../hooks/useAuth";
 import './ProfileComponents/alumniprofile.css';
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../api/baseUrl";
+import baseUrlforImg from "../api/baseUrlforImg";
 
 export default function AlumnProfile() {
         const [ user, setUser ] = useState([]);
@@ -18,7 +20,7 @@ export default function AlumnProfile() {
     
             const getusers = async () =>{
                 try{
-                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+auth.user.id,{
+                    const response = await axios.get(baseUrl+'/alumni/?id='+auth.user.id,{
                         headers: {
                             "Authorization": 'Bearer ' + String(auth.accessToken),
                             "Content-Type": 'multipart/form-data'
@@ -40,7 +42,7 @@ export default function AlumnProfile() {
         useEffect(() =>{
             const getemploy = async () =>{
               try{
-                  const response = await axios.get('http://127.0.0.1:8000/api/employment/',{
+                  const response = await axios.get(baseUrl+'/employment/',{
                       headers: {
                           "Authorization": 'Bearer ' + String(auth.accessToken),
                           "Content-Type": 'multipart/form-data'
@@ -67,7 +69,7 @@ export default function AlumnProfile() {
       useEffect(() =>{
         const getstudy = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/studie/',{
+              const response = await axios.get(baseUrl+'/studie/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -94,7 +96,7 @@ export default function AlumnProfile() {
       const fetchOpportunities = async () => {
         
         try {
-          const response = await axios.get('http://127.0.0.1:8000/api/opportunity');
+          const response = await axios.get(baseUrl+'/opportunity');
           
           response.data.forEach((opp)=>{
             if(parseInt(opp.user)===parseInt(auth.user.id)){
@@ -120,7 +122,7 @@ export default function AlumnProfile() {
         <div className='alumni-profile-main'>
           <div className="alumni-profile-top-left">
             <div className="basic-info">
-              <img src={"http://localhost:8000"+use?.image_url} alt="profile" className="alumni-profile-img" />
+              <img src={baseUrlforImg+use?.image_url} alt="profile" className="alumni-profile-img" />
               <div className="alumni-profile-info">
                 <div className="alumni-profile-info-top">
                   <h2>{use.first_name} {use.last_name}</h2>

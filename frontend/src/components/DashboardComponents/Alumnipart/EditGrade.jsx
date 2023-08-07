@@ -9,6 +9,7 @@ import './register.css'
 import { CiCircleRemove } from "react-icons/ci";
 import { BiSave } from "react-icons/bi";
 import { BsFillHouseAddFill } from "react-icons/bs";
+import baseUrl from "../../../api/baseUrl";
 
 export default function AddGrade() {
     const {auth} = useAuth();
@@ -24,7 +25,7 @@ export default function AddGrade() {
     
         const getGrade = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/grades/?id='+params.id,{
+                const response = await axios.get(baseUrl+'/grades/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -69,7 +70,7 @@ export default function AddGrade() {
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
         setFamilies(values);
-        axios.post('http://127.0.0.1:8000/api/family/'+values[index]["id"]+'/', {
+        axios.post(baseUrl+'/family/'+values[index]["id"]+'/', {
             family_name:values[index]["family_name"], 
             family_number:values[index]["family_number"],
             family_mother:values[index]["family_mother"], 
@@ -87,7 +88,7 @@ export default function AddGrade() {
         const values = [...grade];
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
-        axios.post('http://127.0.0.1:8000/api/grade/'+params.id+'/', {
+        axios.post(baseUrl+'/grade/'+params.id+'/', {
             'grade_name':values[index]['grade_name'], 
             'start_academic_year':values[index]['start_academic_year'],
             'end_academic_year':values[index]['end_academic_year']
@@ -104,7 +105,7 @@ export default function AddGrade() {
 
       const handleDeletegrade = () => {
         
-        axios.delete('http://127.0.0.1:8000/api/grade/'+params.id+'/delete/',
+        axios.delete(baseUrl+'/grade/'+params.id+'/delete/',
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -118,7 +119,7 @@ export default function AddGrade() {
       };
 
       const handleRemovesavedFamily =(index,id) =>{
-        axios.delete('http://127.0.0.1:8000/api/family/'+id+'/delete/',
+        axios.delete(baseUrl+'/family/'+id+'/delete/',
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -142,7 +143,7 @@ export default function AddGrade() {
       const handleSaveFamily = () =>{
         console.log(family);
         family.forEach((f)=>{
-            axios.post('http://127.0.0.1:8000/api/addfamilies/', {
+            axios.post(baseUrl+'/addfamilies/', {
                 grade:f.grade,
                 family_name:f.family_name,
                 family_number:f.family_number,

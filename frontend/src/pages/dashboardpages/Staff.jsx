@@ -11,6 +11,8 @@ import { BiEditAlt,BiStreetView } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import { PiPasswordFill } from "react-icons/pi";
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 export default function Staff() {
   const [results, setResults]=useState([]);
@@ -22,7 +24,7 @@ export default function Staff() {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/staff/',{
+            const response = await axios.get(baseUrl+'/staff/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -86,7 +88,7 @@ export default function Staff() {
                 {results.map((result, id)=>{
                   return  <tr key={id}>
                       <td>{id+1}</td>
-                      <td><img src={"http://localhost:8000"+result.image_url} alt="logo" className="user-image-icon" /></td>
+                      <td><img src={baseUrlforImg+result.image_url} alt="logo" className="user-image-icon" /></td>
                       <td>{result.first_name} {result.last_name}</td>
                       <td>{result.email}</td>
                       <td>{result?.phone1}</td>

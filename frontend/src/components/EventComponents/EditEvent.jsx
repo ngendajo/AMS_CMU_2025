@@ -5,6 +5,7 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../../api/baseUrl";
 
 
 export default function EditEvent() {
@@ -31,7 +32,7 @@ export default function EditEvent() {
 
     const handleDelete = () => {
         
-        axios.delete('http://127.0.0.1:8000/api/deleteevent/'+params.id+"/",
+        axios.delete(baseUrl+'/deleteevent/'+params.id+"/",
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -46,7 +47,7 @@ export default function EditEvent() {
 
     let updateep = (e)=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/updateevent/'+params.id+"/", {
+        axios.post(baseUrl+'/updateevent/'+params.id+"/", {
             'title':title,
             'description':description
         },
@@ -67,7 +68,7 @@ export default function EditEvent() {
     
         const getEvent = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/event/?id='+params.id,{
+                const response = await axios.get(baseUrl+'/event/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

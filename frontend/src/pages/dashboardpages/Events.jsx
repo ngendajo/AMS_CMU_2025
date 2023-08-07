@@ -4,6 +4,7 @@ import useAuth from '../../hooks/useAuth';
 import axios from "axios";
 import ReactPaginate from 'react-paginate';
 import { Link, useNavigate } from "react-router-dom";
+import baseUrl from '../../api/baseUrl';
 
 import styled from 'styled-components';
 
@@ -67,7 +68,7 @@ export default function Events() {
     
         const getData = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/event/',{
+                const response = await axios.get(baseUrl+'/event/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

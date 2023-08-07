@@ -12,6 +12,8 @@ import useLogout from '../../hooks/useLogout';
 import * as CiIcons from "react-icons/ci";
 import { BiLogOut } from "react-icons/bi";
 import axios from 'axios';
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 
 export default function Header() {
@@ -31,7 +33,7 @@ export default function Header() {
         const getuser = async () =>{
             try{
                 if(auth.user.is_alumni){
-                    const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+auth?.user.id,{
+                    const response = await axios.get(baseUrl+'/alumni/?id='+auth?.user.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -41,7 +43,7 @@ export default function Header() {
                 setUserid(response.data)
                 }else
                 {
-                    const response = await axios.get('http://127.0.0.1:8000/api/staff/?id='+auth?.user.id,{
+                    const response = await axios.get(baseUrl+'/staff/?id='+auth?.user.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -98,7 +100,7 @@ export default function Header() {
         </div>
         <div onClick={showprofile}>
             <div className='profile'>
-            {userid.map((result, id)=>{return <span key={id}> <img src={"http://localhost:8000"+result.image_url} alt="logo" /></span>})}
+            {userid.map((result, id)=>{return <span key={id}> <img src={baseUrlforImg+result.image_url} alt="logo" /></span>})}
 
                 <p><strong>{auth.user.first_name} {auth.user.last_name}</strong>
                 <br/>{auth.user.is_superuser? "Admin":

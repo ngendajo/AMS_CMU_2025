@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import React, {useState, useEffect, useContext} from 'react'
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
+import baseUrl from "../../../api/baseUrl";
 
 export const EpDetails = ({ id }) => {
     const [title, setTitle] = useState("");
@@ -13,7 +14,7 @@ export const EpDetails = ({ id }) => {
 
     let updateep = (e )=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/updateep/'+id+"/", {
+        axios.post(baseUrl+'/updateep/'+id+"/", {
             'title':title,
             'type':type
         },
@@ -36,7 +37,7 @@ export const EpDetails = ({ id }) => {
     }, [])
 
     let getData = async() =>{
-        let response = await fetch('http://127.0.0.1:8000/api/ep/?id='+id, {
+        let response = await fetch(baseUrl+'/ep/?id='+id, {
             method:'GET',
             headers:{
                 'Content-Type':'application/json',

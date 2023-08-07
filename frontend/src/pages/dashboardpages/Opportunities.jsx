@@ -8,6 +8,7 @@ import '../../components/Header/searchResultsList.css';
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import AddOpportunity from '../../components/DashboardComponents/Opportunitypart/AddOpportunity';
+import baseUrl from '../../api/baseUrl';
 
 function Opportunities() {
   const [opportunities, setOpportunities] = useState([]);
@@ -32,7 +33,7 @@ function Opportunities() {
       setOpportunities(updatedOpportunities);
 
       try {
-        await axios.patch("http://localhost:8000/api/opportunity/"+opportunityId+"/approve",
+        await axios.patch(baseUrl+"/opportunity/"+opportunityId+"/approve",
         { approved },
         {
           headers: {
@@ -54,7 +55,7 @@ function Opportunities() {
 
   const fetchOpportunities = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/opportunity');
+      const response = await axios.get(baseUrl+'/opportunity');
       console.log(response.data);
       setOpportunities(response.data);
     } catch (error) {

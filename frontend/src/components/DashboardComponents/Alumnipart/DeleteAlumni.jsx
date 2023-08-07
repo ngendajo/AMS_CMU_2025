@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import baseUrl from "../../../api/baseUrl";
 
 const DeleteAlumni = () => {
   const [userid, setUserid]=useState([]);
@@ -15,7 +16,7 @@ const DeleteAlumni = () => {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+                const response = await axios.get(baseUrl+'/alumni/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -34,7 +35,7 @@ const DeleteAlumni = () => {
     },[auth,params])
     const handleDelete = (event) => {
     
-      axios.delete('http://127.0.0.1:8000/api/deleteuser/'+event+'/delete/',
+      axios.delete(baseUrl+'/deleteuser/'+event+'/delete/',
       {
           headers: {
               "Authorization": 'Bearer ' + String(auth.accessToken),

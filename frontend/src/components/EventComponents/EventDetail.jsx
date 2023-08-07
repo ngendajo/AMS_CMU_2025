@@ -5,6 +5,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import './eventdetail.css';
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 export default function EventDetail() {
 
@@ -26,7 +28,7 @@ export default function EventDetail() {
   useEffect(() =>{
       const getData = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/event/?id='+params.id,{
+              const response = await axios.get(baseUrl+'/event/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -63,7 +65,7 @@ export default function EventDetail() {
     return (
       <div className='cardComponenet'>
         <div className="imageContainer">
-          <img src={"http://localhost:8000"+events.image_url}  alt='' width={175} height={175} ></img>
+          <img src={baseUrlforImg+events.image_url}  alt='' width={175} height={175} ></img>
         </div>
         <h2>{events.title}</h2>
         <p>{events.description}</p>

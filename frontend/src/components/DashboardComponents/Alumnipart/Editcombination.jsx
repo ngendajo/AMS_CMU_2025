@@ -4,6 +4,7 @@ import useAuth from "../../../hooks/useAuth";
 import React, {useState, useEffect} from 'react';
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import baseUrl from "../../../api/baseUrl";
 
 export default function Editcombination() {
     const [combination_name, setCombination_name] = useState("");
@@ -13,7 +14,7 @@ export default function Editcombination() {
 
     const handleDelete = () => {
         
-        axios.delete('http://127.0.0.1:8000/api/combination/'+params.id+'/delete/',
+        axios.delete(baseUrl+'/combination/'+params.id+'/delete/',
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -30,7 +31,7 @@ export default function Editcombination() {
     
         const getCombination = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/combination/?id='+params.id,{
+                const response = await axios.get(baseUrl+'/combination/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -51,7 +52,7 @@ export default function Editcombination() {
     
     let updatecomb = (e )=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/combination/'+params.id+"/", {
+        axios.post(baseUrl+'/combination/'+params.id+"/", {
             'combination_name':combination_name
         },
         {

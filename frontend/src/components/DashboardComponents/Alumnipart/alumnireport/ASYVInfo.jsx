@@ -12,6 +12,8 @@ import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useNavigate } from 'react-router-dom';
 import { PiPasswordFill } from "react-icons/pi";
+import baseUrl from '../../../../api/baseUrl';
+import baseUrlforImg from '../../../../api/baseUrlforImg';
 
 const columns = [
   { header: 'No', key: 'no' },
@@ -80,7 +82,7 @@ export default function ASYVInfo() {
     
     const getalumniusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumnilist/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+            const response = await axios.get(baseUrl+'/alumnilist/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { /* 请求头 */
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -94,7 +96,7 @@ export default function ASYVInfo() {
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
-                image:<img src={"http://localhost:8000"+element.image_url} alt="logo" className="user-image-icon" />,
+                image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,
@@ -125,7 +127,7 @@ export default function ASYVInfo() {
     
     const getusers = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+            const response = await axios.get(baseUrl+'/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { /* 请求头 */
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'

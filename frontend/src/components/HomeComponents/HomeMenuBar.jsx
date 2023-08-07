@@ -12,6 +12,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
 import axios from "../../api/axios";
+import baseUrl from '../../api/baseUrl';
 import Modal from 'react-modal';
 const LOGIN_URL = '/token/';
 
@@ -109,7 +110,7 @@ export default function HomeMenuBar() {
         const [alumniCount, setAlumniCount] = useState(0);
 
         useEffect(() => {
-            axios.get('http://127.0.0.1:8000/api/alumni_count')
+            axios.get(baseUrl+'/alumni_count')
                 .then(response => {
                     setAlumniCount(response.data.count);
                 })

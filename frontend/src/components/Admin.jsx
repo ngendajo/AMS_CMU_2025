@@ -7,6 +7,7 @@ import useAuth from '../hooks/useAuth';
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import baseUrl from '../api/baseUrl';
 import EmploymentGeneralReportChart from './charts/EmploymentGeneralReportChart';
 import FutherStudingGeneralReportChart from './charts/FutherStudingGeneralReportChart';
 import EmployementAndEducation from './charts/EmployementAndEducation';
@@ -56,7 +57,7 @@ const Admin = () => {
     
       const getAlumni = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/lumngradereport/',{
+              const response = await axios.get(baseUrl+'/lumngradereport/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -117,7 +118,7 @@ const Admin = () => {
     
       const getGrades = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/grades/',{
+              const response = await axios.get(baseUrl+'/grades/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -139,7 +140,7 @@ const Admin = () => {
     
     const getEmpStu = async () =>{
         try{
-            const response = await axios.get('http://127.0.0.1:8000/api/empstureport/',{
+            const response = await axios.get(baseUrl+'/empstureport/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -193,7 +194,7 @@ const Admin = () => {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get('http://localhost:8000/api/totalalumnreport/',{
+            const response = await axios.get(baseUrl+'/totalalumnreport/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'

@@ -6,6 +6,7 @@ import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import './register.css'
+import baseUrl from "../../../api/baseUrl";
 
 export default function EditEp() {
 
@@ -18,7 +19,7 @@ export default function EditEp() {
 
     const handleDelete = () => {
         
-        axios.delete('http://127.0.0.1:8000/api/ep/'+params.id+'/delete/',
+        axios.delete(baseUrl+'/ep/'+params.id+'/delete/',
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -33,7 +34,7 @@ export default function EditEp() {
 
     let updateep = (e)=> {
         e.preventDefault()
-        axios.post('http://127.0.0.1:8000/api/updateep/'+params.id+"/", {
+        axios.post(baseUrl+'/updateep/'+params.id+"/", {
             'title':title,
             'type':type
         },
@@ -54,7 +55,7 @@ export default function EditEp() {
     
         const getEp = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/ep/?id='+params.id,{
+                const response = await axios.get(baseUrl+'/ep/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

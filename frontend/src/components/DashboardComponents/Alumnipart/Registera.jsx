@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import "../forms.css";
 import Dropzone from "react-dropzone"; 
+import baseUrl from "../../../api/baseUrl";
 
 // This file is to add Alumni
 
@@ -123,7 +124,7 @@ const Registera = () => {
         formData.append('phone1',phone1);
         formData.append('password',"Agahozo@12");
         formData.append('image_url',image.image_url);
-        const response = await axios.post("http://127.0.0.1:8000/api/alumni/",
+        const response = await axios.post(baseUrl+"/alumni/",
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),

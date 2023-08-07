@@ -8,6 +8,9 @@ import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Dropzone from "react-dropzone"; 
 import { useNavigate } from "react-router-dom";
+import baseUrl from "../../../api/baseUrl";
+import baseUrlforImg from "../../../api/baseUrlforImg";
+
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/;
 const PHONE_REGIX = /^[0-9]{10}$/;
@@ -43,7 +46,7 @@ export default function EditAlumini() {
     
         const getuser = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/alumni/?id='+params.id,{
+                const response = await axios.get(baseUrl+'/alumni/?id='+params.id,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -85,7 +88,7 @@ export default function EditAlumini() {
             try{
                 let formData = new FormData();
                 formData.append('image_url',file);
-                const response = axios.post("http://127.0.0.1:8000/api/updateuserimage/"+params.id,
+                const response = axios.post(baseUrl+"/updateuserimage/"+params.id,
                     formData,{
                         headers: {
                             "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -166,7 +169,7 @@ export default function EditAlumini() {
         formData.append('first_name',first_name);
         formData.append('last_name',last_name);
         formData.append('phone1',phone1);
-        const response = axios.post("http://127.0.0.1:8000/api/updateuser/"+params.id,
+        const response = axios.post(baseUrl+"/updateuser/"+params.id,
             formData,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -216,7 +219,7 @@ export default function EditAlumini() {
     <center> <h1>Update Alumni Info</h1></center>
      <form>
      <center>
-     {disiplayfile ? <img className="img-for-profile" src={"http://localhost:8000"+currentfile} alt="" />:
+     {disiplayfile ? <img className="img-for-profile" src={baseUrlforImg+currentfile} alt="" />:
      <img className="img-for-profile" src={file} alt="" />
      }
      <Dropzone onDrop={onDrop} multiple={false}>

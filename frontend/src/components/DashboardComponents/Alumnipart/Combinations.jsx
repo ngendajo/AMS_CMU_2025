@@ -9,6 +9,7 @@ import { IoIosAdd } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import './combinations.css';
 import { useNavigate } from 'react-router-dom';
+import baseUrl from '../../../api/baseUrl';
 
 export const Combinations = () => {
     const [data, setData] = useState([]);
@@ -20,7 +21,7 @@ export const Combinations = () => {
     
         const getData = async () =>{
             try{
-                const response = await axios.get('http://127.0.0.1:8000/api/combination/',{
+                const response = await axios.get(baseUrl+'/combination/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'

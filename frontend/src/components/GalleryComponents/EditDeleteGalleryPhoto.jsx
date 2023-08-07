@@ -6,6 +6,7 @@ import '../../components/Header/searchBar.css';
 import '../../components/Header/searchResultsList.css';
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import baseUrl from '../../api/baseUrl';
 //import { Link } from "react-router-dom";
 
 
@@ -27,7 +28,7 @@ function Galleries() {
     setGalleries(updatedGalleries);
 
     try {
-      await axios.post("http://localhost:8000/api/updategallery/"+galleryId+"/",
+      await axios.post(baseUrl+"/updategallery/"+galleryId+"/",
         { displayed: displayStatus },
         {
               headers: {
@@ -46,7 +47,7 @@ function Galleries() {
   };
   const fetchGalleries = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/gallery');
+      const response = await axios.get(baseUrl+'/gallery');
       setGalleries(response.data);
     } catch (error) {
       console.log(error);
@@ -56,7 +57,7 @@ function Galleries() {
 
   const handleDelete = async (event) => {
     
-    axios.delete('http://127.0.0.1:8000/api/deletegallery/'+event,
+    axios.delete(baseUrl+'/deletegallery/'+event,
     {
         headers: {
             "Authorization": 'Bearer ' + String(auth.accessToken),

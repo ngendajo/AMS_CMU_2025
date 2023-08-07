@@ -6,6 +6,8 @@ import useAuth from "../../hooks/useAuth";
 import jwtDecode from 'jwt-decode';
 import ReactPaginate from 'react-paginate';
 import '../../components/DashboardComponents/Newspart/News.css';
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 // Dropzone for file upload --------------------------------
 const MyDropzone = ({ onDrop }) => {
@@ -57,7 +59,7 @@ const CreateNewsForm = ({ onCreate }) => {
     formData.append('description', description);
     formData.append('image_url', file);
 
-    axios.post(`http://127.0.0.1:8000/api/news/create/`, formData)
+    axios.post(`${baseUrl}/news/create/`, formData)
       .then((response) => {
         console.log('News created:', response.data);
         navigate('/') // navigate to dashboard
@@ -94,7 +96,7 @@ const EditNewsForm = ({ news, onEdit, onDelete, setNewsData, setIsEditing }) => 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    axios.put(`http://127.0.0.1:8000/api/news/${news.id}/update/`, {
+    axios.put(`${baseUrl}/news/${news.id}/update/`, {
       title,
       description,
       pinned
@@ -102,7 +104,7 @@ const EditNewsForm = ({ news, onEdit, onDelete, setNewsData, setIsEditing }) => 
     })
     .then((response) => {
       // After the news has been successfully updated, fetch the news data again from the server
-      axios.get('http://127.0.0.1:8000/api/news/')
+      axios.get(baseUrl+'/news/')
         .then(response => {
           setNewsData(response.data);
           setIsEditing(false);
@@ -121,7 +123,7 @@ const EditNewsForm = ({ news, onEdit, onDelete, setNewsData, setIsEditing }) => 
   };
 
   const handleDelete = () => {
-    axios.delete(`http://127.0.0.1:8000/api/news/${news.id}/delete/`)
+    axios.delete(`${baseUrl}/news/${news.id}/delete/`)
       .then(() => {
         onDelete(news.id);
         setIsEditing(false);
@@ -181,7 +183,7 @@ const NewsCard = ({ news, onEdit, onDelete, setNewsData }) => {
 
   return (
     <div className="news-card">
-      <img src={`http://localhost:8000${news.image_url}`} alt={title} />
+      <img src={`${baseUrlforImg+news.image_url}`} alt={title} />
       <div className="news-content">
         <h2>{title}</h2>
         <p>{description.substring(0, 75) + '...'}</p>
@@ -213,7 +215,7 @@ const News = () => {
       return;
     }
 
-    axios.get('http://127.0.0.1:8000/api/news/')
+    axios.get(baseUrl+'/news/')
       .then(response => {
         setNewsData(response.data);
       })

@@ -12,6 +12,8 @@ import "../../forms.css";
 import { useNavigate } from "react-router-dom";
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
+import baseUrl from "../../../../api/baseUrl";
+import baseUrlforImg from "../../../../api/baseUrlforImg";
 
 
 
@@ -37,7 +39,7 @@ export default function UpdateStudie() {
     
       const getuser = async () =>{
           try{
-              const response = await axios.get('http://127.0.0.1:8000/api/studie/?id='+params.id,{
+              const response = await axios.get(baseUrl+'/studie/?id='+params.id,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -68,7 +70,7 @@ export default function UpdateStudie() {
   const handleSubmit = async (e) =>{
     e.preventDefault();
 
-    axios.post('http://127.0.0.1:8000/api/updatestudie/'+params.id+'/', {
+    axios.post(baseUrl+'/updatestudie/'+params.id+'/', {
       "level":level,
         "degree":degree,
         "university":university,
@@ -104,7 +106,7 @@ export default function UpdateStudie() {
       {
       userid.map((result, id)=>{
           return <div key={id} className="delete-message"> 
-          <img src={"http://localhost:8000"+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
+          <img src={baseUrlforImg+result.alumn.user.image_url} alt="logo" className="user-image-icon" />
           <h1>Update Study Status for  {result.alumn.user.first_name} {result.alumn.user.last_name} with {result.alumn.user.email} as 
           email
           </h1>

@@ -9,7 +9,7 @@ import {Bulkalumni} from './Bulkalumni'
 import {Grades} from './Grades'
 import {Combinations} from './Combinations'
 import {Eps} from './Eps'
-import {Clubs} from './Clubs'
+import baseUrl from '../../../api/baseUrl';
 
 
 
@@ -34,7 +34,7 @@ export default function UserList() {
       setUserseen(!userseen)
     };
     let getData = async() =>{
-        let response = await fetch('http://127.0.0.1:8000/api/alumnil/', {
+        let response = await fetch(baseUrl+'/alumnil/', {
             method:'GET',
             headers:{
                 'Content-Type':'application/json',

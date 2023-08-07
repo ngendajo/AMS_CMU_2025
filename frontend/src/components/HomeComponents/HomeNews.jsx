@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 // Define NewsCard
 const NewsCard = ({ imageSrc, title, description, time }) => {
@@ -98,7 +100,7 @@ const HomeNews = () => {
 
   useEffect(() => {
     // Fetch News data from the backend
-    axios.get('http://127.0.0.1:8000/api/news/')
+    axios.get(baseUrl+'/api/news/')
       .then(response => {
         console.log(response.data);
         setNewsData(response.data);
@@ -138,7 +140,7 @@ const HomeNews = () => {
         {displayNews.map((news) => (
           <NewsCard
             key={news.id}
-            imageSrc={`http://localhost:8000${news.image_url}`}
+            imageSrc={`${baseUrlforImg+news.image_url}`}
             title={news.title}
             description={news.description}
             time={news.date}
