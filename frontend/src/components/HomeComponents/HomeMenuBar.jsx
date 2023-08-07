@@ -24,7 +24,6 @@ export default function HomeMenuBar() {
     const [seen, setSeen] = useState(false)
 
     const { setAuth } = useAuth();
-    alert("Hello "+baseUrl)
 
     const navigate = useNavigate();
     const location = useLocation();
