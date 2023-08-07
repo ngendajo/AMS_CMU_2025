@@ -46,7 +46,7 @@ def get_users(request):
             serializer = UserSerializer(user, many=True)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND) 
+            return Response(status=status.HTTP_404_NOT_FOUND) 
 
 class AluminiBulkRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
