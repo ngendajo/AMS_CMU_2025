@@ -146,7 +146,7 @@ export default function Events() {
         <center><Link to={'/add-event/'} className='new-event'>Add a New Event</Link></center>
     <div className="card-list">
       {currentEvents.map((item, index) => (
-        <div className="CardSmall">
+        <div key={index} className="CardSmall">
         <CardSmall key={index} id={item.id} title={item.title} startDate={item.startDate} description={item.description} image_url={item.image_url} />
         </div>
       ))}

@@ -100,7 +100,7 @@ const HomeNews = () => {
 
   useEffect(() => {
     // Fetch News data from the backend
-    axios.get(baseUrl+'/api/news/')
+    axios.get(baseUrl+'/news/')
       .then(response => {
         console.log(response.data);
         setNewsData(response.data);

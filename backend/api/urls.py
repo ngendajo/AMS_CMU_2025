@@ -16,7 +16,7 @@ urlpatterns = [
     path('password-reset/<str:encoded_pk>/<str:token>',
         views.ResetPassword.as_view(),
          name="reset-password",
-    ),
+    ), 
     path('password-reset/', views.PasswordReset.as_view(), name="password-reset"),
     path('users/', views.get_users, name="users"),
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
