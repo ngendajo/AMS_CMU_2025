@@ -49,7 +49,7 @@ def get_users(request):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
 class AluminiBulkRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -86,7 +86,7 @@ class AluminiRegistrationView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
 class AluminiListView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -112,7 +112,7 @@ class AluminiListView(APIView):
                 return Response(serializer.data)
             
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
    
 class AluminiListByEyView(APIView):
     #permission_classes = [IsAuthenticated, ]
@@ -127,7 +127,7 @@ class AluminiListByEyView(APIView):
                 else:
                     return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
 
 class StaffUserView(APIView):
@@ -155,7 +155,7 @@ class StaffUserView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -380,7 +380,7 @@ class GradeView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -471,7 +471,7 @@ class EpView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -528,7 +528,7 @@ class CombinationRegistrationView(APIView):
                 return Response("No data")
             
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -586,7 +586,7 @@ class EventView(APIView):
                 return Response("No data")
             
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST']) 
@@ -657,7 +657,7 @@ class StoryView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class StoryHomeView(APIView):
@@ -674,7 +674,7 @@ class StoryHomeView(APIView):
                 return Response("No data")
             
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 # update story is meant for updating the content of the story
@@ -705,7 +705,7 @@ def display_story(request, pk):
                 return Response("No data")
     
     except Exception as e:
-        return Response(e,status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['DELETE'])
@@ -752,7 +752,7 @@ class EmploymentView(APIView):
                 return Response("No data")
 
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
 class GradesAndFamiliesView(APIView):
     permission_classes = [IsAuthenticated, ]  
@@ -768,7 +768,7 @@ class GradesAndFamiliesView(APIView):
                 return Response("No data")
             
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
 
 @api_view(['POST'])
@@ -825,7 +825,7 @@ class StudieView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -886,7 +886,7 @@ class StudyReportView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 # Gallery data view
@@ -1009,7 +1009,7 @@ class AlumnReportView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class AlumnInGradeReportView(APIView):
     permission_classes = [IsAuthenticated, ]  
@@ -1040,7 +1040,7 @@ class EmploymentStudieReportView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response( e,status=status.HTTP_404_NOT_FOUND)
+            return Response( status=status.HTTP_404_NOT_FOUND)
         
 
 
@@ -1075,7 +1075,7 @@ class GalleryView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -1137,7 +1137,7 @@ class newsView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(e,status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 """ @api_view(['GET'])
 def news_list(request):
