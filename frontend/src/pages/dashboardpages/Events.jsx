@@ -110,7 +110,7 @@ export default function Events() {
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
         <div className="imageContainer">
-          <img src={"http://localhost:8000"+events.image_url}  alt='' width={75} height={75} ></img>
+          <img src={baseUrl+events.image_url}  alt='' width={75} height={75} ></img>
         </div>
         <h2>{events.title}</h2>
         <p>{events.description}</p>
