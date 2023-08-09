@@ -1137,7 +1137,7 @@ class newsView(APIView):
             else:
                 return Response("No data")
         except Exception as e:
-            return Response(error=e,status=status.HTTP_404_NOT_FOUND)
+            return Response(e,status=status.HTTP_404_NOT_FOUND)
 
 """ @api_view(['GET'])
 def news_list(request):
