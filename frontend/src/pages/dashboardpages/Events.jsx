@@ -5,6 +5,7 @@ import axios from "axios";
 import ReactPaginate from 'react-paginate';
 import { Link, useNavigate } from "react-router-dom";
 import baseUrl from '../../api/baseUrl';
+import baseUrlforImg from '../../api/baseUrlforImg';
 
 import styled from 'styled-components';
 
@@ -110,7 +111,7 @@ export default function Events() {
     return (
       <div className={`card ${isClicked ? "clicked" : ""}`} onClick={handleClick} >
         <div className="imageContainer">
-          <img src={baseUrl+events.image_url}  alt='' width={75} height={75} ></img>
+          <img src={baseUrlforImg+events.image_url}  alt='' width={75} height={75} ></img>
         </div>
         <h2>{events.title}</h2>
         <p>{events.description}</p>
