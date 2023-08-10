@@ -17,6 +17,7 @@ import baseUrlforImg from '../../api/baseUrlforImg';
 
 
 export default function Header() {
+    //decrare variables
     const [results, setResults]=useState([]);
     const [userid, setUserid]=useState([]);
     const [profile, setProfile] = useState(false);
@@ -89,6 +90,7 @@ export default function Header() {
                 <AiOutlinePlusCircle className='postsmsnotific-icon'/>
                 <span>Post</span>
             </div>
+            
             <div className='messages'>
                 <BsDot className='messages-sign'/>
                 <AiOutlineMessage className='messages-icon'/>
