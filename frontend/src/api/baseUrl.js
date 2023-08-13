@@ -1,5 +1,5 @@
 
-const  baseUrl='http://10.10.88.228:8000/api';
+const  baseUrl='http://backend.asyv.ac.rw/api';
 
 
 export default baseUrl;
