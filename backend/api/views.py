@@ -47,7 +47,7 @@ def get_users(request):
                 serializer = UserSerializer(user, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -62,7 +62,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -84,7 +84,7 @@ class AluminiRegistrationView(APIView):
                 serializer = AlumniSerializer(user, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -125,7 +125,7 @@ class AluminiListByEyView(APIView):
                     serializer = AlumniListbyEPSerializer(user, many=True)
                     return Response(serializer.data)
                 else:
-                    return Response("No data")
+                    return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -153,7 +153,7 @@ class StaffUserView(APIView):
                 serializer = StaffUserSerializer(crc, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -378,7 +378,7 @@ class GradeView(APIView):
                 serializer = GradeSerializers(grades, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -469,7 +469,7 @@ class EpView(APIView):
                 serializer = EpSerializer(ep, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -525,7 +525,7 @@ class CombinationRegistrationView(APIView):
                 serializer = CombinationSerializer(comb, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
             
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -583,7 +583,7 @@ class EventView(APIView):
                 serializer = EventSerializer(eve, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
             
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -655,7 +655,7 @@ class StoryView(APIView):
                 serializer = DisplayAllStoriesSerializer(story, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -671,7 +671,7 @@ class StoryHomeView(APIView):
                 serializer = DisplayAllStoriesSerializer(story, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
             
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -702,7 +702,7 @@ def display_story(request, pk):
             data.save()
             return Response(data.data)
         else:
-                return Response("No data")
+                return Response([])
     
     except Exception as e:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -749,7 +749,7 @@ class EmploymentView(APIView):
                 serializer = DisplayEmploymentSerializer(user, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
 
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -765,7 +765,7 @@ class GradesAndFamiliesView(APIView):
                 serializer = GradesAndFamiliesSerializer(user, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
             
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -823,7 +823,7 @@ class StudieView(APIView):
                 serializer = StudieWithAlumnSerializer(stud, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -884,7 +884,7 @@ class StudyReportView(APIView):
                 serializer = StudyReportSerializer(stud, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -1007,7 +1007,7 @@ class AlumnReportView(APIView):
                 serializer = TotalAlumnReportSerializer(stud, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -1022,7 +1022,7 @@ class AlumnInGradeReportView(APIView):
                 serializer = TotalAlumnGradeSerializer(stud, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -1038,7 +1038,7 @@ class EmploymentStudieReportView(APIView):
                 serializer = EmploymentAndStudieSerializer(empstud, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response( status=status.HTTP_404_NOT_FOUND)
         
@@ -1073,7 +1073,7 @@ class GalleryView(APIView):
                 serializer = GallerySerializer(gall, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -1135,7 +1135,7 @@ class newsView(APIView):
                 serializer = NewsSerializer(news, many=True)
                 return Response(serializer.data)
             else:
-                return Response("No data")
+                return Response([])
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
