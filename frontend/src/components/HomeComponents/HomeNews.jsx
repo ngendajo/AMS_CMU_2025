@@ -112,8 +112,8 @@ const HomeNews = () => {
 
   // Separate pinned news and the latest news
   console.log(newsData)
-  const pinnedNews = newsData.length>0?newsData.filter((news) => news.pinned):[];
-  const notPinnedNews = newsData.length>0?newsData.filter((news) => !news.pinned):[];
+  const pinnedNews = Array.isArray(newsData)?newsData.filter((news) => news.pinned):[];
+  const notPinnedNews = Array.isArray(newsData)?newsData.filter((news) => !news.pinned):[];
   notPinnedNews.sort((a, b) => new Date(b.date) - new Date(a.date)); // sort by date in descending order
 
   // Combine pinned news and the latest news
