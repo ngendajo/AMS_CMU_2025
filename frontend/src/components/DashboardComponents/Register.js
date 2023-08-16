@@ -20,7 +20,7 @@ const Register = () => {
     const [image, setImage] = useState(null);
     const current = new Date();
     const [file, setFile] = useState();
-    const [level, setLevel] = useState("is_staff")
+    const [level, setLevel] = useState("is_crc")
 
     const onOptionChange = e => {
         setLevel(e.target.value)
