@@ -28,27 +28,28 @@ export const Eps = ({ id }) => {
                     withCredentials:true
                 });
                 var eplist=[]
+                Array.isArray(response.data)?
                 response.data.forEach(e=>{
-                var t=""
-                if(e.type==="A"){
-                    t="Arts"
-                }else if(e.type==="S"){
-                    t="Sports"
-                }
-                else if(e.type==="C"){
-                    t="Clubs"
-                }
-                else{
-                    t="Sciences"
-                }
-                eplist.push({
-                    title:<Link className='comb_name' to={`/epalumn/${e.id}`}>{e.title}</Link>, 
-                    type:t,
-                    ep_id:<span>
-                        <Link to={`/add-ep/${e.id}`}><BiEditAlt className='icon'/></Link>
-                    </span>
-                })
-                })
+                    var t=""
+                    if(e.type==="A"){
+                        t="Arts"
+                    }else if(e.type==="S"){
+                        t="Sports"
+                    }
+                    else if(e.type==="C"){
+                        t="Clubs"
+                    }
+                    else{
+                        t="Sciences"
+                    }
+                    eplist.push({
+                        title:<Link className='comb_name' to={`/epalumn/${e.id}`}>{e.title}</Link>, 
+                        type:t,
+                        ep_id:<span>
+                            <Link to={`/add-ep/${e.id}`}><BiEditAlt className='icon'/></Link>
+                        </span>
+                    })
+                    }):null;
                 setData(eplist)
             }catch(err) {
                 console.log(err);
