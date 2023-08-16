@@ -12,7 +12,7 @@ import EmploymentGeneralReportChart from './charts/EmploymentGeneralReportChart'
 import FutherStudingGeneralReportChart from './charts/FutherStudingGeneralReportChart';
 import EmployementAndEducation from './charts/EmployementAndEducation';
 import {Bar} from 'react-chartjs-2';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -51,7 +51,7 @@ const Admin = () => {
     const [Bachelors, setBachelors] = useState('');
     const [otherdegree, setOtherdegree] = useState('');
     const {auth} = useAuth();
-    const navigate=useNavigate();
+    //const navigate=useNavigate();
 
     useEffect(() =>{
     
@@ -106,7 +106,7 @@ const Admin = () => {
           setAlumni(alu)
           }catch(err) {
               console.log(err);
-               navigate('/error');
+              // navigate('/error');
           }
       }
   
@@ -128,7 +128,7 @@ const Admin = () => {
               setGrades(response.data.length);
           }catch(err) {
               console.log(err);
-               navigate('/error');
+              // navigate('/error');
           }
       }
   
@@ -312,7 +312,7 @@ const Admin = () => {
             )
         }catch(err) {
             console.log(err);
-             navigate('error');
+            // navigate('error');
         }
     }
 
