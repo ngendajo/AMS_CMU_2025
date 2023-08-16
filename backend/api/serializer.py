@@ -53,6 +53,7 @@ class StaffUserRegistrationSerializer(serializers.ModelSerializer):
                 position=profile_data,
             )
         elif(level_data=="is_superuser"):
+            img_data = validated_data.pop('image_url')
             user = User.objects.create_superuser(**validated_data)
             CrcProfile.objects.create(
                 user=user,
