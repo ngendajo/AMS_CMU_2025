@@ -995,7 +995,7 @@ class ApproveOpportunityView(RetrieveUpdateAPIView):
 # Dashboard needed data view
 
 class AlumnReportView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
 
     def get(self, request):
         try:

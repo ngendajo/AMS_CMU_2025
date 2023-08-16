@@ -106,7 +106,7 @@ const Admin = () => {
           setAlumni(alu)
           }catch(err) {
               console.log(err);
-              // navigate('/error');
+               navigate('/error');
           }
       }
   
@@ -128,7 +128,7 @@ const Admin = () => {
               setGrades(response.data.length);
           }catch(err) {
               console.log(err);
-              // navigate('/error');
+               navigate('/error');
           }
       }
   
@@ -312,7 +312,7 @@ const Admin = () => {
             )
         }catch(err) {
             console.log(err);
-            // navigate('error');
+             navigate('error');
         }
     }
 
