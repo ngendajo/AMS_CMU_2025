@@ -172,9 +172,9 @@ export const Grades = () => {
               </div>
             </div>
             <div className='grades-list'>
-            {results.length?
+            {Array.isArray(results)?
                     <>
-                      {results.map((result, id)=>{
+                      { results.map((result, id)=>{
                         return <div className='grade-details' key={id}>
                     <Link className='view-grade-alumni' to={`/gradealumni/${result.id}`}>
                       <p>Grade: {result.grade_name}</p>
