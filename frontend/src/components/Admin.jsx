@@ -72,7 +72,7 @@ const Admin = () => {
                 }
                 groups[grade].push(item);
                 return groups;
-            }, {}):null;
+            }, {}):[];
             let alu=[]
             (groupedData.length>0 && Array.isArray(groupedData))?
             Object.entries(groupedData).forEach(([grade, items]) => {
