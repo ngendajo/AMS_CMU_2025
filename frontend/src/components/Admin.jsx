@@ -12,7 +12,7 @@ import EmploymentGeneralReportChart from './charts/EmploymentGeneralReportChart'
 import FutherStudingGeneralReportChart from './charts/FutherStudingGeneralReportChart';
 import EmployementAndEducation from './charts/EmployementAndEducation';
 import {Bar} from 'react-chartjs-2';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Chart as ChartJS,
   CategoryScale,
