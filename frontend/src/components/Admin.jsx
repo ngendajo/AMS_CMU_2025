@@ -105,7 +105,8 @@ const Admin = () => {
                 
               }
           }):null;
-          setAlumni(alu)
+          alu.length>0?
+          setAlumni(alu):null;
           }catch(err) {
               console.log(err);
                navigate('/error');
