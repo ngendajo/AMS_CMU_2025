@@ -72,9 +72,9 @@ const Admin = () => {
                 }
                 groups[grade].push(item);
                 return groups;
-            }, {}):[];
+            }, {}):null;
             let alu=[]
-            (groupedData.length>0 && Array.isArray(groupedData))?
+            (Array.isArray(groupedData))?
             Object.entries(groupedData).forEach(([grade, items]) => {
               console.log(grade);
               console.log(items);
