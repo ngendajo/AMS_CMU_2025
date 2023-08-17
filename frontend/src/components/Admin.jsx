@@ -109,7 +109,7 @@ const Admin = () => {
           setAlumni(alu):null;
           }catch(err) {
               console.log(err);
-               navigate('/error');
+               //navigate('/error');
           }
       }
   
