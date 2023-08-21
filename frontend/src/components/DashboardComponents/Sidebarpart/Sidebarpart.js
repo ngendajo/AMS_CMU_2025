@@ -65,7 +65,7 @@ const Sidebarpart = () => {
       <IconContext.Provider value={{ color: "#615E69" }}>
         <SidebarNav>
           <SidebarWrap>
-            {auth.user.is_alumni?
+            {(auth.user.is_alumni || auth.user.is_staff) && (!auth.user.is_crc || !auth.user.is_superuser)?
             SidebarDataforAlumn.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             }):

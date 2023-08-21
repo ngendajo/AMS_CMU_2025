@@ -16,8 +16,11 @@ export default function Dashboard() {
       else if(user.is_crc){
         setTitle("AMS-CRC Staff")
       }
-      else{
+      else if(user.is_alumni){
         setTitle("AMS-Alumni")
+      }
+      else {
+        setTitle("AMS-Visitor")
       }
         document.title = title;
         }, [title,user]);
@@ -26,7 +29,7 @@ export default function Dashboard() {
   
   return (
     <div>
-        {user.is_superuser || user.is_crc ? 
+        {user.is_superuser || user.is_crc || user.is_staff? 
        <Admin />
        :user.is_alumni ?
        <Alumni />
