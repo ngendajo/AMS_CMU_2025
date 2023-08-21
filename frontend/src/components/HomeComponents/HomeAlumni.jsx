@@ -192,7 +192,7 @@ const HomeAlumni = () => {
 
   if (imageData.length < 6) {
     // render loading state (need at least 6 alumni images)
-    return <p>Loading...</p>;
+    return <p id='resources'>Loading...</p>;
   }
 
   const dynamicStyles = getDynamicStyles(imageData);
