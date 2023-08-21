@@ -64,15 +64,17 @@ const Admin = () => {
                   },
                   withCredentials:true
               });
-              const groupedData = response.data.reduce((groups, item) => {
+              const groupedData = Array.isArray(response.data)?
+              response.data.reduce((groups, item) => {
                 const { grade } = item;
                 if (!groups[grade]) {
                     groups[grade] = [];
                 }
                 groups[grade].push(item);
                 return groups;
-            }, {});
+            }, {}):null;
             let alu=[]
+            (Array.isArray(groupedData))?
             Object.entries(groupedData).forEach(([grade, items]) => {
               console.log(grade);
               console.log(items);
@@ -102,11 +104,12 @@ const Admin = () => {
                 }
                 
               }
-          })
-          setAlumni(alu)
+          }):null;
+          alu.length>0?
+          setAlumni(alu):null;
           }catch(err) {
               console.log(err);
-              // navigate('/error');
+               //navigate('/error');
           }
       }
   
@@ -125,10 +128,11 @@ const Admin = () => {
                   },
                   withCredentials:true
               });
-              setGrades(response.data.length);
+              Array.isArray(response.data)?
+              setGrades(response.data.length):setGrades(0);
           }catch(err) {
               console.log(err);
-              // navigate('/error');
+               navigate('/error');
           }
       }
   
@@ -150,6 +154,7 @@ const Admin = () => {
             let empstu=new Map();
             let grades= new Set();
 
+            Array.isArray(response.data)?
             response.data.forEach((empst)=>{
               grades.add(empst.grade_name)
               empstu.set(empst.grade_name+"Male"+"noEmp"+"noStu",0);
@@ -160,8 +165,9 @@ const Admin = () => {
               empstu.set(empst.grade_name+"Female"+"noEmp"+"Stu",0);
               empstu.set(empst.grade_name+"Female"+"Emp"+"noStu",0);
               empstu.set(empst.grade_name+"Female"+"Emp"+"Stu",0);
-            })
+            }):null;
             setEmpStugrade(Array.from(grades))
+            Array.isArray(response.data)?
             response.data.forEach((empst)=>{
               let key=empst.grade_name+empst.gender;
            
@@ -178,7 +184,7 @@ const Admin = () => {
                 key+="Stu";
               }
               empstu.set(key,empstu.get(key)+1);
-            })
+            }):null;
             setEmpStuReport(empstu)
          
         }catch(err) {
@@ -201,118 +207,131 @@ const Admin = () => {
                 },
                 withCredentials:true
             });
-            setTotal(response.data.length)
+            Array.isArray(response.data)?
+            setTotal(response.data.length):setTotal(0);
             setFemale(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.gender==="Female") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length :0
             )
             setMale(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.gender==="Male") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length :0
             )
             setA1(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="A1") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setA2(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="A2") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setM(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="M") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setPhd(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="PHD") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setBachelors(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="A0") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setOtherdegree(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree===null) {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setEmploy(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.employed!=="I" && element.end==="Up to now") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setUnemploy(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.end!=="Up to now" && element.end!==null) {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setIntern(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.employed==="I" && element.end==="Up to now") {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
             setOthers(
+              Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.employed===null ) {
                   return true;
                 }
               
                 return false;
-              }).length
+              }).length:0
             )
         }catch(err) {
             console.log(err);
-            // navigate('error');
+             navigate('error');
         }
     }
 

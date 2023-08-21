@@ -20,7 +20,7 @@ const Register = () => {
     const [image, setImage] = useState(null);
     const current = new Date();
     const [file, setFile] = useState();
-    const [level, setLevel] = useState("is_staff")
+    const [level, setLevel] = useState("is_crc")
 
     const onOptionChange = e => {
         setLevel(e.target.value)
@@ -414,7 +414,7 @@ const Register = () => {
                         <div className="formpart">
                             <label>Select level</label>
                             <span className="level">
-                                <input
+                                {/* <input
                                 type="radio"
                                 name="level"
                                 value="is_staff"
@@ -422,7 +422,7 @@ const Register = () => {
                                 checked={level === "is_staff"}
                                 onChange={onOptionChange}
                                 />
-                                <label htmlFor="is_staff">Normal Staff</label>
+                                <label htmlFor="is_staff">Normal Staff</label> */}
 
                                 <input
                                 type="radio"
@@ -434,7 +434,7 @@ const Register = () => {
                                 />
                                 <label htmlFor="is_crc">CRC Staff</label>
 
-                                <input
+                                {/* <input
                                 type="radio"
                                 name="level"
                                 value="is_superuser"
@@ -442,7 +442,7 @@ const Register = () => {
                                 checked={level === "is_superuser"}
                                 onChange={onOptionChange}
                                 />
-                                <label htmlFor="is_superuser">Admin</label>
+                                <label htmlFor="is_superuser">Admin</label> */}
                             </span>
 
                         </div>

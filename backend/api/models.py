@@ -105,7 +105,7 @@ class User(AbstractBaseUser):
 	first_name = models.CharField(max_length=200)
 	last_name = models.CharField(max_length=200)
 	phone1 = models.CharField(max_length=200, blank=True, unique=True)
-	image_url = models.ImageField(upload_to='profiles', default='profiles/default.jpg')
+	image_url = models.ImageField(upload_to='profiles', default='profiles/default_xRzM6Kf.JPG')
 	username = None
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['first_name', 'last_name', 'phone1']
