@@ -208,7 +208,7 @@ const HomeAlumni = () => {
 
 
   return (
-    <div>
+    <div id='resources'>
       <h2 style={{ color: 'orange', textAlign: 'center', marginTop: '32px' }}>SUCCESS STORIES</h2>
       <h1 style={styles.title}>Learn From Our Alumni </h1>
       <div style={styles.container}>

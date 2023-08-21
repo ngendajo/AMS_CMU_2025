@@ -28,7 +28,7 @@ const HomeFooter = () => {
   };
 
   return (
-    <div style={footerStyle}>
+    <div style={footerStyle} id='footer'>
 
       <div style={contentStyle}>
         It takes a Village to transform a child.

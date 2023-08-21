@@ -95,11 +95,11 @@ export default function HomeMenuBar() {
         const MobileMenu = () => {
             return (
                 <div className={'mobile-menu'}>
-                    <a onClick={toggleMobileMenu} className="active" href='https://www.asyv.org/'>Home</a>
-                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/mission'>About Us</a>
-                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/partners-supporters'>Resources</a>
-                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/blog'>News</a>
-                    <a onClick={toggleMobileMenu} href='https://www.asyv.org/contact-us'>Contact</a>
+                    <a onClick={toggleMobileMenu} className="active" href='#home'>Home</a>
+                    <a onClick={toggleMobileMenu} href='#about'>About Us</a>
+                    <a onClick={toggleMobileMenu} href='#resources'>Resources</a>
+                    <a onClick={toggleMobileMenu} href='#news'>News</a>
+                    <a onClick={toggleMobileMenu} href='#footer'>Contact</a>
                 </div>
             );
         };
@@ -124,7 +124,7 @@ export default function HomeMenuBar() {
     return (
         <>
             {/* --------------------- 1. Top Navigation Bar --------------------- */}
-            <div className='HomeMenuBar topbarWrapper'> {/* container of top navigation bar*/}
+            <div className='HomeMenuBar topbarWrapper' id='home'> {/* container of top navigation bar*/}
                 <div className="left-menu">
                     <img src={images} alt="logo" />
                 </div>
@@ -132,11 +132,11 @@ export default function HomeMenuBar() {
                 <div>
                     {/* Desktop Menu, which only appears on large screens */}
                     <div className='menu'>
-                        <a className="active" href='https://www.asyv.org/'>Home</a>
-                        <a href='https://www.asyv.org/mission'>About Us</a>
-                        <a href='https://www.asyv.org/partners-supporters'>Resources</a>
-                        <a href='https://www.asyv.org/blog'>News</a>
-                        <a href='https://www.asyv.org/contact-us'>Contact</a>
+                        <a className="active" href='#home'>Home</a>
+                        <a href='#about'>About Us</a>
+                        <a href='#resources'>Resources</a>
+                        <a href='#news'>News</a>
+                        <a href='#footer'>Contact</a>
                     </div>
 
                     {/* This button only shows up on small screens. It is used to open the mobile menu */}

@@ -7,7 +7,7 @@ import Front_Story4 from "../../Static/Images/Front_Story4.jpg"
 
 const HomeStory = () => {
   return (
-    <div className="container">
+    <div className="container" id='about'>
 
       {/* ----------------- Left Part ----------------- */}
       <div className="left-column">

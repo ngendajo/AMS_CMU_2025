@@ -121,7 +121,7 @@ const HomeNews = () => {
   const displayNews = allOrderedNews.slice(0, 4); // display in front page
 
   return (
-    <div>
+    <div id='news'>
       {/* ----------- Page Title ----------- */}
       <h1
         style={{
