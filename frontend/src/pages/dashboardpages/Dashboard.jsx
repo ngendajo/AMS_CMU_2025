@@ -29,12 +29,10 @@ export default function Dashboard() {
   
   return (
     <div>
-        {user.is_superuser || user.is_crc || user.is_staff? 
-       <Admin />
-       :user.is_alumni ?
+        {user.is_alumni ?
        <Alumni />
        :
-       <p>Unauthorized user</p>
+       <Admin />
        }
     </div>
   )
