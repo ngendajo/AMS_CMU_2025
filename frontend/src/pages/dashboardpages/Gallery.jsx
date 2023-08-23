@@ -55,15 +55,15 @@ export default function GalleryPage() {
       {isEmpty?
         null:<div><Gallery images={data} /> </div>
       }
-      {auth.user.is_alumni?
-         null:<center><div className='add-galleryphoto'>
+      {auth.user.is_superuser || auth.user.is_crc?
+         <center><div className='add-galleryphoto'>
             <Link to="/add-gallery" className='link'>Add Photo</Link><IoIosAdd className='addicon'/>
-          </div></center>
+          </div></center>:null
       }
-      {auth.user.is_alumni?
-         null: <center><div className='edit-delete-gallery-photo'>
+      {auth.user.is_superuser || auth.user.is_crc?
+          <center><div className='edit-delete-gallery-photo'> 
           <Link to="/edit-gallery" className='link'>Change Photo in Gallery</Link>
-        </div></center>
+        </div></center>:null
       } 
     </div>
   );

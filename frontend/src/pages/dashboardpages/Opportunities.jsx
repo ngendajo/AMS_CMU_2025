@@ -82,7 +82,10 @@ function Opportunities() {
     <div className="opportunity-table">
       <h1>Explore Job Opportunities!</h1>
       <OpportunityTable opportunities={filteredOpportunities} onApprove={handleApprove}/>
-      <AddOpportunity />
+      {
+        auth.user.is_superuser || auth.user.is_crc?<AddOpportunity />:null
+      }
+      
     </div>
   );
 }

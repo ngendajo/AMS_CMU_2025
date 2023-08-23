@@ -144,7 +144,10 @@ export default function Events() {
 
   return (
     <div className="listWithPage">
-        <center><Link to={'/add-event/'} className='new-event'>Add a New Event</Link></center>
+      {auth.user.is_superuser || auth.user.is_crc?
+         <center><Link to={'/add-event/'} className='new-event'>Add a New Event</Link></center>:null
+        }
+        
     <div className="card-list">
       {currentEvents.map((item, index) => (
         <div key={index} className="CardSmall">

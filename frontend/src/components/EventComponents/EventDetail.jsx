@@ -77,8 +77,8 @@ export default function EventDetail() {
 
   return (
     <div className="listWithPage">
-        {auth.user.is_alumni?
-         null: <center><Link to={'/edit-event/'+params.id} className='new-event'>Edit/Delete Event</Link></center>
+        {auth.user.is_superuser || auth.user.is_crc?
+         <center><Link to={'/edit-event/'+params.id} className='new-event'>Edit/Delete Event</Link></center>:null
         }
         <center><div className="card">
         <Card id={data.id} title={data.title} startDate={data.startDate} endDate={data.endDate} description={data.description} image_url={data.image_url} />
