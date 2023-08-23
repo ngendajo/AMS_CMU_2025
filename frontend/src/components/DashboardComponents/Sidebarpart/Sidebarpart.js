@@ -73,7 +73,9 @@ const Sidebarpart = () => {
             SidebarDataforAlumn.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             }):
-            <p>You are a visitor</p>
+            SidebarDataforAlumn.map((item, index) => {
+              return <SubMenu item={item} key={index} />;
+            })
             }
               <Link to="#" className='profile-logout-link' onClick={signOut}><BiLogOut/><span>Log Out</span></Link>
             <Sidebarmenufooter>
