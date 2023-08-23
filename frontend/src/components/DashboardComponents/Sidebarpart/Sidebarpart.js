@@ -65,7 +65,7 @@ const Sidebarpart = () => {
       <IconContext.Provider value={{ color: "#615E69" }}>
         <SidebarNav>
           <SidebarWrap>
-            {auth.user.is_superuser || auth.user.is_superuser?
+            {auth.user.is_superuser || auth.user.is_crc?
             SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             }):
