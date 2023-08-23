@@ -64,7 +64,7 @@ export default function HomeMenuBar() {
                 const accessToken = response?.data.access;
                 const refresh = response?.data.refresh;
                 const user =jwtDecode(accessToken); 
-                const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": null
+                const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": "visitor"
                 
                 setAuth({user,roles,email, pwd, accessToken,refresh });
                 setEmail('');
