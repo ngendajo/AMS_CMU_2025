@@ -69,10 +69,6 @@ const Sidebarpart = () => {
             SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             }):
-            auth.user.is_alumni?
-            SidebarDataforAlumn.map((item, index) => {
-              return <SubMenu item={item} key={index} />;
-            }):
             SidebarDataforAlumn.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             })
