@@ -32,9 +32,7 @@ export default function Dashboard() {
         {user.is_alumni ?
        <Alumni />
        :
-       user.is_crc || user.is_superuser?
-       <Admin />:
-       <p>You are a visitor</p>
+       <Admin />
        }
     </div>
   )
