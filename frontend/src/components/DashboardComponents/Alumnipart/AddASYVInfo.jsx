@@ -36,7 +36,7 @@ export default function AddASYVInfo() {
     const [s4marks, setS4marks] = useState('');
       const [s5marks, setS5marks] = useState('');
       const [s6marks, setS6marks] = useState('');
-      const [ne, setNe] = useState('');
+      const [ne, setNe] = useState('0.0');
       const [maxforne, setMaxforne] = useState('');
 
     useEffect(() =>{
@@ -128,11 +128,11 @@ export default function AddASYVInfo() {
   const fatherRef = useRef();
   const motherRef = useRef();
 
-  const [father, setFather] = useState('');
+  const [father, setFather] = useState('NN');
     const [validFather, setValidFather] = useState(false);
     const [fatherFocus, setFatherFocus] = useState(false);
 
-    const [mother, setMother] = useState('');
+    const [mother, setMother] = useState('NN');
     const [validMother, setValidMother] = useState(false);
     const [motherFocus, setMotherFocus] = useState(false);  
     
@@ -248,6 +248,7 @@ export default function AddASYVInfo() {
                       type="text"
                       id="father"
                       ref={fatherRef}
+                      value={father}
                       autoComplete="off"
                       onChange={(e) => setFather(e.target.value)}
                       required
@@ -276,6 +277,7 @@ export default function AddASYVInfo() {
                       type="text"
                       id="mother"
                       ref={motherRef}
+                      value={mother}
                       autoComplete="off"
                       onChange={(e) => setMother(e.target.value)}
                       required
