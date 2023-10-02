@@ -12,7 +12,7 @@ import baseUrl from "../../../api/baseUrl";
 // This file is to add Alumni
 
 const EMAIL_REGIX =/\S+@\S+\.\S+/; 
-const PHONE_REGIX = /^[0-9]{15}$/;
+const PHONE_REGIX = /^[0-9]{10,15}$/;
 const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
 
 const Registera = () => {
