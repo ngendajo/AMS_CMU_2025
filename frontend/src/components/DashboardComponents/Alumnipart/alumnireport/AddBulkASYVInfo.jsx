@@ -77,7 +77,6 @@ export default function AddBulkASYVInfo() {
               setEps(response.data)
           }catch(err) {
               console.log(err);
-              navigate('/error');
           }
       }
   
@@ -98,7 +97,6 @@ export default function AddBulkASYVInfo() {
               setCombinations(response.data)
           }catch(err) {
               console.log(err);
-              navigate('/error');
           }
       }
   
@@ -135,7 +133,6 @@ export default function AddBulkASYVInfo() {
               setFamilies(fam)
           }catch(err) {
               console.log(err);
-              navigate('/error');
           }
       }
   
@@ -156,7 +153,6 @@ export default function AddBulkASYVInfo() {
             setUsers(response.data)
         }catch(err) {
             console.log(err);
-            navigate('/error');
         }
     }
 
@@ -244,7 +240,7 @@ export default function AddBulkASYVInfo() {
           const parseData = XLSX.utils.sheet_to_json(sheet);
           parseData.forEach((ele)=>{
             families.forEach((fami)=>{
-              if((ele.family)===(fami.family_name)){
+              if((ele.family).toUpperCase()===(fami.family_name).toUpperCase()){
                 ele.family=fami.family_id
               }else{
                 console.log(ele.family+" is not exist in the system.")
@@ -253,7 +249,7 @@ export default function AddBulkASYVInfo() {
           })
           parseData.forEach((ele)=>{
             combinations.forEach((comb)=>{
-              if((ele.combination)===(comb.combination_name)){
+              if((ele.combination).toUpperCase()===(comb.combination_name).toUpperCase()){
                 ele.combination=comb.id
               }else{
                 console.log(ele.combination+" is not exist in the system.")
@@ -386,7 +382,6 @@ export default function AddBulkASYVInfo() {
     } catch (error) {
       console.error('<<<ERRROR>>>', error);
       console.error('Something Went Wrong', error.message);
-      navigate('/error');
     } finally {
       // removing worksheet's instance to create new one
       workbook.removeWorksheet(workSheetName);
@@ -461,10 +456,7 @@ export default function AddBulkASYVInfo() {
               }
           }
       )
-      .then(res1 =>{
-          console.log(res1)
-      })
-      .catch(error => console.log(error.response))
+      //.catch(error => console.log(error.response))
     }
     let title=ele.job_title,career=ele.career,description=ele.description,
           company=ele.company,job_status=ele.job_status;
