@@ -240,7 +240,7 @@ export default function AddBulkASYVInfo() {
           const parseData = XLSX.utils.sheet_to_json(sheet);
           parseData.forEach((ele)=>{
             families.forEach((fami)=>{
-              if((ele.family).toUpperCase()===(fami.family_name).toUpperCase()){
+              if((ele.family)===(fami.family_name)){
                 ele.family=fami.family_id
               }else{
                 console.log(ele.family+" is not exist in the system.")
@@ -249,7 +249,7 @@ export default function AddBulkASYVInfo() {
           })
           parseData.forEach((ele)=>{
             combinations.forEach((comb)=>{
-              if((ele.combination).toUpperCase()===(comb.combination_name).toUpperCase()){
+              if((ele.combination)===(comb.combination_name)){
                 ele.combination=comb.id
               }else{
                 console.log(ele.combination+" is not exist in the system.")
