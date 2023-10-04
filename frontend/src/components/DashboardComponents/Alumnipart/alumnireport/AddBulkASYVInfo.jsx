@@ -441,7 +441,9 @@ export default function AddBulkASYVInfo() {
         university=ele.university,scholarship=ele.scholarship,
         country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
         if(level===undefined?true:!(["A2","A1","A0","M","PHD"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
-        {}
+        {
+          console.log(level)
+        }
         else{
         axios.post(baseUrl+'/studie/', {
           "alumn":res.data.id,
@@ -461,7 +463,7 @@ export default function AddBulkASYVInfo() {
               }
           }
       )
-      //.catch(error => console.log(error.response))
+      .catch(error => console.log(error.response))
     }
     let title=ele.job_title,career=ele.career,description=ele.description,
           company=ele.company,job_status=ele.job_status;
@@ -503,7 +505,7 @@ export default function AddBulkASYVInfo() {
       datafinal.forEach((ele)=>{
         handleSubmit(ele)
       })
-      //navigate('/alumni/')
+      navigate('/alumni/')
     }
   }
       
