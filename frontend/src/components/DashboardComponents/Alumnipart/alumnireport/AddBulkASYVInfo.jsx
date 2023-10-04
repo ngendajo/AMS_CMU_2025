@@ -407,9 +407,6 @@ export default function AddBulkASYVInfo() {
               withCredentials:true 
           }
           );
-          console.log(response.data.id)
-          console.log(ele.family+" "+ele.combination)
-          console.log(ele)
           axios.post(baseUrl+'/alumni/info/', {
         "user":response.data.id,
         "marital_status":ele.martal_status,
