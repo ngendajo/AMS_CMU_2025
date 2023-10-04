@@ -207,6 +207,7 @@ const Admin = () => {
                 },
                 withCredentials:true
             });
+            console.log(response.data)
             Array.isArray(response.data)?
             setTotal(response.data.length):setTotal(0);
             setFemale(
