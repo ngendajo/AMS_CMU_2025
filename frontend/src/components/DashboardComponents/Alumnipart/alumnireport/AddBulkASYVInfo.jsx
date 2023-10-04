@@ -437,7 +437,7 @@ export default function AddBulkASYVInfo() {
     ) 
     .then(res =>{
         console.log(res.data.id) 
-   /*      let level=ele.study_level,degree=ele.degree,
+         let level=ele.study_level,degree=ele.degree,
         university=ele.university,scholarship=ele.scholarship,
         country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
         if(level===undefined?true:!(["A2","A1","A0","M","PHD"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
@@ -489,7 +489,7 @@ export default function AddBulkASYVInfo() {
         console.log(res)
     })
     .catch(error => console.log(error.response))
-  } */
+  } 
     }) 
     .catch(error => console.log(error.response.data))
           //clear input fields 
