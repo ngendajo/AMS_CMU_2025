@@ -396,7 +396,27 @@ export default function AddBulkASYVInfo() {
       formData.append('last_name',ele.last_name);
       formData.append('phone1',ele.phone_number);
       formData.append('password',"Agahozo@12");
-      const response = await axios.post(baseUrl+"/bulkalumni/",
+
+      let checkdata={
+        "marital_status":ele.martal_status,
+        "gender":ele.gender,
+        "Family":ele.family,
+        "Combination":ele.combination,
+        "eps":ele.eps,
+        "kids":ele.kids==="Yes"?true:false,
+        "father":ele.father===undefined?"none":ele.father,
+        "mother":ele.mother===undefined?"none":ele.mother,
+        "place_of_birth":ele.place_of_origin===undefined?"":ele.place_of_origin,
+        "currcesidence":ele.current_residence===undefined?"":ele.current_residence,
+        's4marks':ele.s4_marks===undefined?0:ele.s4_marks,
+        's5marks':ele.s5_marks===undefined?0:ele.s5_marks,
+        's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
+        'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
+        'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne
+      }
+      console.log(checkdata)
+
+     /* const response = await axios.post(baseUrl+"/bulkalumni/",
           formData,{
               headers: {
                   "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -429,7 +449,7 @@ export default function AddBulkASYVInfo() {
                 "Content-Type": 'application/json'
             }
         }
-    )
+    ) 
     .then(res =>{
         console.log(res.data.id) 
         let level=ele.study_level,degree=ele.degree,
@@ -485,12 +505,12 @@ export default function AddBulkASYVInfo() {
     })
     .catch(error => console.log(error.response))
   }
-    })
+    }) 
     .catch(error => console.log(error.response.data))
           //clear input fields 
+      */
           }catch(err){
               console.log(err);
-              navigate('/error');
           }
   }
   function savedata(){
@@ -498,7 +518,7 @@ export default function AddBulkASYVInfo() {
       datafinal.forEach((ele)=>{
         handleSubmit(ele)
       })
-      navigate('/alumni/')
+      //navigate('/alumni/')
     }
   }
       
