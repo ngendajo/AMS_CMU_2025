@@ -243,16 +243,17 @@ export default function AddBulkASYVInfo() {
               if((ele.family)===(fami.family_name)){
                 ele.family=fami.family_id
               }else{
-                console.log(ele.family+" is not exist in the system.")
+                //console.log(ele.family+" is not exist in the system.")
               }
             })
+
           })
           parseData.forEach((ele)=>{
             combinations.forEach((comb)=>{
               if((ele.combination)===(comb.combination_name)){
                 ele.combination=comb.id
               }else{
-                console.log(ele.combination+" is not exist in the system.")
+                //console.log(ele.combination+" is not exist in the system.")
               }
             })
           })
@@ -397,26 +398,7 @@ export default function AddBulkASYVInfo() {
       formData.append('phone1',ele.phone_number);
       formData.append('password',"Agahozo@12");
 
-      let checkdata={
-        "marital_status":ele.martal_status,
-        "gender":ele.gender,
-        "Family":ele.family,
-        "Combination":ele.combination,
-        "eps":ele.eps,
-        "kids":ele.kids==="Yes"?true:false,
-        "father":ele.father===undefined?"none":ele.father,
-        "mother":ele.mother===undefined?"none":ele.mother,
-        "place_of_birth":ele.place_of_origin===undefined?"":ele.place_of_origin,
-        "currcesidence":ele.current_residence===undefined?"":ele.current_residence,
-        's4marks':ele.s4_marks===undefined?0:ele.s4_marks,
-        's5marks':ele.s5_marks===undefined?0:ele.s5_marks,
-        's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
-        'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
-        'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne
-      }
-      console.log(checkdata)
-
-     /* const response = await axios.post(baseUrl+"/bulkalumni/",
+      const response = await axios.post(baseUrl+"/bulkalumni/",
           formData,{
               headers: {
                   "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -425,6 +407,7 @@ export default function AddBulkASYVInfo() {
               withCredentials:true 
           }
           );
+          console.log(response.data.id)
           axios.post(baseUrl+'/alumni/info/', {
         "user":response.data.id,
         "marital_status":ele.martal_status,
@@ -452,7 +435,7 @@ export default function AddBulkASYVInfo() {
     ) 
     .then(res =>{
         console.log(res.data.id) 
-        let level=ele.study_level,degree=ele.degree,
+   /*      let level=ele.study_level,degree=ele.degree,
         university=ele.university,scholarship=ele.scholarship,
         country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
         if(level===undefined?true:!(["A2","A1","A0","M","PHD"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
@@ -504,11 +487,11 @@ export default function AddBulkASYVInfo() {
         console.log(res)
     })
     .catch(error => console.log(error.response))
-  }
+  } */
     }) 
     .catch(error => console.log(error.response.data))
           //clear input fields 
-      */
+      
           }catch(err){
               console.log(err);
           }
