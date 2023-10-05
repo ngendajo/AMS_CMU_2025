@@ -106,7 +106,7 @@ const Admin = () => {
                 }
                 
               }
-          }):null;
+          }):console.log("there is aproblem!");
           alu.length>0?
           setAlumni(alu):null;
           console.log(alu)
