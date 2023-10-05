@@ -76,7 +76,7 @@ const Admin = () => {
             }, {}):null;
             console.log(groupedData)
             let alu=[]
-            (Array.isArray(groupedData))?
+            (Object.keys(groupedData).length>0)?
             Object.entries(groupedData).forEach(([grade, items]) => {
               console.log(grade);
               console.log(items);
