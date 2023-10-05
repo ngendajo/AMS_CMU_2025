@@ -64,6 +64,7 @@ const Admin = () => {
                   },
                   withCredentials:true
               });
+              console.log(response.data)
               const groupedData = Array.isArray(response.data)?
               response.data.reduce((groups, item) => {
                 const { grade } = item;
@@ -73,6 +74,7 @@ const Admin = () => {
                 groups[grade].push(item);
                 return groups;
             }, {}):null;
+            console.log(groupedData)
             let alu=[]
             (Array.isArray(groupedData))?
             Object.entries(groupedData).forEach(([grade, items]) => {
@@ -107,6 +109,7 @@ const Admin = () => {
           }):null;
           alu.length>0?
           setAlumni(alu):null;
+          console.log(alu)
           }catch(err) {
               console.log(err);
                //navigate('/error');
@@ -116,6 +119,8 @@ const Admin = () => {
       getAlumni();
   
   },[auth])
+
+  console.log(alumni)
 
     useEffect(() =>{
     
