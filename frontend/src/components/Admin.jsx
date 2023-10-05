@@ -293,7 +293,7 @@ const Admin = () => {
             setEmploy(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.employed!=="I" && element.end==="Up to now") {
+                if (element.employed==="F" || element.employed==="P"|| element.employed==="S") {
                   return true;
                 }
               
@@ -303,7 +303,7 @@ const Admin = () => {
             setUnemploy(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.end!=="Up to now" && element.end!==null) {
+                if (element.employed==="U") {
                   return true;
                 }
               
@@ -313,7 +313,7 @@ const Admin = () => {
             setIntern(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.employed==="I" && element.end==="Up to now") {
+                if (element.employed==="I") {
                   return true;
                 }
               
@@ -323,7 +323,7 @@ const Admin = () => {
             setOthers(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.employed===null ) {
+                if (element.employed===null || element.employed==="O" ) {
                   return true;
                 }
               

@@ -1000,7 +1000,7 @@ class AlumnReportView(APIView):
     def get(self, request):
         try:
             stud = User.objects.raw(
-            "SELECT api_user.id,userprofile_alumni.gender,userprofile_employment.status as employed,userprofile_employment.end_date as end,userprofile_studie.level as degree from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id LEFT OUTER JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni;")
+            "SELECT api_user.id,userprofile_alumni.gender,userprofile_grade.grade_name,userprofile_family.family_name,userprofile_combination.combination_name,userprofile_employment.status as employed,userprofile_employment.end_date as end,userprofile_studie.level as degree from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id LEFT OUTER JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni;")
 
             # if there is something in items else raise error
             if stud:

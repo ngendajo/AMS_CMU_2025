@@ -469,7 +469,7 @@ export default function AddBulkASYVInfo() {
         else{
           axios.post(baseUrl+'/employment/', {
         "title":title,
-        "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"O":"I",
+        "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"S":job_status.toUpperCase().startsWith("I",0)?"I":job_status.toUpperCase().startsWith("U",0)?"U":"O",
         "description":description===undefined?"NS":description,
         "company":company,
         "alumn":res.data.id,

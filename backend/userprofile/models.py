@@ -85,7 +85,9 @@ class Employment(models.Model):
         ('P', 'Part-time'),
         ('S', 'Self-employed'),
         ('I', 'Intern'),
-    )
+        ('U', 'Unemployed'),
+        ('O', 'Others'),
+    ) 
     status = models.CharField(max_length=2, choices=emps)
     career = models.CharField(max_length=200, default="")
     description = models.CharField(max_length=200)

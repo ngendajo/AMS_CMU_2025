@@ -135,6 +135,8 @@ export default function AddEmployment() {
                           <option value="F">Full-time</option>
                           <option value="P">Part-time</option>
                           <option value="I">Intern</option>
+                          <option value="U">Unemployed</option>
+                          <option value="O">Missed Info</option>
                         </select>
                     </div>
                     

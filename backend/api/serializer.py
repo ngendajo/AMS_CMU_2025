@@ -414,13 +414,16 @@ class TotalAlumnReportSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=True)
     gender = serializers.CharField(max_length=200, required=True)
+    grade_name = serializers.CharField(max_length=200, required=True)
+    family_name = serializers.CharField(max_length=200, required=True)
+    combination_name = serializers.CharField(max_length=200, required=True)
     employed = serializers.CharField(max_length=200, required=True)
     end = serializers.CharField(max_length=200, required=True)
     degree = serializers.CharField(max_length=200, required=True)
 
     class Meta:
         model = User
-        fields = ('id','gender','employed','end','degree')
+        fields = ('id','gender','grade_name','family_name','combination_name','employed','end','degree')
 
 class TotalAlumnGradeSerializer(serializers.ModelSerializer):
 
