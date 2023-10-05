@@ -76,8 +76,36 @@ const Admin = () => {
             }, {}):null;
             console.log(groupedData)
             let alu=[]
-            (Array.isArray(groupedData))?
-            alert("Hello!"):null;
+            Object.entries(groupedData).forEach(([grade, items]) => {
+              console.log(grade);
+              console.log(items);
+              if(grade==="null"){
+                alu.push({
+                  "grade":"Others",
+                  "boys":0,
+                  "girls":0,
+                  "others":items[0].number
+                })
+
+              } else{
+                if(items.length==1){
+                  alu.push({
+                    "grade":grade,
+                    "boys":items[0].gender==="Male"?items[0].number:0,
+                    "girls":items[0].gender==="Female"?items[0].number:0,
+                    "others":0
+                  })
+                }else{
+                  alu.push({
+                    "grade":grade,
+                    "boys":items[0].gender==="Male"?items[0].number:items[1].number,
+                    "girls":items[0].gender==="Female"?items[0].number:items[1].number,
+                    "others":0
+                  })
+                }
+                
+              }
+          })
           alu.length>0?
           setAlumni(alu):null;
           console.log(alu)
