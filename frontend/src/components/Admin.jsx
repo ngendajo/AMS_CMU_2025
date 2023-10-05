@@ -76,8 +76,8 @@ const Admin = () => {
             }, {}):null;
             console.log(groupedData)
             let alu=[]
-            (Object.keys(groupedData).length>0)?
-            console.log(groupedData):console.log("No dat");
+            (Array.isArray(groupedData))?
+            alert("Hello!"):null;
           alu.length>0?
           setAlumni(alu):null;
           console.log(alu)
