@@ -49,6 +49,7 @@ class Ep(models.Model):
         ('S', 'Sport'),
         ('SC', 'Sciences'),
         ('C', 'Club'),
+        ('P', 'Professional'),
     )
     type = models.CharField(max_length=2, choices=TYPES)
 
@@ -74,6 +75,16 @@ class Alumni(models.Model):
     s6marks =models.FloatField(default=0.0)
     ne =models.FloatField(default=0.0)
     maxforne =models.FloatField(default=0.0)
+    dec = (
+        ('P', 'Pass'),
+        ('F', 'Fail'),
+    ) 
+    decision = models.CharField(max_length=2,choices=dec,default="P")
+    life = (
+        ('A', 'Alive'),
+        ('D', 'Died'),
+    ) 
+    life_status = models.CharField(max_length=2,choices=life,default="A")
 
 
 # Employment model
@@ -128,20 +139,23 @@ class Event(models.Model):
 class Studie(models.Model):
     alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='studies')
     levels = (
-        ('A2', 'Advanced level degree'),
+        ('C', 'Certificate'),
         ('A1', 'Advanced diploma'),
         ('A0', 'Bachelors'),
         ('M', 'Masters'),
         ('PHD', 'PHD'),
+        ('NMS', 'No More Study'),
+        ('N', 'NoInfo'),
     )
-    level = models.CharField(max_length=3, choices=levels, default='A2')
+    level = models.CharField(max_length=3, choices=levels, default='NMS')
     degree = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
     country = models.CharField(max_length=200)
     Scholarships = (
         ('F', 'Full'),
         ('P', 'Partial'),
-        ('N', 'None'),
+        ('NS', 'No Scholarship'),
+        ('N', 'NoInfo'),
     )
     scholarship = models.CharField(max_length=2, choices=Scholarships)
     scholarship_details = models.CharField(max_length=200,default="")
@@ -150,6 +164,7 @@ class Studie(models.Model):
         ('S', 'Susepended'),
         ('O', 'On_going'),
         ('C', 'Completed'),
+        ('N', 'NoInfo'),
     )
     status = models.CharField(max_length=2, choices=Statuss)
 
