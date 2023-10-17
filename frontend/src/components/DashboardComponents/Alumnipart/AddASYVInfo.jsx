@@ -464,7 +464,7 @@ export default function AddASYVInfo() {
                           Life Status
                       </label>
                       <select name="life_status" value={life_status} onChange={(event) => setLife_status(event.target.value)}>
-                      <option value="A" selected>Alive</option>
+                      <option value="A">Alive</option>
                         <option value="D">Died</option>
                       </select>
                   </div>
