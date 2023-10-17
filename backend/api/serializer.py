@@ -203,10 +203,12 @@ class AlumniListsSerializer(serializers.ModelSerializer):
     family_id = serializers.IntegerField(required=True)
     grade_id=serializers.IntegerField(required=True)
     combination_id = serializers.IntegerField(required=True)
+    decision = serializers.CharField(max_length=200, required=True)
+    life_status = serializers.CharField(max_length=200, required=True)
 
     class Meta:
         model = User
-        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id')
+        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id','decision','life_status')
         
 class AlumniListbyEPSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=True)
