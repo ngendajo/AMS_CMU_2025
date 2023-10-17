@@ -53,6 +53,10 @@ export default function EpAlumni() {
     {
       return "Sports";
     }
+    if(type==="P")
+    {
+      return "Professional";
+    }
   }
   function getEps(eps)
   {

@@ -39,6 +39,9 @@ export const Eps = ({ id }) => {
                     else if(e.type==="C"){
                         t="Clubs"
                     }
+                    else if(e.type==="P"){
+                        t="Professional"
+                    }
                     else{
                         t="Sciences"
                     }
