@@ -1,3 +1,3 @@
 
-const  baseUrlforImg='http://backend.asyv.ac.rw';
+const  baseUrlforImg='http://localhost';
 export default baseUrlforImg;
