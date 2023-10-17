@@ -28,6 +28,7 @@ export const Eps = ({ id }) => {
                     withCredentials:true
                 });
                 var eplist=[]
+                var i=1
                 Array.isArray(response.data)?
                 response.data.forEach(e=>{
                     var t=""
@@ -45,13 +46,16 @@ export const Eps = ({ id }) => {
                     else{
                         t="Sciences"
                     }
+                    
                     eplist.push({
+                        id:i,
                         title:<Link className='comb_name' to={`/epalumn/${e.id}`}>{e.title}</Link>, 
                         type:t,
                         ep_id:<span>
                             <Link to={`/add-ep/${e.id}`}><BiEditAlt className='icon'/></Link>
                         </span>
                     })
+                    i++
                     }):null;
                 setData(eplist)
                 console.log(eplist)
