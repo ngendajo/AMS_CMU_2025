@@ -95,7 +95,7 @@ const Registera = () => {
    const handleSubmit = async (e) =>{
     e.preventDefault();
     if (selectedFiles && selectedFiles[0].name){
-        var imgname="default.jpeg"
+        var imgname=email+current+".jpeg"
     const file = new File(selectedFiles, imgname);
           setImage({
             image_url:file,
