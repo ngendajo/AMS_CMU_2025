@@ -203,8 +203,8 @@ class AlumniListsSerializer(serializers.ModelSerializer):
     family_id = serializers.IntegerField(required=True)
     grade_id=serializers.IntegerField(required=True)
     combination_id = serializers.IntegerField(required=True)
-    decision = serializers.CharField(max_length=200, required=True)
-    life_status = serializers.CharField(max_length=200, required=True)
+    decision = serializers.CharField(max_length=2, required=True)
+    life_status = serializers.CharField(max_length=2, required=True)
 
     class Meta:
         model = User
