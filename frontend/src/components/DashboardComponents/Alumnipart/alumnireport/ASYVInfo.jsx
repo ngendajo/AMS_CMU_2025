@@ -95,6 +95,7 @@ export default function ASYVInfo() {
             /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
             var alumnilist=[]
             var i=1
+            console.log(response.data)
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
