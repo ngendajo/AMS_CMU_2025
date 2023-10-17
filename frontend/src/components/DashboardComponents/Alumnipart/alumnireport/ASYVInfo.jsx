@@ -36,7 +36,9 @@ const columns = [
   { header: 'S5 Marks', key: 's5marks' },
   { header: 'S6 Marks', key: 's6marks' },
   { header: 'National Exam Result', key: 'ne' },
-  { header: 'Maximum Aggregate in NE', key: 'maxforne' }
+  { header: 'Maximum Aggregate in NE', key: 'maxforne' },
+  { header: 'Decision', key: 'decision' },
+  { header: 'Life Status', key: 'life_status' }
 ];
 const workSheetName = 'Alumni_Report';
 const workBookName = 'Alumni_Report';
@@ -162,7 +164,9 @@ export default function ASYVInfo() {
                 s5marks:element.alumn==null?"Null":element.alumn.s5marks,
                 s6marks:element.alumn==null?"Null":element.alumn.s6marks,
                 ne:element.alumn==null?"Null":element.alumn.ne,
-                maxforne:element.alumn==null?"Null":element.alumn.maxforne
+                maxforne:element.alumn==null?"Null":element.alumn.maxforne,
+                decision:element.alumn==null?"Null":element.alumn.decision=="P"?"Pass":"Fail",
+                life_status:element.alumn==null?"Null":element.alumn.life_status=="A"?"Alive":"Died"
               })
               i+=1
             }):null;

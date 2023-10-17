@@ -43,6 +43,8 @@ export default function AddASYVInfo() {
       const [s6marks, setS6marks] = useState('');
       const [ne, setNe] = useState('');
       const [maxforne, setMaxforne] = useState('');
+      const [decision, setDecision] = useState('');
+      const [life_status, setLife_status] = useState('');
 
     const navigate = useNavigate();
 
@@ -217,6 +219,8 @@ export default function AddASYVInfo() {
                 setS6marks(dat.alumn.s6marks)
                 setNe(dat.alumn.ne)
                 setMaxforne(dat.alumn.maxforne)
+                setDecision(dat.alumn.decision)
+                setLife_status(dat.alumn.life_status)
                 var eplist=[]
                 dat.alumn.eps.forEach(element => {
                 eplist.push(
@@ -256,7 +260,9 @@ export default function AddASYVInfo() {
         "s5marks":s5marks,
         "s6marks":s6marks,
         "ne":ne,
-        "maxforne":maxforne
+        "maxforne":maxforne,
+        'decision':decision,
+        'life_status':life_status
         },
         {
             headers: {
@@ -502,6 +508,24 @@ export default function AddASYVInfo() {
                             onChange={(event) => setNe(event.target.value)}
                         />
                  </div>
+                 <div className="formpart">
+                      <label htmlFor="decision">
+                          Decision
+                      </label>
+                      <select value={decision} defaultValue={decision} onChange={(e)=>setDecision(e.target.value)} name="decision">
+                        <option value="P">Pass</option>
+                        <option value="F">Fail</option>
+                      </select>
+                  </div>
+                  <div className="formpart">
+                      <label htmlFor="life_status">
+                          Life Status
+                      </label>
+                      <select value={life_status} defaultValue={life_status} onChange={(e)=>setLife_status(e.target.value)} name="life_status">
+                        <option value="A">Alive</option>
+                        <option value="D">Died</option>
+                      </select>
+                  </div>
                   
               </div>
 

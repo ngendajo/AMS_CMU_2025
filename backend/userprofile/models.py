@@ -167,7 +167,7 @@ class Studie(models.Model):
         ('S', 'Susepended'),
         ('O', 'On_going'),
         ('C', 'Completed'),
-        ('D', 'Deceased'),
+        ('De', 'Deceased'),
         ('N', 'NoInfo'),
     )
     status = models.CharField(max_length=2, choices=Statuss)

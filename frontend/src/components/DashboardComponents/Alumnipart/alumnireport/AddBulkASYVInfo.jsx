@@ -32,6 +32,8 @@ const columns = [
     { header: 's6_marks', key: 's6marks' },
     { header: 'national_exam_result', key: 'ne' },
     { header: 'maximum_aggregate_in_ne', key: 'maxforne' },
+    { header: 'Decision', key: 'decision' },
+    { header: 'Life_status', key: 'life_status' },
     { header: 'job_title', key: 'job_title' },
     { header: 'job_status', key: 'job_status' },
     { header: 'description', key: 'description' },
@@ -424,6 +426,8 @@ export default function AddBulkASYVInfo() {
         's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
         'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
         'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne,
+        "decision":ele.decision,
+        "life_status":ele.life_status,
         },
         {
             headers: {
@@ -437,7 +441,7 @@ export default function AddBulkASYVInfo() {
          let level=ele.study_level,degree=ele.degree,
         university=ele.university,scholarship=ele.scholarship,
         country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
-        if(level===undefined?true:!(["A2","A1","A0","M","PHD"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
+        if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
         {
           console.log(level)
         }
@@ -447,10 +451,10 @@ export default function AddBulkASYVInfo() {
           "level":level,
           "degree":degree,
           "university":university,
-          "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":"N",
+          "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NS",0)?"NS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
           "country":country,
           "scholarship_details":scholarship_details,
-          "status":status.toUpperCase().startsWith("D",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":"C"
+          "status":status.toUpperCase().startsWith("D",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":status.toUpperCase().startsWith("De",0)?"De":status.toUpperCase().startsWith("C",0)?"C":"N"
           
           }, 
           {
@@ -469,7 +473,7 @@ export default function AddBulkASYVInfo() {
         else{
           axios.post(baseUrl+'/employment/', {
         "title":title,
-        "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"S":job_status.toUpperCase().startsWith("I",0)?"I":job_status.toUpperCase().startsWith("U",0)?"U":"O",
+        "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"S":job_status.toUpperCase().startsWith("I",0)?"I":job_status.toUpperCase().startsWith("U",0)?"U":job_status.toUpperCase().startsWith("D",0)?"D":"N",
         "description":description===undefined?"NS":description,
         "company":company,
         "alumn":res.data.id,

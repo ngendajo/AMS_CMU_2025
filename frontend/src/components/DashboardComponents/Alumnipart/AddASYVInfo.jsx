@@ -32,6 +32,9 @@ export default function AddASYVInfo() {
     const [marital_status, setMarital_status] = useState('');
     const [gender, setGender] = useState('')
     const [kids, setKids] = useState('')
+    const [decision, setDecision] = useState('')
+    const [life_status, setLife_status] = useState('')
+    
 
     const [s4marks, setS4marks] = useState('');
       const [s5marks, setS5marks] = useState('');
@@ -197,7 +200,9 @@ export default function AddASYVInfo() {
         's5marks':s5marks,
         's6marks':s6marks,
         'ne':ne,
-        'maxforne':maxforne
+        'maxforne':maxforne,
+        'decision':decision,
+        'life_status':life_status
         },
         {
             headers: {
@@ -385,7 +390,7 @@ export default function AddASYVInfo() {
                       </label>
                       <input
                             type='number'
-                            step="0.1"
+                            step="0.01"
                             min='0'
                             max='100'
                             value={s4marks}
@@ -398,7 +403,7 @@ export default function AddASYVInfo() {
                       </label>
                       <input
                             type='number'
-                            step="0.1"
+                            step="0.01"
                             min='0'
                             max='100'
                             value={s5marks}
@@ -411,7 +416,7 @@ export default function AddASYVInfo() {
                       </label>
                       <input
                             type='number'
-                            step="0.1"
+                            step="0.01"
                             min='0'
                             max='100'
                             value={s6marks}
@@ -424,6 +429,9 @@ export default function AddASYVInfo() {
                       </label>
                       <input
                             type='number'
+                            step="0.01"
+                            min='0'
+                            max='100'
                             value={maxforne}
                             onChange={(event) => setMaxforne(event.target.value)}
                         />
@@ -434,10 +442,32 @@ export default function AddASYVInfo() {
                       </label>
                       <input
                             type='number'
+                            step="0.01"
+                            min='0'
+                            max='100'
                             value={ne}
                             onChange={(event) => setNe(event.target.value)}
                         />
                  </div>
+                 <div className="formpart">
+                      <label htmlFor="decision">
+                          Decision
+                      </label>
+                      <select name="decision" value={decision} onChange={(event) => setDecision(event.target.value)}>
+                      <option value="" disabled>Select your choice</option>
+                        <option value="P">Pass</option>
+                        <option value="F">Fail</option>
+                      </select>
+                  </div>
+                  <div className="formpart">
+                      <label htmlFor="life_status">
+                          Life Status
+                      </label>
+                      <select name="life_status" value={life_status} onChange={(event) => setLife_status(event.target.value)}>
+                      <option value="A" selected>Alive</option>
+                        <option value="D">Died</option>
+                      </select>
+                  </div>
               </div>
 
               <center>
