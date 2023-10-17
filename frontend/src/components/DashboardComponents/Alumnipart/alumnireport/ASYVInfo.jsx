@@ -141,6 +141,7 @@ export default function ASYVInfo() {
             
             var alumnilist2=[]
             var i=1
+            console.log(response.data)
             Array.isArray(response.data)?
             response.data.forEach(element => {
               alumnilist2.push({
