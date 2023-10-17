@@ -13,7 +13,7 @@ export default function EditEp() {
     const [title, setTitle] = useState("");
     const [type, setType] = useState("");
     const navigate = useNavigate();
-    const [types, setTypes] = useState([{'Art':'A','Clubs':'C','Sports':'S','Science':'SC','d':'A'}]);
+    const [types, setTypes] = useState([{'Art':'A','Clubs':'C','Professional':'P','Sports':'S','Science':'SC','d':'A'}]);
     let {auth}= useAuth();
     const params = useParams();
 
@@ -65,7 +65,7 @@ export default function EditEp() {
                 let data=response.data;
                 setTitle(data[0].title);
                 setType(data[0].type)
-                setTypes([{'Art':'A','Clubs':'C','Sports':'S','Science':'SC','d':data[0].type}])
+                setTypes([{'Art':'A','Clubs':'C','Professional':'P','Sports':'S','Science':'SC','d':data[0].type}])
             }catch(err) {
                 console.log(err);
                 navigate('/error');
@@ -99,6 +99,9 @@ export default function EditEp() {
 
                                         {t.d===t.Art ? <option value={t.Art} selected>Art</option>
                                         :<option value={t.Art}>Art</option>}
+
+                                        {t.d===t.Professional ? <option value={t.Professional} selected>Professional</option>
+                                        :<option value={t.Professional}>Professional</option>}
 
                                         {t.d===t.Clubs ? <option value={t.Clubs} selected>Clubs</option>
                                         :<option value={t.Clubs}>Clubs</option>}

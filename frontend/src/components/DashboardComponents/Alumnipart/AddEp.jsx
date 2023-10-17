@@ -50,6 +50,7 @@ export default function AddEp() {
                         <option value="C">Clubs</option>
                         <option value="S">Sports</option>
                         <option value="SC">Sciences</option>
+                        <option value="P">Professional</option>
                     </select>
                 </label>
         </div>

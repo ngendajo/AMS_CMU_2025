@@ -7,7 +7,7 @@ export const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   const onChange = useAsyncDebounce((value) => {
     setGlobalFilter(value || undefined);
   }, 200);
-
+console.log(globalFilter)
   return (
     <div className='input-wrapper search-staff'>
                 <FaSearch id='search-icon'/>

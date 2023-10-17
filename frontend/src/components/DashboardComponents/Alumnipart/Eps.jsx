@@ -54,6 +54,7 @@ export const Eps = ({ id }) => {
                     })
                     }):null;
                 setData(eplist)
+                console.log(eplist)
             }catch(err) {
                 console.log(err);
                 navigate('/error');
