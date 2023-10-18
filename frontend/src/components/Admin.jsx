@@ -116,8 +116,6 @@ const Admin = () => {
   
   },[auth])
 
-  console.log(alumni)
-
     useEffect(() =>{
     
       const getGrades = async () =>{
@@ -332,7 +330,7 @@ const Admin = () => {
               }).length:0
             )
         }catch(err) {
-            console.log(err);
+            //console.log(err);
              navigate('error');
         }
     }
