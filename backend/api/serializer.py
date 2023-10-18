@@ -179,7 +179,7 @@ class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
-        fields = '__all__'
+        fields = ('id','user','marital_status','gender','family','combination','eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
         depth = 3
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
