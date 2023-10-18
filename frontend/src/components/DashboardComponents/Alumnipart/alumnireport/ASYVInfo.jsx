@@ -183,6 +183,30 @@ export default function ASYVInfo() {
     getusers();
 
 },[auth])
+useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
+    
+    const getTest = async () =>{
+        try{
+            const response = await axios.get(baseUrl+'/test/',{ /* 用 axios 库发送了一个异步 GET 请求*/
+                headers: { /* 请求头 */
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials:true
+            });
+
+            /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
+            
+            console.log(response.data)
+        }catch(err) {
+            console.log(err);
+            // navigate('/error');
+        }
+    }
+
+    getTest();
+
+},[auth])
 
 const workbook = new Excel.Workbook();
 

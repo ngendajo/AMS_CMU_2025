@@ -60,6 +60,22 @@ class AluminiBulkRegistrationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class TestView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    
+    def get(self, request):
+        try:
+            user = User.objects.filter(is_alumni=True)
+
+            # if there is something in items else raise error
+            if user:
+                serializer = TestSerializer(user, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class AluminiRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
