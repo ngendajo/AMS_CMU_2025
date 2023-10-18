@@ -112,7 +112,7 @@ class AluminiListView(APIView):
                 return Response(serializer.data)
             
         except Exception as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(error=e,status=status.HTTP_404_NOT_FOUND)
    
 class AluminiListByEyView(APIView):
     #permission_classes = [IsAuthenticated, ]
