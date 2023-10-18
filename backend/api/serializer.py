@@ -178,7 +178,7 @@ class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
-        fields = ('id','user','life_status')
+        fields = ('__all__')
         depth = 3
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
