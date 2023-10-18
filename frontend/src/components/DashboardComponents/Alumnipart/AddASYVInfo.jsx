@@ -334,7 +334,7 @@ export default function AddASYVInfo() {
                   </div>
                   <div className="formpart">
                       <label htmlFor="kids">
-                          Do you have kids
+                      Do you have your own biological children?
                       </label>
                       <select name="kids" value={kids} onChange={(event) => setKids(event.target.value)}>
                       <option value="" disabled>Select your choice</option>
