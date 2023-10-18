@@ -75,7 +75,7 @@ class TestView(APIView):
             else:
                 return Response([])
         except Exception as e:
-            return Response(error=e,status=status.HTTP_404_NOT_FOUND)
+            return Response(e)
 
 class AluminiRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
