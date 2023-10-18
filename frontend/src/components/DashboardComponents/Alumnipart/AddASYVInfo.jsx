@@ -32,8 +32,8 @@ export default function AddASYVInfo() {
     const [marital_status, setMarital_status] = useState('');
     const [gender, setGender] = useState('')
     const [kids, setKids] = useState('')
-    const [decision, setDecision] = useState('')
-    const [life_status, setLife_status] = useState('')
+    /* const [decision, setDecision] = useState('')
+    const [life_status, setLife_status] = useState('') */
     
 
     const [s4marks, setS4marks] = useState('');
@@ -449,7 +449,7 @@ export default function AddASYVInfo() {
                             onChange={(event) => setNe(event.target.value)}
                         />
                  </div>
-                 <div className="formpart">
+                {/*  <div className="formpart">
                       <label htmlFor="decision">
                           Decision
                       </label>
@@ -467,7 +467,7 @@ export default function AddASYVInfo() {
                       <option value="A">Alive</option>
                         <option value="D">Died</option>
                       </select>
-                  </div>
+                  </div> */}
               </div>
 
               <center>
