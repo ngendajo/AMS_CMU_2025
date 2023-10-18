@@ -180,7 +180,7 @@ class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
         fields = '__all__'
-        depth = 2
+        depth = 3
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
     alumn = AlumniListSerializer()
