@@ -39,10 +39,10 @@ const Admin = () => {
     const [empStugrade, setEmpStugrade] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
-    const [employ, setEmploy] = useState('');
-    const [unemploy, setUnemploy] = useState('');
-    const [intern, setIntern] = useState('');
-    const [others, setOthers] = useState('');
+    const [employ, setEmploy] = useState(0);
+    const [unemploy, setUnemploy] = useState(0);
+    const [intern, setIntern] = useState(0);
+    const [others, setOthers] = useState(0);
     const [grades, setGrades] = useState('');
     const [a2, setA2] = useState('');
     const [a1, setA1] = useState('');
@@ -322,7 +322,7 @@ const Admin = () => {
             setOthers(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.employed===null || element.employed==="O" ) {
+                if (element.employed===null || element.employed==="D"|| element.employed==="N" ) {
                   return true;
                 }
               
@@ -330,8 +330,8 @@ const Admin = () => {
               }).length:0
             )
         }catch(err) {
-            //console.log(err);
-             navigate('error');
+            console.log(err);
+             //navigate('error');
         }
     }
 
