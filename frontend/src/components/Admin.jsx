@@ -77,8 +77,6 @@ const Admin = () => {
             console.log(groupedData)
             let alu=[]
             Object.entries(groupedData).forEach(([grade, items]) => {
-              console.log(grade);
-              console.log(items);
               if(grade==="null"){
                 alu.push({
                   "grade":"Others",
@@ -108,7 +106,6 @@ const Admin = () => {
           })
           alu.length>0?
           setAlumni(alu):null;
-          console.log(alu)
           }catch(err) {
               console.log(err);
                //navigate('/error');
