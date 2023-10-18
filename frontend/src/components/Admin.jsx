@@ -331,7 +331,7 @@ const Admin = () => {
             )
         }catch(err) {
             console.log(err);
-             //navigate('error');
+            navigate('error');
         }
     }
 
