@@ -115,6 +115,9 @@ export default function AddStudie() {
                           <option value="A0">Bachelors</option>
                           <option value="M">Masters</option>
                           <option value="PHD">PHD</option>
+                          <option value="NMS">No futher study</option>
+                          <option value="D">Deseaded</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     
@@ -166,7 +169,9 @@ export default function AddStudie() {
                         <select name="scholarship">
                           <option value="F">Full Scholarship</option>
                           <option value="P">Partial Scholarship</option>
-                          <option value="N">None</option>
+                          <option value="NS">No Scholarship</option>
+                          <option value="D">Deseaded</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     <div className="formpart">

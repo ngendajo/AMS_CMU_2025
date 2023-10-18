@@ -426,8 +426,8 @@ export default function AddBulkASYVInfo() {
         's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
         'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
         'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne,
-        "decision":ele.decision,
-        "life_status":ele.life_status,
+        /* "decision":ele.decision,
+        "life_status":ele.life_status, */
         },
         {
             headers: {

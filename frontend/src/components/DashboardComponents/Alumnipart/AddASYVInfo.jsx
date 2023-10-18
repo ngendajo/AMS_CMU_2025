@@ -200,9 +200,9 @@ export default function AddASYVInfo() {
         's5marks':s5marks,
         's6marks':s6marks,
         'ne':ne,
-        'maxforne':maxforne,
+        'maxforne':maxforne/* ,
         'decision':decision,
-        'life_status':life_status
+        'life_status':life_status */
         },
         {
             headers: {

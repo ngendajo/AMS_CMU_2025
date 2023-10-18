@@ -64,7 +64,7 @@ export default function Employment() {
                 title:element?.title,
                 company:element?.company,
                 description:element?.description,
-                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Intern":element.status==="U"?"Unemployed":null,
+                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Intern":element.status==="U"?"Unemployed":element.status==="D"?"Deseaded":element.status==="N"?"NoInfo":null,
                 career:element?.career,
                 start_date:element?.start_date,
                 end:element?.end
@@ -76,7 +76,7 @@ export default function Employment() {
                 name:element.first_name+" "+element.last_name,
                 phone:element.phone1,
                 title:element?.title,
-                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Intern":element.status==="U"?"Unemployed":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
+                status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Intern":element.status==="U"?"Unemployed":element.status==="D"?"Deseaded":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
                 career:element?.career,
                 end:element?.end,
                 user_id:element.title?<span>

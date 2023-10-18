@@ -415,7 +415,7 @@ let data = [5, 2, 5, 5, 10],
                   <div className='item3-top'>
                     <div><BsDot className='item3-icon'/></div>
                     <div>
-                      <div className='item2-title'>A2 Certificate</div>
+                      <div className='item2-title'>Certificate</div>
                       <div className='male-statistics'><strong className='male-number'>{a2}</strong><span className='female-percentage'>{Math.round(a2===0? 0:(a2*100)/total)}%</span></div>
                     </div>
                   </div>

@@ -61,9 +61,9 @@ export default function Studies() {
                 field:element?.degree,
                 university:element?.university,
                 country:element?.country,
-                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="N"?"None":null,
+                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="N"?"NoInfo":null,
                 scholarship_details:element.scholarship_details,
-                status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
+                status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":element.status==="De"?"Deseaded":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
                 user_id:element.study_id?<span>
                   <Link to={`/alumni/updatestudie/${element.study_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deletestudy/${element.study_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
@@ -78,7 +78,7 @@ export default function Studies() {
                 degree:element?.degree,
                 university:element?.university,
                 country:element?.country,
-                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="N"?"None":null,
+                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="N"?"NoInfo":null,
                 scholarship_details:element.scholarship_details,
                 status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":null
                 

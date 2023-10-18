@@ -128,6 +128,9 @@ export default function UpdateStudie() {
                           <option value="A0">Bachelors</option>
                           <option value="M">Masters</option>
                           <option value="PHD">PHD</option>
+                          <option value="NMS">No futher study</option>
+                          <option value="D">Deseaded</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     <div className="formpart">
@@ -187,6 +190,8 @@ export default function UpdateStudie() {
                           <option value="S">Suspended</option>
                           <option value="O">On_Going</option>
                           <option value="C">Completed</option>
+                          <option value="De">Deseaded</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     <div className="formpart">
@@ -196,7 +201,9 @@ export default function UpdateStudie() {
                         <select name="scholarship" value={scholarship} defaultValue={scholarship} onChange={(e)=>setScholarship(e.target.value)}>
                           <option value="F">Full Scholarship</option>
                           <option value="P">Partial Scholarship</option>
-                          <option value="N">None</option>
+                          <option value="NS">No Scholarship</option>
+                          <option value="D">Deseaded</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     
