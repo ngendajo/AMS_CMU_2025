@@ -175,11 +175,7 @@ class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
         fields = ('id','marital_status','gender','family','combination','Eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Alumni
-        fields = ('__all__')
-        depth = 3
+
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni

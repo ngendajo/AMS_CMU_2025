@@ -60,22 +60,6 @@ class AluminiBulkRegistrationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class TestView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    
-    def get(self, request):
-        try:
-            user = User.objects.filter(is_alumni=True)
-
-            # if there is something in items else raise error
-            if user:
-                serializer = TestSerializer(user, many=True)
-                return Response(serializer.data)
-            else:
-                return Response([])
-        except Exception as e:
-            return Response(e)
 
 class AluminiRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -1016,7 +1000,7 @@ class AlumnReportView(APIView):
     def get(self, request):
         try:
             stud = User.objects.raw(
-            "SELECT api_user.id,userprofile_alumni.gender,userprofile_grade.grade_name,userprofile_family.family_name,userprofile_combination.combination_name,userprofile_employment.status as employed,userprofile_employment.end_date as end,userprofile_studie.level as degree from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id LEFT OUTER JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni;")
+            "SELECT api_user.id,userprofile_alumni.gender,userprofile_grade.grade_name,userprofile_family.family_name,userprofile_combination.combination_name,userprofile_employment.status as employed,userprofile_employment.end_date as end,userprofile_studie.level as degree from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id LEFT OUTER JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id left outer join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id  WHERE api_user.is_alumni;")
 
             # if there is something in items else raise error
             if stud:
@@ -1025,7 +1009,7 @@ class AlumnReportView(APIView):
             else:
                 return Response([])
         except Exception as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(error=e,status=status.HTTP_404_NOT_FOUND)
 
 class AlumnInGradeReportView(APIView):
     permission_classes = [IsAuthenticated, ]  
