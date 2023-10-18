@@ -21,15 +21,15 @@ export default function Alumni() {
         <div className='alumni-list-heading'>  {/* className属性设置为'alumni-list-heading'，它是一个用于样式设计的类名 */}
 
         <Link to={"/alumni/"} className={category===7? "displayed":"notdisplayed"} onClick={()=>setCategory(7)}>
-            <span>ASYV Info</span>
+            <span>Alumni Profile</span>
           </Link>
          
           <Link to={"/alumni/studie/"} className={category===1? "displayed":"notdisplayed"} onClick={()=>setCategory(1)}>
-            <span>Higher Institutions</span>
+            <span>Education Attainment</span>
           </Link>
 
           <Link to={"/alumni/employment/"} className={category===2? "displayed":"notdisplayed"} onClick={()=>setCategory(2)}>
-            <span>Employed</span>
+            <span>Employment Status</span>
           </Link>
           <Link to={"/alumni/story/"} className={category===9? "displayed":"notdisplayed"} onClick={()=>setCategory(9)}>
             <span>Stories</span>
