@@ -32,14 +32,14 @@ export default function AddASYVInfo() {
     const [marital_status, setMarital_status] = useState('');
     const [gender, setGender] = useState('')
     const [kids, setKids] = useState('')
-    /* const [decision, setDecision] = useState('')
-    const [life_status, setLife_status] = useState('') */
+    const [decision, setDecision] = useState('')
+    const [life_status, setLife_status] = useState('') 
     
 
     const [s4marks, setS4marks] = useState('');
       const [s5marks, setS5marks] = useState('');
       const [s6marks, setS6marks] = useState('');
-      const [ne, setNe] = useState('0.0');
+      const [ne, setNe] = useState('0.0');/*  */
       const [maxforne, setMaxforne] = useState('');
 
     useEffect(() =>{
@@ -200,9 +200,9 @@ export default function AddASYVInfo() {
         's5marks':s5marks,
         's6marks':s6marks,
         'ne':ne,
-        'maxforne':maxforne/* ,
+        'maxforne':maxforne,
         'decision':decision,
-        'life_status':life_status */
+        'life_status':life_status
         },
         {
             headers: {
@@ -449,7 +449,7 @@ export default function AddASYVInfo() {
                             onChange={(event) => setNe(event.target.value)}
                         />
                  </div>
-                {/*  <div className="formpart">
+                 <div className="formpart">
                       <label htmlFor="decision">
                           Decision
                       </label>
@@ -467,7 +467,7 @@ export default function AddASYVInfo() {
                       <option value="A">Alive</option>
                         <option value="D">Died</option>
                       </select>
-                  </div> */}
+                  </div>
               </div>
 
               <center>
