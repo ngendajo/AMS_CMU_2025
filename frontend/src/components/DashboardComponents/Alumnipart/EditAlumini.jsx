@@ -84,12 +84,12 @@ export default function EditAlumini() {
             var imgname=email+current+"."+files[0].name.split('.').pop();
             console.log(imgname+":"+files[0].name.split('.').pop())
             console.log(URL.createObjectURL(files[0]))
-            const file = new File(files[0], imgname);
+            const file = new File(files, imgname);
                 
             setDisplayifile(false)
             try{
                 let formData = new FormData();
-                formData.append('image_url',file);
+                formData.append('image_url',files[0]);
                 const response = axios.post(baseUrl+"/updateuserimage/"+params.id,
                     formData,{
                         headers: {
