@@ -91,7 +91,7 @@ const Registera = () => {
         setErrMsg('');
     },[email,first_name,last_name,phone1])
 
-
+ 
    const handleSubmit = async (e) =>{
     e.preventDefault();
     if (selectedFiles && selectedFiles[0].name){
