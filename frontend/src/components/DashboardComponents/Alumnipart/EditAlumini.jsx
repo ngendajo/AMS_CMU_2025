@@ -201,7 +201,7 @@ export default function EditAlumini() {
     }
 
   }
-
+console.log(baseUrlforImg+currentfile)
     
   return (
      <section className="form">
