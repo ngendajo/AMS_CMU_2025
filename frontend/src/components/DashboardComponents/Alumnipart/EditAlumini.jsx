@@ -81,7 +81,7 @@ export default function EditAlumini() {
         if (files.length > 0) {
             setSelectedFiles(files);
             setFile(URL.createObjectURL(files[0]));
-            var imgname=email+current+files[0].name.split('.').pop();
+            var imgname=email+current+"."+files[0].name.split('.').pop();
             console.log(imgname+":"+files[0].name.split('.').pop())
             const file = new File(files, imgname);
                 
