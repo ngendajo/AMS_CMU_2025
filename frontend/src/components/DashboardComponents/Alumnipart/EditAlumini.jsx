@@ -83,6 +83,7 @@ export default function EditAlumini() {
             setFile(URL.createObjectURL(files[0]));
             var imgname=email+current+"."+files[0].name.split('.').pop();
             console.log(imgname+":"+files[0].name.split('.').pop())
+            console.log(URL.createObjectURL(files[0]))
             const file = new File(files, imgname);
                 
             setDisplayifile(false)
@@ -201,8 +202,7 @@ export default function EditAlumini() {
     }
 
   }
-console.log(baseUrlforImg+currentfile)
-    
+    console.log(file)
   return (
      <section className="form">
         <div className="updateactivities">
