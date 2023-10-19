@@ -167,8 +167,8 @@ export default function ASYVInfo() {
                 s6marks:element.alumn==null?"Null":element.alumn.s6marks,
                 ne:element.alumn==null?"Null":element.alumn.ne,
                 maxforne:element.alumn==null?"Null":element.alumn.maxforne,
-                decision:element.alumn==null?"Null":element.alumn.decision,
-                life_status:element.alumn==null?"Null":element.alumn.life_status
+                decision:element.alumn==null?"Null":element.alumn.decision=="P"?"Pass":"Fail",
+                life_status:element.alumn==null?"Null":element.alumn.life_status=="A"?"Alive":"Died"
               })
               i+=1
             }):null;
