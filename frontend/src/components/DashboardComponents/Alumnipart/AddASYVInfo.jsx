@@ -32,8 +32,8 @@ export default function AddASYVInfo() {
     const [marital_status, setMarital_status] = useState('');
     const [gender, setGender] = useState('')
     const [kids, setKids] = useState('')
-    const [decision, setDecision] = useState('')
-    const [life_status, setLife_status] = useState('') 
+    const [decision, setDecision] = useState('P')
+    const [life_status, setLife_status] = useState('A') 
     
 
     const [s4marks, setS4marks] = useState('');
