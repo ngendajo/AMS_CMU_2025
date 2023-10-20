@@ -91,7 +91,7 @@ export default function EditAlumini() {
             setDisplayifile(false)
             try{
                 let formData = new FormData();
-                formData.append('image_url',files[0]);
+                formData.append('image_url',files);
                 const response = axios.post(baseUrl+"/updateuserimage/"+params.id,
                     formData,{
                         headers: {
