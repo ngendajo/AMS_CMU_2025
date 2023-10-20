@@ -183,7 +183,7 @@ def update_user_image(request, pk):
         return Response(data.data)
     else:
         print(data.errors)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(error=data.errors,status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
