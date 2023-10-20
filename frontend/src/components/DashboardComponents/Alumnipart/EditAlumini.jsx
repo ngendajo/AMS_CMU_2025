@@ -76,12 +76,7 @@ export default function EditAlumini() {
     const [disiplayfile, setDisplayifile] = useState(true);
 
     const [selectedFiles, setSelectedFiles] = useState(undefined);
-    const generateUniqueFilename = () => {
-    const timestamp = new Date().getTime();
-    const randomString = Math.random().toString(36).substring(7);
-    return `${timestamp}_${randomString}`;
-  };
-
+   
       const onDrop = (files) => {
         if (files.length > 0) {
             setSelectedFiles(files);
@@ -91,7 +86,7 @@ export default function EditAlumini() {
             setDisplayifile(false)
             try{
                 let formData = new FormData();
-                formData.append('image_url',files);
+                formData.append('image_url',files[0],imgname);
                 const response = axios.post(baseUrl+"/updateuserimage/"+params.id,
                     formData,{
                         headers: {
