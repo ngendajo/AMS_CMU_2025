@@ -203,7 +203,6 @@ export default function EditAlumini() {
     }
 
   }
-    console.log(file)
   return (
      <section className="form">
         <div className="updateactivities">
