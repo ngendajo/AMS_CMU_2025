@@ -77,20 +77,21 @@ export default function EditAlumini() {
 
     const [selectedFiles, setSelectedFiles] = useState(undefined);
     const generateUniqueFilename = () => {
-        const timestamp = new Date().getTime();
-        const randomString = Math.random().toString(36).substring(7);
-        return `${timestamp}_${randomString}`;
-      };
+    const timestamp = new Date().getTime();
+    const randomString = Math.random().toString(36).substring(7);
+    return `${timestamp}_${randomString}`;
+  };
 
       const onDrop = (files) => {
         if (files.length > 0) {
             setSelectedFiles(files);
             setFile(URL.createObjectURL(files[0]));
+            var imgname=email+current+"."+files[0].name.split('.').pop();
                 
             setDisplayifile(false)
             try{
                 let formData = new FormData();
-                formData.append('image_url',files[0], uniqueFilename);
+                formData.append('image_url',files[0]);
                 const response = axios.post(baseUrl+"/updateuserimage/"+params.id,
                     formData,{
                         headers: {
@@ -203,6 +204,7 @@ export default function EditAlumini() {
     }
 
   }
+    console.log(file)
   return (
      <section className="form">
         <div className="updateactivities">
