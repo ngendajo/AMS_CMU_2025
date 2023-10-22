@@ -45,7 +45,9 @@ const columns = [
     { header: 'country', key: 'country' },
     { header: 'scholarship', key: 'scholarship' },
     { header: 'scholarship_details', key: 'scholarship_details' },
-    { header: 'study_status', key: 'study_status' }
+    { header: 'study_status', key: 'study_status' }, 
+    { header: 'decision', key: 'decision' }, 
+    { header: 'life_status', key: 'life_status' }
   ];
   const workSheetName = 'ASYV_Alumni_Data';
   const workBookName = 'ASYV_Alumni_Data';
@@ -426,8 +428,8 @@ export default function AddBulkASYVInfo() {
         's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
         'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
         'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne,
-        /* "decision":ele.decision,
-        "life_status":ele.life_status, */
+        "decision":ele.decision,
+        "life_status":ele.life_status,
         },
         {
             headers: {
