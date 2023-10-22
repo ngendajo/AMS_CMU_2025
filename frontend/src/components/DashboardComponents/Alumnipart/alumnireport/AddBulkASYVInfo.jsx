@@ -45,9 +45,7 @@ const columns = [
     { header: 'country', key: 'country' },
     { header: 'scholarship', key: 'scholarship' },
     { header: 'scholarship_details', key: 'scholarship_details' },
-    { header: 'study_status', key: 'study_status' }, 
-    { header: 'decision', key: 'decision' }, 
-    { header: 'life_status', key: 'life_status' }
+    { header: 'study_status', key: 'study_status' }
   ];
   const workSheetName = 'ASYV_Alumni_Data';
   const workBookName = 'ASYV_Alumni_Data';
