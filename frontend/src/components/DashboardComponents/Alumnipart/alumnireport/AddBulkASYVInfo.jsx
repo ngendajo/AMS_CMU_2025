@@ -244,6 +244,7 @@ export default function AddBulkASYVInfo() {
             families.forEach((fami)=>{
               if((ele.family).toUpperCase()===(fami.family_name).toUpperCase()){
                 ele.family=fami.family_id
+                console.log(ele.family+" exist in the system. we have "+fami.family_name)
               }else{
                 console.log(ele.family+" is not exist in the system. we have "+fami.family_name)
               }
