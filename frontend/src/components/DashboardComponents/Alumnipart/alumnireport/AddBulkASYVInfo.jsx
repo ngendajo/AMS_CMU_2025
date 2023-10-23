@@ -240,6 +240,7 @@ export default function AddBulkASYVInfo() {
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
           const parseData = XLSX.utils.sheet_to_json(sheet);
+          console.log(families)
           parseData.forEach((ele)=>{
             families.forEach((fami)=>{
               if((ele.family).toUpperCase()===(fami.family_name).toUpperCase()){
