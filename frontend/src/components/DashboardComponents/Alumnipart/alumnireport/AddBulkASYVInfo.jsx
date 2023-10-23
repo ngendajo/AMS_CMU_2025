@@ -257,7 +257,7 @@ export default function AddBulkASYVInfo() {
               if((ele.combination)===(comb.combination_name)){
                 ele.combination=comb.id
               }else{
-                console.log(ele.combination+" is not exist in the system.")
+                console.log(ele.combination+" is not exist in the system. we have "+comb.combination_name)
               }
             })
           })
