@@ -242,10 +242,10 @@ export default function AddBulkASYVInfo() {
           const parseData = XLSX.utils.sheet_to_json(sheet);
           parseData.forEach((ele)=>{
             families.forEach((fami)=>{
-              if((ele.family)===(fami.family_name)){
+              if((ele.family).trim().toUpperCase()===(fami.family_name).trim().toUpperCase()){
                 ele.family=fami.family_id
               }else{
-                //console.log(ele.family+" is not exist in the system.")
+                console.log(ele.family+" is not exist in the system.")
               }
             })
 
