@@ -123,7 +123,7 @@ export default function UpdateStudie() {
                             Status
                         </label>
                         <select name="level" value={level} defaultValue={level} onChange={(e)=>setLevel(e.target.value)}>
-                          <option value="A2">Advanced level Certificate</option>
+                          <option value="C">Advanced level Certificate</option>
                           <option value="A1">Advanced diploma</option>
                           <option value="A0">Bachelors</option>
                           <option value="M">Masters</option>
