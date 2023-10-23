@@ -243,7 +243,7 @@ export default function AddBulkASYVInfo() {
           console.log(families)
           parseData.forEach((ele)=>{
             families.forEach((fami)=>{
-              if((ele.family).toUpperCase()===(fami.family_name).toUpperCase()){
+              if((ele.family)==(fami.family_name)){
                 ele.family=fami.family_id
                 console.log(ele.family+" exist in the system. we have "+fami.family_name)
               }else{
