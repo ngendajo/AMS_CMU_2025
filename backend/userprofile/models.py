@@ -159,8 +159,9 @@ class Studie(models.Model):
         ('NS', 'No Scholarship'),
         ('D', 'Deceased'),
         ('N', 'NoInfo'),
+        ('NMS', 'No More Study'),
     )
-    scholarship = models.CharField(max_length=2, choices=Scholarships)
+    scholarship = models.CharField(max_length=3, choices=Scholarships)
     scholarship_details = models.CharField(max_length=200,default="")
     Statuss = (
         ('D', 'Dropped_Out'),
