@@ -171,7 +171,7 @@ class Studie(models.Model):
         ('N', 'NoInfo'),
         ('NMS', 'NoFurtherStudy'),
     )
-    status = models.CharField(max_length=2, choices=Statuss)
+    status = models.CharField(max_length=3, choices=Statuss)
 
     def __str__(self):
         return str(self.alumn.user.first_name + self.university)
