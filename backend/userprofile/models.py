@@ -169,6 +169,7 @@ class Studie(models.Model):
         ('C', 'Completed'),
         ('De', 'Deceased'),
         ('N', 'NoInfo'),
+        ('NMS', 'NoFurtherStudy'),
     )
     status = models.CharField(max_length=2, choices=Statuss)
 
