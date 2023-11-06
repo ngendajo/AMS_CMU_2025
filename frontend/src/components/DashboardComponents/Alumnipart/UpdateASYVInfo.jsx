@@ -245,6 +245,7 @@ export default function AddASYVInfo() {
     epsdone.forEach((ep)=>{
         ep_ids.push(ep.value)
     })
+    console.log(gender)
     axios.put(baseUrl+'/alumni/info/'+alumn_id+"/update/", {
         "marital_status":marital_status,
         "gender":gender,
