@@ -135,10 +135,11 @@ export default function AddBulkStudies() {
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
         if(arr[i].study_level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((arr[i].study_level).toUpperCase()))){
-          continue;
-        }else{
           newArr[index] = arr[i];
                 index++;
+        }else{
+          
+          continue;
         }
        }
        return [...new Set(newArr)];
