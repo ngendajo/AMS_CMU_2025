@@ -264,9 +264,8 @@ export default function AddBulkStudies() {
   };
   const handleSubmit = async (ele) =>{
     try{
-      let level=ele.study_level,degree=ele.degree,id=ele.id
+      let level=ele.study_level,degree=ele.degree,id=ele.id,
       university=ele.university,scholarship=ele.scholarship,
-      console.log(university)
       country=ele.country,study_status=ele.study_status,scholarship_details=ele.scholarship_details
       if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||study_status===undefined?true:study_status===""||scholarship===undefined?true:scholarship==="")
       {
