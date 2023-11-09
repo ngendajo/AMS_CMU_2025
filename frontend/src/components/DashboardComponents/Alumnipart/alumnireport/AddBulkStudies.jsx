@@ -266,8 +266,8 @@ export default function AddBulkStudies() {
     try{
       let level=ele.study_level,degree=ele.degree,id=ele.id
       university=ele.university,scholarship=ele.scholarship,
-      country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
-      if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
+      country=ele.country,study_status=ele.study_status,scholarship_details=ele.scholarship_details
+      if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||study_status===undefined?true:study_status===""||scholarship===undefined?true:scholarship==="")
       {
         console.log(level)
       }
@@ -280,7 +280,7 @@ export default function AddBulkStudies() {
         "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NS",0)?"NS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
         "country":country,
         "scholarship_details":scholarship_details,
-        "status":status.toUpperCase().startsWith("Dr",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":status.toUpperCase().startsWith("De",0)?"De":status.toUpperCase().startsWith("D",0)?"C":status.toUpperCase().startsWith("NMS",0)?"NMS":"N"
+        "status":study_status.toUpperCase().startsWith("Dr",0)?"D":study_status.toUpperCase().startsWith("S",0)?"S":study_status.toUpperCase().startsWith("O",0)?"O":study_status.toUpperCase().startsWith("De",0)?"De":study_status.toUpperCase().startsWith("D",0)?"C":study_status.toUpperCase().startsWith("NMS",0)?"NMS":"N"
         
         }, 
         {
