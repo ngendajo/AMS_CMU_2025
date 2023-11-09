@@ -272,6 +272,7 @@ export default function AddBulkStudies() {
         console.log(level)
       }
       else{
+        console.log(university)
       axios.post(baseUrl+'/studie/', {
         "alumn":id,
         "level":level,
