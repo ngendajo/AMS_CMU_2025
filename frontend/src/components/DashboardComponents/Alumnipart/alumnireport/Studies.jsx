@@ -53,7 +53,7 @@ export default function Studies() {
             console.log(response.data)
             response.data.forEach(element => {
               alumnilist.push({
-                id:i, 
+                id:element.alumn_id, 
                 image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 name:element.first_name+" "+element.last_name,
