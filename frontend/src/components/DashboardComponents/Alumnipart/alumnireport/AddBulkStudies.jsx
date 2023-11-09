@@ -16,7 +16,6 @@ const columns = [
     { header: 'email', key: 'email' },
     { header: 'name', key: 'name' },
     { header: 'phone_number', key: 'phone' },
-    { header: 'gender', key: 'gender' },
     { header: 'study_level', key: 'study_level' },
     { header: 'degree', key: 'degree' },
     { header: 'university', key: 'university' },
@@ -28,7 +27,7 @@ const columns = [
   const workSheetName = 'ASYV_Alumni_Studies_Data';
   const workBookName = 'ASYV_Alumni_Data';
   const EMAIL_REGIX =/\S+@\S+\.\S+/; 
-export default function AddBulkStadies() {
+export default function AddBulkStudies() {
     const [data, setData]= useState([]);
     const [data1, setData1]= useState([]);
     const [data2, setData2]= useState([]);

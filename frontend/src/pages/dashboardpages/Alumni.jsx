@@ -46,10 +46,10 @@ export default function Alumni() {
             <Link className='grades-link' to="/alumni/eps">Eps</Link>
           </div>
           <div className={category===10? "displayed":"notdisplayed"} onClick={()=>setCategory(10)}>
-            <Link className='grades-link' to="/alumni/bulkalumni">Bulk Alumni Registration</Link>
+            <Link className='grades-link' to="/alumni/bulkalumni">Bulk Alumni Reg</Link>
           </div>
           <div className={category===11? "displayed":"notdisplayed"} onClick={()=>setCategory(11)}>
-            <Link className='grades-link' to="/alumni/bulkstadie">Bulk Studies Registration</Link>
+            <Link className='grades-link' to="/alumni/bulkstudie">Bulk Studies</Link>
           </div>
 
         </div>
