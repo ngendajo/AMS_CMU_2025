@@ -53,7 +53,7 @@ export default function AddBulkStudies() {
                 alumnilist2.push({
                   id:element.alumn_id,
                   email:element.email,
-                  name:element.lastst_name+" "+element.first_name,
+                  name:element.last_name+" "+element.first_name,
                   phone:element.phone1,
                   study_level:element?.level,
                   degree:element?.degree,
@@ -101,36 +101,7 @@ export default function AddBulkStudies() {
        }
        return [...new Set(newArr)];
     }
-    function findDuplicatesinnumber(arr) {
-      let index = 0, newArr = [];
-       for (let i = 0; i < arr.length - 1; i++) {
-          for (let j = i + 1; j < arr.length; j++) {
-          if (arr[i].phone_number === arr[j].phone_number) {
-                newArr[index] = arr[i];
-                index++;
-             }
-          }
-       }
-       return [...new Set(newArr)];
-    }
-    function findDuplicatesinnumberandemailindatabase(arr) {
-      let index = 0, newArr = [];
-       for (let i = 0; i < arr.length - 1; i++) {
-          for (let j = 0; j < users.length; j++) {
-          if ((arr[i].phone_number === users[j].phone1)) {
-                newArr[index] = arr[i];
-                alert("This phone number "+arr[i].phone_number+" is already exist")
-              index++;
-             }
-             else if(arr[i].email === users[j].email){
-              newArr[index] = arr[i];
-              alert("This email "+arr[i].email+" is already exist")
-              index++;
-             }
-          }
-       }
-       return [...new Set(newArr)];
-    }
+    
     function findincorrectlevel(arr) {
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
