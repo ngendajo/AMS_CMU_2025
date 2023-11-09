@@ -12,33 +12,12 @@ import { useNavigate } from "react-router-dom";
 import baseUrl from '../../../../api/baseUrl';
 
 const columns = [
+    { header: 'id', key: 'id' },
     { header: 'email', key: 'email' },
     { header: 'first_name', key: 'first_name' },
     { header: 'last_name', key: 'last_name' },
     { header: 'phone_number', key: 'phone1' },
-    { header: 'martal_status', key: 'marital_status' },
     { header: 'gender', key: 'gender' },
-    { header: 'kids', key: 'kids' },
-    { header: 'father', key: 'father' },
-    { header: 'mother', key: 'mother' },
-    { header: 'place_of_origin', key: 'place_of_birth' },
-    { header: 'current_residence', key: 'CurrResidence' },
-    { header: 'grade', key: 'grade_name' },
-    { header: 'family', key: 'family' },
-    { header: 'combination', key: 'combination_name' },
-    { header: 'eps', key: 'eps' },
-    { header: 's4_marks', key: 's4marks' },
-    { header: 's5_marks', key: 's5marks' },
-    { header: 's6_marks', key: 's6marks' },
-    { header: 'national_exam_result', key: 'ne' },
-    { header: 'maximum_aggregate_in_ne', key: 'maxforne' },
-    { header: 'Decision', key: 'decision' },
-    { header: 'Life_status', key: 'life_status' },
-    { header: 'job_title', key: 'job_title' },
-    { header: 'job_status', key: 'job_status' },
-    { header: 'description', key: 'description' },
-    { header: 'company', key: 'company' },
-    { header: 'career', key: 'career' },
     { header: 'study_level', key: 'study_level' },
     { header: 'degree', key: 'degree' },
     { header: 'university', key: 'university' },
@@ -47,7 +26,7 @@ const columns = [
     { header: 'scholarship_details', key: 'scholarship_details' },
     { header: 'study_status', key: 'study_status' }
   ];
-  const workSheetName = 'ASYV_Alumni_Data';
+  const workSheetName = 'ASYV_Alumni_Studies_Data';
   const workBookName = 'ASYV_Alumni_Data';
   const EMAIL_REGIX =/\S+@\S+\.\S+/; 
 export default function AddBulkStadies() {
@@ -58,115 +37,54 @@ export default function AddBulkStadies() {
     const [data4, setData4]= useState([]);
     const [datafinal, setDatafinal]= useState([]);
     const {auth} = useAuth();
-    const [users, setUsers]= useState([]);
-    const [families, setFamilies]= useState([]);
-    const [combinations, setCombinations]= useState([]);
-    const [eps, setEps]= useState([]);
-    
+    const [datatodownload, setDatatodownload] = useState([]);
     const navigate = useNavigate();
 
-    useEffect(() =>{ 
-
-      const geteps = async () =>{
+    useEffect(() =>{
+    
+      const users = async () =>{
           try{
-              const response = await axios.get(baseUrl+'/ep/',{ /* 用 axios 库发送了一个异步 GET 请求*/
-                  headers: { 
+              const response = await axios.get(baseUrl+'/studie/',{
+                  headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
                   },
                   withCredentials:true
               });
-              setEps(response.data)
-          }catch(err) {
-              console.log(err);
-          }
-      }
-  
-      geteps();
-  
-  },[auth])
-    useEffect(() =>{ 
-
-      const getcombinations = async () =>{
-          try{
-              const response = await axios.get(baseUrl+'/combination/',{ /* 用 axios 库发送了一个异步 GET 请求*/
-                  headers: { 
-                      "Authorization": 'Bearer ' + String(auth.accessToken),
-                      "Content-Type": 'multipart/form-data'
-                  },
-                  withCredentials:true
-              });
-              setCombinations(response.data)
-          }catch(err) {
-              console.log(err);
-          }
-      }
-  
-      getcombinations();
-  
-  },[auth])
-    useEffect(() =>{ 
-
-      const getfamilies = async () =>{
-          try{
-              const response = await axios.get(baseUrl+'/grades/',{ /* 用 axios 库发送了一个异步 GET 请求*/
-                  headers: { 
-                      "Authorization": 'Bearer ' + String(auth.accessToken),
-                      "Content-Type": 'multipart/form-data'
-                  },
-                  withCredentials:true
-              });
-              let fam=[]
-              if(response.data.length>0){
-                response.data.forEach((grade)=>{
-                  if(grade.families.length>0){
-                    grade.families.forEach((fami)=>{
-                      fam.push(
-                        {
-                         family_id:fami.id,
-                          family_name:fami.family_name
-                        }
-                      )
-                    })
-                  }
+              var alumnilist2=[]
+              response.data.forEach(element => {
+                
+                alumnilist2.push({
+                  no:element.alumn_id,
+                  email:element.email,
+                  name:element.first_name+" "+element.last_name,
+                  phone:element.phone1,
+                  level:element?.level,
+                  degree:element?.degree,
+                  university:element?.university,
+                  country:element?.country,
+                  scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="N"?"NoInfo":null,
+                  scholarship_details:element.scholarship_details,
+                  status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":null
                   
                 })
-              }
-              setFamilies(fam)
+              });
+              setDatatodownload(alumnilist2);
           }catch(err) {
               console.log(err);
+              navigate('/error');
           }
       }
   
-      getfamilies();
+      users();
   
   },[auth])
-    useEffect(() =>{ 
-
-    const getcrcusers = async () =>{
-        try{
-            const response = await axios.get(baseUrl+'/users/',{ /* 用 axios 库发送了一个异步 GET 请求*/
-                headers: { 
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'multipart/form-data'
-                },
-                withCredentials:true
-            });
-            setUsers(response.data)
-        }catch(err) {
-            console.log(err);
-        }
-    }
-
-    getcrcusers();
-
-},[auth])
 
     function findemptycell(arr) {
       
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
-          if((arr[i].phone_number=== undefined)? true:(arr[i].phone_number).length<=0 || arr[i].first_name===undefined? true:(arr[i].first_name)<=0 || arr[i].last_name===undefined?true:(arr[i].last_name)<=0 || arr[i].gender===undefined?true:(arr[i].gender)<=0 || arr[i].family===undefined?true:(arr[i].family)<=0 || arr[i].combination===undefined?true:(arr[i].combination)<=0){
+          if((arr[i].phone_number=== undefined)? true:(arr[i].phone_number).length<=0 || arr[i].first_name===undefined? true:(arr[i].first_name)<=0 || arr[i].last_name===undefined?true:(arr[i].last_name)<=0 || arr[i].gender===undefined?true:(arr[i].gender)<=0  || arr[i].id===undefined?true:(arr[i].id)<=0 ){
             newArr[index] = arr[i];
                 index++;
           }
@@ -379,6 +297,32 @@ export default function AddBulkStadies() {
         column.width = column.header.length + 5;
         column.alignment = { horizontal: 'center' };
       });
+
+      // loop through data and add each one to worksheet
+      datatodownload.forEach(singleData => {
+        worksheet.addRow(singleData);
+      });
+
+      // loop through all of the rows and set the outline style.
+      worksheet.eachRow({ includeEmpty: false }, row => {
+        // store each cell to currentCell
+        const currentCell = row._cells;
+
+        // loop through currentCell to apply border only for the non-empty cell of excel
+        currentCell.forEach(singleCell => {
+          // store the cell address i.e. A1, A2, A3, B1, B2, B3, ...
+          const cellAddress = singleCell._address;
+
+          // apply border
+          worksheet.getCell(cellAddress).border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+        });
+      });
+
       // write the content using writeBuffer
       const buf = await workbook.xlsx.writeBuffer();
 
@@ -394,121 +338,46 @@ export default function AddBulkStadies() {
   };
   const handleSubmit = async (ele) =>{
     try{
-      let formData = new FormData();
-      
-      formData.append('email',ele.email);
-      formData.append('first_name',ele.first_name);
-      formData.append('last_name',ele.last_name);
-      formData.append('phone1',ele.phone_number);
-      formData.append('password',"Agahozo@12");
-
-      const response = await axios.post(baseUrl+"/bulkalumni/",
-          formData,{
-              headers: {
-                  "Authorization": 'Bearer ' + String(auth.accessToken),
-                  "Content-Type": 'multipart/form-data'
-              },
-              withCredentials:true 
-          }
-          );
-          axios.post(baseUrl+'/alumni/info/', {
-        "user":response.data.id,
-        "marital_status":ele.martal_status,
-        "gender":ele.gender,
-        "family":ele.family,
-        "combination":ele.combination,
-        "eps":ele.eps,
-        "kids":ele.kids==="Yes"?true:false,
-        "father":ele.father===undefined?"none":ele.father,
-        "mother":ele.mother===undefined?"none":ele.mother,
-        "place_of_birth":ele.place_of_origin===undefined?"":ele.place_of_origin,
-        "currcesidence":ele.current_residence===undefined?"":ele.current_residence,
-        's4marks':ele.s4_marks===undefined?0:ele.s4_marks,
-        's5marks':ele.s5_marks===undefined?0:ele.s5_marks,
-        's6marks':ele.s6_marks===undefined?0:ele.s6_marks,
-        'ne':ele.national_exam_result===undefined?0:ele.national_exam_result,
-        'maxforne':ele.maximum_aggregate_in_ne===undefined?0:ele.maximum_aggregate_in_ne,
-        "decision":ele.decision,
-        "life_status":ele.life_status,
-        },
-        {
-            headers: {
-                "Authorization": 'Bearer ' + String(auth.accessToken),
-                "Content-Type": 'application/json'
-            }
-        }
-    ) 
-    .then(res =>{
-        console.log(res.data.id) 
-         let level=ele.study_level,degree=ele.degree,
-        university=ele.university,scholarship=ele.scholarship,
-        country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
-        if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
-        {
-          console.log(level)
-        }
-        else{
-        axios.post(baseUrl+'/studie/', {
-          "alumn":res.data.id,
-          "level":level,
-          "degree":degree,
-          "university":university,
-          "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NS",0)?"NS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
-          "country":country,
-          "scholarship_details":scholarship_details,
-          "status":status.toUpperCase().startsWith("Dr",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":status.toUpperCase().startsWith("De",0)?"De":status.toUpperCase().startsWith("D",0)?"C":"N"
-          
-          }, 
-          {
-              headers: {
-                  "Authorization": 'Bearer ' + String(auth.accessToken),
-                  "Content-Type": 'application/json'
-              }
-          }
-      )
-      .catch(error => console.log(error.response))
-    }
-    let title=ele.job_title,career=ele.career,description=ele.description,
-          company=ele.company,job_status=ele.job_status;
-        if(title===undefined?true:title===""||company===undefined?true:company===""||career===undefined?true:career===""||job_status===undefined?true:job_status==="")
-        {}
-        else{
-          axios.post(baseUrl+'/employment/', {
-        "title":title,
-        "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"S":job_status.toUpperCase().startsWith("I",0)?"I":job_status.toUpperCase().startsWith("U",0)?"U":job_status.toUpperCase().startsWith("D",0)?"D":"N",
-        "description":description===undefined?"NS":description,
-        "company":company,
+      let level=ele.study_level,degree=ele.degree,
+      university=ele.university,scholarship=ele.scholarship,
+      country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
+      if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
+      {
+        console.log(level)
+      }
+      else{
+      axios.post(baseUrl+'/studie/', {
         "alumn":res.data.id,
-        "career":career===undefined?"":career,
-        "start_date":"NS",
-        "end_date":"Up to now"
-        },
+        "level":level,
+        "degree":degree,
+        "university":university,
+        "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NS",0)?"NS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
+        "country":country,
+        "scholarship_details":scholarship_details,
+        "status":status.toUpperCase().startsWith("Dr",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":status.toUpperCase().startsWith("De",0)?"De":status.toUpperCase().startsWith("D",0)?"C":"N"
+        
+        }, 
         {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
                 "Content-Type": 'application/json'
             }
         }
-    )
-    .then(res =>{
-        console.log(res)
-    })
-    .catch(error => console.log(error.response))
-  } 
-    }) 
-    .catch(error => console.log(error.response.data))
-          //clear input fields 
+    ).catch(error => console.log(error.response.data))
+          //clear input fields
+      } 
       
-          }catch(err){
-              console.log(err);
-          }
-  }
+  }catch(err){
+      console.log(err);
+    }
+    }
+  
   function savedata(){
     if(datafinal.length>0){
       datafinal.forEach((ele)=>{
         handleSubmit(ele)
       })
-      navigate('/alumni/')
+      navigate('/alumni/studie/')
     }
   }
       
