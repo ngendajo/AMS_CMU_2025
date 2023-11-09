@@ -14,8 +14,7 @@ import baseUrl from '../../../../api/baseUrl';
 const columns = [
     { header: 'id', key: 'id' },
     { header: 'email', key: 'email' },
-    { header: 'first_name', key: 'first_name' },
-    { header: 'last_name', key: 'last_name' },
+    { header: 'name', key: 'name' },
     { header: 'phone_number', key: 'phone1' },
     { header: 'gender', key: 'gender' },
     { header: 'study_level', key: 'study_level' },
@@ -55,17 +54,18 @@ export default function AddBulkStadies() {
               response.data.forEach(element => {
                 
                 alumnilist2.push({
-                  no:element.alumn_id,
+                  id:element.alumn_id,
                   email:element.email,
-                  name:element.first_name+" "+element.last_name,
+                  name:element.lastst_name+" "+element.first_name,
                   phone:element.phone1,
-                  level:element?.level,
+                  gender:element.gender,
+                  study_level:element?.level,
                   degree:element?.degree,
                   university:element?.university,
                   country:element?.country,
                   scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="N"?"NoInfo":null,
                   scholarship_details:element.scholarship_details,
-                  status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":null
+                  study_status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":null
                   
                 })
               });
