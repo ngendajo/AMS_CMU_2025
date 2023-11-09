@@ -48,6 +48,9 @@ export default function Alumni() {
           <div className={category===10? "displayed":"notdisplayed"} onClick={()=>setCategory(10)}>
             <Link className='grades-link' to="/alumni/bulkalumni">Bulk Alumni Registration</Link>
           </div>
+          <div className={category===10? "displayed":"notdisplayed"} onClick={()=>setCategory(10)}>
+            <Link className='grades-link' to="/alumni/bulkstadie">Bulk Studies Registration</Link>
+          </div>
 
         </div>
         }
