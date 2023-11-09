@@ -376,6 +376,7 @@ class StudyWithAlumnSerializer(serializers.ModelSerializer):
 class StudieWithAlumnSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=True)
+    alumn_id= serializers.IntegerField(required=True)
     email = serializers.EmailField(required=True)
     phone1 = serializers.CharField(max_length=30, required=True)
     first_name = serializers.CharField(max_length=200, required=True)
@@ -392,7 +393,7 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Studie
-        fields = ('id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
+        fields = ('id','alumn_id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
 
 
 
