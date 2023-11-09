@@ -80,7 +80,7 @@ export default function AddBulkStudies() {
       
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
-          if(arr[i].degree===""||arr[i].university===""||arr[i].country===""||arr[i].scholarship_details===""||arr[i].status===""||scholarship===""  ){
+          if(arr[i].degree===""||arr[i].university===""||arr[i].country===""||arr[i].scholarship_details===""||arr[i].status===""||arr[i].scholarship===""  ){
             newArr[index] = arr[i];
                 index++;
           }
