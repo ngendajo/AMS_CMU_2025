@@ -29,9 +29,7 @@ const columns = [
   const EMAIL_REGIX =/\S+@\S+\.\S+/; 
 export default function AddBulkStudies() {
     const [data, setData]= useState([]);
-    const [data1, setData1]= useState([]);
     const [data2, setData2]= useState([]);
-    const [data3, setData3]= useState([]);
     const [data4, setData4]= useState([]);
     const [datafinal, setDatafinal]= useState([]);
     const {auth} = useAuth();
@@ -82,7 +80,7 @@ export default function AddBulkStudies() {
       
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
-          if((arr[i].phone_number=== undefined)? true:(arr[i].phone_number).length<=0 || arr[i].first_name===undefined? true:(arr[i].first_name)<=0 || arr[i].last_name===undefined?true:(arr[i].last_name)<=0 || arr[i].gender===undefined?true:(arr[i].gender)<=0  || arr[i].id===undefined?true:(arr[i].id)<=0 ){
+          if(arr[i].degree===""||arr[i].university===""||arr[i].country===""||arr[i].scholarship_details===""||arr[i].status===""||scholarship===""  ){
             newArr[index] = arr[i];
                 index++;
           }
@@ -90,12 +88,12 @@ export default function AddBulkStudies() {
        return [...new Set(newArr)];
     }
 
-    function findDuplicatesinemail(arr) {
+    function findDuplicatesid(arr) {
       
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
           for (let j = i + 1; j < arr.length; j++) {
-          if (arr[i].email === arr[j].email) {
+          if (arr[i].id === arr[j].id) {
                 newArr[index] = arr[i];
                 index++;
              }
@@ -133,10 +131,10 @@ export default function AddBulkStudies() {
        }
        return [...new Set(newArr)];
     }
-    function findincorrectemail(arr) {
+    function findincorrectlevel(arr) {
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
-        if(EMAIL_REGIX.test(arr[i].email)){
+        if(arr[i].study_level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((arr[i].study_level).toUpperCase()))){
           continue;
         }else{
           newArr[index] = arr[i];
@@ -156,55 +154,12 @@ export default function AddBulkStudies() {
           const sheetName = workbook.SheetNames[0];
           const sheet = workbook.Sheets[sheetName];
           const parseData = XLSX.utils.sheet_to_json(sheet);
-          console.log(families)
-          parseData.forEach((ele)=>{
-            families.forEach((fami)=>{
-              if((ele.family)==(fami.family_name)){
-                ele.family=fami.family_id
-                console.log(ele.family+" exist in the system. we have "+fami.family_name)
-              }else{
-                console.log(ele.family+" is not exist in the system. we have "+fami.family_name)
-              }
-            })
-
-          })
-          parseData.forEach((ele)=>{
-            combinations.forEach((comb)=>{
-              if((ele.combination)===(comb.combination_name)){
-                ele.combination=comb.id
-              }else{
-                console.log(ele.combination+" is not exist in the system. we have "+comb.combination_name)
-              }
-            })
-          })
-          parseData.forEach((ep)=>{
-            let eps1=ep.eps
-            eps1=eps1.split(",")
-            ep.eps=eps1
-            for(let i=0;i<eps1.length;i++){
-              eps.forEach((p)=>{
-                if(eps1[i]===p.title){
-                  ep.eps[i]=p.id
-                }
-              })
-            }
-            ep.eps.forEach((e)=>{
-              eps.forEach((p)=>{
-                if(e===p.title){
-                  e=p.id
-                  console.log(e+" "+ep.email)
-                }
-              })
-            })
-            ep.eps=([...new Set(ep.eps)]).filter((str) => str !== '').filter(x => typeof x === "number") /* remove duplicate and empty values and keep numbers only */
-            console.log(ep.eps)
-            console.log(ep.email)
-          })
+          
           setDatafinal(parseData)
-          let results =findDuplicatesinemail(parseData)
+          let results =findDuplicatesid(parseData)
           results.sort((a, b) => {
-            let fa = a.email,
-                fb = b.email;
+            let fa = a.id,
+                fb = b.id;
         
             if (fa < fb) {
                 return -1;
@@ -214,36 +169,10 @@ export default function AddBulkStudies() {
             }
             return 0;
         });
-        let results1 =findDuplicatesinnumber(parseData)
-          results1.sort((a, b) => {
-            let fa = a.phone_number,
-                fb = b.phone_number;
-        
-            if (fa < fb) {
-                return -1;
-            }
-            if (fa > fb) {
-                return 1;
-            }
-            return 0;
-        });
-        let results2 =findincorrectemail(parseData)
+        let results2 =findincorrectlevel(parseData)
           results2.sort((a, b) => {
-            let fa = a.email,
-                fb = b.email;
-        
-            if (fa < fb) {
-                return -1;
-            }
-            if (fa > fb) {
-                return 1;
-            }
-            return 0;
-        });
-        let results3 =findDuplicatesinnumberandemailindatabase(parseData)
-          results3.sort((a, b) => {
-            let fa = a.email,
-                fb = b.email;
+            let fa = a.id,
+                fb = b.id;
         
             if (fa < fb) {
                 return -1;
@@ -255,8 +184,8 @@ export default function AddBulkStudies() {
         });
         let results4 =findemptycell(parseData)
           results4.sort((a, b) => {
-            let fa = a.email,
-                fb = b.email;
+            let fa = a.id,
+                fb = b.id;
         
             if (fa < fb) {
                 return -1;
@@ -267,9 +196,7 @@ export default function AddBulkStudies() {
             return 0;
         });
         setData4(results4)
-        setData3(results3)
         setData2(results2)
-        setData1(results1)
           setData(results)
         }
       }
@@ -352,7 +279,7 @@ export default function AddBulkStudies() {
         "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NS",0)?"NS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
         "country":country,
         "scholarship_details":scholarship_details,
-        "status":status.toUpperCase().startsWith("Dr",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":status.toUpperCase().startsWith("De",0)?"De":status.toUpperCase().startsWith("D",0)?"C":"N"
+        "status":status.toUpperCase().startsWith("Dr",0)?"D":status.toUpperCase().startsWith("S",0)?"S":status.toUpperCase().startsWith("O",0)?"O":status.toUpperCase().startsWith("De",0)?"De":status.toUpperCase().startsWith("D",0)?"C":status.toUpperCase().startsWith("NMS",0)?"NMS":"N"
         
         }, 
         {
@@ -407,40 +334,21 @@ export default function AddBulkStudies() {
                 <div className="errormessage">
                   {data.length>0? 
                     <>
-                      <h1>Duplicate emails</h1>
+                      <h1>Duplicate id</h1>
                       {
                         data.map((ele,key)=>{
-                          return <p key={key}>{ele.email}, Names {ele.last_name} {ele.first_name}</p>
+                          return <p key={key}>Id:{ele.id},Email:{ele.email}, Names {ele.last_name} {ele.first_name}</p>
                         })
                       }
                     </>
-                    :
-                    data1.length>0?
-                    <>
-                      <h1>Duplicate phone_number</h1>
-                      {
-                        data1.map((ele,key)=>{
-                          return <p key={key}>{ele.phone_number}, Names {ele.last_name} {ele.first_name}</p>
-                        })
-                      }
-                    </>
+                    
                     :
                     data2.length>0?
                     <>
-                      <h1>Incorect emails</h1>
+                      <h1>Incorect Study Level</h1>
                       {
                         data2.map((ele,key)=>{
-                          return <p key={key}>{ele.email}, Names {ele.email} {ele.first_name}</p>
-                        })
-                      }
-                    </>
-                    :
-                    data3.length>0?
-                    <>
-                      <h1>Duplicate Exist email or phone</h1>
-                      {
-                        data3.map((ele,key)=>{
-                          return <p key={key}>{ele.phone_number}, {ele.email}, Names {ele.last_name} {ele.first_name}</p>
+                          return <p key={key}>{ele.email}, Names {ele.last_name} {ele.first_name} Your study_level is {ele.study_level} choose in "A2","A1","A0","M","PHD","NMS","D","N"</p>
                         })
                       }
                     </>
