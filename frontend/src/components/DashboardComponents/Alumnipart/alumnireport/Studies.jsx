@@ -50,6 +50,7 @@ export default function Studies() {
             var alumnilist=[]
             var alumnilist2=[]
             var i=1
+            console.log(response.data)
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
