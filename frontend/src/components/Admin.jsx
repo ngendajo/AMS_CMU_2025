@@ -44,7 +44,7 @@ const Admin = () => {
     const [intern, setIntern] = useState('');
     const [others, setOthers] = useState('');
     const [grades, setGrades] = useState('');
-    const [c, setC] = useState('');
+    const [certificates, setCertificates] = useState(0);
     const [a1, setA1] = useState('');
     const [m, setM] = useState('');
     const [phd, setPhd] = useState('');
@@ -243,7 +243,7 @@ const Admin = () => {
                 return false;
               }).length:0
             )
-            setC(
+            setCertificates(
               Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="C") {
@@ -455,7 +455,7 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>Certificate</div>
-                      <div className='male-statistics'><strong className='male-number'>{c}</strong><span className='female-percentage'>{Math.round(C===0? 0:(C*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{certificates}</strong><span className='female-percentage'>{Math.round(C===0? 0:(C*100)/total)}%</span></div>
                     </div>
                   </div>
                   <div className='item3-top'>
