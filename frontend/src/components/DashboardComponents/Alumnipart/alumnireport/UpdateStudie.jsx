@@ -192,6 +192,7 @@ export default function UpdateStudie() {
                           <option value="C">Completed</option>
                           <option value="De">Deseaded</option>
                           <option value="N">NoInfo</option>
+                          <option value="NMS">No futher study</option>
                         </select>
                     </div>
                     <div className="formpart">
@@ -201,9 +202,9 @@ export default function UpdateStudie() {
                         <select name="scholarship" value={scholarship} defaultValue={scholarship} onChange={(e)=>setScholarship(e.target.value)}>
                           <option value="F">Full Scholarship</option>
                           <option value="P">Partial Scholarship</option>
-                          <option value="NS">No Scholarship</option>
                           <option value="D">Deseaded</option>
                           <option value="N">NoInfo</option>
+                          <option value="NMS">No futher study</option>
                         </select>
                     </div>
                     
