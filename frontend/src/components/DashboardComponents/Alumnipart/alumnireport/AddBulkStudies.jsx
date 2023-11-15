@@ -249,7 +249,7 @@ export default function AddBulkStudies() {
         "level":level,
         "degree":degree,
         "university":university,
-        "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NS",0)?"NS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
+        "scholarship":scholarship.toUpperCase().startsWith("F",0)?"F":scholarship.toUpperCase().startsWith("P",0)?"P":scholarship.toUpperCase().startsWith("NMS",0)?"NMS":scholarship.toUpperCase().startsWith("D",0)?"D":"N",
         "country":country,
         "scholarship_details":scholarship_details,
         "status":study_status.toUpperCase().startsWith("Dr",0)?"D":study_status.toUpperCase().startsWith("S",0)?"S":study_status.toUpperCase().startsWith("O",0)?"O":study_status.toUpperCase().startsWith("De",0)?"De":study_status.toUpperCase().startsWith("G",0)?"C":study_status.toUpperCase().startsWith("NMS",0)?"NMS":"N"
