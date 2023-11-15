@@ -44,10 +44,14 @@ const Admin = () => {
     const [intern, setIntern] = useState('');
     const [others, setOthers] = useState('');
     const [grades, setGrades] = useState('');
-    const [a2, setA2] = useState('');
+    const [c, setC] = useState('');
     const [a1, setA1] = useState('');
     const [m, setM] = useState('');
     const [phd, setPhd] = useState('');
+    const [noInfo, setNoInfo] = useState('');
+    const [nfs, setNfs] = useState('');
+    const [died, setDied] = useState('');
+    const [noInfoUne, setNoInfoUne] = useState('');
     const [Bachelors, setBachelors] = useState('');
     const [otherdegree, setOtherdegree] = useState('');
     const {auth} = useAuth();
@@ -239,10 +243,10 @@ const Admin = () => {
                 return false;
               }).length:0
             )
-            setA2(
+            setC(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.degree==="A2") {
+                if (element.degree==="C") {
                   return true;
                 }
               
@@ -273,6 +277,36 @@ const Admin = () => {
               Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.degree==="A0") {
+                  return true;
+                }
+              
+                return false;
+              }).length:0
+            )
+            setNoInfo(
+              Array.isArray(response.data)?
+              response.data.filter(element => {
+                if (element.degree==="N") {
+                  return true;
+                }
+              
+                return false;
+              }).length:0
+            )
+            setNfs(
+              Array.isArray(response.data)?
+              response.data.filter(element => {
+                if (element.degree==="NMS") {
+                  return true;
+                }
+              
+                return false;
+              }).length:0
+            )
+            setDied(
+              Array.isArray(response.data)?
+              response.data.filter(element => {
+                if (element.degree==="D") {
                   return true;
                 }
               
@@ -319,10 +353,20 @@ const Admin = () => {
                 return false;
               }).length:0
             )
+            setNoInfoUne(
+              Array.isArray(response.data)?
+              response.data.filter(element => {
+                if (element.employed==="N") {
+                  return true;
+                }
+              
+                return false;
+              }).length:0
+            )
             setOthers(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.employed===null || element.employed==="D"|| element.employed==="N" ) {
+                if (element.employed===null) {
                   return true;
                 }
               
@@ -411,7 +455,7 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>Certificate</div>
-                      <div className='male-statistics'><strong className='male-number'>{a2}</strong><span className='female-percentage'>{Math.round(a2===0? 0:(a2*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{c}</strong><span className='female-percentage'>{Math.round(C===0? 0:(C*100)/total)}%</span></div>
                     </div>
                   </div>
                   <div className='item3-top'>
@@ -449,11 +493,39 @@ let data = [5, 2, 5, 5, 10],
                   <div className='item3-top'>
                     <div><BsDot className='item3-icon'/></div>
                     <div>
-                      <div className='item2-title'>Others</div>
-                      <div className='male-statistics'><strong className='male-number'>{otherdegree}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
+                      <div className='item2-title'>Deceased</div>
+                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
                     </div>
                   </div>
                 </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>No Info</div>
+                      <div className='male-statistics'><strong className='male-number'>{noInfo}</strong><span className='female-percentage'>{Math.round(phd===0? 0:(phd*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>No Further Studies</div>
+                      <div className='male-statistics'><strong className='male-number'>{nfs}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                </div>
+                {otherdegree>0?
+              <div className='itme3'>
+              <div className='item3-top'>
+                <div><BsDot className='item3-icon'/></div>
+                <div>
+                  <div className='item2-title'>No Records</div>
+                  <div className='male-statistics'><strong className='male-number'>{otherdegree}</strong><span className='female-percentage'>{Math.round(phd===0? 0:(phd*100)/total)}%</span></div>
+                </div>
+              </div>
+            </div>:null  
+              }
+                
             </div>
           </Link>
           <Link to={"/alumni/employment/"} className="statistic-part-right statistic">
