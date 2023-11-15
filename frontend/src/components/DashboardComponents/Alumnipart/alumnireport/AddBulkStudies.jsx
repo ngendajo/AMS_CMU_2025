@@ -261,7 +261,7 @@ export default function AddBulkStudies() {
                 "Content-Type": 'application/json'
             }
         }
-    ).catch(error => console.log(error.response.data))
+    ).catch(error => console.log(error))
           //clear input fields
       } 
       
