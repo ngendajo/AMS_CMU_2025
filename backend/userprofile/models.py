@@ -150,8 +150,8 @@ class Studie(models.Model):
         ('N', 'NoInfo'),
     )
     level = models.CharField(max_length=3, choices=levels, default='NMS')
-    degree = models.CharField(max_length=50)
-    university = models.CharField(max_length=50)
+    degree = models.CharField(max_length=250)
+    university = models.CharField(max_length=250)
     country = models.CharField(max_length=200)
     Scholarships = (
         ('F', 'Full'),
