@@ -59,12 +59,12 @@ export default function Studies() {
                 name:element.first_name+" "+element.last_name,
                 // phone:element.phone1,
                 degree:element?.level,
-                field:element?.degree,
+                field:element.degree==="PHD"? "PHD":element.degree==="M"? "Masters":element.degree==="A0"? "Bachelors":element.degree==="A1"? "Diploma":element.degree==="C"? "Certificate":element.degree==="NMS"? "No further studies":element.degree==="N"? "No Info":null,
                 university:element?.university,
                 country:element?.country,
-                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="N"?"NoInfo":null,
+                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="NMS"?"No Futher Studies":element.scholarship==="N"?"No Info":null,
                 scholarship_details:element.scholarship_details,
-                status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":element.status==="De"?"Deseaded":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
+                status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":element.status==="De"?"Deseaded":element.status==="NMS"?"No Futher Studies":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
                 user_id:element.study_id?<span>
                   <Link to={`/alumni/updatestudie/${element.study_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deletestudy/${element.study_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
@@ -76,13 +76,10 @@ export default function Studies() {
                 name:element.first_name+" "+element.last_name,
                 phone:element.phone1,
                 level:element?.level,
-                degree:element?.degree,
+                degree:element.degree==="PHD"? "PHD":element.degree==="M"? "Masters":element.degree==="A0"? "Bachelors":element.degree==="A1"? "Diploma":element.degree==="C"? "Certificate":element.degree==="NMS"? "No further studies":element.degree==="N"? "No Info":null,
                 university:element?.university,
                 country:element?.country,
-                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="N"?"NoInfo":null,
-                scholarship_details:element.scholarship_details,
-                status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":null
-                
+                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="NMS"?"No Futher Studies":element.scholarship==="N"?"No Info":null,
               })
               i+=1
             });
