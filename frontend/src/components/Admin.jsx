@@ -503,7 +503,7 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>No Info</div>
-                      <div className='male-statistics'><strong className='male-number'>{noInfo}</strong><span className='female-percentage'>{Math.round(phd===0? 0:(phd*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{noInfo}</strong><span className='female-percentage'>{Math.round(noInfo===0? 0:(noInfo*100)/total)}%</span></div>
                     </div>
                   </div>
                   <div className='item3-top'>
