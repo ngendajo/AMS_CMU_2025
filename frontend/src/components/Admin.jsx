@@ -494,7 +494,7 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>Deceased</div>
-                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(died===0? 0:(died*100)/total)}%</span></div>
                     </div>
                   </div>
                 </div>
@@ -510,7 +510,7 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>No Further Studies</div>
-                      <div className='male-statistics'><strong className='male-number'>{nfs}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{nfs}</strong><span className='female-percentage'>{Math.round(nfs===0? 0:(nfs*100)/total)}%</span></div>
                     </div>
                   </div>
                 </div>
@@ -520,7 +520,7 @@ let data = [5, 2, 5, 5, 10],
                 <div><BsDot className='item3-icon'/></div>
                 <div>
                   <div className='item2-title'>No Records</div>
-                  <div className='male-statistics'><strong className='male-number'>{otherdegree}</strong><span className='female-percentage'>{Math.round(phd===0? 0:(phd*100)/total)}%</span></div>
+                  <div className='male-statistics'><strong className='male-number'>{otherdegree}</strong><span className='female-percentage'>{Math.round(otherdegree===0? 0:(otherdegree*100)/total)}%</span></div>
                 </div>
               </div>
             </div>:null  
