@@ -105,7 +105,7 @@ export default function AddBulkStudies() {
     function findincorrectlevel(arr) {
       let index = 0, newArr = [];
        for (let i = 0; i < arr.length - 1; i++) {
-        if(arr[i].study_level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((arr[i].study_level).toUpperCase()))){
+        if(arr[i].study_level===undefined?true:!(["C","A1","A0","M","PHD","NMS","D","N"].includes((arr[i].study_level).toUpperCase()))){
           newArr[index] = arr[i];
                 index++;
         }else{
@@ -238,7 +238,7 @@ export default function AddBulkStudies() {
       let level=ele.study_level,degree=ele.degree,id=ele.id,
       university=ele.university,scholarship=ele.scholarship,
       country=ele.country,study_status=ele.study_status,scholarship_details=ele.scholarship_details
-      if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||study_status===undefined?true:study_status===""||scholarship===undefined?true:scholarship==="")
+      if(level===undefined?true:!(["C","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||study_status===undefined?true:study_status===""||scholarship===undefined?true:scholarship==="")
       {
         console.log(level)
       }
@@ -321,7 +321,7 @@ export default function AddBulkStudies() {
                       <h1>Incorect Study Level</h1>
                       {
                         data2.map((ele,key)=>{
-                          return <p key={key}>{ele.email}, Names {ele.last_name} {ele.first_name} Your study_level is {ele.study_level} choose in "A2","A1","A0","M","PHD","NMS","D","N"</p>
+                          return <p key={key}>{ele.email}, Names {ele.last_name} {ele.first_name} Your study_level is {ele.study_level} choose in "C","A1","A0","M","PHD","NMS","D","N"</p>
                         })
                       }
                     </>
