@@ -173,6 +173,7 @@ export default function AddStudie() {
                           <option value="F">Full Scholarship</option>
                           <option value="P">Partial Scholarship</option>
                           <option value="NS">No Scholarship</option>
+                          <option value="NMS">No futher study</option>
                           <option value="D">Deseaded</option>
                           <option value="N">NoInfo</option>
                         </select>
