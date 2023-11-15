@@ -386,10 +386,10 @@ let data = [5, 2, 5, 5, 10],
     subTitle1 = total,
     showLabel = false,
     colors = ["#F49D47","#42A2EC", "#F9DF5A", "#FF7410", "#4C8061"],
-    radius = 30,
-    hole = 25,
+    radius = 20,
+    hole = 15,
     stroke = 1,
-    strokeWidth = 10;
+    strokeWidth = 7;
   return (
     <div className="dashboard-container">
         <div className="statistic-part">
