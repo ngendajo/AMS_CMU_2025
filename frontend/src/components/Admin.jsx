@@ -455,7 +455,7 @@ let data = [5, 2, 5, 5, 10],
                     <div><BsDot className='item3-icon'/></div>
                     <div>
                       <div className='item2-title'>Certificate</div>
-                      <div className='male-statistics'><strong className='male-number'>{certificates}</strong><span className='female-percentage'>{Math.round(C===0? 0:(C*100)/total)}%</span></div>
+                      <div className='male-statistics'><strong className='male-number'>{certificates}</strong><span className='female-percentage'>{Math.round(setCertificates===0? 0:(certificates*100)/total)}%</span></div>
                     </div>
                   </div>
                   <div className='item3-top'>
