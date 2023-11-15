@@ -110,7 +110,7 @@ export default function AddStudie() {
                             Degree
                         </label>
                         <select name="level">
-                          <option value="A2">Advanced level Certificate</option>
+                          <option value="C">Advanced level Certificate</option>
                           <option value="A1">Advanced diploma</option>
                           <option value="A0">Bachelors</option>
                           <option value="M">Masters</option>
@@ -160,6 +160,9 @@ export default function AddStudie() {
                           <option value="S">Suspended</option>
                           <option value="O">On_Going</option>
                           <option value="C">Completed</option>
+                          <option value="NMS">No futher study</option>
+                          <option value="De">Deseaded</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     <div className="formpart">
