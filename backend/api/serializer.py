@@ -150,17 +150,21 @@ class DisplayEmploymentSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
     image_url =serializers.ImageField(required=True)
+    grade_name = serializers.CharField(max_length=200, required=True)
+    family_name = serializers.CharField(max_length=200, required=True)
+    combination_name = serializers.CharField(max_length=200, required=True)
     title = serializers.CharField(max_length=200, required=True)
     company = serializers.CharField(max_length=200, required=True)
     description = serializers.CharField(max_length=5000, required=True)
     start_date = serializers.CharField(max_length=200, required=True)
     status = serializers.CharField(max_length=30, required=True)
     emp_id = serializers.IntegerField(required=True)
+    alumn_id = serializers.IntegerField(required=True)
     end = serializers.CharField(max_length=200, required=True)
     career = serializers.CharField(max_length=200, required=True)
 
     class Meta:
-        fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'title','company','description','start_date','status', 'emp_id','career')
+        fields = ('id','alumn_id', 'email','phone1', 'first_name','last_name','end','image_url','grade_name','family_name','combination_name', 'title','company','description','start_date','status', 'emp_id','career')
 
 # Alumni data serializers
 
