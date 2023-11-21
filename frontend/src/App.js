@@ -62,6 +62,7 @@ import AlumnProfile from './components/ProfileComponents/AlumnProfile';
 import EditGallery from './components/GalleryComponents/EditDeleteGalleryPhoto';
 import AddBulkASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkASYVInfo';
 import AddBulkStudies from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkStudies';
+import AddBulkEmpl from './components/DashboardComponents/Alumnipart/alumnireport/AddBulkEmpl';
 import Password from './pages/dashboardpages/Password';
 import Error from './pages/dashboardpages/Error';
 import ResetPassword from './components/DashboardComponents/Staffpart/ResetPassword';
@@ -140,6 +141,7 @@ function App() {
                         <Route path='displaystory/:id' element={<DisplayStory />}/>
                         <Route path='bulkalumni' element={<AddBulkASYVInfo />}/>
                         <Route path='bulkstudie' element={<AddBulkStudies />}/>
+                        <Route path='bulkemploy' element={<AddBulkEmpl />} />
                       </Route>
                     </Route>
                     <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
