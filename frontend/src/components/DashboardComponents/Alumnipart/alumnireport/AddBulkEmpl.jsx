@@ -49,6 +49,7 @@ export default function AddBulkStudies() {
                   withCredentials:true
               });
               var alumnilist2=[]
+              console.log(response.data)
               response.data.forEach(element => {
                 
                 alumnilist2.push({
