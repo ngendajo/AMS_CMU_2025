@@ -94,11 +94,11 @@ export default function EmployementAndEducation({data,grades}) {
             data: empStuFemale
         },{
             name: 'Decesed Boys',
-            data: empStuMale
+            data: diedMale
         },
         {
             name: 'Deceased Girls',
-            data: empStuFemale
+            data: diedFemale
         }
         
     ]
