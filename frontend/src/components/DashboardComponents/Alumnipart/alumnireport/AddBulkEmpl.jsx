@@ -222,7 +222,7 @@ export default function AddBulkStudies() {
           "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"S":job_status.toUpperCase().startsWith("I",0)?"I":job_status.toUpperCase().startsWith("U",0)?"U":job_status.toUpperCase().startsWith("D",0)?"D":"N",
           "description":description===undefined?"NS":description,
           "company":company,
-          "alumn":res.data.id,
+          "alumn":ele.id,
           "career":career===undefined?"":career,
           "start_date":"NS",
           "end_date":"Up to now"
