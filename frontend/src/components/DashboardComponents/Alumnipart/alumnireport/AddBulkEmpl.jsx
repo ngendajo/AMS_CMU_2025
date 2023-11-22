@@ -216,7 +216,19 @@ export default function AddBulkStudies() {
     try{
         let title=ele.title,career=ele.career,description=ele.description,
         company=ele.company,job_status=ele.employ_status;
-      if(title===""||company===""||career===""||job_status==="")
+        console.log(ele)
+        let dta={
+          "title":title,
+          "status":job_status.toUpperCase().startsWith("F",0)?"F":job_status.toUpperCase().startsWith("P",0)?"P":job_status.toUpperCase().startsWith("S",0)?"S":job_status.toUpperCase().startsWith("I",0)?"I":job_status.toUpperCase().startsWith("U",0)?"U":job_status.toUpperCase().startsWith("D",0)?"D":"N",
+          "description":description===undefined?"NS":description,
+          "company":company,
+          "alumn":res.data.id,
+          "career":career===undefined?"":career,
+          "start_date":"NS",
+          "end_date":"Up to now"
+          }
+          console.log(dta)
+     /*  if(title===""||company===""||career===""||job_status==="")
       {
         alert("There is a column which has empty values")
       }
@@ -241,7 +253,7 @@ export default function AddBulkStudies() {
   .then(res =>{
       console.log(res)
   })
-} 
+}  */
       
   }catch(err){
       console.log(err);
