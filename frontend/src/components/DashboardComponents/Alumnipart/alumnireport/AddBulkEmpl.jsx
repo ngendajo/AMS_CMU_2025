@@ -250,8 +250,11 @@ export default function AddBulkStudies() {
   
   function savedata(){
     if(datafinal.length>0){
+      let r=1
       datafinal.forEach((ele)=>{
         handleSubmit(ele)
+        alert(r)
+        r++
       })
       navigate('/alumni/employment/')
     }
