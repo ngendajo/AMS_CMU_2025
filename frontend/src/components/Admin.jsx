@@ -326,7 +326,7 @@ const Admin = () => {
             setEmploy(
               Array.isArray(response.data)?
               response.data.filter(element => {
-                if (element.employed==="F" || element.employed==="P"|| element.employed==="S") {
+                if (element.employed==="F" || element.employed==="P"|| element.employed==="S" || element.employed==="I") {
                   return true;
                 }
               
@@ -343,7 +343,7 @@ const Admin = () => {
                 return false;
               }).length:0
             )
-            setIntern(
+            /* setIntern(
               Array.isArray(response.data)?
               response.data.filter(element => {
                 if (element.employed==="I") {
@@ -352,7 +352,7 @@ const Admin = () => {
               
                 return false;
               }).length:0
-            )
+            ) */
             setNoInfoUne(
               Array.isArray(response.data)?
               response.data.filter(element => {
@@ -556,8 +556,8 @@ let data = [5, 2, 5, 5, 10],
                   <div className='item3-top'>
                     <div><BsDot className='item3-icon'/></div>
                     <div>
-                      <div className='item2-title'>Internship</div>
-                      <div className='male-statistics'><strong className='male-number'>{intern}</strong><span className='female-percentage'>{Math.round(intern===0? 0:(intern*100)/total)}%</span></div>
+                      <div className='item2-title'>Deceased</div>
+                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(died===0? 0:(died*100)/total)}%</span></div>
                     </div>
                   </div>
                 </div>
@@ -578,13 +578,7 @@ let data = [5, 2, 5, 5, 10],
                   </div>
                 </div>
                 <div className='itme3'>
-                  <div className='item3-top'>
-                    <div><BsDot className='item3-icon'/></div>
-                    <div>
-                      <div className='item2-title'>Deceased</div>
-                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(died===0? 0:(died*100)/total)}%</span></div>
-                    </div>
-                  </div>
+                  
                   {others>0?
                   <div className='item3-top'>
                     <div><BsDot className='item3-icon'/></div>
