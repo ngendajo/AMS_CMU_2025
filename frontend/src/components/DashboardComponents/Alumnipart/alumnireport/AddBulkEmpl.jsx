@@ -216,7 +216,7 @@ export default function AddBulkStudies() {
     try{
         let title=ele.title,career=ele.career,description=ele.description,
         company=ele.company,job_status=ele.employ_status;
-      if(title===undefined?true:title===""||company===undefined?true:company===""||career===undefined?true:career===""||job_status===undefined?true:job_status==="")
+      if(title===""||company===""||career===""||job_status==="")
       {
         alert("There is a column which has empty values")
       }
@@ -250,11 +250,8 @@ export default function AddBulkStudies() {
   
   function savedata(){
     if(datafinal.length>0){
-      let r=1
       datafinal.forEach((ele)=>{
         handleSubmit(ele)
-        alert(r)
-        r++
       })
       navigate('/alumni/employment/')
     }
