@@ -458,8 +458,8 @@ class EmploymentAndStudieSerializer(serializers.ModelSerializer):
 
     gender = serializers.CharField(max_length=200, required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
-    emp= serializers.IntegerField(required=True)
-    stu= serializers.IntegerField(required=True)
+    emp= serializers.CharField(max_length=20, required=True)
+    stu= serializers.CharField(max_length=20, required=True)
     id= serializers.IntegerField(required=True)
 
     class Meta:

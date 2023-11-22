@@ -156,7 +156,6 @@ const Admin = () => {
             });
             let empstu=new Map();
             let grades= new Set();
-
             Array.isArray(response.data)?
             response.data.forEach((empst)=>{
               grades.add(empst.grade_name)
@@ -174,14 +173,16 @@ const Admin = () => {
             response.data.forEach((empst)=>{
               let key=empst.grade_name+empst.gender;
            
-              if(empst.emp===null){
+              if(empst.emp==="N" || empst.emp==="U"){
                 key+="noEmp";
               }
               else{
                 key+="Emp";
               }
-              if(empst.stu===null){
+              if(empst.stu==="N" ||empst.stu==="NMS"){
                 key+="noStu";
+              }else if(empst.stu==="D"){
+                key+="died";
               }
               else{
                 key+="Stu";

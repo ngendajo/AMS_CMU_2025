@@ -5,6 +5,8 @@ import HighchartsReact from 'highcharts-react-official';
 export default function EmployementAndEducation({data,grades}) {
     let noStuMale=[];
     let stuMale=[];
+    let diedMale=[];
+    let diedFemale=[];
     let noStuFemale=[];
     let stuFemale=[];
     let noEmpStuMale = [];
@@ -29,6 +31,10 @@ export default function EmployementAndEducation({data,grades}) {
         let key8=grade+"Female"+"noEmp"+"Stu";
         stuFemale.push(data.get(key8));
         empStuFemale.push(data.get(key7));
+        let key9=grade+"Female"+"died";
+        diedFemale.push(data.get(key9));
+        let key10=grade+"Male"+"died";
+        diedMale.push(data.get(key10));
 
     })
   const configObj ={
@@ -85,6 +91,13 @@ export default function EmployementAndEducation({data,grades}) {
         },
         {
             name: 'Employed Girls With Further Education',
+            data: empStuFemale
+        },{
+            name: 'Decesed Boys',
+            data: empStuMale
+        },
+        {
+            name: 'Deceased Girls',
             data: empStuFemale
         }
         

@@ -1030,8 +1030,8 @@ class AlumnInGradeReportView(APIView):
 class EmploymentStudieReportView(APIView):
     permission_classes = [IsAuthenticated, ]  
     def get(self,request):
-        try:
-            empstud = User.objects.raw("SELECT alumni.gender,grade.grade_name,employment.id as emp,studie.id as stu,alumni.id FROM userprofile_alumni AS alumni LEFT JOIN userprofile_employment AS employment ON employment.alumn_id = alumni.id LEFT JOIN userprofile_studie AS studie ON studie.alumn_id=alumni.id JOIN userprofile_family AS family ON alumni.family_id= family.id JOIN userprofile_grade AS grade ON family.grade_id=grade.id;")
+        try: 
+            empstud = User.objects.raw("SELECT alumni.gender,grade.grade_name,employment.status as emp,studie.level as stu,alumni.id FROM userprofile_alumni AS alumni LEFT JOIN userprofile_employment AS employment ON employment.alumn_id = alumni.id LEFT JOIN userprofile_studie AS studie ON studie.alumn_id=alumni.id JOIN userprofile_family AS family ON alumni.family_id= family.id JOIN userprofile_grade AS grade ON family.grade_id=grade.id;")
             
             # if there is something in items else raise error
             if empstud:
