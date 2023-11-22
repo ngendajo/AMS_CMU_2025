@@ -217,7 +217,9 @@ export default function AddBulkStudies() {
         let title=ele.title,career=ele.career,description=ele.description,
         company=ele.company,job_status=ele.employ_status;
       if(title===undefined?true:title===""||company===undefined?true:company===""||career===undefined?true:career===""||job_status===undefined?true:job_status==="")
-      {}
+      {
+        alert("There is a column which has empty values")
+      }
       else{
         axios.post(baseUrl+'/employment/', {
       "title":title,
