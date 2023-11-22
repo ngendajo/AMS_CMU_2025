@@ -68,7 +68,7 @@ const Admin = () => {
                   },
                   withCredentials:true
               });
-              console.log(response.data)
+              //console.log(response.data)
               const groupedData = Array.isArray(response.data)?
               response.data.reduce((groups, item) => {
                 const { grade } = item;
@@ -210,7 +210,7 @@ const Admin = () => {
                 },
                 withCredentials:true
             });
-            console.log(response.data)
+            //console.log(response.data)
             Array.isArray(response.data)?
             setTotal(response.data.length):setTotal(0);
             setFemale(
@@ -572,10 +572,28 @@ let data = [5, 2, 5, 5, 10],
                   <div className='item3-top'>
                     <div><BsDot className='item3-icon'/></div>
                     <div>
-                      <div className='item2-title'>Others</div>
-                      <div className='male-statistics'><strong className='male-number'>{others}</strong><span className='female-percentage'>{Math.round(others===0? 0:(others*100)/total)}%</span></div>
+                      <div className='item2-title'>No Info</div>
+                      <div className='male-statistics'><strong className='male-number'>{noInfoUne}</strong><span className='female-percentage'>{Math.round(noInfoUne===0? 0:(noInfoUne*100)/total)}%</span></div>
                     </div>
                   </div>
+                </div>
+                <div className='itme3'>
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>Deceased</div>
+                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(died===0? 0:(died*100)/total)}%</span></div>
+                    </div>
+                  </div>
+                  {others>0?
+                  <div className='item3-top'>
+                    <div><BsDot className='item3-icon'/></div>
+                    <div>
+                      <div className='item2-title'>No Records</div>
+                      <div className='male-statistics'><strong className='male-number'>{others}</strong><span className='female-percentage'>{Math.round(others===0? 0:(others*100)/total)}%</span></div>
+                    </div>
+                  </div>:null
+                  }
                 </div>
             </div>
           </Link>
