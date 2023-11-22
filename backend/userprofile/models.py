@@ -6,7 +6,7 @@ from api.models import User
 # Staff model
 class CrcProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    position = models.CharField(max_length=200)
+    position = models.CharField(max_length=2000)
 
     def __str__(self):
         return str(self.user)
@@ -15,9 +15,9 @@ class CrcProfile(models.Model):
 # Grade model
 
 class Grade(models.Model):
-    grade_name = models.CharField(max_length=50)
-    start_academic_year = models.CharField(max_length=50)
-    end_academic_year = models.CharField(max_length=50)
+    grade_name = models.CharField(max_length=500)
+    start_academic_year = models.CharField(max_length=500)
+    end_academic_year = models.CharField(max_length=500)
 
     def __str__(self):
         return str(self.grade_name)
@@ -36,14 +36,14 @@ class Family(models.Model):
 
 # Combination models
 class Combination(models.Model):
-    combination_name = models.CharField(max_length=50)
+    combination_name = models.CharField(max_length=500)
 
     def __str__(self):
         return str(self.combination_name)
 
 # Eps model
 class Ep(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=500)
     TYPES = (
         ('A', 'Art'),
         ('S', 'Sport'),
@@ -60,16 +60,16 @@ class Ep(models.Model):
 
 class Alumni(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
-    marital_status = models.CharField(max_length=50)
-    gender = models.CharField(max_length=50)
+    marital_status = models.CharField(max_length=500)
+    gender = models.CharField(max_length=500)
     family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
     combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
     eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
     kids = models.BooleanField(default=False)
-    father = models.CharField(max_length=50,default="")
-    mother = models.CharField(max_length=50,default="")
-    place_of_birth = models.CharField(max_length=50,default="")
-    currresidence = models.CharField(max_length=50,default="")
+    father = models.CharField(max_length=500,default="")
+    mother = models.CharField(max_length=500,default="")
+    place_of_birth = models.CharField(max_length=500,default="")
+    currresidence = models.CharField(max_length=500,default="")
     s4marks =models.FloatField(default=0.0)
     s5marks =models.FloatField(default=0.0)
     s6marks =models.FloatField(default=0.0)
@@ -89,7 +89,7 @@ class Alumni(models.Model):
 
 # Employment model
 class Employment(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=5000)
     alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='employement')
     emps = (
         ('F', 'Full-time'),
@@ -101,11 +101,11 @@ class Employment(models.Model):
         ('N', 'NoInfo'),
     ) 
     status = models.CharField(max_length=2, choices=emps)
-    career = models.CharField(max_length=200, default="")
-    description = models.CharField(max_length=200)
-    company = models.CharField(max_length=50)
-    start_date = models.CharField(max_length=50, default="")
-    end_date = models.CharField(max_length=50, default="Up to now")
+    career = models.CharField(max_length=2000, default="")
+    description = models.CharField(max_length=2000)
+    company = models.CharField(max_length=5000)
+    start_date = models.CharField(max_length=100, default="")
+    end_date = models.CharField(max_length=100, default="Up to now")
 
     def __str__(self):
         return str(self.title)
@@ -114,7 +114,7 @@ class Employment(models.Model):
 # Opportunity model
 class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=5000)
     description = models.CharField(max_length=200)
     approved = models.BooleanField(default=False)
     post_time = models.DateTimeField(default=datetime.now)
@@ -125,8 +125,8 @@ class Opportunity(models.Model):
 
 # Event model
 class Event(models.Model):
-    title = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    title = models.CharField(max_length=5000)
+    description = models.CharField(max_length=20000)
     startDate = models.DateTimeField(auto_now=True)
     endDate = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
@@ -150,8 +150,8 @@ class Studie(models.Model):
         ('N', 'NoInfo'),
     )
     level = models.CharField(max_length=3, choices=levels, default='NMS')
-    degree = models.CharField(max_length=250)
-    university = models.CharField(max_length=250)
+    degree = models.CharField(max_length=2500)
+    university = models.CharField(max_length=2500)
     country = models.CharField(max_length=200)
     Scholarships = (
         ('F', 'Full'),
@@ -162,7 +162,7 @@ class Studie(models.Model):
         ('NMS', 'No More Study'),
     )
     scholarship = models.CharField(max_length=3, choices=Scholarships)
-    scholarship_details = models.CharField(max_length=200,default="")
+    scholarship_details = models.CharField(max_length=2000,default="")
     Statuss = (
         ('D', 'Dropped_Out'),
         ('S', 'Susepended'),
@@ -196,7 +196,7 @@ class Gallery(models.Model):
 
 # News model
 class News(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=5000)
     description = models.CharField(max_length=5000)
     date = models.DateTimeField(auto_now=True)
     image_url = models.ImageField(upload_to='news', default='news/default.jpg')
