@@ -394,7 +394,7 @@ export default function AddBulkASYVInfo() {
   };
   const handleSubmit = async (ele) =>{
     try{
-      /* let formData = new FormData();
+      let formData = new FormData();
       
       formData.append('email',ele.email);
       formData.append('first_name',ele.first_name);
@@ -410,9 +410,9 @@ export default function AddBulkASYVInfo() {
               },
               withCredentials:true 
           }
-          ); */
+          );
           axios.post(baseUrl+'/alumni/info/', {
-        "user":ele.id,
+        "user":response.data.id,
         "marital_status":ele.martal_status,
         "gender":ele.gender,
         "family":ele.family,
@@ -440,7 +440,7 @@ export default function AddBulkASYVInfo() {
     ) 
     .then(res =>{
         console.log(res.data.id) 
-         /* let level=ele.study_level,degree=ele.degree,
+         let level=ele.study_level,degree=ele.degree,
         university=ele.university,scholarship=ele.scholarship,
         country=ele.country,status=ele.study_status,scholarship_details=ele.scholarship_details
         if(level===undefined?true:!(["A2","A1","A0","M","PHD","NMS","D","N"].includes((level).toUpperCase()))||degree===undefined?true:degree===""||university===undefined?true:university===""||country===undefined?true:country===""||scholarship_details===undefined?true:scholarship_details===""||status===undefined?true:status===""||scholarship===undefined?true:scholarship==="")
@@ -494,7 +494,7 @@ export default function AddBulkASYVInfo() {
         console.log(res)
     })
     .catch(error => console.log(error.response))
-  }  */
+  } 
     }) 
     .catch(error => console.log(error.response.data))
           //clear input fields 
