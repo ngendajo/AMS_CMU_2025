@@ -22,6 +22,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+import pandas as pd
 
 from userprofile.models import Alumni
 
@@ -1196,12 +1197,33 @@ class UserCountAPIView(APIView):
             where api_user.is_alumni;
             """)
             row = cursor.fetchone()
+        sql_query1 = "select alumn_id,level, CASE WHEN level = 'PHD' THEN 1 WHEN level = 'M' THEN 2 WHEN level= 'A0' THEN 3 WHEN level = 'A1' THEN 4 WHEN level = 'C' THEN 5 WHEN level = 'NMS' THEN 6 WHEN level= 'D' THEN 7 ELSE 8 END AS level_code from userprofile_studie order by alumni_id,level_code desc;"
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            columns = [col[0] for col in cursor1.description]
+            data1 = cursor1.fetchall()
+
+        # Create a Pandas DataFrame
+        df = pd.DataFrame(data1, columns=columns)
+        # Count alumn_id group by level, and for repeated alumn_id, count the one with less level_code
+        result_df = df.groupby('alumn_id').apply(lambda group: group.loc[group['level_code'].idxmin()]).groupby('level').agg({'alumn_id': 'count'}).reset_index()
+
+        # Rename columns as needed
+        result_df.columns = ['level', 'count']
+        result_dict = dict(zip(df['level'], df['count']))
         if row is not None:
             data = {
                 'total_users': row[0],
                 'male_count': row[1],
                 'female_count': row[2]
             }
+            data.update(result_dict)
+            keys=['C','A1','A0','M','PHD','NMS','D','N']
+            for i in keys:
+                if i not in list(result_dict.keys()):
+                    data[i]:0
 
             serializer = AlumniCountSerializer(data)
             return Response(serializer.data)
@@ -1210,7 +1232,15 @@ class UserCountAPIView(APIView):
             data = {
                 'total_users': 0,
                 'male_count': 0,
-                'female_count': 0
+                'female_count': 0,
+                'C':0,
+                'A1':0,
+                'A0':0,
+                'M':0,
+                'PHD':0,
+                'NMS':0,
+                'D':0,
+                'N':0
             }
 
             serializer = AlumniCountSerializer(data)

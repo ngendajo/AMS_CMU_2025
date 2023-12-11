@@ -129,6 +129,14 @@ class AlumniCountSerializer(serializers.Serializer):
     total_users = serializers.IntegerField()
     male_count = serializers.IntegerField()
     female_count = serializers.IntegerField()
+    C = serializers.IntegerField()
+    A1 = serializers.IntegerField()
+    A0 = serializers.IntegerField()
+    M = serializers.IntegerField()
+    PHD = serializers.IntegerField()
+    NMS = serializers.IntegerField()
+    D = serializers.IntegerField()
+    N = serializers.IntegerField()
 
 
 #Employment serializers
