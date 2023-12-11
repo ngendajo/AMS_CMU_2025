@@ -1221,9 +1221,10 @@ class UserCountAPIView(APIView):
             }
             data.update(result_dict)
             keys=['C','A1','A0','M','PHD','NMS','D','N']
-            for i in keys:
-                if i not in list(result_dict.keys()):
-                    data[i]:0
+            difference_list = list(set(keys) - set(list(result_dict.keys())))
+            
+            if(len(difference_list)>0):
+                data.update({key: 0 for key in difference_list})
 
             serializer = AlumniCountSerializer(data)
             return Response(serializer.data)
