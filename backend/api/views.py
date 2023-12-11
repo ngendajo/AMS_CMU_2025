@@ -1180,6 +1180,8 @@ def delete_news(request, pk):
 def alumni_count(request):
     try:
         count = Alumni.objects.count()  # count Alumni number
+        alumni =Alumni.objects.all()
+        print(alumni)
         return JsonResponse({"count": count})  # response JSON
     except Exception as e:
         return Response(e)
