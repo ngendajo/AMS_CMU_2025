@@ -1196,13 +1196,25 @@ class UserCountAPIView(APIView):
             where api_user.is_alumni;
             """)
             row = cursor.fetchone()
+        if row is not None:
+            data = {
+                'total_users': row[0],
+                'male_count': row[1],
+                'female_count': row[2]
+            }
 
-        data = {
-            'total_users': row[0],
-            'male_count': row[1],
-            'female_count': row[2]
-        }
+            serializer = AlumniCountSerializer(data)
+            return Response(serializer.data)
+        else:
+            # Handle the case when no rows are returned
+            data = {
+                'total_users': 0,
+                'male_count': 0,
+                'female_count': 0
+            }
 
-        serializer = AlumniCountSerializer(data)
-        return Response(serializer.data)
+            serializer = AlumniCountSerializer(data)
+            return Response(serializer.data)
+
+        
 
