@@ -125,6 +125,12 @@ class AddFamilySerializer(serializers.ModelSerializer):
 #End of grades and families  
 
 
+class AlumniCountSerializer(serializers.Serializer):
+    total_users = serializers.IntegerField()
+    male_count = serializers.IntegerField()
+    female_count = serializers.IntegerField()
+
+
 #Employment serializers
 
 class EmploymentSerializer(serializers.ModelSerializer):

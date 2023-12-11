@@ -11,6 +11,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.db import connection
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -1183,4 +1184,25 @@ def alumni_count(request):
         return JsonResponse({"count": count})  # response JSON
     except Exception as e:
         return Response(e)
+
+class UserCountAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        with connection.cursor() as cursor:
+            cursor.execute("""
+            select COUNT(api_user.id) as total_users,
+            COUNT(CASE WHEN userprofile_alumni.gender = 'Male' THEN 1 END) AS male_count,
+            COUNT(CASE WHEN userprofile_alumni.gender = 'Female' THEN 1 END) AS female_count 
+            from api_user left join userprofile_alumni on api_user.id=userprofile_alumni.user_id 
+            where api_user.is_alumni;
+            """)
+            row = cursor.fetchone()
+
+        data = {
+            'total_users': row[0],
+            'male_count': row[1],
+            'female_count': row[2]
+        }
+
+        serializer = AlumniCountSerializer(data)
+        return Response(serializer.data)
 
