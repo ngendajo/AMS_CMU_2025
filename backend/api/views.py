@@ -1199,7 +1199,7 @@ class UserCountAPIView(APIView):
             row = cursor.fetchone()
             
             #for education
-        sql_query1 = "select alumn_id,level, CASE WHEN level = 'PHD' THEN 1 WHEN level = 'M' THEN 2 WHEN level= 'A0' THEN 3 WHEN level = 'A1' THEN 4 WHEN level = 'C' THEN 5 WHEN level = 'NMS' THEN 6 WHEN level= 'D' THEN 7 ELSE 8 END AS level_code from userprofile_studie order by alumn_id,level_code desc;"
+        sql_query1 = "select alumn_id,level, CASE WHEN level = 'PHD' THEN 1 WHEN level = 'M' THEN 2 WHEN level= 'A0' THEN 3 WHEN level = 'A1' THEN 4 WHEN level = 'C' THEN 5 WHEN level = 'NMS' THEN 6 WHEN level= 'D' THEN 0 ELSE 7 END AS level_code from userprofile_studie order by alumn_id,level_code desc;"
 
         # Execute the SQL query
         with connection.cursor() as cursor1:
@@ -1217,7 +1217,7 @@ class UserCountAPIView(APIView):
         result_dict = dict(zip(result_df['level'], result_df['count']))
         
         #for employment
-        sql_query2 = "select alumn_id,status, CASE WHEN status = 'S' THEN 1 WHEN status = 'F' THEN 2 WHEN status= 'P' THEN 3 WHEN status = 'I' THEN 4 WHEN status = 'U' THEN 5 WHEN status= 'D' THEN 6 ELSE 7 END AS status_code from userprofile_employment order by alumn_id,status_code desc;"
+        sql_query2 = "select alumn_id,status, CASE WHEN status = 'S' THEN 1 WHEN status = 'F' THEN 2 WHEN status= 'P' THEN 3 WHEN status = 'I' THEN 4 WHEN status = 'U' THEN 5 WHEN status= 'D' THEN 0 ELSE 6 END AS status_code from userprofile_employment order by alumn_id,status_code desc;"
 
         # Execute the SQL query
         with connection.cursor() as cursor2:
