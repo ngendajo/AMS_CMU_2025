@@ -1197,6 +1197,8 @@ class UserCountAPIView(APIView):
             where api_user.is_alumni;
             """)
             row = cursor.fetchone()
+            
+            #for education
         sql_query1 = "select alumn_id,level, CASE WHEN level = 'PHD' THEN 1 WHEN level = 'M' THEN 2 WHEN level= 'A0' THEN 3 WHEN level = 'A1' THEN 4 WHEN level = 'C' THEN 5 WHEN level = 'NMS' THEN 6 WHEN level= 'D' THEN 7 ELSE 8 END AS level_code from userprofile_studie order by alumn_id,level_code desc;"
 
         # Execute the SQL query
@@ -1213,6 +1215,34 @@ class UserCountAPIView(APIView):
         # Rename columns as needed
         result_df.columns = ['level', 'count']
         result_dict = dict(zip(result_df['level'], result_df['count']))
+        
+        #for employment
+        sql_query2 = "select alumn_id,status, CASE WHEN status = 'S' THEN 1 WHEN status = 'F' THEN 2 WHEN status= 'P' THEN 3 WHEN status = 'I' THEN 4 WHEN status = 'U' THEN 5 WHEN status= 'D' THEN 6 ELSE 7 END AS status_code from userprofile_employment order by alumn_id,status_code desc;"
+
+        # Execute the SQL query
+        with connection.cursor() as cursor2:
+            cursor2.execute(sql_query2)
+            columns2 = [col[0] for col in cursor2.description]
+            data2 = cursor2.fetchall()
+
+        # Create a Pandas DataFrame
+        df2 = pd.DataFrame(data2, columns=columns2)
+        # Count alumn_id group by status, and for repeated alumn_id, count the one with less status_code
+        result_df2 = df2.groupby('alumn_id').apply(lambda group: group.loc[group['status_code'].idxmin()]).groupby('status').agg({'alumn_id': 'count'}).reset_index()
+        
+        # Rename columns as needed
+        result_df2.columns = ['status', 'count']
+        result_dict2 = dict(zip(result_df2['status'], result_df2['count']))
+        # Check if the old key exists in the dictionary
+        if 'D' in result_dict2:
+            # Create a new key with the desired name and assign the value of the old key
+            result_dict2['DEM'] = result_dict2.pop('D')
+            
+        # Check if the old key exists in the dictionary
+        if 'N' in result_dict2:
+            # Create a new key with the desired name and assign the value of the old key
+            result_dict2['NEM'] = result_dict2.pop('N')
+        
         if row is not None:
             data = {
                 'total_users': row[0],
@@ -1225,6 +1255,13 @@ class UserCountAPIView(APIView):
             
             if(len(difference_list)>0):
                 data.update({key: 0 for key in difference_list})
+                
+            data.update(result_df2)
+            keys2=['S','F','P','I','U','DEM','NEM']
+            difference_list2 = list(set(keys2) - set(list(result_dict2.keys())))
+            
+            if(len(difference_list2)>0):
+                data.update({key: 0 for key in difference_list2})
 
             serializer = AlumniCountSerializer(data)
             return Response(serializer.data)
@@ -1241,6 +1278,13 @@ class UserCountAPIView(APIView):
                 'PHD':0,
                 'NMS':0,
                 'D':0,
+                'N':0,
+                'F':0,
+                'P':0,
+                'S':0,
+                'I':0,
+                'U':0,
+                'DEM':0,
                 'N':0
             }
 
