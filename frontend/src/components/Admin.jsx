@@ -41,7 +41,6 @@ const Admin = () => {
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
     const [unemploy, setUnemploy] = useState('');
-    const [intern, setIntern] = useState('');
     const [others, setOthers] = useState('');
     const [grades, setGrades] = useState('');
     const [certificates, setCertificates] = useState(0);
@@ -51,6 +50,7 @@ const Admin = () => {
     const [noInfo, setNoInfo] = useState('');
     const [nfs, setNfs] = useState('');
     const [died, setDied] = useState('');
+    const [diede, setDiede] = useState('');
     const [noInfoUne, setNoInfoUne] = useState('');
     const [Bachelors, setBachelors] = useState('');
     const [otherdegree, setOtherdegree] = useState('');
@@ -204,7 +204,7 @@ const Admin = () => {
     
     const getcrcusers = async () =>{
         try{
-            const response = await axios.get(baseUrl+'/totalalumnreport/',{
+            const response = await axios.get(baseUrl+'/alumnitotal/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -212,168 +212,24 @@ const Admin = () => {
                 withCredentials:true
             });
             //console.log(response.data)
-            Array.isArray(response.data)?
-            setTotal(response.data.length):setTotal(0);
-            setFemale(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.gender==="Female") {
-                  return true;
-                }
-              
-                return false;
-              }).length :0
-            )
-            setMale(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.gender==="Male") {
-                  return true;
-                }
-              
-                return false;
-              }).length :0
-            )
-            setA1(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="A1") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setCertificates(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="C") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setM(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="M") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setPhd(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="PHD") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setBachelors(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="A0") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setNoInfo(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="N") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setNfs(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="NMS") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setDied(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree==="D") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setOtherdegree(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.degree===null) {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setEmploy(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.employed==="F" || element.employed==="P"|| element.employed==="S" || element.employed==="I") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setUnemploy(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.employed==="U") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            /* setIntern(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.employed==="I") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            ) */
-            setNoInfoUne(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.employed==="N") {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
-            setOthers(
-              Array.isArray(response.data)?
-              response.data.filter(element => {
-                if (element.employed===null) {
-                  return true;
-                }
-              
-                return false;
-              }).length:0
-            )
+            setTotal(response.data[0].total_users)
+            setFemale(response.data[0].female_count)
+            setMale(response.data[0].male_count)
+            setA1(response.data[0].A1)
+            setCertificates(response.data[0].C)
+            setM(response.data[0].M)
+            setPhd(response.data[0].PHD)
+            setBachelors(response.data[0].A0)
+            setNoInfo(response.data[0].N)
+            setNfs(response.data[0].NMS)
+            setDied(response.data[0].D)
+            setOtherdegree((response.data[0].total_users)-(response.data[0].A1+response.data[0].A0+response.data[0].C+response.data[0].M+response.data[0].PHD+response.data[0].D+response.data[0].NMS+response.data[0].N))
+            setEmploy(response.data[0].S+response.data[0].F+response.data[0].P+response.data[0].I)
+            setUnemploy(response.data[0].U)
+            
+            setNoInfoUne(response.data[0].NEM)
+            setDiede(response.data[0].DEM)
+            setOthers((response.data[0].total_users)-(response.data[0].S+response.data[0].F+response.data[0].P+response.data[0].I+response.data[0].U+response.data[0].DEM))
         }catch(err) {
             console.log(err);
             navigate('error');

@@ -24,7 +24,7 @@ urlpatterns = [
     path('alumnilist/', views.AluminiListView.as_view(), name='alumini'),
     path('alumnilistbyep/', views.AluminiListByEyView.as_view(), name='aluminiep'),
     path('bulkalumni/', views.AluminiBulkRegistrationView.as_view(), name='auth_bulkregisteralumini'),
-    path('alumnigender/', views.UserCountAPIView.as_view(), name='alumni_by_gender'),
+    path('alumnitotal/', views.UserCountAPIView.as_view(), name='alumni_by_gender'),
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('alumni/info/<int:pk>/update/', views.update_alumni_info, name='alumn-info-update'),
