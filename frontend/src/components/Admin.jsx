@@ -410,13 +410,15 @@ let data = [5, 2, 5, 5, 10],
                       <div className='male-statistics'><strong className='male-number'>{employ}</strong><span className='female-percentage'>{Math.round(employ===0? 0:(employ*100)/total)}%</span></div>
                     </div>
                   </div>
+                  {others>0?
                   <div className='item3-top'>
                     <div><BsDot className='item3-icon'/></div>
                     <div>
-                      <div className='item2-title'>Deceased</div>
-                      <div className='male-statistics'><strong className='male-number'>{died}</strong><span className='female-percentage'>{Math.round(died===0? 0:(died*100)/total)}%</span></div>
+                      <div className='item2-title'>No Records</div>
+                      <div className='male-statistics'><strong className='male-number'>{others}</strong><span className='female-percentage'>{Math.round(others===0? 0:(others*100)/total)}%</span></div>
                     </div>
-                  </div>
+                  </div>:null
+                  }
                 </div>
                 <div className='itme3'>
                   <div className='item3-top'>
@@ -433,18 +435,6 @@ let data = [5, 2, 5, 5, 10],
                       <div className='male-statistics'><strong className='male-number'>{noInfoUne}</strong><span className='female-percentage'>{Math.round(noInfoUne===0? 0:(noInfoUne*100)/total)}%</span></div>
                     </div>
                   </div>
-                </div>
-                <div className='itme3'>
-                  
-                  {others>0?
-                  <div className='item3-top'>
-                    <div><BsDot className='item3-icon'/></div>
-                    <div>
-                      <div className='item2-title'>No Records</div>
-                      <div className='male-statistics'><strong className='male-number'>{others}</strong><span className='female-percentage'>{Math.round(others===0? 0:(others*100)/total)}%</span></div>
-                    </div>
-                  </div>:null
-                  }
                 </div>
             </div>
           </Link>
