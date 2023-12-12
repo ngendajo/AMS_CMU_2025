@@ -212,7 +212,24 @@ const Admin = () => {
                 withCredentials:true
             });
             //console.log(response.data)
-            console.log(response.data)
+            setTotal(response.data.total_users)
+            setFemale(response.data.female_count)
+            setMale(response.data.male_count)
+            setA1(response.data.A1)
+            setCertificates(response.data.C)
+            setM(response.data.M)
+            setPhd(response.data.PHD)
+            setBachelors(response.data.A0)
+            setNoInfo(response.data.N)
+            setNfs(response.data.NMS)
+            setDied(response.data.D)
+            setOtherdegree((response.data.total_users)-(response.data.A1+response.data.A0+response.data.C+response.data.M+response.data.PHD+response.data.D+response.data.NMS+response.data.N))
+            setEmploy(response.data.S+response.data.F+response.data.P+response.data.I)
+            setUnemploy(response.data.U)
+            
+            setNoInfoUne(response.data.NEM)
+            setDiede(response.data.DEM)
+            setOthers((response.data.total_users)-(response.data.S+response.data.F+response.data.P+response.data.I+response.data.U+response.data.DEM))
         }catch(err) {
             console.log(err);
             navigate('error');
