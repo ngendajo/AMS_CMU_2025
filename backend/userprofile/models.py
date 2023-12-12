@@ -5,7 +5,7 @@ from api.models import User
 
 # Staff model
 class CrcProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='profile')
     position = models.CharField(max_length=2000)
 
     def __str__(self):
@@ -24,7 +24,7 @@ class Grade(models.Model):
 
 # Families model
 class Family(models.Model):
-    grade = models.ForeignKey(Grade, related_name="families", on_delete=models.CASCADE)
+    grade = models.ForeignKey(Grade, related_name="families", on_delete=models.PROTECT)
     family_name = models.CharField(max_length=100)
     family_number = models.IntegerField(null=True, blank=True)
     family_mother = models.CharField(max_length=200, blank=True, default="")
@@ -59,11 +59,11 @@ class Ep(models.Model):
 # Alumn model
 
 class Alumni(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
+    user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='alumn')
     marital_status = models.CharField(max_length=500)
     gender = models.CharField(max_length=500)
-    family = models.ForeignKey(Family,on_delete=models.CASCADE, related_name="alumnis")
-    combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.CASCADE)
+    family = models.ForeignKey(Family,on_delete=models.PROTECT, related_name="alumnis")
+    combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.PROTECT)
     eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
     kids = models.BooleanField(default=False)
     father = models.CharField(max_length=500,default="")
@@ -90,7 +90,7 @@ class Alumni(models.Model):
 # Employment model
 class Employment(models.Model):
     title = models.CharField(max_length=5000)
-    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='employement')
+    alumn = models.ForeignKey(Alumni, on_delete=models.PROTECT, related_name='employement')
     emps = (
         ('F', 'Full-time'),
         ('P', 'Part-time'),
@@ -113,7 +113,7 @@ class Employment(models.Model):
 
 # Opportunity model
 class Opportunity(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opportunities')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='opportunities')
     title = models.CharField(max_length=5000)
     description = models.CharField(max_length=200)
     approved = models.BooleanField(default=False)
@@ -129,7 +129,7 @@ class Event(models.Model):
     description = models.CharField(max_length=20000)
     startDate = models.DateTimeField(auto_now=True)
     endDate = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="events")
     image_url = models.ImageField(upload_to='events', default='events/default.jpg')
 
     def __str__(self):
@@ -138,7 +138,7 @@ class Event(models.Model):
 
 # Studie model
 class Studie(models.Model):
-    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='studies')
+    alumn = models.ForeignKey(Alumni, on_delete=models.PROTECT, related_name='studies')
     levels = (
         ('C', 'Certificate'),
         ('A1', 'Advanced diploma'),
@@ -180,7 +180,7 @@ class Studie(models.Model):
 
 # Story model
 class Story(models.Model):
-    alumn = models.ForeignKey(Alumni, on_delete=models.CASCADE, related_name='stories')
+    alumn = models.ForeignKey(Alumni, on_delete=models.PROTECT, related_name='stories')
     description = models.CharField(max_length=5000)
     displayed = models.BooleanField(default=False)
 
