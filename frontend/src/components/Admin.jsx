@@ -212,24 +212,7 @@ const Admin = () => {
                 withCredentials:true
             });
             //console.log(response.data)
-            setTotal(response.data[0].total_users)
-            setFemale(response.data[0].female_count)
-            setMale(response.data[0].male_count)
-            setA1(response.data[0].A1)
-            setCertificates(response.data[0].C)
-            setM(response.data[0].M)
-            setPhd(response.data[0].PHD)
-            setBachelors(response.data[0].A0)
-            setNoInfo(response.data[0].N)
-            setNfs(response.data[0].NMS)
-            setDied(response.data[0].D)
-            setOtherdegree((response.data[0].total_users)-(response.data[0].A1+response.data[0].A0+response.data[0].C+response.data[0].M+response.data[0].PHD+response.data[0].D+response.data[0].NMS+response.data[0].N))
-            setEmploy(response.data[0].S+response.data[0].F+response.data[0].P+response.data[0].I)
-            setUnemploy(response.data[0].U)
-            
-            setNoInfoUne(response.data[0].NEM)
-            setDiede(response.data[0].DEM)
-            setOthers((response.data[0].total_users)-(response.data[0].S+response.data[0].F+response.data[0].P+response.data[0].I+response.data[0].U+response.data[0].DEM))
+            console.log(response.data)
         }catch(err) {
             console.log(err);
             navigate('error');
