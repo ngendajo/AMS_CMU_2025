@@ -229,7 +229,7 @@ const Admin = () => {
             
             setNoInfoUne(response.data.NEM)
             setDiede(response.data.DEM)
-            setOthers((response.data.total_users)-(response.data.S+response.data.F+response.data.P+response.data.I+response.data.U+response.data.DEM))
+            setOthers((response.data.total_users)-(response.data.S+response.data.F+response.data.P+response.data.I+response.data.U+response.data.DEM+response.data.NEM))
         }catch(err) {
             console.log(err);
             navigate('error');
