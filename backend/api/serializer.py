@@ -137,7 +137,7 @@ class AlumniCountSerializer(serializers.Serializer):
     NMS = serializers.IntegerField()
     D = serializers.IntegerField()
     N = serializers.IntegerField()
-    S = serializers.IntegerField()
+    S= serializers.IntegerField()
     F = serializers.IntegerField()
     P = serializers.IntegerField()
     I = serializers.IntegerField()

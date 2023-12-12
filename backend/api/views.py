@@ -1227,12 +1227,15 @@ class UserCountAPIView(APIView):
 
         # Create a Pandas DataFrame
         df2 = pd.DataFrame(data2, columns=columns2)
+        
         # Count alumn_id group by status, and for repeated alumn_id, count the one with less status_code
         result_df2 = df2.groupby('alumn_id').apply(lambda group: group.loc[group['status_code'].idxmin()]).groupby('status').agg({'alumn_id': 'count'}).reset_index()
         
         # Rename columns as needed
         result_df2.columns = ['status', 'count']
+        
         result_dict2 = dict(zip(result_df2['status'], result_df2['count']))
+        
         # Check if the old key exists in the dictionary
         if 'D' in result_dict2:
             # Create a new key with the desired name and assign the value of the old key
@@ -1243,6 +1246,7 @@ class UserCountAPIView(APIView):
             # Create a new key with the desired name and assign the value of the old key
             result_dict2['NEM'] = result_dict2.pop('N')
         
+        
         if row is not None:
             data = {
                 'total_users': row[0],
@@ -1250,13 +1254,14 @@ class UserCountAPIView(APIView):
                 'female_count': row[2]
             }
             data.update(result_dict)
+            
             keys=['C','A1','A0','M','PHD','NMS','D','N']
             difference_list = list(set(keys) - set(list(result_dict.keys())))
             
             if(len(difference_list)>0):
                 data.update({key: 0 for key in difference_list})
                 
-            data.update(result_df2)
+            data.update(result_dict2)
             keys2=['S','F','P','I','U','DEM','NEM']
             difference_list2 = list(set(keys2) - set(list(result_dict2.keys())))
             
@@ -1285,7 +1290,7 @@ class UserCountAPIView(APIView):
                 'I':0,
                 'U':0,
                 'DEM':0,
-                'N':0
+                'NEM':0
             }
 
             serializer = AlumniCountSerializer(data)
