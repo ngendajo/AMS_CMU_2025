@@ -1324,7 +1324,7 @@ class UserCountByGradeAPIView(APIView):
     
     
 class EmploymentStatusByGradeAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
             

@@ -5,17 +5,24 @@ import HighchartsReact from 'highcharts-react-official';
 export default function EmploymentGeneralReportChart({data1}) {
     let noEmpMale=[];
     let empMale=[];
+    let diedMale=[];
+    let noInfoMale=[];
     let noEmpFemale=[];
     let empFemale=[];
+    let diedFemale=[];
+    let noInfoFemale=[];
     let grades=[];
-    console.log(data1)
     if(data1.length>0){
         data1.forEach((info)=>{
             grades.push(info['grade_name']);
             noEmpMale.push(info['unempmale']);
             empMale.push(info['empmale']);
+            diedMale.push(info['diedmale']);
+            noInfoMale.push(info['noinfomale']);
             noEmpFemale.push(info['unempfemale']);
             empFemale.push(info['empfemale']);
+            diedFemale.push(info['diedfemale']);
+            noInfoFemale.push(info['noinfofemale']);
     
         })
     }
@@ -50,11 +57,11 @@ export default function EmploymentGeneralReportChart({data1}) {
             }
         },
         series: [{
-            name: 'Boys with no Employment Info',
+            name: 'Unemployed Boys',
             data: noEmpMale
         },
         {
-            name: 'Girls with no Employment Info',
+            name: 'Unemployed Girls',
             data:noEmpFemale
         }, {
             name: 'Employed Boys',
@@ -63,6 +70,21 @@ export default function EmploymentGeneralReportChart({data1}) {
         {
             name: 'Employed Girls',
             data: empFemale
+        }
+        , {
+            name: 'Boys with No Info',
+            data: noInfoMale
+        },
+        {
+            name: 'Girls with No Info',
+            data: noInfoFemale
+        }, {
+            name: 'Deceased Boys',
+            data: diedMale
+        },
+        {
+            name: 'Deceased Girls',
+            data: diedFemale
         }
         
     ]

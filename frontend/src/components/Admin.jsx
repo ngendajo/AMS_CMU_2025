@@ -116,7 +116,6 @@ const Admin = () => {
                 },
                 withCredentials:true
             });
-            console.log(response.data)
             response.data.length>0?setEmpByGrade(response.data):setEmpByGrade([])
             
          
