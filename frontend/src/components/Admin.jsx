@@ -61,7 +61,7 @@ const Admin = () => {
     
       const getAlumni = async () =>{
           try{
-              const response = await axios.get(baseUrl+'/lumngradereport/',{
+              const response = await axios.get(baseUrl+'/alumnitotalbygrade/',{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
@@ -69,47 +69,9 @@ const Admin = () => {
                   withCredentials:true
               });
               //console.log(response.data)
-              const groupedData = Array.isArray(response.data)?
-              response.data.reduce((groups, item) => {
-                const { grade } = item;
-                if (!groups[grade]) {
-                    groups[grade] = [];
-                }
-                groups[grade].push(item);
-                return groups;
-            }, {}):null;
-            console.log(groupedData)
-            let alu=[]
-            Object.entries(groupedData).forEach(([grade, items]) => {
-              if(grade==="null"){
-                alu.push({
-                  "grade":"Others",
-                  "boys":0,
-                  "girls":0,
-                  "others":items[0].number
-                })
-
-              } else{
-                if(items.length==1){
-                  alu.push({
-                    "grade":grade,
-                    "boys":items[0].gender==="Male"?items[0].number:0,
-                    "girls":items[0].gender==="Female"?items[0].number:0,
-                    "others":0
-                  })
-                }else{
-                  alu.push({
-                    "grade":grade,
-                    "boys":items[0].gender==="Male"?items[0].number:items[1].number,
-                    "girls":items[0].gender==="Female"?items[0].number:items[1].number,
-                    "others":0
-                  })
-                }
-                
-              }
-          })
-          alu.length>0?
-          setAlumni(alu):null;
+              
+          response.data.length>0?
+          setAlumni(response.data):null;
           }catch(err) {
               console.log(err);
                //navigate('/error');
