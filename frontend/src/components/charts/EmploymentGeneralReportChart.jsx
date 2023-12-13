@@ -19,14 +19,6 @@ export default function EmploymentGeneralReportChart({data1}) {
     
         })
     }
-    empByGrade.forEach((data)=>{
-        grades.push(data['grade_name']);
-        noEmpMale.push(data['unempmale']);
-        empMale.push(data['empmale']);
-        noEmpFemale.push(data['unempfemale']);
-        empFemale.push(data['empfemale']);
-
-    })
 
 
 
