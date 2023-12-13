@@ -2,24 +2,18 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-export default function EmploymentGeneralReportChart({data,grades}) {
+export default function EmploymentGeneralReportChart({empByGrade}) {
     let noEmpMale=[];
     let empMale=[];
     let noEmpFemale=[];
     let empFemale=[];
-    grades.forEach((grade)=>{
-        let key1=grade+"Male"+"noEmp"+"Stu";
-        let key2=grade+"Male"+"noEmp"+"noStu";
-        noEmpMale.push(data.get(key1)+data.get(key2));
-        let key3=grade+"Male"+"Emp"+"Stu";
-        let key4=grade+"Male"+"Emp"+"noStu";
-        empMale.push(data.get(key3)+data.get(key4));
-        let key5=grade+"Female"+"noEmp"+"Stu";
-        let key6=grade+"Female"+"noEmp"+"noStu";
-        noEmpFemale.push(data.get(key5)+data.get(key6));
-        let key7=grade+"Female"+"Emp"+"Stu";
-        let key8=grade+"Female"+"Emp"+"noStu";
-        empFemale.push(data.get(key7)+data.get(key8));
+    let grades=[];
+    empByGrade.forEach((data)=>{
+        grades.push(data['grade_name']);
+        noEmpMale.push(data['unempmale']);
+        empMale.push(data['empmale']);
+        noEmpFemale.push(data['unempfemale']);
+        empFemale.push(data['empfemale']);
 
     })
 

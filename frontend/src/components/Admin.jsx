@@ -35,8 +35,8 @@ const Admin = () => {
    
     const [total, setTotal] = useState('');
     const [alumni, setAlumni] = useState([]);
-    const [empStuReport, setEmpStuReport] = useState(new Map());
-    const [empStugrade, setEmpStugrade] = useState([]);
+    //const [empStuReport, setEmpStuReport] = useState(new Map());
+    const [empByGrade, setEmpByGrade] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
@@ -109,49 +109,15 @@ const Admin = () => {
     
     const getEmpStu = async () =>{
         try{
-            const response = await axios.get(baseUrl+'/empstureport/',{
+            const response = await axios.get(baseUrl+'/emplbygrade/',{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
                 },
                 withCredentials:true
             });
-            let empstu=new Map();
-            let grades= new Set();
-            Array.isArray(response.data)?
-            response.data.forEach((empst)=>{
-              grades.add(empst.grade_name)
-              empstu.set(empst.grade_name+"Male"+"noEmp"+"noStu",0);
-              empstu.set(empst.grade_name+"Male"+"noEmp"+"Stu",0);
-              empstu.set(empst.grade_name+"Male"+"Emp"+"noStu",0);
-              empstu.set(empst.grade_name+"Male"+"Emp"+"Stu",0);
-              empstu.set(empst.grade_name+"Female"+"noEmp"+"noStu",0);
-              empstu.set(empst.grade_name+"Female"+"noEmp"+"Stu",0);
-              empstu.set(empst.grade_name+"Female"+"Emp"+"noStu",0);
-              empstu.set(empst.grade_name+"Female"+"Emp"+"Stu",0);
-            }):null;
-            setEmpStugrade(Array.from(grades))
-            Array.isArray(response.data)?
-            response.data.forEach((empst)=>{
-              let key=empst.grade_name+empst.gender;
-           
-              if(empst.emp==="N" || empst.emp==="U"){
-                key+="noEmp";
-              }
-              else{
-                key+="Emp";
-              }
-              if(empst.stu==="N" ||empst.stu==="NMS"){
-                key+="noStu";
-              }else if(empst.stu==="D"){
-                key+="died";
-              }
-              else{
-                key+="Stu";
-              }
-              empstu.set(key,empstu.get(key)+1);
-            }):null;
-            setEmpStuReport(empstu)
+            response.data.length>0?setEmpByGrade(response.data):setEmpByGrade([])
+            
          
         }catch(err) {
             console.log(err);
@@ -424,19 +390,10 @@ let data = [5, 2, 5, 5, 10],
         </div>
         <div className="staff-data">
           <div className='results-list-in-table alumni-list-body'>
-              <EmploymentGeneralReportChart data={empStuReport} grades={empStugrade} />
+              <EmploymentGeneralReportChart data={empByGrade}  />
           </div>
         </div>
-        <div className="staff-data">
-          <div className='results-list-in-table alumni-list-body'>
-              <FutherStudingGeneralReportChart data={empStuReport} grades={empStugrade} />
-          </div>
-        </div>
-        <div className="staff-data">
-          <div className='results-list-in-table alumni-list-body'>
-              <EmployementAndEducation data={empStuReport} grades={empStugrade} />
-          </div>
-        </div>
+        
     </div>
   )
 }
