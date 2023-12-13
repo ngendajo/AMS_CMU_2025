@@ -1295,6 +1295,34 @@ class UserCountAPIView(APIView):
 
             serializer = AlumniCountSerializer(data)
             return Response(serializer.data)
+        
+class UserCountByGradeAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        
+            
+            #count alumni by grade
+        sql_query1 = "select userprofile_grade.grade_name,userprofile_grade.end_academic_year, count(CASE WHEN userprofile_alumni.gender = 'Male' THEN 1 ELSE 0 END) AS male,count(CASE WHEN userprofile_alumni.gender='Female' THEN 1 ELSE 0 END) AS female from userprofile_alumni inner join userprofile_family on userprofile_alumni.family_id=userprofile_family.id inner join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id group by userprofile_grade.grade_name,userprofile_grade.end_academic_year  order by userprofile_grade.end_academic_year;"
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            #columns = [col[0] for col in cursor1.description]
+            data1 = cursor1.fetchall()
+            
+            # Create a Pandas DataFrame
+       # df = pd.DataFrame(data1, columns=columns)
+        data=[]   
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                        'grade_name': i[0],
+                        'male': i[2],
+                        'female': i[3]
+                })
+
+        serializer = AlumniCountByGradeSerializer(data, many=True)
+        return Response(serializer.data)
+        
 
         
 

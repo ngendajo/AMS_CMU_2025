@@ -124,7 +124,7 @@ class AddFamilySerializer(serializers.ModelSerializer):
     
 #End of grades and families  
 
-
+#Count Alumni by gender education and employment
 class AlumniCountSerializer(serializers.Serializer):
     total_users = serializers.IntegerField()
     male_count = serializers.IntegerField()
@@ -144,6 +144,12 @@ class AlumniCountSerializer(serializers.Serializer):
     U = serializers.IntegerField()
     DEM = serializers.IntegerField()
     NEM = serializers.IntegerField()
+    
+#Count Alumni by grade
+class AlumniCountByGradeSerializer(serializers.Serializer):
+    grade_name = serializers.CharField()
+    male = serializers.IntegerField()
+    female = serializers.IntegerField()
     
 
 

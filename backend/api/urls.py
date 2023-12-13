@@ -25,6 +25,7 @@ urlpatterns = [
     path('alumnilistbyep/', views.AluminiListByEyView.as_view(), name='aluminiep'),
     path('bulkalumni/', views.AluminiBulkRegistrationView.as_view(), name='auth_bulkregisteralumini'),
     path('alumnitotal/', views.UserCountAPIView.as_view(), name='alumni_by_gender'),
+    path('alumnitotalbygrade/', views.UserCountByGradeAPIView.as_view(), name='alumni_by_grade'),
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('alumni/info/<int:pk>/update/', views.update_alumni_info, name='alumn-info-update'),
