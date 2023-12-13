@@ -405,23 +405,19 @@ let data = [5, 2, 5, 5, 10],
           <div className='results-list-in-table alumni-list-body'>
            <center><h1>Alumni in Grade</h1></center>
            <Bar data={{
-            labels:alumni.map(alumn=>alumn.grade),
+            labels:alumni.map(alumn=>alumn.grade_name),
             datasets:[
               {
                 label:"Boys",
-                data:alumni.map(alumn=>alumn.boys),
+                data:alumni.map(alumn=>alumn.male),
                 backgroundColor:"#F49D47",
               },
               {
                 label:"Girls",
-                data:alumni.map(alumn=>alumn.girls),
+                data:alumni.map(alumn=>alumn.female),
                 backgroundColor:"#2b7e40",
               },
-              {
-                label:"Others",
-                data:alumni.map(alumn=>alumn.others),
-                backgroundColor:"#FF0000",
-              },
+             
             ]
            }} /> 
           </div>
