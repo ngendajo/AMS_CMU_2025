@@ -390,7 +390,7 @@ let data = [5, 2, 5, 5, 10],
         </div>
         <div className="staff-data">
           <div className='results-list-in-table alumni-list-body'>
-              <EmploymentGeneralReportChart data={empByGrade}  />
+              <EmploymentGeneralReportChart data1={empByGrade}  />
           </div>
         </div>
         
