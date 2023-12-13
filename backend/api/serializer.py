@@ -145,11 +145,23 @@ class AlumniCountSerializer(serializers.Serializer):
     DEM = serializers.IntegerField()
     NEM = serializers.IntegerField()
     
-#Count Alumni by grade
+#Count Alumni by grades
 class AlumniCountByGradeSerializer(serializers.Serializer):
     grade_name = serializers.CharField()
     male = serializers.IntegerField()
     female = serializers.IntegerField()
+    
+#Employment status by grades
+class EmploymentStatusByGradeSerializer(serializers.Serializer):
+    grade_name = serializers.CharField()
+    diedmale = serializers.IntegerField()
+    diedfemale = serializers.IntegerField()
+    empmale = serializers.IntegerField()
+    empfemale = serializers.IntegerField()
+    unempmale = serializers.IntegerField()
+    unempfemale = serializers.IntegerField()
+    noinfomale = serializers.IntegerField()
+    noinfofemale = serializers.IntegerField()
     
 
 

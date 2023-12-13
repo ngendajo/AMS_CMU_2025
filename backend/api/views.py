@@ -1308,11 +1308,8 @@ class UserCountByGradeAPIView(APIView):
         # Execute the SQL query
         with connection.cursor() as cursor1:
             cursor1.execute(sql_query1)
-            #columns = [col[0] for col in cursor1.description]
             data1 = cursor1.fetchall()
             
-            # Create a Pandas DataFrame
-       # df = pd.DataFrame(data1, columns=columns)
         data=[]   
         if data1 is not None:
             for i in data1:
@@ -1323,6 +1320,38 @@ class UserCountByGradeAPIView(APIView):
                 })
 
         serializer = AlumniCountByGradeSerializer(data, many=True)
+        return Response(serializer.data)
+    
+    
+class EmploymentStatusByGradeAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get(self, request, *args, **kwargs):
+        
+            
+            #count alumni by grade
+        sql_query1 = "SELECT grade_name,end_academic_year,SUM(diedmale) AS diedmale,SUM(diedfemale) AS diedfemale, SUM(empmale) AS empmale,SUM(empfemale) AS empfemale,SUM(unempmale) AS unempmale, SUM(unempfemale) AS unempfemale,SUM(noinfomale) AS noinfomale, SUM(noinfofemale) as noinfofemale FROM (SELECT DISTINCT ON (userprofile_alumni.id) (userprofile_alumni.id),userprofile_grade.grade_name,userprofile_grade.end_academic_year,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status='D' THEN 1 ELSE 0 END) as diedmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status='D' THEN 1 ELSE 0 END) as diedfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status IN ('F','S','P','I') THEN 1 ELSE 0 END) AS empmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status IN ('F','S','P','I') THEN 1 ELSE 0 END) AS empfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status='U' THEN 1 ELSE 0 END) AS unempmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status='U' THEN 1 ELSE 0 END) AS unempfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status NOT IN ('F','S','P','I','D','U') THEN 1 ELSE 0 END) AS noinfomale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status NOT IN ('F','S','P','I','D','U') THEN 1 ELSE 0 END) AS noinfofemale FROM userprofile_alumni INNER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id INNER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id ORDER BY userprofile_alumni.id, CASE WHEN userprofile_employment.status = 'D' THEN 1 WHEN userprofile_employment.status = 'S' THEN 2 WHEN userprofile_employment.status = 'F' THEN 3 WHEN userprofile_employment.status = 'P' THEN 4 WHEN userprofile_employment.status = 'I' THEN 5 ELSE 6 END) AS employment GROUP BY grade_name,end_academic_year ORDER BY end_academic_year;"
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            data1 = cursor1.fetchall()
+            
+        data=[]   
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                        'grade_name': i[0],
+                        'diedmale': i[2],
+                        'diedfemale': i[3],
+                        'empmale': i[4],
+                        'empfemale': i[5],
+                        'unempmale': i[6],
+                        'unempfemale': i[7],
+                        'noinfomale': i[8],
+                        'noinfofemale': i[9]
+                })
+
+        serializer = EmploymentStatusByGradeSerializer(data, many=True)
         return Response(serializer.data)
         
 
