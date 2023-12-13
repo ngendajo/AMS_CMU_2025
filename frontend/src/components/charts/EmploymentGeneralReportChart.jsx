@@ -57,6 +57,20 @@ export default function EmploymentGeneralReportChart({data1}) {
             }
         },
         series: [{
+            name: 'Deceased Boys',
+            data: diedMale
+        },
+        {
+            name: 'Deceased Girls',
+            data: diedFemale
+        },{
+            name: 'Boys with No Info',
+            data: noInfoMale
+        },
+        {
+            name: 'Girls with No Info',
+            data: noInfoFemale
+        },{
             name: 'Unemployed Boys',
             data: noEmpMale
         },
@@ -71,22 +85,6 @@ export default function EmploymentGeneralReportChart({data1}) {
             name: 'Employed Girls',
             data: empFemale
         }
-        , {
-            name: 'Boys with No Info',
-            data: noInfoMale
-        },
-        {
-            name: 'Girls with No Info',
-            data: noInfoFemale
-        }, {
-            name: 'Deceased Boys',
-            data: diedMale
-        },
-        {
-            name: 'Deceased Girls',
-            data: diedFemale
-        }
-        
     ]
     };
     
