@@ -1303,7 +1303,7 @@ class UserCountByGradeAPIView(APIView):
         
             
             #count alumni by grade
-        sql_query1 = "select userprofile_grade.grade_name,userprofile_grade.end_academic_year, count(CASE WHEN userprofile_alumni.gender = 'Male' THEN 1 ELSE 0 END) AS male,count(CASE WHEN userprofile_alumni.gender='Female' THEN 1 ELSE 0 END) AS female from userprofile_alumni inner join userprofile_family on userprofile_alumni.family_id=userprofile_family.id inner join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id group by userprofile_grade.grade_name,userprofile_grade.end_academic_year  order by userprofile_grade.end_academic_year;"
+        sql_query1 = "select userprofile_grade.grade_name,userprofile_grade.end_academic_year, sum(CASE WHEN userprofile_alumni.gender = 'Male' THEN 1 ELSE 0 END) AS male,sum(CASE WHEN userprofile_alumni.gender='Female' THEN 1 ELSE 0 END) AS female from userprofile_alumni inner join userprofile_family on userprofile_alumni.family_id=userprofile_family.id inner join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id group by userprofile_grade.grade_name,userprofile_grade.end_academic_year  order by userprofile_grade.end_academic_year;"
 
         # Execute the SQL query
         with connection.cursor() as cursor1:
