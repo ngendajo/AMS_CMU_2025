@@ -8,6 +8,7 @@ export default function EmploymentGeneralReportChart({empByGrade}) {
     let noEmpFemale=[];
     let empFemale=[];
     let grades=[];
+    console.log(empByGrade)
     for(data in empByGrade){
         grades.push(data['grade_name']);
         noEmpMale.push(data['unempmale']);
