@@ -35,8 +35,8 @@ const Admin = () => {
    
     const [total, setTotal] = useState('');
     const [alumni, setAlumni] = useState([]);
-    //const [empStuReport, setEmpStuReport] = useState(new Map());
     const [empByGrade, setEmpByGrade] = useState([]);
+    const [stuByGrade, setStuByGrade] = useState([]);
     const [male, setMale] = useState('');
     const [female, setFemale] = useState('');
     const [employ, setEmploy] = useState('');
@@ -82,6 +82,9 @@ const Admin = () => {
   
   },[auth])
 
+  
+  
+
     useEffect(() =>{
     
       const getGrades = async () =>{
@@ -125,6 +128,29 @@ const Admin = () => {
     }
 
     getEmpStu();
+
+},[auth])
+
+useEffect(() =>{
+    
+  const getstuStu = async () =>{
+      try{
+          const response = await axios.get(baseUrl+'/stubygrade/',{
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'multipart/form-data'
+              },
+              withCredentials:true
+          });
+          response.data.length>0?setStuByGrade(response.data):setStuByGrade([])
+          
+       
+      }catch(err) {
+          console.log(err);
+      }
+  }
+
+  getstuStu();
 
 },[auth])
 
@@ -391,6 +417,11 @@ let data = [5, 2, 5, 5, 10],
         <div className="staff-data">
           <div className='results-list-in-table alumni-list-body'>
               <EmploymentGeneralReportChart data1={empByGrade}  />
+          </div>
+        </div>
+        <div className="staff-data">
+          <div className='results-list-in-table alumni-list-body'>
+              <FutherStudingGeneralReportChart data1={stuByGrade} />
           </div>
         </div>
         

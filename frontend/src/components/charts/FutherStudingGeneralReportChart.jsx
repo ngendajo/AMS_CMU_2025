@@ -2,26 +2,30 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-export default function FutherStudingGeneralReportChart({data,grades}) {
+export default function FutherStudingGeneralReportChart({data1}) {
     let noStuMale=[];
     let stuMale=[];
+    let diedMale=[];
+    let noInfoMale=[];
     let noStuFemale=[];
     let stuFemale=[];
-    grades.forEach((grade)=>{
-        let key1=grade+"Male"+"Emp"+"noStu";
-        let key2=grade+"Male"+"noEmp"+"noStu";
-        noStuMale.push(data.get(key1)+data.get(key2));
-        let key3=grade+"Male"+"Emp"+"Stu";
-        let key4=grade+"Male"+"noEmp"+"Stu";
-        stuMale.push(data.get(key3)+data.get(key4));
-        let key5=grade+"Female"+"Emp"+"noStu";
-        let key6=grade+"Female"+"noEmp"+"noStu";
-        noStuFemale.push(data.get(key5)+data.get(key6));
-        let key7=grade+"Female"+"Emp"+"Stu";
-        let key8=grade+"Female"+"noEmp"+"Stu";
-        stuFemale.push(data.get(key7)+data.get(key8));
-
-    })
+    let diedFemale=[];
+    let noInfoFemale=[];
+    let grades=[];
+    if(data1.length>0){
+        data1.forEach((info)=>{
+            grades.push(info['grade_name']);
+            noStuMale.push(info['nstupmale']);
+            stuMale.push(info['stumale']);
+            diedMale.push(info['diedmale']);
+            noInfoMale.push(info['noinfomale']);
+            noStuFemale.push(info['nstufemale']);
+            stuFemale.push(info['stufemale']);
+            diedFemale.push(info['diedfemale']);
+            noInfoFemale.push(info['noinfofemale']);
+    
+        })
+    }
     const configObj ={
         chart: {
             type: 'bar'
@@ -50,11 +54,25 @@ export default function FutherStudingGeneralReportChart({data,grades}) {
             }
         },
         series: [{
-            name: 'Boys with no Education Info',
+            name: 'Deceased Boys',
+            data: diedMale
+        },
+        {
+            name: 'Deceased Girls',
+            data: diedFemale
+        },{
+            name: 'Boys with No Info',
+            data: noInfoMale
+        },
+        {
+            name: 'Girls with No Info',
+            data: noInfoFemale
+        },{
+            name: 'Boys with no Futher Education',
             data: noStuMale
         },
         {
-            name: 'Girls with no Education Info',
+            name: 'Girls with no Futher Education',
             data: noStuFemale
         }, {
             name: 'Boys with Further Education',
