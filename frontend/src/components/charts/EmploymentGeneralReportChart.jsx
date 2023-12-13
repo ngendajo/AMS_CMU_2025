@@ -8,14 +8,14 @@ export default function EmploymentGeneralReportChart({empByGrade}) {
     let noEmpFemale=[];
     let empFemale=[];
     let grades=[];
-    empByGrade.forEach((data)=>{
+    for(data in empByGrade){
         grades.push(data['grade_name']);
         noEmpMale.push(data['unempmale']);
         empMale.push(data['empmale']);
         noEmpFemale.push(data['unempfemale']);
         empFemale.push(data['empfemale']);
 
-    })
+    }
 
 
 
