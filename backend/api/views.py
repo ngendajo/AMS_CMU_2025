@@ -1187,6 +1187,7 @@ def alumni_count(request):
         return Response(e)
 
 class UserCountAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -1297,6 +1298,7 @@ class UserCountAPIView(APIView):
             return Response(serializer.data)
         
 class UserCountByGradeAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
             
