@@ -15,7 +15,7 @@ export default function FutherStudingGeneralReportChart({data1}) {
     if(data1.length>0){
         data1.forEach((info)=>{
             grades.push(info['grade_name']);
-            noStuMale.push(info['nstupmale']);
+            noStuMale.push(info['nstumale']);
             stuMale.push(info['stumale']);
             diedMale.push(info['diedmale']);
             noInfoMale.push(info['noinfomale']);
