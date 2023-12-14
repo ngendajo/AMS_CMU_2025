@@ -2,39 +2,27 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-export default function EmployementAndEducation({data,grades}) {
-    let noStuMale=[];
-    let stuMale=[];
-    let diedMale=[];
-    let diedFemale=[];
-    let noStuFemale=[];
-    let stuFemale=[];
-    let noEmpStuMale = [];
-    let empStuMale = [];
-    let noEmpStuFemale = [];
-    let empStuFemale = [];
+export default function EmployementAndEducation({data1}) {
+    let empstumale=[];
+    let empnstumale=[];
+    let unempstumale=[];
+    let unempnstumale=[];
+    let empstufemale = [];
+    let empnstufemale = [];
+    let unempstufemale = [];
+    let unempnstufemale = [];
+    let grades = [];
     
-    grades.forEach((grade)=>{
-        let key1=grade+"Male"+"Emp"+"noStu";
-        let key2=grade+"Male"+"noEmp"+"noStu";
-        noStuMale.push(data.get(key1));
-        noEmpStuMale.push(data.get(key2));
-        let key3=grade+"Male"+"Emp"+"Stu";
-        let key4=grade+"Male"+"noEmp"+"Stu";
-        stuMale.push(data.get(key4));
-        empStuMale.push(data.get(key3));
-        let key5=grade+"Female"+"Emp"+"noStu";
-        let key6=grade+"Female"+"noEmp"+"noStu";
-        noStuFemale.push(data.get(key5));
-        noEmpStuFemale.push(data.get(key6));
-        let key7=grade+"Female"+"Emp"+"Stu";
-        let key8=grade+"Female"+"noEmp"+"Stu";
-        stuFemale.push(data.get(key8));
-        empStuFemale.push(data.get(key7));
-        let key9=grade+"Female"+"died";
-        diedFemale.push(data.get(key9));
-        let key10=grade+"Male"+"died";
-        diedMale.push(data.get(key10));
+    data1.forEach((data)=>{
+        grades.push(data['grade_name'])
+        empstumale.push(data['empnstumale']);
+        empnstumale.push(data['empnstumale']);
+        unempstumale.push(data['unempstumale']);
+        unempnstumale.push(data['unempnstumale']);
+        empstufemale.push(data['empnstufemale']);
+        empnstufemale.push(data['empnstufemale']);
+        unempstufemale.push(data['unempstufemale']);
+        unempnstufemale.push(data['unempnstufemale']);
 
     })
   const configObj ={
@@ -65,40 +53,33 @@ export default function EmployementAndEducation({data,grades}) {
             }
         },
         series: [{
-            name: 'Boys With no Employment and Further Education Info',
-            data: noEmpStuMale
+            name: 'Boys Without both Employment and Further Education',
+            data: unempnstumale
         },
         {
-            name: 'Girls With no Employment and Further Education Info',
-            data: noEmpStuFemale
+            name: 'Girls Without both Employment and Further Education',
+            data: unempnstufemale
         }, {
-            name: 'Employed Boys With no Further Education Info',
-            data: noStuMale
+            name: 'Employed Boys With no Further Education',
+            data: empnstumale
         },
         {
-            name: 'Employed Girls With no Further Education Info',
-            data: noStuFemale
+            name: 'Employed Girls With no Further Education',
+            data: empnstufemale
         },{
-            name: 'Boys With Further Education and no Employment Info',
-            data: stuMale
+            name: 'Boys With Further Education but not Employed',
+            data: unempstumale
         },
         {
-            name: 'Girls With Further Education and no Employment Info',
-            data: stuFemale
+            name: 'Girls With Further Education but no Employed',
+            data: unempstufemale
         },{
             name: 'Employed Boys With Further Education',
-            data: empStuMale
+            data: empstumale
         },
         {
             name: 'Employed Girls With Further Education',
-            data: empStuFemale
-        },{
-            name: 'Decesed Boys',
-            data: diedMale
-        },
-        {
-            name: 'Deceased Girls',
-            data: diedFemale
+            data: empstufemale
         }
         
     ]

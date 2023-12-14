@@ -1387,7 +1387,7 @@ class StudieStatusByGradeAPIView(APIView):
     
 
 class StudieEmployStatusByGradeAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
             
