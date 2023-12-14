@@ -53,7 +53,8 @@ export default function FutherStudingGeneralReportChart({data1}) {
                 }
             }
         },
-        series: [{
+        series: [
+            /* {
             name: 'Deceased Boys',
             data: diedMale
         },
@@ -67,7 +68,8 @@ export default function FutherStudingGeneralReportChart({data1}) {
         {
             name: 'Girls with No Info',
             data: noInfoFemale
-        },{
+        }, */
+        {
             name: 'Boys with no Futher Education',
             data: noStuMale
         },
