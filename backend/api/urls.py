@@ -28,6 +28,7 @@ urlpatterns = [
     path('alumnitotalbygrade/', views.UserCountByGradeAPIView.as_view(), name='alumni_by_grade'),
     path('emplbygrade/', views.EmploymentStatusByGradeAPIView.as_view(), name='empl_by_grade'),
     path('stubygrade/', views.StudieStatusByGradeAPIView.as_view(), name='stu_by_grade'),
+    path('empstubygrade/', views.StudieEmployStatusByGradeAPIView.as_view(), name='empstu_by_grade'),
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('alumni/info/<int:pk>/update/', views.update_alumni_info, name='alumn-info-update'),
