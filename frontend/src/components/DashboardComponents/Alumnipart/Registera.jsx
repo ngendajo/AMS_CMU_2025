@@ -92,22 +92,34 @@ const Registera = () => {
     },[email,first_name,last_name,phone1])
 
  
-   const handleSubmit = async (e) =>{
-    e.preventDefault();
-    if (selectedFiles && selectedFiles[0].name){
-        var imgname=email+current+"."+file.name.split('.').pop();
-        console.log(imgname+":"+file.name.split('.').pop())
-    const file = new File(selectedFiles, imgname);
-          setImage({
-            image_url:file,
-        });
-    }else{
-        setErrMsg("Select file")
-        return;
-    }
-    if(!image){
-        return;
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        if (selectedFiles && selectedFiles[0].name) {
+            const objectURL = URL.createObjectURL(selectedFiles[0]); 
+
+            if (objectURL) {
+              var imgname = email + current + "." + selectedFiles[0].name.split('.').pop();
+              console.log(imgname + ": extension:" + selectedFiles[0].name.split('.').pop());
+      
+            const file = new File(selectedFiles, imgname);
+      
+            setImage({
+              image_url: file,
+            });
+          } else {
+            setErrMsg("Select file");
+            return;
+          }
+        } else {
+          setErrMsg("Select file");
+          return;
+        }
+      
+        if (!image) {
+          // Handle the case when `image` is undefined
+          return;
+        }
     
     const v1 = EMAIL_REGIX.test(email);
     const v3 = USER_REGIX.test(first_name);

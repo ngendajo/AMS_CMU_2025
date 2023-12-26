@@ -62,10 +62,15 @@ export default function EditEp() {
                     },
                     withCredentials:true
                 });
-                let data=response.data;
+                let data = response.data;
+
+                if (data && data.length > 0) {
                 setTitle(data[0].title);
-                setType(data[0].type)
+                setType(data[0].type);
                 setTypes([{'Art':'A','Clubs':'C','Professional':'P','Sports':'S','Science':'SC','d':data[0].type}])
+                } else {
+                console.log("No data") // Handle the case when data is undefined or empty
+                }
             }catch(err) {
                 console.log(err);
                 navigate('/error');

@@ -71,8 +71,9 @@ const Admin = () => {
               });
               //console.log(response.data)
               
-          response.data.length>0?
-          setAlumni(response.data):null;
+          if(response.data.length>0){
+            setAlumni(response.data)
+          }
           }catch(err) {
               console.log(err);
                //navigate('/error');

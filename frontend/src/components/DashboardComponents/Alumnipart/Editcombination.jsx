@@ -12,21 +12,6 @@ export default function Editcombination() {
     const params = useParams();
     const navigate =useNavigate()
 
-    const handleDelete = () => {
-        
-        axios.delete(baseUrl+'/combination/'+params.id+'/delete/',
-        {
-            headers: {
-                "Authorization": 'Bearer ' + String(auth.accessToken),
-                "Content-Type": 'application/json'
-            }
-        }
-        ).then(res =>{
-            console.log(res)
-            navigate('/alumni/combinations')
-        })
-      };
-
     useEffect(() =>{
     
         const getCombination = async () =>{
@@ -39,10 +24,14 @@ export default function Editcombination() {
                     withCredentials:true
                 });
                 let data=response.data;
-                setCombination_name(data[0].combination_name)
+                if (data && data.length > 0) {
+                    setCombination_name(data[0].combination_name);
+                  } else {
+                    console.log("No data")// Handle the case when data is undefined or empty
+                  }
             }catch(err) {
                 console.log(err);
-                navigate('/error');
+                //navigate('/error');
             }
         }
     
@@ -69,6 +58,20 @@ export default function Editcombination() {
     .catch(error => console.log(error))
        
     }
+    const handleDelete = () => {
+        
+        axios.delete(baseUrl+'/combination/'+params.id+'/delete/',
+        {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        }
+        ).then(res =>{
+            console.log(res)
+            navigate('/alumni/combinations')
+        })
+      };
   return (
     <div className='alumni-list-body'>
         

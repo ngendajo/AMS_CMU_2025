@@ -142,8 +142,8 @@ export default function ASYVInfo() {
             
             var alumnilist2=[]
             var i=1
-            console.log(response.data)
-            Array.isArray(response.data)?
+            //console.log(response.data)
+            if(Array.isArray(response.data)){
             response.data.forEach(element => {
               alumnilist2.push({
                no:i,
@@ -171,7 +171,8 @@ export default function ASYVInfo() {
                 life_status:element.alumn==null?"Null":element.alumn.life_status=="A"?"Alive":"Died"
               })
               i+=1
-            }):null;
+            })
+          }
             setDatatodownload(alumnilist2);
             console.log(alumnilist2)
         }catch(err) {

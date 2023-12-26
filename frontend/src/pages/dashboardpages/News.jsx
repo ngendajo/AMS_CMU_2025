@@ -217,8 +217,9 @@ const News = () => {
 
     axios.get(baseUrl+'/news/')
       .then(response => {
-        Array.isArray(response.data)?
-        setNewsData(response.data):null;
+        if(Array.isArray(response.data)){
+        setNewsData(response.data)
+      }
       })
       .catch(error => {
         console.error('Error fetching News data:', error);

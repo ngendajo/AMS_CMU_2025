@@ -29,7 +29,7 @@ export const Eps = ({ id }) => {
                 });
                 var eplist=[]
                 var i=1
-                Array.isArray(response.data)?
+                if(Array.isArray(response.data)){
                 response.data.forEach(e=>{
                     var t=""
                     if(e.type==="A"){
@@ -56,7 +56,8 @@ export const Eps = ({ id }) => {
                         </span>
                     })
                     i++
-                    }):null;
+                    })
+                }
                 setData(eplist)
                 console.log(eplist)
             }catch(err) {
