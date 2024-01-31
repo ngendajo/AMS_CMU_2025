@@ -31,13 +31,16 @@ export const COLUMNS = [
       Header: "Status",
       accessor: "status",
     },{
+      Header: "Company",
+      accessor: "company",
+    },{
       Header: "Career",
       accessor: "career",
     },
-    {
+    /* {
         Header: "End Time",
         accessor: "end",
-      },
+      }, */
     {
       Header: "Action",
       accessor: "user_id",

@@ -24,7 +24,7 @@ export default function AddEmployment() {
     const [end, setEnd] = useState(false)
     const [title, setTitle]=useState('');
     const [status, setStatus]=useState('');
-    const [description, setDescription]=useState('');
+    const [description, setDescription]=useState('nn');
     const [company, setCompany]=useState('');
     const [career, setCareer]=useState('');
     const [start_date, setStart_date]=useState('');
@@ -70,8 +70,8 @@ export default function AddEmployment() {
         "description":description,
         "company":company,
         "career":career,
-        "start_date":start_date,
-        "end_date":end?"Up to now":end_date
+        "start_date":"nn",//start_date,
+        "end_date":end?"current":"old"//end_date
         },
         {
             headers: {
@@ -143,12 +143,12 @@ export default function AddEmployment() {
                         </select>
                     </div>
                     
-                    <div className="formpart">
+                   {/*  <div className="formpart">
                         <label htmlFor="description">
                             Description
                         </label>
                         <input type="text" name="description" value={description} onChange={(e)=>setDescription(e.target.value)} />
-                    </div>
+                    </div> */}
                     <div className="formpart">
                         <label htmlFor="company" >
                             Company
@@ -169,12 +169,12 @@ export default function AddEmployment() {
                         required
                         />
                     </div>
-                    <div className="formpart">
+                    {/* <div className="formpart">
                         <label htmlFor="start-date">
                             Start Date
                         </label>
                         <input type="date" name="start_date" value={start_date} onChange={(e)=>setStart_date(e.target.value)} />
-                    </div>
+                    </div> */}
                     <div className="formpart">
                               <label></label>
                               <span className="end">
@@ -199,7 +199,7 @@ export default function AddEmployment() {
                               </span>
 
                           </div>
-                    {!end?
+                    {/* {!end?
                     <div className="formpart">
                       <label htmlFor="end-date">
                           End Date
@@ -207,13 +207,13 @@ export default function AddEmployment() {
                       <input type="date" name="end_date" value={end_date} onChange={(e)=>setEnd_date(e.target.value)} />
                     </div>  
                     :null
-                  }
+                  } */}
                     
                     
                 </div>
 
                 <center>
-                <button>Save</button>
+                <button>Update</button>
                 </center>
             </form>
             

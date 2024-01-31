@@ -27,6 +27,14 @@ import pandas as pd
 from userprofile.models import Alumni
 
 from django.http import JsonResponse
+import openpyxl
+from openpyxl.worksheet.datavalidation import DataValidation
+import re
+from dateutil import parser
+import numpy as np
+import os
+from rest_framework.parsers import MultiPartParser
+from django.http import HttpResponse
 
 User = get_user_model()
 
@@ -36,7 +44,7 @@ User = get_user_model()
 # User data
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def get_users(request):
         try:
             if request.query_params:
@@ -1416,6 +1424,597 @@ class StudieEmployStatusByGradeAPIView(APIView):
 
         serializer = StudieEmployStatusByGradeSerializer(data, many=True)
         return Response(serializer.data)
+    
+#def create_data_validation(sheet, column_letter, start_row, options):
+        # data_validation = DataValidation(type="list", formula1=options, showDropDown=True)
+
+        # for row in range(start_row, sheet.max_row + 1):
+        #     cell = sheet[column_letter + str(row)]
+        #     sheet.add_data_validation(data_validation)
+        #     data_validation.add(cell)
+class UsersExcelExportView(APIView):
+    
+    def get(self, request, *args, **kwargs):
+
+        # Create an Excel workbook and add a worksheet
+        workbook = openpyxl.Workbook()
+        # Get the sheet you want to rename
+        alumni_profile = workbook['Sheet']  # Replace 'Sheet1' with the current name of your sheet
+
+        # Set the new name for the sheet
+        alumni_profile_name = 'personal_profile'
+        alumni_profile.title = alumni_profile_name
+
+        # Write headers excluding sensitive fields
+        headers = ["email","first_name","last_name","phone1","date_of_birth", "gender","did_you_born_in_rwanda","place_of_birth_district_or_country","place_of_birth_sector_or_city","grade","family","combination","eps","s4marks","s5marks","s6marks","ne","maxforne","decision","life_status","marital_status","currresidence_in_rwanda","currresidence_district_or_country","currresidence_sector_or_city","kids"]
+        alumni_profile.append(headers)
+        column_letter_for_datavalidation = 'G' 
+        start_row = 2
+        # Define options for the dropdown list
+        options = '"Yes,No"'
+
+        
+        # Iterate over all columns and adjust their widths
+        for column in alumni_profile.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            alumni_profile.column_dimensions[column_letter].width = adjusted_width
+            
+        # Create a new sheet
+        employement_sheet_name = 'employement'
+        employement_sheet = workbook.create_sheet(title=employement_sheet_name)
+        # Write headers excluding sensitive fields
+        employement_headers = ["email","job_title","job_status","career","company","current_old"]
+        employement_sheet.append(employement_headers)
+        
+        # Iterate over all columns and adjust their widths
+        for column in employement_sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            employement_sheet.column_dimensions[column_letter].width = adjusted_width
+            
+            # Create a new sheet
+        study_sheet_name = 'futher_study'
+        study_sheet = workbook.create_sheet(title=study_sheet_name)
+        # Write headers excluding sensitive fields
+        study_sheet_headers = ["email","study_level","course_name","university","in_which_country","Which_scholarship_did_you_receive","Scholarship details (Example: REB, FARG,...)","Study_status"]
+        study_sheet.append(study_sheet_headers)
+        
+        # Iterate over all columns and adjust their widths
+        for column in study_sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            study_sheet.column_dimensions[column_letter].width = adjusted_width
+
+        try:
+            #create_data_validation(alumni_profile, column_letter_for_datavalidation, start_row, options)
+            # Create a response with the Excel file
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=bulk_alumni_reg_template.xlsx'
+            workbook.save(response)
+            #print("Data validation applied successfully.")
+        except Exception as e:
+            print(f"Error: {str(e)}")
+        
+
+        return response
+    
+def is_date(string):
+    try:
+        # Attempt to parse the string into a date
+        parser.parse(str(string))
+        return True
+    except ValueError:
+        # If parsing fails, it's not a date
+        return False
+
+def get_family_id(family_name):
+    try:
+        return Family.objects.get(family_name=family_name).id
+    except Family.DoesNotExist:
+        # Handle the case where Family with the specified family_name doesn't exist
+        return np.nan  # or any default value you prefer
+    
+def get_combination_id(combination_name):
+    try:
+        return Combination.objects.get(combination_name=combination_name).id
+    except Combination.DoesNotExist:
+        # Handle the case where Family with the specified family_name doesn't exist
+        return np.nan  # or any default value you prefer
+
+# Function to get alumni ID from email
+def get_alumni_id(email):
+    try:
+        alumni = Alumni.objects.get(user__email=email)
+        return alumni.id
+    except Alumni.DoesNotExist:
+        return np.nan  # Handle the case where the alumni doesn't exist
+
+# Define a function to get eps IDs from the Django model
+
+def get_eps_id(ep):
+    try:
+        return Ep.objects.get(title=ep).id
+    except Ep.DoesNotExist:
+        # Handle the case where the episode doesn't exist in the model
+        return np.nan
+    
+def is_excel_file(file):
+    # Check if the file has an Excel extension (e.g., '.xlsx' or '.xls')
+    allowed_extensions = {'.xlsx', '.xls'}
+    _, file_extension = os.path.splitext(file.name)
+    
+    if file_extension.lower() in allowed_extensions:
+        return True
+    else:
+        return False
+class ExcelUploadAPIView(APIView):
+    parser_classes = (MultiPartParser,)
+
+    def post(self, request, format=None):
+        file = request.FILES.get('file')
+        if file:
+            if is_excel_file(file):
+                print("The uploaded file is an Excel file.")
+                
+                workbook = openpyxl.load_workbook(file)
+                sheet_names = workbook.sheetnames
+                data = {}
+                expected_sheet_names=['personal_profile','employement','futher_study']
+                if set(sheet_names) ==set(expected_sheet_names):
+                    for sheet_name in sheet_names:
+                        sheet = workbook[sheet_name]
+                        rows = []
+
+                        for row in sheet.iter_rows(values_only=True):
+                            rows.append(row)
+
+                        data[sheet_name] = rows
+                    
+                    #...........validate alumni profile data.........................
+                    
+                    if 'personal_profile' in data:
+                        # Extract headers and data
+                        alumni_profile_headers = data['personal_profile'][0]
+                        if set(data['personal_profile'][0]) == set(('email', 'first_name', 'last_name', 'phone1', 'date_of_birth', 'gender', 'did_you_born_in_rwanda', 'place_of_birth_district_or_country', 'place_of_birth_sector_or_city', 'family', 'combination', 'eps', 's4marks', 's5marks', 's6marks', 'ne', 'maxforne', 'decision', 'life_status', 'marital_status', 'currresidence_in_rwanda', 'currresidence_district_or_country', 'currresidence_sector_or_city', 'kids')):
+                            alumni_profile_rows=data['personal_profile'][1:]
+                            if(len(alumni_profile_rows)>0):
+                                # Create a DataFrame
+                                alumni_profile= pd.DataFrame(alumni_profile_rows, columns=alumni_profile_headers)
+                                
+                                # Check for null values in the entire DataFrame
+                                # Sum the null values in each column
+                                null_countsalumni_profile = alumni_profile.isnull().sum()
+                                if(null_countsalumni_profile>0).all():
+                                    print("\nNull counts in each column in profile:")
+                                    print(null_countsalumni_profile)
+                                    data["error"]="there are some empty cells in profile"
+                                    return Response(data)
+                                # Check for duplicates in 'email'
+                                duplicatesemail = alumni_profile.duplicated('email')
+                                # Display rows with duplicates in 'your_column'
+                                duplicate_rowsemail = alumni_profile[duplicatesemail]
+                                print("Rows with duplicates in email:")
+                                print(sum(duplicatesemail))
+                                print(duplicate_rowsemail)
+                                if(sum(duplicatesemail)>0):
+                                    data["error"]="there are some duplicate emails"
+                                    return Response(data)
+                                
+                                #check if email exist
+                                existemails=[]
+                                for email_to_check in alumni_profile['email']:
+                                    if User.objects.filter(email=email_to_check).exists():
+                                        existemails.append(email_to_check)
+                                  
+                                if(len(existemails)>0):
+                                    print("List of exist emails:\n")
+                                    print(existemails)
+                                    data['error']="There are "+str(len(existemails))+" exist emails"
+                                    return Response(data)
+                                        
+                                #check collect email
+                                incolect_email=[]
+                                # Regular expression for basic email validation
+                                email_pattern = r'^\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\s*$'
+                                for email_to_check in alumni_profile['email']:
+                                    if not (re.match(email_pattern, email_to_check)):
+                                        incolect_email.append(email_to_check)
+                                        
+                                print("List of incollect emails:\n")
+                                print(incolect_email)
+                                if len(incolect_email)>0:
+                                    data["error"]="there are some incorrect emails"
+                                    return Response(data)
+                                
+                                
+                                # Check for duplicates in 'phone1'
+                                duplicatesphone1 = alumni_profile.duplicated('phone1')
+                                # Display rows with duplicates in 'your_column'
+                                duplicate_rowsphone1 = alumni_profile[duplicatesphone1]
+                                print("Rows with duplicates in phone1:")
+                                print(sum(duplicatesphone1))
+                                print(duplicate_rowsphone1)
+                                if(sum(duplicatesphone1)):
+                                    data["error"]="there are some duplicate phones"
+                                    return Response(data)
+                                
+                                #check if phone1 exist
+                                existphones=[]
+                                for phone_to_check in alumni_profile['phone1']:
+                                    if User.objects.filter(phone1=phone_to_check).exists():
+                                        existphones.append(phone_to_check)
+                                        
+                                print("List of exist phones:\n")
+                                print(existphones)
+                                if(len(existphones)>0):
+                                    data["error"]="there are some exist phones"
+                                    return Response(data)
+                                
+                                #check if current date minus date_of_birth >18
+                                
+                                
+                                invalid_date=[]
+                                for dt in alumni_profile['date_of_birth']:
+                                    if is_date(dt):
+                                        continue
+                                    else:
+                                        invalid_date.append(alumni_profile.loc[alumni_profile['date_of_birth']==dt,['email']]['email'])
+                                        
+
+                                if(len(invalid_date)>0):
+                                    data["error"]="there are some invalid dates"
+                                    return Response(data)
+                                #print("Invalid dob")
+                                for dte in invalid_date:
+                                    print(dte)
+                                    
+                                if(len(invalid_date)==0):
+                                    # Convert 'date_of_birth' to datetime objects
+                                    alumni_profile['date_of_births'] = pd.to_datetime(alumni_profile['date_of_birth'])
+                                    # Calculate the age by subtracting 'date_of_birth' from the current date
+                                    alumni_profile['age'] =  (datetime.now() - alumni_profile['date_of_births']) // pd.Timedelta('365.25D')
+
+                                    # Filter rows where age is less than to 18
+                                    filtered_alumni_profile = alumni_profile[alumni_profile['age'] < 18]
+
+                                    # Display the resulting DataFrame with emails
+                                    print("People with age bellow 18")
+                                    print(filtered_alumni_profile[['email']])
+                                    if(len(filtered_alumni_profile)>0):
+                                        data["error"]="there some People with age bellow 18"
+                                        return Response(data)
+                                    
+                                    # Check if all values in the 'gender' column are either 'Female' or 'Male'
+                                    valid_genders = set(['female', 'male'])
+                                    is_valid = alumni_profile['gender'].str.lower().isin(valid_genders).all()
+
+                                    # If all values are valid, capitalize the 'gender' column
+                                    if is_valid:
+                                        alumni_profile['gender'] = alumni_profile['gender'].str.capitalize()
+                                        print("All values in the 'gender' column are either 'Female' or 'Male'. Capitalized the values.")
+                                    else:
+                                        print("Some values in the 'gender' column are not 'Female' or 'Male'. No changes made.")
+                                        data["error"]="Some values in the 'gender' column are not 'Female' or 'Male'. No changes made."
+                                        return Response(data)
+                                        
+                                    # Check if all values in the 'did_you_born_in_rwanda' column are either 'Yes' or 'No'
+                                    valid_did_you_born_in_rwanda = set(['yes', 'no'])
+                                    is_valid_did_you_born_in_rwanda = alumni_profile['did_you_born_in_rwanda'].str.lower().isin(valid_did_you_born_in_rwanda).all()
+
+                                    # If all values are valid, capitalize the 'did_you_born_in_rwanda' column
+                                    if is_valid_did_you_born_in_rwanda:
+                                        alumni_profile['did_you_born_in_rwanda'] = alumni_profile['did_you_born_in_rwanda'].str.capitalize()
+                                        print("All values in the 'did_you_born_in_rwanda' column are either 'Yes' or 'No'. Capitalized the values.")
+                                    else:
+                                        print("Some values in the 'did_you_born_in_rwanda' column are not 'Yes' or 'No'. No changes made.")
+                                        data["error"]="Some values in the 'did_you_born_in_rwanda' column are not 'Yes' or 'No'. No changes made."
+                                        return Response(data)
+                                        
+                                    #Add family id
+                                    
+                                    # Iterate through rows and query the Family model to get family ids
+                                    alumni_profile['familyid'] = alumni_profile['family'].apply(get_family_id)
+
+                                    # Alternatively, you can use the map function
+                                    # alumni_profile['familyid'] = alumni_profile['familyname'].map(lambda x: Family.objects.get(family_name=x).id)
+
+                                    # Display noumber of non existing family
+                                    
+                                    if(alumni_profile['familyid'].isnull().sum())>0:
+                                        print("number of non existing family:"+str(alumni_profile['familyid'].isnull().sum()))
+                                        print(alumni_profile['familyid'])
+                                        data["error"]="number of non existing family:"+str(alumni_profile['familyid'].isnull().sum())
+                                        return Response(data)
+                                    
+                                    # Iterate through rows and query the Family model to get combination ids
+                                    alumni_profile['combinationid'] = alumni_profile['combination'].apply(get_combination_id)
+                                    # Display noumber of non existing combination
+                                    print("number of non existing combination:"+str(alumni_profile['combinationid'].isnull().sum()))
+                                    if (alumni_profile['combinationid'].isnull().sum())>0:
+                                        data["error"]="number of non existing combination:"+str(alumni_profile['combinationid'].isnull().sum())
+                                        return Response(data)
+                                    
+                                    # Apply the function to create a new column 'epsid'
+                                    alumni_profile['epsid'] = alumni_profile['eps'].apply(lambda eps: [get_eps_id(ep) for ep in eps.split(',')])
+                                    # Select rows where 'epsid' column has NaN in the list
+                                    selected_rows = alumni_profile[alumni_profile['epsid'].apply(lambda x: any(pd.isna(y) for y in x))]
+
+                                    # Display the selected rows
+                                    print(selected_rows)
+                                    if len(selected_rows)>0:
+                                        data["error"]="There are some non existing eps"
+                                        return Response(data)
+                                    
+                                    print(alumni_profile[['combinationid','combination','family','familyid','eps','epsid']])
+                                    
+                                
+                                    # Specify the columns you want to check
+                                    columns_to_check = ['s4marks', 's5marks', 's6marks', 'ne', 'maxforne']
+
+                                    # Check if all values are numbers and within the specified range
+                                    is_valid = alumni_profile[columns_to_check].apply(lambda x: x.apply(lambda y: isinstance(y, (int, float)) and 0 <= y <= 100))
+
+                                    # Check if all values in each column meet the conditions
+                                    all_columns_valid = is_valid.all(axis=0)
+
+                                    # Display the result
+                                    if sum(all_columns_valid)<5:
+                                        print(all_columns_valid)
+                                        print("There are some marks which are not in (int, float)) and 0 <= y <= 100)")
+                                        data["error"]="There are some marks which are not in (int, float)) and 0 <= y <= 100)"
+                                        return Response(data)
+                                    # Check if values in ne are less than the corresponding values in maxforne
+                                    is_less_than_maxforne = alumni_profile['ne'] < alumni_profile['maxforne']
+
+                                    # Display the result
+                                    if not (is_less_than_maxforne).all():
+                                        print(is_less_than_maxforne)
+                                        print("There are some marks in national exam which are greater that maximum")
+                                        data["error"]="There are some marks in national exam which are greater that maximum"
+                                        return Response(data)
+                                    
+                                    
+                                    # Define expected categories
+                                    expected_decision_values = ['Pass', 'Fail']
+                                    expected_life_status_values = ['Alive', 'Died']
+                                    expected_residence_values = ['Yes', 'No']
+                                    expected_kids_values = ['Yes', 'No']
+                                    # Check for incorrect data in each column
+                                    incorrect_decision = ~alumni_profile['decision'].str.capitalize().isin(expected_decision_values)
+                                    incorrect_life_status = ~alumni_profile['life_status'].str.capitalize().isin(expected_life_status_values)
+                                    incorrect_residence = ~alumni_profile['currresidence_in_rwanda'].str.capitalize().isin(expected_residence_values)
+                                    incorrect_kids = ~alumni_profile['kids'].str.capitalize().isin(expected_kids_values)
+
+                                    # Filter rows with incorrect data
+                                    incorrect_rows = alumni_profile[incorrect_decision | incorrect_life_status | incorrect_residence | incorrect_kids]
+                                    
+                                    # Display the result
+                                    if not (incorrect_rows).empty:
+                                        print(incorrect_rows)
+                                        print("check if  values in decision column fall in Pass or Fail, life_status column fall in Alive or Died, currresidence_in_rwanda column fall in Yes or No and kids column fall in Yes or No")
+                                        data["error"]="check if  values in decision column fall in Pass or Fail, life_status column fall in Alive or Died, currresidence_in_rwanda column fall in Yes or No and kids column fall in Yes or No"
+                                        return Response(data)
+                                    #Data validation on employement
+                                    # Extract headers and data
+                                    employement_headers = data['employement'][0]
+                                    if(set(employement_headers)==set(('email', 'job_title', 'job_status', 'career', 'company'))):
+                                        employement_rows=data['employement'][1:]
+                                        if(len(alumni_profile_rows)>0):
+                                            # Create a DataFrame
+                                            employement= pd.DataFrame(employement_rows, columns=employement_headers)
+                                            
+                                            # Check for null values in the entire DataFrame
+                                            # Sum the null values in each column
+                                            null_countsemployement = employement.isnull().sum()
+                                            if(null_countsemployement>0).all():
+                                                print("\nNull counts in each column in employement:")
+                                                print(null_countsemployement)
+                                                data["error"]="there are some empty cells in employement"
+                                                return Response(data)
+                                            
+                                            
+                                            #ad user id according to email given
+                                            # Apply the function to create the 'alumniid' column
+                                            #employement['alumniid'] = employement['email'].apply(get_alumni_id)
+                                            
+                                            #Check if all email in employement sheet have their corresponding email in personal_profile sheet
+                                            all_emails_present_in_employ = employement['email'].isin(alumni_profile['email']).all()
+
+                                            if all_emails_present_in_employ:
+                                                print("All emails in employment have corresponding emails in personal_profile.")
+                                            else:
+                                                print("Not all emails in employment have corresponding emails in personal_profile.")
+                                                # Find emails in employment without correspondence in personal_profile
+                                                missing_emails = employement[~employement['email'].isin(alumni_profile['email'])]
+
+                                                print("Emails without correspondence in personal_profile:")
+                                                print(missing_emails)
+                                                data["error"]="Not all emails in employment have corresponding emails in personal_profile."
+                                                return Response(data)
+                                           
+                                            # Define a mapping dictionary for the first letter to status
+                                            status_mapping = {'F': 'F', 'P': 'P', 'S': 'S', 'I': 'I', 'U': 'U', 'D': 'D', 'N': 'N'}
+                                            # Create a new 'status' column based on the first letter of 'job_status'
+                                            employement['job_status']=employement['job_status'].str.capitalize()
+                                            employement['status'] = employement['job_status'].str[0].map(status_mapping)
+                                            null_countsemployement2 = employement.isnull().sum()
+                                            if(null_countsemployement2>0).all():
+                                                print("\nNull counts in each column in employement:")
+                                                print(null_countsemployement2)
+                                                data["error"]="there are some empty cells in employement especialy in status"
+                                                return Response(data)
+                                            
+                                    #Data validation on further study
+                                    # Extract headers and data
+                                    futher_study_headers = data['futher_study'][0]
+                                    if(set(futher_study_headers)==set(('email', 'study_level', 'course_name', 'university', 'in_which_country', 'Which_scholarship_did_you_receive', 'Scholarship details (Example: REB, FARG,...)', 'Study_status'))):
+                                        futher_study_rows=data['futher_study'][1:]
+                                        if(len(futher_study_rows)>0):
+                                            # Create a DataFrame
+                                            futher_study= pd.DataFrame(futher_study_rows, columns=futher_study_headers)
+                                            
+                                            # Check for null values in the entire DataFrame
+                                            # Sum the null values in each column
+                                            
+                                            
+                                            #ad user id according to email given
+                                            # Apply the function to create the 'alumniid' column
+                                            #futher_study['alumniid'] = futher_study['email'].apply(get_alumni_id)
+                                            
+                                            #Validate scholarship column
+                                            status_mapping_study = {'Full':'F','Partial':'P','Noscholarship':'NS','Deceased':'D','Noinfo':'N','Nofurtherstudy':'NMS'}
+                                            # Create a new 'scholar' column based on the first letter of 'Which_scholarship_did_you_receive'
+                                            futher_study['Which_scholarship_did_you_receive']=futher_study['Which_scholarship_did_you_receive'].str.capitalize()
+                                            futher_study['scholar'] = futher_study['Which_scholarship_did_you_receive'].map(status_mapping_study)
+                                            
+                                            #Validate study_level column
+                                            status_mapping_study_level = {'Certificate':'C','Diploma':'A1','Bachelor':'A0','Masters':'M','Phd':'PHD','Deceased':'D','Noinfo':'N','Nofurtherstudy':'NMS'}
+                                            # Create a new 'level' column based on the first letter of 'study_level'
+                                            futher_study['study_level']=futher_study['study_level'].str.capitalize()
+                                            futher_study['level'] = futher_study['study_level'].map(status_mapping_study_level)
+                                            
+                                            #Validate study_status column
+                                            status_mapping_study_status = {'Graduated':'C','Dropped':'D','Suspended':'S','Studying':'O','Deceased':'D','Noinfo':'N','Nofurtherstudy':'NMS'}
+                                            # Create a new 'status' column based on the first letter of 'Study_status'
+                                            futher_study['Study_status']=futher_study['Study_status'].str.capitalize()
+                                            futher_study['stutas'] = futher_study['Study_status'].map(status_mapping_study_status)
+                                            print(futher_study)
+                                            """ for index, row in alumni_profile.iterrows():
+                                                print(f"Index: {index}, email: {row['email']}") """
+                                            
+                                            null_countsfuther_study = futher_study.isnull().sum()
+                                            if(null_countsemployement2>0).all():
+                                                print("\nNull counts in each column in further study:")
+                                                print(null_countsfuther_study)
+                                                data["error"]="there are some empty cells in further study"
+                                                return Response(data)
+                                            
+                                            #group all data in one dataframe
+                                            grouped_employment = employement.groupby('email').agg(lambda x: list(x))
+                                            grouped_data = futher_study.groupby('email').agg(lambda x: list(x))
+                                            # Merge alumni_profile with grouped_data and grouped_employment
+                                            alumni_profile = pd.merge(alumni_profile, grouped_data, on='email', how='left')
+                                            alumni_profile = pd.merge(alumni_profile, grouped_employment, on='email', how='left')
+                                            
+                                            # Add two new columns as dictionaries of related data
+                                            #'study_level', 'course_name', 'university', 'in_which_country','Which_scholarship_did_you_receive','Scholarship details (Example: REB, FARG,...)', 'Study_status','alumniid', 'scholar', 'level', 'stutas'
+                                            alumni_profile['further_study_data'] = alumni_profile.apply(lambda row: {'study_level': row['level'], 'course_name': row['course_name'], 'university': row['university'], 'in_which_country': row['in_which_country'], 'scholar_details': row['Scholarship details (Example: REB, FARG,...)'], 'scholar': row['scholar'], 'study_status': row['stutas']}, axis=1)
+
+                                            alumni_profile['employment_data'] = alumni_profile.apply(lambda row: {'job_title': row['job_title'], 'job_status': row['job_status'], 'career': row['career'], 'company': row['company'], 'job_status': row['status']}, axis=1)
+
+                                            # Drop unnecessary columns
+                                            alumni_profile.drop(['study_level', 'course_name', 'university', 'in_which_country', 'Which_scholarship_did_you_receive', 'Scholarship details (Example: REB, FARG,...)', 'Study_status', 'scholar', 'level', 'stutas', 'job_title', 'job_status', 'career', 'company', 'status'], axis=1, inplace=True)
+
+                                            for index, row in alumni_profile.iterrows():
+                                                print(f"Index: {index}, email: {row['email']} First Name: {row['first_name']}")
+                                                employdata=row['employment_data']
+                                                life = 'A' if row['life_status'].lower().startswith('a') else 'D'
+                                                new_user = User.objects.create_alumniuserwithoutimage(email=row['email'], first_name=row['first_name'], last_name=row['last_name'], phone1=row['phone1'], password="Amahoro@1")
+                                                family = Family.objects.get(id=row['familyid'])
+                                                combination = Combination.objects.get(id=row['combinationid'])
+                                                alumni_info = Alumni.objects.create(
+                                                    user=new_user,
+                                                    marital_status=row['marital_status'],
+                                                    date_of_birth=row['date_of_birth'],
+                                                    gender=row['gender'],
+                                                    family=family,
+                                                    combination=combination,
+                                                    kids=True if row['kids'].lower().startswith('y') else False,
+                                                    father="NN",
+                                                    mother="NN",
+                                                    did_you_born_in_rwanda=True if row['did_you_born_in_rwanda'].lower().startswith('y') else False,
+                                                    place_of_birth_district_or_country=row['place_of_birth_district_or_country'],
+                                                    place_of_birth_sector_or_city=row['place_of_birth_sector_or_city'],
+                                                    currresidence_in_rwanda=True if row['currresidence_in_rwanda'].lower().startswith('y') else False,
+                                                    currresidence_district_or_country=row['currresidence_district_or_country'],
+                                                    currresidence_sector_or_city=row['currresidence_sector_or_city'],
+                                                    s4marks=row['s4marks'], s5marks=row['s5marks'], s6marks=row['s6marks'], ne=row['ne'], maxforne=row['maxforne'],
+                                                    decision='P' if row['decision'].lower().startswith('p') else 'F',
+                                                    life_status=life)
+
+                                                for ep_id in row['epsid']:
+                                                    try:
+                                                        ep = Ep.objects.get(id=ep_id)
+                                                        alumni_info.eps.add(ep)
+                                                    except Ep.DoesNotExist:
+                                                        raise NotFound()
+
+                                                if row['life_status'].lower().startswith('d'):
+                                                    Studie.objects.create(alumn=alumni_info, level='D', degree="Deceased", university="Deceased", country="Deceased", scholarship='D', status="De", scholarship_details="Deceased")
+                                                else:
+                                                    if not isinstance(row['further_study_data']['study_level'], list):
+                                                        # Handle the case where it's not a list
+                                                        print(row['further_study_data']['study_level'])
+                                                        Studie.objects.create(alumn=alumni_info, level='N', degree='NoInfo', university='NoInfo', country='NoInfo', scholarship='N', status="N", scholarship_details='NoInfo')
+                                                    else:
+                                                        st = pd.DataFrame(row['further_study_data'])
+                                                        for index, row in st.iterrows():
+                                                            Studie.objects.create(alumn=alumni_info, level=row['study_level'], degree=row['course_name'], university=row['university'], country=row['in_which_country'], scholarship=row['scholar'], status=row['study_status'], scholarship_details=row['scholar_details'])
+
+                                                if life=="D":
+                                                    Employment.objects.create(alumn=alumni_info, title="Deceased", status="D", description="Deceased", company="Deceased", career="Deceased")
+                                                else:
+                                                    if not isinstance(employdata['job_status'], list):
+                                                        # Handle the case where it's not a list
+                                                        Employment.objects.create(alumn=alumni_info, title='NoInfo', status="N", description='NoInfo', company='NoInfo', career='NoInfo')
+                                                    else:
+                                                        emp = pd.DataFrame(employdata)
+                                                        for index, row in emp.iterrows():
+                                                            Employment.objects.create(alumn=alumni_info, title=row['job_title'], status=row['job_status'], description='NN', company=row['company'], career=row['career'],end_date=row['current_old'])
+
+                                               
+                                            
+                                else:
+                                    data['error']="personal_profile sheet is empty!"
+                                    print('personal_profile sheet is empty!')
+                                    return Response(data)
+                        else:
+                            data['error']="Columns are not the same as the one expected"
+                            print("Columns are not the same as the one expected")
+                            return Response(data)
+
+                    
+                    else:
+                        data["error"]="The sheet 'personal_profile' does not exist in the excel file."
+                        print("The sheet 'personal_profile' does not exist in the excel file.")
+                        return Response(data)
+                    
+                    
+                else:
+                    data["error"]="please upload using the real template"
+                    print("please upload using the real template")
+                    return Response(data)
+                    
+
+                return Response(data)
+            else:
+                data={"error":"The uploaded file is not an Excel file."}
+                print("The uploaded file is not an Excel file.")
+                return Response(data)
+
+        return Response({'error': 'No file provided'})
         
 
         

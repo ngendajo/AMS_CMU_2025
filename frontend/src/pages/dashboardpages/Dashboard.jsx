@@ -1,5 +1,5 @@
 import useAuth from "../../hooks/useAuth";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import Alumni from '../../components/Alumini';
 import Admin from '../../components/Admin';
 import { useState, useEffect } from "react";

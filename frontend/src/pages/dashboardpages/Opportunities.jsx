@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import OpportunityTable from '../../components/DashboardComponents/Opportunitypart/OpportunityTable';
 import '../../components/DashboardComponents/Opportunitypart/opportunity.css';
 import '../../components/Header/searchBar.css';

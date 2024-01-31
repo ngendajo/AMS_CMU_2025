@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import useAuth from "../../../../hooks/useAuth";
 import axios from "axios";
 import { useParams } from 'react-router';
-import "../../forms.css";
+import "./form.css";
 import { useNavigate } from "react-router-dom";
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
@@ -19,7 +19,24 @@ import baseUrlforImg from "../../../../api/baseUrlforImg";
 
 
 export default function AddStudie() {
+
+    const customStyles = {
+        control: (provided, state) => ({
+          ...provided,
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          margin:'5px 30%',
+          boxShadow: state.isFocused ? '0 0 0 1px dodgerblue' : null,
+        }),
+        option: (provided, state) => ({
+          ...provided,
+          backgroundColor: state.isSelected ? 'dodgerblue' : null,
+          color: state.isSelected ? 'white' : 'inherit',
+        }),
+      };
+
   const [userid, setUserid]=useState([]);
+  const [message, setMessage]=useState("");
   const { auth } = useAuth();
   const params = useParams();
     const navigate = useNavigate();
@@ -79,7 +96,21 @@ export default function AddStudie() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
-        navigate(`/add-alumni/info/${params.id}/addemployment`)
+        if(e.target.level.value==='PHD')
+        {
+            setMessage("Provide your Masters Info")
+        }
+        else if(e.target.level.value==='M'){
+            setMessage("Provide your Bachelors Info")
+        }
+        else if(e.target.level.value==='A0'){
+            setMessage("Do you have a diploma degree?")
+        }else if (e.target.level.value!=='C'){
+            setMessage("Do you do a short course?")
+        }else{
+            navigate(`/add-alumni/info/${params.id}/addemployment`)
+        }
+        
     })
     .catch(error => console.log(error.response))
      
@@ -89,6 +120,10 @@ export default function AddStudie() {
     <center>
           <p>
               <Link className="line" to="/alumni/studie/">Go back</Link>
+          </p>
+          <p>Or</p>
+          <p>
+            <Link className="line" to={`/add-alumni/info/${params.id}/addemployment`}>Add employment Info</Link>
           </p>
       {
       userid.map((result, id)=>{
@@ -101,7 +136,7 @@ export default function AddStudie() {
       }
       )}
 
-    
+        <h2 className="message">{message}</h2>
         <form onSubmit={handleSubmit}>
           
                 <div className="form-content">
@@ -110,13 +145,13 @@ export default function AddStudie() {
                             Degree
                         </label>
                         <select name="level">
-                          <option value="C">Advanced level Certificate</option>
+                          <option value="C">Short Course Certificate</option>
                           <option value="A1">Advanced diploma</option>
                           <option value="A0">Bachelors</option>
                           <option value="M">Masters</option>
                           <option value="PHD">PHD</option>
                           <option value="NMS">No futher study</option>
-                          <option value="D">Deseaded</option>
+                          <option value="D">Deceased</option>
                           <option value="N">NoInfo</option>
                         </select>
                     </div>
@@ -149,19 +184,19 @@ export default function AddStudie() {
                         <label htmlFor="country">
                             Country
                         </label>
-                        <Select options={options} value={value} onChange={changeHandler} />
+                        <Select options={options} styles={customStyles} value={value} onChange={changeHandler} />
                     </div>
                     <div className="formpart">
                         <label htmlFor="status">
                             Status
                         </label>
                         <select name="status">
-                          <option value="D">Dropped_Out</option>
-                          <option value="S">Suspended</option>
+                          <option value="C">Graduated</option>
                           <option value="O">On_Going</option>
-                          <option value="C">Completed</option>
+                          <option value="S">Suspended</option>
+                          <option value="D">Dropped_Out</option>
                           <option value="NMS">No futher study</option>
-                          <option value="De">Deseaded</option>
+                          <option value="De">Deceased</option>
                           <option value="N">NoInfo</option>
                         </select>
                     </div>
@@ -192,7 +227,7 @@ export default function AddStudie() {
 
                 <center>
                 {alumn===0?null:
-                <button
+                <button className="button"
                 >Save and continue</button>
                 }
                 </center>

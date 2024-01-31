@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import ReactPaginate from 'react-paginate';
 import '../../components/DashboardComponents/Newspart/News.css';
 import baseUrl from '../../api/baseUrl';

@@ -1,9 +1,9 @@
 
 import React, {useState, useEffect} from 'react'
 import useAuth from '../../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { EpTable } from './EpTable';
+//import { EpTable } from './EpTable';
 import { Link } from 'react-router-dom';
 import { BiExport } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
@@ -11,10 +11,12 @@ import { BiEditAlt } from "react-icons/bi";
 import './combinations.css';
 import baseUrl from '../../../api/baseUrl';
 
+import DynamicTable from "./alumnireport/dinamicTable/DynamicTable";
+
 export const Eps = ({ id }) => {
     const [data, setData] = useState([]);
     let {auth}= useAuth() 
-    const navigate = useNavigate()
+   // const navigate = useNavigate()
     
     useEffect(() =>{
     
@@ -62,7 +64,7 @@ export const Eps = ({ id }) => {
                 console.log(eplist)
             }catch(err) {
                 console.log(err);
-                navigate('/error');
+                //navigate('/error');
             }
         }
     
@@ -80,9 +82,7 @@ export const Eps = ({ id }) => {
                 </div>
               </div>
                 
-            <div id='allcombinations'>
-                <EpTable mockData={data}/>
-            </div>
+              <DynamicTable mockdata={data} />
             
     </center>
   );

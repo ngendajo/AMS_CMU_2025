@@ -1,6 +1,6 @@
 
 import useAuth from "../../../hooks/useAuth";
-import { Table } from "./Table";
+//import { Table } from "./Table";
 import { useParams } from 'react-router';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
 import { PiPasswordFill } from "react-icons/pi";
 import baseUrl from "../../../api/baseUrl";
 import baseUrlforImg from "../../../api/baseUrlforImg";
+import DynamicTable from "./alumnireport/dinamicTable/DynamicTable";
 
 const columns = [
   { header: 'No', key: 'no' },
@@ -128,7 +129,7 @@ export default function CombinationAlumni() {
 
     getalumniusers();
 
-},[auth])
+},[auth,params.id])
 
   useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
     
@@ -266,9 +267,7 @@ const workbook = new Excel.Workbook();
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <Table mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }

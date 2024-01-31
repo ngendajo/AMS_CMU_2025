@@ -1,5 +1,5 @@
 import useAuth from '../../../../hooks/useAuth';
-import { Table } from '../Table';
+//import { Table } from '../Table';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoIosAdd } from "react-icons/io";
@@ -10,10 +10,11 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { PiPasswordFill } from "react-icons/pi";
 import baseUrl from '../../../../api/baseUrl';
 import baseUrlforImg from '../../../../api/baseUrlforImg';
+import DynamicTable from "./dinamicTable/DynamicTable";
 
 const columns = [
   { header: 'No', key: 'no' },
@@ -47,7 +48,7 @@ export default function ASYVInfo() {
     const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
     const [datatodownload, setDatatodownload] = useState([]); 
     const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
-  const navigate=useNavigate();
+  //const navigate=useNavigate();
 
   function epType(type){
     if(type==="A")
@@ -67,18 +68,7 @@ export default function ASYVInfo() {
       return "Sports";
     }
   }
-  function getEps(eps)
-  {
-    var epslist=" ";
-  for(var i=0;i<eps.length;i++){
-    if(i===eps.length-1){
-      epslist+=eps[i].title+" from "+epType(eps[i].type)
-    }else{
-      epslist+=eps[i].title+" from "+epType(eps[i].type)+", "
-    }
-  }
-  return epslist
-  }
+  
 
   useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
     
@@ -127,8 +117,19 @@ export default function ASYVInfo() {
 },[auth])
 
   useEffect(() =>{ /* 用 useEffect 钩子定义了一个副作用函数。副作用函数是在组件渲染完成后执行的函数 */
-    
-    const getusers = async () =>{
+    function getEps(eps)
+    {
+      var epslist=" ";
+    for(var i=0;i<eps.length;i++){
+      if(i===eps.length-1){
+        epslist+=eps[i].title+" from "+epType(eps[i].type)
+      }else{
+        epslist+=eps[i].title+" from "+epType(eps[i].type)+", "
+      }
+    }
+    return epslist
+    }
+      const getusers = async () =>{
         try{
             const response = await axios.get(baseUrl+'/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { /* 请求头 */
@@ -151,24 +152,24 @@ export default function ASYVInfo() {
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone1:element.phone1, 
-                marital_status:element.alumn==null?"Null":element.alumn.marital_status,
-                gender:element.alumn==null?"Null":element.alumn.gender,
-                kids:element.alumn==null?"Null":element.alumn.kids?"Yes":"No",
-                father:element.alumn==null?"Null":element.alumn.father,
-                mother:element.alumn==null?"Null":element.alumn.mother,
-                place_of_birth:element.alumn==null?"Null":element.alumn.place_of_birth,
-                currresidence:element.alumn==null?"Null":element.alumn.currresidence,
-                grade_name:element.alumn==null?"Null":element.alumn.family.grade.grade_name,
-                family:element.alumn==null?"Null":element.alumn.family.family_name,
-                combination_name:element.alumn==null?"Null":element.alumn.combination.combination_name,
-                eps:element.alumn==null?"Null":element.alumn.eps.length>0?getEps(element.alumn.eps):element.alumn.eps.length,
-                s4marks:element.alumn==null?"Null":element.alumn.s4marks,
-                s5marks:element.alumn==null?"Null":element.alumn.s5marks,
-                s6marks:element.alumn==null?"Null":element.alumn.s6marks,
-                ne:element.alumn==null?"Null":element.alumn.ne,
-                maxforne:element.alumn==null?"Null":element.alumn.maxforne,
-                decision:element.alumn==null?"Null":element.alumn.decision=="P"?"Pass":"Fail",
-                life_status:element.alumn==null?"Null":element.alumn.life_status=="A"?"Alive":"Died"
+                marital_status:element.alumn===null?"Null":element.alumn.marital_status,
+                gender:element.alumn===null?"Null":element.alumn.gender,
+                kids:element.alumn===null?"Null":element.alumn.kids?"Yes":"No",
+                father:element.alumn===null?"Null":element.alumn.father,
+                mother:element.alumn===null?"Null":element.alumn.mother,
+                place_of_birth:element.alumn===null?"Null":element.alumn.place_of_birth,
+                currresidence:element.alumn===null?"Null":element.alumn.currresidence,
+                grade_name:element.alumn===null?"Null":element.alumn.family.grade.grade_name,
+                family:element.alumn===null?"Null":element.alumn.family.family_name,
+                combination_name:element.alumn===null?"Null":element.alumn.combination.combination_name,
+                eps:element.alumn===null?"Null":element.alumn.eps.length>0?getEps(element.alumn.eps):element.alumn.eps.length,
+                s4marks:element.alumn===null?"Null":element.alumn.s4marks,
+                s5marks:element.alumn===null?"Null":element.alumn.s5marks,
+                s6marks:element.alumn===null?"Null":element.alumn.s6marks,
+                ne:element.alumn===null?"Null":element.alumn.ne,
+                maxforne:element.alumn===null?"Null":element.alumn.maxforne,
+                decision:element.alumn===null?"Null":element.alumn.decision==="P"?"Pass":"Fail",
+                life_status:element.alumn===null?"Null":element.alumn.life_status==="A"?"Alive":"Died"
               })
               i+=1
             })
@@ -261,9 +262,7 @@ const workbook = new Excel.Workbook();
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <Table mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }

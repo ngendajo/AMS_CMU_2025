@@ -1,20 +1,21 @@
 
 import React, {useState, useEffect} from 'react'
 import useAuth from '../../../hooks/useAuth';
-import {CombinationsTable} from './CombinationsTable'
+//import {CombinationsTable} from './CombinationsTable'
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { BiExport } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import { BiEditAlt } from "react-icons/bi";
 import './combinations.css';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../api/baseUrl';
+import DynamicTable from "./alumnireport/dinamicTable/DynamicTable";
 
 export const Combinations = () => {
     const [data, setData] = useState([]);
     let {auth} = useAuth();
-    const navigate=useNavigate();
+    //const navigate=useNavigate();
 
 
     useEffect(() =>{
@@ -40,7 +41,7 @@ export const Combinations = () => {
                 setData(combinationlist);
             }catch(err) {
                 console.log(err);
-                navigate('/error');
+                //navigate('/error');
             }
         }
     
@@ -60,10 +61,7 @@ export const Combinations = () => {
                   <Link to="/add-comb" className='link'>Add Combination</Link><IoIosAdd className='addicon'/>
                 </div>
               </div>
-                
-            <div id='allcombinations'>
-                <CombinationsTable mockData={data}/>
-            </div>
+              <DynamicTable mockdata={data} />
             
     </center>
   );

@@ -1,4 +1,4 @@
-import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+/* import {faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {useRef, useState, useEffect} from "react";
 import '../../Header/header.css';
@@ -16,10 +16,10 @@ import baseUrl from "../../../api/baseUrl";
 import baseUrlforImg from "../../../api/baseUrlforImg";
 
 
-const USER_REGIX = /^[a-zA-Z- ']{2,50}$/;
+const USER_REGIX = /^[a-zA-Z- ']{2,50}$/; */
 
 export default function AddASYVInfo() {
-  const [userid, setUserid]=useState([]);
+  /* const [userid, setUserid]=useState([]);
   const [gradeSelected, setGradeSelected]=useState(false);
   const { auth } = useAuth();
   const params = useParams();
@@ -39,10 +39,10 @@ export default function AddASYVInfo() {
     const [s4marks, setS4marks] = useState('');
       const [s5marks, setS5marks] = useState('');
       const [s6marks, setS6marks] = useState('');
-      const [ne, setNe] = useState('0.0');/*  */
-      const [maxforne, setMaxforne] = useState('');
+      const [ne, setNe] = useState('0.0');
+      const [maxforne, setMaxforne] = useState(''); */
 
-    useEffect(() =>{
+    /* useEffect(() =>{
     
         const getgrades = async () =>{
             try{
@@ -56,7 +56,6 @@ export default function AddASYVInfo() {
                 setGrades(response.data)
             }catch(err) {
                 console.log(err);
-                navigate('/error');
             }
         }
     
@@ -76,9 +75,9 @@ export default function AddASYVInfo() {
 
     var handleChangeofEp = (selectedOption) => {
       setEpsdone(selectedOption);
-    };
+    }; */
 
-    useEffect(() =>{
+   /*  useEffect(() =>{
     
       const geteps = async () =>{
           try{
@@ -98,7 +97,6 @@ export default function AddASYVInfo() {
               setEps(eplist)
           }catch(err) {
               console.log(err);
-              navigate('/error');
           }
       }
   
@@ -126,9 +124,9 @@ export default function AddASYVInfo() {
   
       getcombinations();
   
-  },[auth])
+  },[auth]) */
 
-  const fatherRef = useRef();
+  /* const fatherRef = useRef();
   const motherRef = useRef();
 
   const [father, setFather] = useState('NN');
@@ -137,9 +135,9 @@ export default function AddASYVInfo() {
 
     const [mother, setMother] = useState('NN');
     const [validMother, setValidMother] = useState(false);
-    const [motherFocus, setMotherFocus] = useState(false);  
+    const [motherFocus, setMotherFocus] = useState(false);   */
     
-    useEffect(() => {
+   /*  useEffect(() => {
         fatherRef.current.focus();
         motherRef.current.focus();
     },[])
@@ -176,9 +174,9 @@ export default function AddASYVInfo() {
   
       getuser();
   
-  },[auth,params])
+  },[auth,params]) */
 
-  const handleSubmit = async (e) =>{
+  /* const handleSubmit = async (e) =>{
     e.preventDefault();
     let ep_ids=[];
     epsdone.forEach((ep)=>{
@@ -198,7 +196,7 @@ export default function AddASYVInfo() {
         "currresidence":e.target.currResidence.value,
         's4marks':s4marks,
         's5marks':s5marks,
-        's6marks':s6marks,
+        's6marks':s6marks, 
         'ne':ne,
         'maxforne':maxforne,
         'decision':decision,
@@ -220,10 +218,10 @@ export default function AddASYVInfo() {
     )
      
 
-  }
+  } */
   return (
     <center>
-    {
+    {/* {
     userid.map((result, id)=>{
         return <div key={id} className="delete-message"> 
         <img src={baseUrlforImg+result.image_url} alt="logo" className="user-image-icon" />
@@ -475,6 +473,7 @@ export default function AddASYVInfo() {
               <button>Save and continue</button>
               </center>
           </form>
-          </center>
+          */}
+          </center> 
   )
 }

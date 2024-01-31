@@ -123,7 +123,7 @@ export default function UpdateStudie() {
                             Status
                         </label>
                         <select name="level" value={level} defaultValue={level} onChange={(e)=>setLevel(e.target.value)}>
-                          <option value="C">Advanced level Certificate</option>
+                          <option value="C">Short Course Certificate</option>
                           <option value="A1">Advanced diploma</option>
                           <option value="A0">Bachelors</option>
                           <option value="M">Masters</option>
@@ -186,13 +186,13 @@ export default function UpdateStudie() {
                             Status
                         </label>
                         <select name="status" value={status} defaultValue={status} onChange={(e)=>setStatus(e.target.value)}>
-                          <option value="D">Dropped_Out</option>
-                          <option value="S">Suspended</option>
+                        <option value="C">Graduated</option>
                           <option value="O">On_Going</option>
-                          <option value="C">Completed</option>
-                          <option value="De">Deseaded</option>
-                          <option value="N">NoInfo</option>
+                          <option value="S">Suspended</option>
+                          <option value="D">Dropped_Out</option>
                           <option value="NMS">No futher study</option>
+                          <option value="De">Deceased</option>
+                          <option value="N">NoInfo</option>
                         </select>
                     </div>
                     <div className="formpart">
@@ -214,7 +214,7 @@ export default function UpdateStudie() {
                 </div>
 
                 <center>
-                  <button>Save and continue</button>
+                  <button>Update and continue</button>
                 </center>
             </form>
             

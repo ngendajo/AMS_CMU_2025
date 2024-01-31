@@ -112,6 +112,10 @@ urlpatterns = [
     path('totalalumnreport/', views.AlumnReportView.as_view()),
     path('lumngradereport/', views.AlumnInGradeReportView.as_view()),
     path('empstureport/', views.EmploymentStudieReportView.as_view()),
+    
+    #export and import data using excel
+    path('export-excel/', views.UsersExcelExportView.as_view()),
+     path('excel-upload/', views.ExcelUploadAPIView.as_view(), name='excel-upload'),
 
     path('alumni_count',alumni_count),
 

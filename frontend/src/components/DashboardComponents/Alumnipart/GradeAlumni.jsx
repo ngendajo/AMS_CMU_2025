@@ -1,10 +1,11 @@
 
 import useAuth from "../../../hooks/useAuth";
-import { Table } from "./Table";
+//import { Table } from "./Table";
+import DynamicTable from "./alumnireport/dinamicTable/DynamicTable";
 import { useParams } from 'react-router';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoIosAdd } from "react-icons/io";
+//import { IoIosAdd } from "react-icons/io";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { ImProfile } from "react-icons/im";
 import React, {useState, useEffect} from 'react';
@@ -267,9 +268,7 @@ const workbook = new Excel.Workbook();
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <Table mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }

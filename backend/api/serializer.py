@@ -236,7 +236,7 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','user','marital_status','gender','family','combination','Eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
+        fields = ('id','date_of_birth','user','marital_status','gender','family','combination','Eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
 
 class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
@@ -247,7 +247,7 @@ class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
-        fields = ('decision','life_status','id','user','marital_status','gender','family','combination','eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne')
+        fields = ('decision','date_of_birth','life_status','id','user','marital_status','gender','family','combination','eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne')
         depth = 3
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
@@ -296,7 +296,7 @@ class AlumniListbyEPSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id','ep_title','ep_id')
         
-
+ 
 class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:

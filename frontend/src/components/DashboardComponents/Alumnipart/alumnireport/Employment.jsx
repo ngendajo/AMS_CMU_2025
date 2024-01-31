@@ -5,10 +5,12 @@ import { AiOutlineFileAdd } from "react-icons/ai";
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { EmplymentTable } from '../EmploymentTable';
-import { useNavigate } from 'react-router-dom';
+//import { EmplymentTable } from '../EmploymentTable';
+//import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../../api/baseUrl';
 import baseUrlforImg from '../../../../api/baseUrlforImg';
+
+import DynamicTable from "./dinamicTable/DynamicTable";
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -23,11 +25,12 @@ const columns = [
   { header: 'combination_name', key: 'combination_name' },
   { header: 'Title', key: 'title' },
   { header: 'Company', key: 'company' },
-  { header: 'Description', key: 'description' },
-  { header: 'Status', key: 'status' },
-  { header: 'Start Date', key: 'start_date' },
-  { header: 'End Date', key: 'end' },
-  { header: 'Career', key: 'career' }
+  { header: 'Career', key: 'career' },
+  //{ header: 'Description', key: 'description' },
+  { header: 'Status', key: 'status' }
+  //{ header: 'Start Date', key: 'start_date' },
+  //{ header: 'End Date', key: 'end' },
+  
 ];
 const workSheetName = 'Alumni_Study_Report';
 const workBookName = 'Alumni_Study_Report';
@@ -38,7 +41,7 @@ export default function Employment() {
   
   const {auth} = useAuth();
 
-  const navigate=useNavigate();
+  //const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -54,6 +57,7 @@ export default function Employment() {
             var alumnilist=[]
             var alumnilist2=[]
             var i=1
+            console.log(response.data)
             response.data.forEach(element => {
               alumnilist2.push({
                 no:i, 
@@ -66,11 +70,12 @@ export default function Employment() {
                 combination_name:element.combination_name,
                 title:element?.title,
                 company:element?.company,
-                description:element?.description,
+                //description:element?.description,
                 status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Intern":element.status==="U"?"Unemployed":element.status==="D"?"Deseaded":element.status==="N"?"NoInfo":null,
-                career:element?.career,
-                start_date:element?.start_date,
-                end:element?.end
+                career:element?.career
+                //company:element?.company
+                //start_date:element?.start_date,
+                //end:element?.end
               })
               alumnilist.push({
                 id:i, 
@@ -81,8 +86,9 @@ export default function Employment() {
                 title:element?.title,
                 status:element.status==="F"?"Full Time":element.status==="S"?"Self Empoyed":element.status==="P"?"Part Time":element.status==="I"?"Intern":element.status==="U"?"Unemployed":element.status==="D"?"Deseaded":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>,
                 career:element?.career,
-                end:element?.end,
-                user_id:element.title?<span>
+                //end:element?.end,
+                Action:element.title?<span>
+                  <Link to={`/add-alumni/info/${element.id}/addemployment`}><AiOutlineFileAdd className='icon'/></Link>
                   <Link to={`/alumni/updateemployement/${element.emp_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deleteemployment/${element.emp_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>:null
@@ -93,7 +99,7 @@ export default function Employment() {
             setDatatodownload(alumnilist2)
         }catch(err) {
             console.log(err);
-            navigate('/error');
+            //navigate('/error');
         }
     }
 
@@ -171,9 +177,7 @@ const workbook = new Excel.Workbook();
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <EmplymentTable mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }

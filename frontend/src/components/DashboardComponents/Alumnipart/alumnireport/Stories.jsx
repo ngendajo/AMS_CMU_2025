@@ -4,13 +4,15 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { StoriesTable } from '../StoriesTable';
+//import { StoriesTable } from '../StoriesTable';
 import ReactHtmlParser from "react-html-parser";
 import { LiaEyeSolid, LiaEyeSlash } from "react-icons/lia";
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { AiOutlineFileAdd } from "react-icons/ai";
 import baseUrl from '../../../../api/baseUrl';
 import baseUrlforImg from '../../../../api/baseUrlforImg';
+
+import DynamicTable from "./dinamicTable/DynamicTable";
 
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -31,7 +33,7 @@ export default function Employment() {
   
   const {auth} = useAuth();
 
-  const navigate=useNavigate();
+  //const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -77,7 +79,7 @@ export default function Employment() {
             setDatatodownload(alumnilist2)
         }catch(err) {
             console.log(err);
-            navigate('/error');
+            //navigate('/error');
         }
     }
 
@@ -156,9 +158,7 @@ const workbook = new Excel.Workbook();
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <StoriesTable mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }

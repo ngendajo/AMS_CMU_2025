@@ -59,16 +59,21 @@ class Ep(models.Model):
 # Alumn model
 
 class Alumni(models.Model):
-    user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='alumn')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
     date_of_birth = models.CharField(max_length=200,default="")
     gender = models.CharField(max_length=500)
     father = models.CharField(max_length=500,default="")
     mother = models.CharField(max_length=500,default="")
-    marital_status = models.CharField(max_length=500)
     place_of_birth = models.CharField(max_length=500,default="")
     did_you_born_in_rwanda = models.BooleanField(default=True)
     place_of_birth_district_or_country = models.CharField(max_length=500,default="")
     place_of_birth_sector_or_city = models.CharField(max_length=500,default="")
+    life = (
+        ('A', 'Alive'),
+        ('D', 'Died'),
+    ) 
+    life_status = models.CharField(max_length=2,choices=life,default="A")
+    marital_status = models.CharField(max_length=500) 
     currresidence = models.CharField(max_length=500,default="")
     currresidence_in_rwanda = models.BooleanField(default=True)
     currresidence_district_or_country = models.CharField(max_length=500,default="")
@@ -87,11 +92,7 @@ class Alumni(models.Model):
         ('F', 'Fail'),
     ) 
     decision = models.CharField(max_length=2,choices=dec,default="P")
-    life = (
-        ('A', 'Alive'),
-        ('D', 'Died'),
-    ) 
-    life_status = models.CharField(max_length=2,choices=life,default="A")
+    
 
 
 # Employment model
@@ -112,7 +113,7 @@ class Employment(models.Model):
     description = models.CharField(max_length=2000)
     company = models.CharField(max_length=5000)
     start_date = models.CharField(max_length=100, default="")
-    end_date = models.CharField(max_length=100, default="Up to now")
+    end_date = models.CharField(max_length=100, default="old")
 
     def __str__(self):
         return str(self.title)

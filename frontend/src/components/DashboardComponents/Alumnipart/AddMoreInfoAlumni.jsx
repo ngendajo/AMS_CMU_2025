@@ -1,9 +1,9 @@
 
-import '../../Header/header.css';
-import '../../Header/searchBar.css';
-import '../../Header/searchResultsList.css';
-import '../Staffpart/staff.css';
-import '../Alumnipart/alumni.css';
+//import '../../Header/header.css';
+//import '../../Header/searchBar.css';
+//simport '../../Header/searchResultsList.css';
+//import '../Staffpart/staff.css';
+//import '../Alumnipart/alumni.css';
 import { Link, Outlet } from 'react-router-dom';
 
 
@@ -20,9 +20,9 @@ export default function Alumni() {
           </div>
 
         </div>
-        <div className='alumni-list-body form'>
+        <div className='alumni-data-body'>
          <Outlet/>
-      </div>
+        </div>
         
     </div>
   )

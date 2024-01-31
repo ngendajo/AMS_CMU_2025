@@ -5,12 +5,14 @@ import { AiOutlineFileAdd } from "react-icons/ai";
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { StudieTable } from '../StudieTable';
-import { useNavigate } from 'react-router-dom';
+//import { StudieTable } from '../StudieTable';
+//import { useNavigate } from 'react-router-dom';
 import baseUrl from '../../../../api/baseUrl';
 import baseUrlforImg from '../../../../api/baseUrlforImg';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
+
+import DynamicTable from "./dinamicTable/DynamicTable";
 
 const columns = [
   { header: 'No', key: 'no' },
@@ -34,7 +36,7 @@ export default function Studies() {
   
   const {auth} = useAuth();
 
-  const navigate=useNavigate();
+  //const navigate=useNavigate();
 
   useEffect(() =>{
     
@@ -66,6 +68,7 @@ export default function Studies() {
                 scholarship_details:element.scholarship_details,
                 status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":element.status==="De"?"Deseaded":element.status==="NMS"?"No Futher Studies":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
                 user_id:element.study_id?<span>
+                  <Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>
                   <Link to={`/alumni/updatestudie/${element.study_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deletestudy/${element.study_id}`}>  <RiDeleteBin5Line className='icon'/></Link>
                 </span>:null
@@ -87,7 +90,7 @@ export default function Studies() {
             setDatatodownload(alumnilist2);
         }catch(err) {
             console.log(err);
-            navigate('/error');
+            //navigate('/error');
         }
     }
 
@@ -165,9 +168,7 @@ const workbook = new Excel.Workbook();
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <StudieTable mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }

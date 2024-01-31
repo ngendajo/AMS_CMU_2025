@@ -22,6 +22,7 @@ export default function AddEmployment() {
   const params = useParams();
     const navigate = useNavigate();
     const [end, setEnd] = useState(false)
+    const [message, setMessage] = useState("")
     const [alumn, setAlumn] = useState(0)
 
     useEffect(() =>{
@@ -54,12 +55,12 @@ export default function AddEmployment() {
     axios.post(baseUrl+'/employment/', {
         "title":e.target.title.value,
         "status":e.target.status.value,
-        "description":e.target.description.value,
+        "description":"NN",//e.target.description.value,
         "company":e.target.company.value,
         "alumn":alumn,
         "career":e.target.career.value,
-        "start_date":e.target.start_date.value,
-        "end_date":end?"Up to now":e.target.end_date.value
+        "start_date":"NN",//e.target.start_date.value,
+        "end_date":end?"current":"old"//end?"Up to now":e.target.end_date.value
         },
         {
             headers: {
@@ -71,10 +72,9 @@ export default function AddEmployment() {
     .then(res =>{
         console.log(res)
         alert(" created successfully")
+        setMessage("Add Another Employement Info")
         if(auth.user.is_alumni){
             navigate('/')
-        }else{
-            navigate('/alumni/employment/')
         }
     })
     .catch(error => console.log(error.response))
@@ -97,7 +97,7 @@ export default function AddEmployment() {
       }
       )}
 
-    
+        <p className="message">{message}</p>
         <form onSubmit={handleSubmit}>
           
                 <div className="form-content">
@@ -136,29 +136,29 @@ export default function AddEmployment() {
                           <option value="P">Part-time</option>
                           <option value="I">Intern</option>
                           <option value="U">Unemployed</option>
-                          <option value="D">Deseased</option>
+                          <option value="D">Deceased</option>
                           <option value="N">NoInfo</option>
                         </select>
                     </div>
                     
-                    <div className="formpart">
+                    {/* <div className="formpart">
                         <label htmlFor="description">
                             Description
                         </label>
                         <input type="text" name="description" />
-                    </div>
+                    </div> */}
                     <div className="formpart">
                         <label htmlFor="company">
                             Company
                         </label>
                         <input type="text" name="company" />
                     </div>
-                    <div className="formpart">
+                    {/* <div className="formpart">
                         <label htmlFor="start-date">
                             Start Date
                         </label>
                         <input type="date" name="start_date" />
-                    </div>
+                    </div> */}
                     <div className="formpart">
                               <label></label>
                               <span className="end">
@@ -173,7 +173,7 @@ export default function AddEmployment() {
                               </span>
 
                           </div>
-                    {!end?
+                    {/* {!end?
                     <div className="formpart">
                       <label htmlFor="end-date">
                           End Date
@@ -181,14 +181,14 @@ export default function AddEmployment() {
                       <input type="date" name="end_date" />
                     </div>  
                     :null
-                  }
+                  } */}
                     
                     
                 </div>
 
                 <center>
                 {alumn===0?null:
-                <button
+                <button className="button"
                 >Save</button>
                 }
                 </center>

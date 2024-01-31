@@ -43,7 +43,8 @@ import EditAlumini from './components/DashboardComponents/Alumnipart/EditAlumini
 import DeleteAlumni from './components/DashboardComponents/Alumnipart/DeleteAlumni';
 import Employment from './components/DashboardComponents/Alumnipart/alumnireport/Employment';
 import ASYVInfo from './components/DashboardComponents/Alumnipart/alumnireport/ASYVInfo';
-import AddASYVInfo from './components/DashboardComponents/Alumnipart/AddASYVInfo';
+//import AddASYVInfo from './components/DashboardComponents/Alumnipart/AddASYVInfo';
+import AddASYVInfoForAlumni from './components/DashboardComponents/Alumnipart/AddASYVInfoForAlumni';
 import AddGallery from './components/GalleryComponents/AddGalleryPhoto'
 import AddEmployment from './components/DashboardComponents/Alumnipart/alumnireport/AddEmployment';
 import DeleteEmployment from './components/DashboardComponents/Alumnipart/DeleteEmployment';
@@ -176,7 +177,7 @@ function App() {
                     </Route>
                     <Route path='add-alumni/info/:id' element={<AddMoreInfoAlumni />}>
                         <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
-                          <Route path='' element={<AddASYVInfo />}/>
+                          <Route path='' element={<AddASYVInfoForAlumni />}/>
                         </Route>
                         <Route path='addemployment' element={<AddEmployment />}/>
                         <Route path='study' element={<AddStudie />}/>

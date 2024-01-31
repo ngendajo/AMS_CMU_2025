@@ -1,6 +1,6 @@
 
 import useAuth from "../../../hooks/useAuth";
-import { Table } from "./Table";
+//import { Table } from "./Table";
 import { useParams } from 'react-router';
 import { BiEditAlt,BiExport } from "react-icons/bi";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -14,11 +14,12 @@ import { saveAs } from 'file-saver';
 import { PiPasswordFill } from "react-icons/pi";
 import baseUrl from "../../../api/baseUrl";
 import baseUrlforImg from "../../../api/baseUrlforImg";
+import DynamicTable from "./alumnireport/dinamicTable/DynamicTable";
 
 const columns = [
   { header: 'No', key: 'no' },
   { header: 'Email', key: 'email' },
-  { header: 'Name', key: 'name' },,
+  { header: 'Name', key: 'name' },
   { header: 'Phone number', key: 'phone1' },
   { header: 'Grade', key: 'grade_name' },
   { header: 'Family', key: 'family' },
@@ -132,7 +133,7 @@ export default function EpAlumni() {
 
     getalumniusers();
 
-},[auth])
+},[auth,params.id])
 
 const workbook = new Excel.Workbook();
 
@@ -209,13 +210,11 @@ const workbook = new Excel.Workbook();
                   <span>Export xlsx</span><BiExport/>
                 </div>
                 <div className='add-staff'>
-                  <Link to="/alumni/combinations/" className='link'>Go Back</Link>
+                  <Link to="/alumni/eps/" className='link'>Go Back</Link>
                 </div>
               </div>
             </div>
-              <div className="listtable">
-                <Table mockData={data} />
-              </div>
+            <DynamicTable mockdata={data} />
       </div>
   )
 }
