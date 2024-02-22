@@ -29,6 +29,7 @@ from userprofile.models import Alumni
 from django.http import JsonResponse
 import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl import Workbook
 import re
 from dateutil import parser
 import numpy as np
@@ -2015,7 +2016,185 @@ class ExcelUploadAPIView(APIView):
                 return Response(data)
 
         return Response({'error': 'No file provided'})
-        
+    
 
-        
+class Generate_reports(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        attrs=request.data
+        # Initialize an empty list to store selected attributes
+        selected_attributes = []
 
+        # Iterate over attrs and add the attribute to selected_attributes if its corresponding value is True
+        for attr, include in attrs.items():
+            if include:
+                selected_attributes.append(attr)
+                
+        if(len(selected_attributes)==0):
+            return Response({"data":"No data"})
+
+        # Construct the SELECT part of the SQL query
+        select_query = ", ".join(selected_attributes)
+
+        # Your base SQL query
+        base_query = """
+        SELECT
+    {select_query}
+FROM
+    (SELECT
+        api_user.email,
+        api_user.first_name,
+        api_user.last_name,
+        api_user.phone1,
+        api_user.image_url,
+        userprofile_alumni.marital_status,
+        userprofile_alumni.gender,
+        userprofile_alumni.kids,
+        userprofile_alumni.father,
+        userprofile_alumni.mother,
+        userprofile_alumni.s4marks,
+        userprofile_alumni.s5marks,
+        userprofile_alumni.s6marks,
+        userprofile_alumni.ne,
+        userprofile_alumni.maxforne,
+        CASE 
+            WHEN  userprofile_alumni.decision = 'P' THEN 'Pass'
+            WHEN  userprofile_alumni.decision = 'F' THEN 'Fail'
+            ELSE 'Unknown'
+        END AS decision,
+        CASE 
+            WHEN userprofile_alumni.life_status = 'A' THEN 'Alive'
+            WHEN userprofile_alumni.life_status = 'D' THEN 'Died'
+            ELSE 'Unknown'
+        END AS life_status,
+        userprofile_alumni.family_id,
+        userprofile_alumni.currresidence_district_or_country,
+        userprofile_alumni.currresidence_in_rwanda,
+        userprofile_alumni.currresidence_sector_or_city,
+        userprofile_alumni.date_of_birth,
+        userprofile_alumni.did_you_born_in_rwanda,
+        userprofile_alumni.place_of_birth_district_or_country,
+        userprofile_alumni.place_of_birth_sector_or_city,
+        userprofile_combination.combination_name,
+        userprofile_ep.title as ep_title, 
+        CASE 
+            WHEN userprofile_ep.type = 'A' THEN 'Arts'
+            WHEN userprofile_ep.type = 'SC' THEN 'Sciences'
+            WHEN userprofile_ep.type = 'S' THEN 'Sports'
+            WHEN userprofile_ep.type = 'C' THEN 'Clubs'
+            WHEN userprofile_ep.type = 'P' THEN 'Professional'
+            ELSE 'Unknown'
+        END AS ep_type,
+        userprofile_family.id as fmly_id, 
+        userprofile_family.family_name, 
+        userprofile_family.family_number, 
+        userprofile_family.family_mother, 
+        userprofile_family.family_mother_tel, 
+        userprofile_family.grade_id,
+        userprofile_grade.id as gde_id, 
+        userprofile_grade.grade_name, 
+        userprofile_grade.start_academic_year, 
+        userprofile_grade.end_academic_year,
+        userprofile_employment.id as emp_id, 
+        userprofile_employment.title as emp_title,
+        CASE 
+            WHEN userprofile_employment.status = 'F' THEN 'Full Time'
+            WHEN userprofile_ep.type = 'P' THEN 'Part Time'
+            WHEN userprofile_ep.type = 'S' THEN 'Self Employed'
+            WHEN userprofile_ep.type = 'I' THEN 'Intern'
+            WHEN userprofile_ep.type = 'U' THEN 'Unemployed'
+            WHEN userprofile_ep.type = 'D' THEN 'Deceased'
+            ELSE 'Unknown'
+        END AS emp_status, 
+        userprofile_employment.career, 
+        userprofile_employment.description, 
+        userprofile_employment.company, 
+        userprofile_employment.start_date, 
+        userprofile_employment.end_date, 
+        userprofile_employment.alumn_id,
+        userprofile_studie.id as st_id, 
+        CASE 
+            WHEN userprofile_studie.level = 'C' THEN 'Certificate'
+            WHEN userprofile_studie.level = 'A1' THEN 'Advanced diploma'
+            WHEN userprofile_studie.level = 'A0' THEN 'Bachelors'
+            WHEN userprofile_studie.level = 'M' THEN 'Masters'
+            WHEN userprofile_studie.level = 'NMS' THEN 'No More Study'
+            WHEN userprofile_studie.level = 'PHD' THEN 'PHD'
+            WHEN userprofile_studie.level = 'D' THEN 'Deceased'
+            ELSE 'Unknown'
+        END AS st_level,
+        userprofile_studie.degree, 
+        userprofile_studie.university, 
+        userprofile_studie.country,
+        CASE 
+            WHEN userprofile_studie.scholarship = 'F' THEN 'Full'
+            WHEN userprofile_studie.scholarship = 'P' THEN 'Partial'
+            WHEN userprofile_studie.scholarship  = 'NS' THEN 'No Scholarship'
+            WHEN userprofile_studie.scholarship  = 'NMS' THEN 'No More Study'
+            WHEN userprofile_studie.scholarship = 'D' THEN 'Deceased'
+            ELSE 'Unknown'
+        END AS scholarship, 
+        userprofile_studie.scholarship_details, 
+        CASE 
+            WHEN userprofile_studie.status = 'D' THEN 'Dropped_Out'
+            WHEN userprofile_studie.status = 'D' THEN 'Suspended'
+            WHEN userprofile_studie.status  = 'O' THEN 'On_going'
+            WHEN userprofile_studie.status  = 'C' THEN 'Graduated'
+            WHEN userprofile_studie.status  = 'NMS' THEN 'No Further Study'
+            WHEN userprofile_studie.status = 'D' THEN 'Deceased'
+            ELSE 'Unknown'
+        END AS st_status
+    FROM
+        api_user
+    LEFT JOIN
+        userprofile_alumni ON api_user.id = userprofile_alumni.user_id
+    LEFT JOIN
+        userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
+    LEFT JOIN
+        userprofile_alumni_eps ON userprofile_alumni.id = userprofile_alumni_eps.alumni_id
+    LEFT JOIN
+        userprofile_ep ON userprofile_alumni_eps.ep_id=userprofile_ep.id
+    LEFT JOIN
+        userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
+    LEFT JOIN
+        userprofile_grade ON userprofile_family.grade_id= userprofile_grade.id
+    LEFT JOIN
+        userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id
+    LEFT JOIN
+        userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id 
+    WHERE
+        api_user.is_alumni = TRUE) AS alumni_data;
+        """.format(select_query=select_query)
+
+        # Execute the SQL query
+        with connection.cursor() as cursor:
+            cursor.execute(base_query)
+            rows = cursor.fetchall()
+            unique_rows = []
+            seen = set()  # Set to keep track of seen tuples
+
+            for row in rows:
+                # Convert tuple to string for hashing
+                row_str = str(row)
+                if row_str not in seen:
+                    unique_rows.append(row)
+                    seen.add(row_str)
+            #print(unique_rows)
+            # Create a new Workbook
+            wb = Workbook()
+
+            # Get the active worksheet
+            ws = wb.active
+            ws.append(selected_attributes)
+            # Add rows
+            alumni_data_name = 'alumni_data'
+            ws.title = alumni_data_name
+            for row_data in unique_rows:
+                ws.append(row_data)
+
+            # Save the workbook
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=my_data.xlsx'
+            wb.save(response)
+
+            return response
