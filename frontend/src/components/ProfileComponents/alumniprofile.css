@@ -82,3 +82,35 @@
     margin: 1%;
     width: 98%;
 }
+.academic-progress{
+    margin: 20px 5%;
+}
+.academic-progress table {  
+    font-family:sans-serif;
+    th, td {
+      padding:.20em .5em;
+      text-align:left;
+      &:nth-child(2) {
+        text-align:right;
+      }
+    }
+    td {
+      background-color:#eee;    
+    }
+    th {
+      background-color:rgb(21, 111, 2);
+      color:#fff;
+    }
+  }
+  
+  .zigzag {
+    border-collapse:separate;
+    border-spacing:.25em 1em;
+    tbody tr:nth-child(odd) {
+      transform:rotate(0.5deg);
+    }
+    thead tr,
+    tbody tr:nth-child(even) {
+      transform:rotate(-0.5deg);
+    }
+  }

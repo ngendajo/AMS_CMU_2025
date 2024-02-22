@@ -1,29 +1,31 @@
 // DynamicTable.js
 import React, { useState, useEffect } from 'react';
 import './DynamicTable.css';
-import {FaSearch} from "react-icons/fa"
+import { FaSearch } from 'react-icons/fa';
 
 const DynamicTable = ({ mockdata }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(itemsPerPage);
-  
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     setFilteredData(mockdata);
   }, [mockdata]);
-  
 
   const handleSort = (key) => {
+    console.log(filteredData)
     const sortedData = [...filteredData].sort((a, b) => (a[key] > b[key] ? 1 : -1));
     setFilteredData(sortedData);
   };
 
   const handleFilter = (searchTerm) => {
     const filteredData = mockdata.filter((item) =>
-      Object.values(item).some((value) =>
-        value !== null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      Object.values(item).some(
+        (value) =>
+          value !== null &&
+          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
     setFilteredData(filteredData);
@@ -40,15 +42,45 @@ const DynamicTable = ({ mockdata }) => {
     setCurrentPage(1);
   };
 
+  const handleRowSelection = (rowKey) => {
+    const selectedIndex = selectedRows.indexOf(rowKey);
+    let newSelectedRows = [];
+
+    if (selectedIndex === -1) {
+      newSelectedRows = [...selectedRows, rowKey];
+    } else {
+      newSelectedRows = selectedRows.filter((key) => key !== rowKey);
+    }
+    console.log(newSelectedRows)
+    setSelectedRows(newSelectedRows);
+  };
+
+  const handleSelectAllRows = () => {
+    const allRowKeys = filteredData.map((item, index) => index.toString());
+    console.log(allRowKeys)
+    setSelectedRows(allRowKeys);
+  };
+
   const renderTableHeaders = () => {
     const firstDataObject = filteredData.length > 0 ? filteredData[0] : {};
     const headerKeys = Object.keys(firstDataObject);
 
-    return headerKeys.map((header) => (
-      <th key={header} onClick={() => handleSort(header)}>
-        {header}
-      </th>
-    ));
+    return (
+      <>
+        <th key="select-all">
+          <input
+            type="checkbox"
+            checked={selectedRows.length === filteredData.length}
+            onChange={handleSelectAllRows}
+          />
+        </th>
+        {headerKeys.map((header) => (
+          <th key={header} onClick={() => handleSort(header)}>
+            {header}
+          </th>
+        ))}
+      </>
+    );
   };
 
   const renderTableRows = () => {
@@ -58,6 +90,13 @@ const DynamicTable = ({ mockdata }) => {
 
     return currentData.map((item, index) => (
       <tr key={index}>
+        <td>
+          <input
+            type="checkbox"
+            checked={selectedRows.includes(index.toString())}
+            onChange={() => handleRowSelection(index.toString())}
+          />
+        </td>
         {Object.keys(item).map((header) => (
           <td key={header}>{item[header]}</td>
         ))}
@@ -67,8 +106,8 @@ const DynamicTable = ({ mockdata }) => {
 
   return (
     <div className="table-container">
-      <div className='input-wrapper filter-container'>
-        <FaSearch id='search-icon'/>
+      <div className="input-wrapper filter-container">
+        <FaSearch id="search-icon" />
         <input
           type="text"
           placeholder="Search..."
@@ -76,20 +115,18 @@ const DynamicTable = ({ mockdata }) => {
         />
       </div>
       <div className="custom-select-container">
-        <label>
-          Items Per Page:
-        </label>
-        <select 
+        <label>Items Per Page:</label>
+        <select
           className="custom-select"
-          value={selectedItemsPerPage} 
+          value={selectedItemsPerPage}
           onChange={handleItemsPerPageChange}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-          </select>
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+        </select>
       </div>
-      
+
       <table className="responsive-table">
         <thead>
           <tr>{renderTableHeaders()}</tr>
@@ -97,18 +134,23 @@ const DynamicTable = ({ mockdata }) => {
         <tbody>{renderTableRows()}</tbody>
       </table>
       <div>
-      <button
-        className='prenext'
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
+        <button
+          className="prenext"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
           Previous
         </button>
-        <span className='pageno'>pag. {currentPage} of {Math.ceil((filteredData.length/itemsPerPage))}</span>
+        <span className="pageno">
+          pag. {currentPage} of {Math.ceil(filteredData.length / itemsPerPage)}
+        </span>
         <button
-          className='prenext'
+          className="prenext"
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={filteredData.length === 0 || currentPage=== Math.ceil((filteredData.length/itemsPerPage))}
+          disabled={
+            filteredData.length === 0 ||
+            currentPage === Math.ceil(filteredData.length / itemsPerPage)
+          }
         >
           Next
         </button>

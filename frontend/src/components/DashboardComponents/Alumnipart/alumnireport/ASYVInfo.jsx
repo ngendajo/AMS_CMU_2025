@@ -16,6 +16,8 @@ import baseUrl from '../../../../api/baseUrl';
 import baseUrlforImg from '../../../../api/baseUrlforImg';
 import DynamicTable from "./dinamicTable/DynamicTable";
 
+import { MdCancel } from "react-icons/md";
+
 const columns = [
   { header: 'No', key: 'no' },
   { header: 'Email', key: 'email' },
@@ -45,6 +47,7 @@ const workSheetName = 'Alumni_Report';
 const workBookName = 'Alumni_Report';
 
 export default function ASYVInfo() {
+    const [reports,setReports]=useState(false)
     const [data, setData] = useState([]); /*useState钩子声明了一个名为data的状态变量,用于存储获取到的校友信息数据. 对应的更新函数setData，初始值为一个空数组[] */
     const [datatodownload, setDatatodownload] = useState([]); 
     const {auth} = useAuth(); /* 使用 useAuth 钩子从上下文中获取了 auth 对象 */
@@ -97,10 +100,13 @@ export default function ASYVInfo() {
                 grade:element.grade_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.grade_name,
                 family:element.family_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.family_name,
                 combination:element.combination_name==null? <Link to={`/add-alumni/info/${element.id}`}><AiOutlineFileAdd className='icon'/></Link>:element.combination_name,
-                user_id:<span> 
+                Action:<span> 
                   <Link to={`/alumniprofile/${element.id}`}><ImProfile className='icon'/></Link>
                   <Link to={`/add-alumni/${element.id}`}><BiEditAlt className='icon'/></Link>
-                      <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>
+                  {auth.user.is_superuser?
+                    <Link to={`/delete-alumni/${element.id}`}>  <RiDeleteBin5Line className='icon'/></Link>:null  
+                }
+                      
                       <Link to={`/reset-alumn-password/${element.id}`}> <PiPasswordFill className='icon'/></Link>
                 </span>
               })
@@ -248,8 +254,104 @@ const workbook = new Excel.Workbook();
       workbook.removeWorksheet(workSheetName);
     }
   };
+  function reportsDashbord(){
+    setReports(!reports)
+  }
+  const [selectedOptions, setSelectedOptions] = useState(
+    {
+      first_name: false,
+      last_name: false,
+      phone1: false,
+      image_url: false,
+      grade_name: false,
+      start_academic_year: false,
+      end_academic_year: false,
+      family_name: false,
+      family_mother: false,
+      family_mother_tel: false,
+      combination_name: false,
+      ep_title: false,
+      ep_type: false,
+      date_of_birth: false,
+      gender: false,
+      place_of_birth_district_or_country: false,
+      place_of_birth_sector_or_city: false,
+      life_status: false,
+      marital_status: false,
+      currresidence_district_or_country: false,
+      currresidence_sector_or_city: false,
+      kids: false,
+      s4marks: false,
+      s5marks: false,
+      s6marks: false,
+      ne: false,
+      maxforne: false,
+      decision: false,
+      emp_title: false,
+      emp_status: false,
+      career: false,
+      company: false,
+      st_level: false,
+      degree: false,
+      university: false,
+      country: false,
+      scholarship: false,
+      scholarship_details: false,
+      st_status: false
+    }
+  );
 
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    if (name === 'all_items') {
+      // If "All" checkbox is selected, update all other checkboxes accordingly
+      const updatedOptions = {};
+      for (const key in selectedOptions) {
+        updatedOptions[key] = checked;
+      }
+      setSelectedOptions(updatedOptions);
+    } else {
+      setSelectedOptions({ ...selectedOptions, [name]: checked });
+    }
+  };
 
+  const handleSubmitExecel = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post(
+        `${baseUrl}/generate-report/`,
+        selectedOptions,
+        {
+          headers: {
+            Authorization: 'Bearer ' + String(auth.accessToken),
+            'Content-Type': 'application/json',
+          },
+          responseType: 'blob', // Indicate response type as blob
+        }
+      );
+  
+      // Create a blob URL for the Excel file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+  
+      // Create a link element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'alumni_data.xlsx');
+      document.body.appendChild(link);
+  
+      // Trigger the click event to start the download
+      link.click();
+  
+      // Clean up the URL object after the download is initiated
+      window.URL.revokeObjectURL(url);
+      reportsDashbord()
+    } catch (error) {
+      console.error('Error downloading Excel file:', error);
+    }
+  };
+
+  //console.log(selectedOptions)
   return (
     <div className='alumni-list-body'>
             <div>
@@ -260,9 +362,156 @@ const workbook = new Excel.Workbook();
                 <div className='add-staff'>
                   <Link to="/add-alumni" className='link'>Add Alumni</Link><IoIosAdd className='addicon'/>
                 </div>
+                <div className='add-staff'>
+                  <span onClick={reportsDashbord} className='links'>Reports</span>
+                </div>
               </div>
             </div>
             <DynamicTable mockdata={data} />
+            {
+              reports?
+              <div className="popupreport">
+                <div className="popup-innerreport">
+                    <MdCancel className='cancellogin' onClick={reportsDashbord} />
+                    
+                   <center> <h3>Select Items</h3></center>
+                   <center className='all_items'>
+                    <label htmlFor="all_items">
+                      <input
+                        name='all_items'
+                        type="checkbox"
+                        onChange={handleCheckboxChange}
+                      />
+                      <span>All</span>
+                    </label>
+                  </center>
+                    
+                    <form onSubmit={handleSubmitExecel}>
+                    <div className='reportitems'>
+                      <label htmlFor="first_name"><input name='first_name' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.first_name || false}
+                       /><span>First Name</span></label>
+                      <label htmlFor="last_name"><input name='last_name' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.last_name || false}
+                      /><span>Last Name</span></label>
+                      <label htmlFor="phone1"><input name='phone1' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.phone1 || false}
+                      /><span>Phone Number</span></label>
+                      <label htmlFor="image_url"><input name='image_url' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.image_url || false}
+                      /><span>Image</span></label>
+                      <label htmlFor="grade_name"><input name='grade_name' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.grade_name || false}
+                      /><span>Grade Name</span></label>
+                      <label htmlFor="start_academic_year"><input name='start_academic_year' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.start_academic_year || false}
+                      /><span>Start Academic Year</span></label>
+                      <label htmlFor="end_academic_year"><input name='end_academic_year' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.end_academic_year || false}
+                      /><span>Graduation Year</span></label>
+                      <label htmlFor="family_name"><input name='family_name' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.family_name || false}
+                      /><span>Family Name</span></label>
+                      <label htmlFor="family_mother"><input name='family_mother' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.family_mother || false}
+                      /><span>Family Mother</span></label>
+                      <label htmlFor="family_mother_tel"><input name='family_mother_tel' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.family_mother_tel || false}
+                      /><span>Family Mother Phone</span></label>
+                      <label htmlFor="combination_name"><input name='combination_name' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.combination_name || false}
+                      /><span>Combination Name</span></label>
+                      <label htmlFor="ep_title"><input name='ep_title' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.ep_title || false}
+                      /><span>EP Title</span></label>
+                      <label htmlFor="ep_type"><input name='ep_type' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.ep_type|| false}
+                      /><span>EPs Types</span></label>
+                      <label htmlFor="date_of_birth"><input name='date_of_birth' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.date_of_birth || false}
+                      /><span>Date of Birth</span></label>
+                      <label htmlFor="gender"><input name='gender' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.gender || false}
+                      /><span>Gender</span></label>
+                      <label htmlFor="place_of_birth_district_or_country"><input name='place_of_birth_district_or_country' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.place_of_birth_district_or_country || false}
+                      /><span>place_of_birth_district_or_country</span></label>
+                      <label htmlFor="place_of_birth_sector_or_city"><input name='place_of_birth_sector_or_city' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.place_of_birth_sector_or_city || false}
+                      /><span>place_of_birth_sector_or_city</span></label>
+                      <label htmlFor="life_status"><input name='life_status' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.life_status || false}
+                      /><span>life_status</span></label>
+                      <label htmlFor="marital_status"><input name='marital_status' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.marital_status || false}
+                      /><span>marital_status</span></label>
+                      <label htmlFor="currresidence_district_or_country"><input name='currresidence_district_or_country' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.currresidence_district_or_country || false}
+                      /><span>currresidence_district_or_country</span></label>
+                      <label htmlFor="currresidence_sector_or_city"><input name='currresidence_sector_or_city' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.currresidence_sector_or_city || false}
+                      /><span>currresidence_sector_or_city</span></label>
+                      <label htmlFor="kids"><input name='kids' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.kids || false}
+                      /><span>kids</span></label>
+                      <label htmlFor="s4marks"><input name='s4marks' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.s4marks || false}
+                      /><span>s4marks</span></label>
+                      <label htmlFor="s5marks"><input name='s5marks' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.s5marks || false}
+                      /><span>s5marks</span></label>
+                      <label htmlFor="s6marks"><input name='s6marks' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.s6marks || false}
+                      /><span>s6marks</span></label>
+                      <label htmlFor="ne"><input name='ne' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.ne || false}
+                      /><span>Natioanal Exam </span></label>
+                      <label htmlFor="maxforne"><input name='maxforne' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.maxforne || false}
+                      /><span>Maximum National Agregate</span></label>
+                      <label htmlFor="decision"><input name='decision' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.decision|| false}
+                      /><span>decision</span></label>
+                      <label htmlFor="emp_title"><input name='emp_title' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.emp_title || false}
+                      /><span>employment_title</span></label>
+                      <label htmlFor="emp_status"><input name='emp_status' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.emp_status || false}
+                      /><span>employment_status</span></label>
+                      <label htmlFor="career"><input name='career' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.career || false}
+                      /><span>Career</span></label>
+                      <label htmlFor="company"><input name='company' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.company || false}
+                      /><span>company</span></label>
+                      <label htmlFor="st_level"><input name='st_level' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.st_level || false}
+                      /><span>study_level</span></label>
+                      <label htmlFor="degree"><input name='degree' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.degree || false}
+                      /><span>degree</span></label>
+                      <label htmlFor="university"><input name='university' type="checkbox"  onChange={handleCheckboxChange}
+                      checked={selectedOptions.university || false}
+                      /><span>university</span></label>
+                      <label htmlFor="country"><input name='country' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.country || false}
+                      /><span>country</span></label>
+                      <label htmlFor="scholarship"><input name='scholarship' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.scholarship || false}
+                      /><span>scholarship</span></label>
+                      <label htmlFor="scholarship_details"><input name='scholarship_details' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.scholarship_details || false}
+                      /><span>scholarship_details</span></label>
+                      <label htmlFor="st_status"><input name='st_status' type="checkbox" onChange={handleCheckboxChange}
+                      checked={selectedOptions.st_status || false}
+                      /><span>study_status</span></label>
+                    </div>
+                      <center><button>Generate</button></center>
+                    </form>
+                </div>
+            </div>:
+            null
+            }
       </div>
   )
 }

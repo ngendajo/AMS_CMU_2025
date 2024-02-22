@@ -56,7 +56,7 @@ export default function AddGrade() {
                 setGrade(value)
             }catch(err) {
                 console.log(err);
-                navigate('/error');
+               // navigate('/error');
             }
         }
     
@@ -70,19 +70,24 @@ export default function AddGrade() {
         const updatedValue = event.target.name;
         values[index][updatedValue] = event.target.value;
         setFamilies(values);
-        axios.post(baseUrl+'/family/'+values[index]["id"]+'/', {
-            family_name:values[index]["family_name"], 
-            family_number:values[index]["family_number"],
-            family_mother:values[index]["family_mother"], 
-            family_mother_tel:values[index]["family_mother_tel"]
-        },
-        {
-            headers: {
-                "Authorization": 'Bearer ' + String(auth.accessToken),
-                "Content-Type": 'application/json'
+        if(values[index]["family_name"]===""){
+            alert("Empty family name")
+        }else{
+            axios.post(baseUrl+'/family/'+values[index]["id"]+'/', {
+                family_name:values[index]["family_name"], 
+                family_number:values[index]["family_number"],
+                family_mother:values[index]["family_mother"], 
+                family_mother_tel:values[index]["family_mother_tel"]
+            },
+            {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'application/json'
+                }
             }
+        )
         }
-    )
+        
       };
       const handleInputChangegrade = (index, event) => {
         const values = [...grade];
@@ -306,6 +311,10 @@ export default function AddGrade() {
                                         handleInputChanges(index, event)
                                             }
                                         />
+                                        {
+                                            auth.user.is_superuser?<span className="addfamily" variant="secondary" onClick={() => handleRemoveFamily(index)}><CiCircleRemove className="icons"/></span>
+                                        :null
+                                        }
                                         <span className="addfamily" variant="secondary" onClick={() => handleRemoveFamily(index)}><CiCircleRemove className="icons"/></span>
                                         
                                     </div>
@@ -321,9 +330,12 @@ export default function AddGrade() {
                 :null}
                 </center>
             </form>
+            {auth.user.is_superuser?
             <p>
-                 <Link onClick={handleDeletegrade} className="line" to="#">Delete Grade</Link>
-            </p>
+                <Link onClick={handleDeletegrade} className="line" to="#">Delete Grade</Link>
+            </p>:null
+            }
+            
     </div>
   )
 }

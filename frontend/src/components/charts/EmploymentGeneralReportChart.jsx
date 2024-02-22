@@ -11,7 +11,7 @@ export default function EmploymentGeneralReportChart({data1}) {
     let empFemale=[];
     let diedFemale=[];
     let noInfoFemale=[];
-    let grades=[];
+    let grades=[]; 
     if(data1.length>0){
         data1.forEach((info)=>{
             grades.push(info['grade_name']);
@@ -87,7 +87,9 @@ export default function EmploymentGeneralReportChart({data1}) {
             name: 'Employed Girls',
             data: empFemale
         }
-    ]
+    ],
+    // Define custom colors for series
+    colors: ['#000000', '#2b7e40', '#65451F', '#F49D47']
     };
     
   return (

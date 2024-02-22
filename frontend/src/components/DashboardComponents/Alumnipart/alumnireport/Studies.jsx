@@ -64,10 +64,10 @@ export default function Studies() {
                 field:element?.degree,
                 university:element?.university,
                 country:element?.country,
-                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="D"?"Deseaded":element.scholarship==="NMS"?"No Futher Studies":element.scholarship==="N"?"No Info":null,
+                scholarship:element.scholarship==="F"?"Full Scholarship":element.scholarship==="P"?"Partial Scholarship":element.scholarship==="NS"?"Self Sponsored":element.scholarship==="D"?"Deseaded":element.scholarship==="NMS"?"No Futher Studies":element.scholarship==="N"?"No Info":null,
                 scholarship_details:element.scholarship_details,
                 status:element.status==="D"?"Droped_Out":element.status==="S"?"Suspended":element.status==="O"?"On_Going":element.status==="C"?"Completed":element.status==="De"?"Deseaded":element.status==="NMS"?"No Futher Studies":element.status==="N"?"NoInfo":<Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>,
-                user_id:element.study_id?<span>
+                Action:element.study_id?<span>
                   <Link to={`/add-alumni/info/${element.id}/study`}><AiOutlineFileAdd className='icon'/></Link>
                   <Link to={`/alumni/updatestudie/${element.study_id}`}><BiEditAlt className='icon'/></Link>
                       <Link to={`/alumni/deletestudy/${element.study_id}`}>  <RiDeleteBin5Line className='icon'/></Link>

@@ -75,8 +75,7 @@ export default function Password() {
         }
        }
   return (
-    <div className='staff-data'>
-        <div className='results-list-in-table alumni-list-body'>
+    <div className='alumni-profile-personal-info'>
             
         <center> 
         <h1>
@@ -88,9 +87,8 @@ export default function Password() {
                     {errMsg}
                 </p>
             </center>
-            <center>
-                <form onSubmit={handleSubmit} className="form changepassword">
-                <div className="formpart">
+                <form onSubmit={handleSubmit} className="form changepasswords">
+                <div className="formpartpass">
                         <label htmlFor="password">
                             Current Password
                         </label>
@@ -102,7 +100,7 @@ export default function Password() {
                         required
                         />
                         </div>
-                    <center className="formpart">
+                    <div className="formpartpass">
                         <label htmlFor="password">
                             New Password
                             <span className={validPwd ? "valid" : "hide"}>
@@ -133,9 +131,9 @@ export default function Password() {
                             <span aria-label="dollar sign">$</span>
                             <span aria-label="percent">%</span>.
                         </p>
-                        </center>
+                        </div>
 
-                        <div className="formpart">
+                        <div className="formpartpass">
 
                         <label htmlFor="confirm_pwd">
                             Confirm Password
@@ -162,13 +160,12 @@ export default function Password() {
                             Must match the password input field.
                         </p>
                         </div>
-                        <div className="formpart">
+                        <div>
                             <button disabled={ !validPwd || !validMatch ? true : false }
                             >Create password</button>
                             </div>
                         </form>
-            </center>
+            
         </div>
-    </div>
   )
 }

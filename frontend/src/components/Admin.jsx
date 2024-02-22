@@ -69,7 +69,7 @@ const Admin = () => {
                   },
                   withCredentials:true
               });
-              //console.log(response.data)
+              console.log(response.data)
               
           if(response.data.length>0){
             setAlumni(response.data)
@@ -121,6 +121,7 @@ const Admin = () => {
                 },
                 withCredentials:true
             });
+            console.log(response.data)
             response.data.length>0?setEmpByGrade(response.data):setEmpByGrade([])
             
          
@@ -144,6 +145,7 @@ useEffect(() =>{
               },
               withCredentials:true
           });
+          console.log(response.data)
           response.data.length>0?setStuByGrade(response.data):setStuByGrade([])
           
        
@@ -167,6 +169,7 @@ useEffect(() =>{
               },
               withCredentials:true
           });
+          console.log(response.data)
           response.data.length>0?setEmpStuByGrade(response.data):setEmpStuByGrade([])
           
        
@@ -433,7 +436,12 @@ let data = [5, 2, 5, 5, 10],
                 label:"Girls",
                 data:alumni.map(alumn=>alumn.female),
                 backgroundColor:"#2b7e40",
+              },{
+                label: "Total",
+                data: alumni.map(alumn => alumn.male + alumn.female),
+                backgroundColor: "#65451F", 
               },
+              
              
             ]
            }} /> 

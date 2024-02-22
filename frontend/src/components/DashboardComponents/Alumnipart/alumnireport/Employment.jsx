@@ -32,8 +32,8 @@ const columns = [
   //{ header: 'End Date', key: 'end' },
   
 ];
-const workSheetName = 'Alumni_Study_Report';
-const workBookName = 'Alumni_Study_Report';
+const workSheetName = 'Alumni_Employment_Report';
+const workBookName = 'Alumni_Employment_Report';
 
 export default function Employment() {
   const [data, setData] = useState([]);

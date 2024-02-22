@@ -12,20 +12,20 @@ export default function EmployementAndEducation({data1}) {
     let unempstufemale = [];
     let unempnstufemale = [];
     let grades = [];
-    
+    console.log(data1)
     data1.forEach((data)=>{
         grades.push(data['grade_name'])
-        empstumale.push(data['empnstumale']);
+        empstumale.push(data['empstumale']);
         empnstumale.push(data['empnstumale']);
         unempstumale.push(data['unempstumale']);
         unempnstumale.push(data['unempnstumale']);
-        empstufemale.push(data['empnstufemale']);
+        empstufemale.push(data['empstufemale']);
         empnstufemale.push(data['empnstufemale']);
         unempstufemale.push(data['unempstufemale']);
         unempnstufemale.push(data['unempnstufemale']);
 
     })
-  const configObj ={
+    const configObj ={
         chart: {
             type: 'bar'
         },
@@ -80,10 +80,11 @@ export default function EmployementAndEducation({data1}) {
         {
             name: 'Employed Girls With Further Education',
             data: empstufemale
-        }
-        
-    ]
+        }],
+        // Define custom colors for series
+        colors: ['#F49D47', '#2b7e40', '#65451F', '#000000', '#ff00ff', '#00ffff', '#990000', '#bbffaa']
     };
+    
     
   return (
     <div>

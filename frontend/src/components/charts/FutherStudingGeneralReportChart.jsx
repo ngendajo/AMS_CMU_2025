@@ -85,7 +85,9 @@ export default function FutherStudingGeneralReportChart({data1}) {
             data: stuFemale
         }
         
-    ]
+    ],
+    // Define custom colors for series
+    colors: ['#000000', '#F49D47', '#65451F','#2b7e40']
     };
     
   return (

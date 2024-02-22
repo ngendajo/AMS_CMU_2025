@@ -32,8 +32,8 @@ export const Combinations = () => {
                 var combinationlist=[]
                 response.data.forEach(e=>{
                     combinationlist.push({
-                    combination:<Link className='comb_name' to={`/combalumn/${e.id}`}>{e.combination_name}</Link>,
-                    combination_id:<span>
+                    combination_name:<Link className='comb_name' to={`/combalumn/${e.id}`}>{e.combination_name}</Link>,
+                    Edit:<span>
                         <Link to={`/add-comb/${e.id}`}><BiEditAlt className='icon'/></Link>
                     </span>
                 })
