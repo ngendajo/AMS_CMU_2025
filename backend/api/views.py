@@ -1131,7 +1131,7 @@ def create_news(request):
 
 
 class newsView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     
     def get(self, request):
         try:
