@@ -45,7 +45,7 @@ User = get_user_model()
 # User data
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def get_users(request):
         try:
             if request.query_params:
@@ -126,7 +126,7 @@ class AluminiListView(APIView):
             return Response(error=e,status=status.HTTP_404_NOT_FOUND)
    
 class AluminiListByEyView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     
     def get(self,request):
         try:
@@ -509,7 +509,7 @@ def delete_ep(request, pk):
 # Combination data view
 
 class CombinationRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = CombinationSerializer(data=request.data)
@@ -1131,7 +1131,7 @@ def create_news(request):
 
 
 class newsView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     
     def get(self, request):
         try:
@@ -2019,7 +2019,7 @@ class ExcelUploadAPIView(APIView):
     
 
 class Generate_reports(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         attrs=request.data
         # Initialize an empty list to store selected attributes
