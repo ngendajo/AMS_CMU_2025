@@ -92,7 +92,7 @@ export default function ASYVInfo() {
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
-                image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
+                image:<img src={baseUrlforImg+element.email} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,
@@ -262,7 +262,7 @@ const workbook = new Excel.Workbook();
       first_name: false,
       last_name: false,
       phone1: false,
-      image_url: false,
+      email: false,
       grade_name: false,
       start_academic_year: false,
       end_academic_year: false,
@@ -397,8 +397,8 @@ const workbook = new Excel.Workbook();
                       <label htmlFor="phone1"><input name='phone1' type="checkbox" onChange={handleCheckboxChange} 
                       checked={selectedOptions.phone1 || false}
                       /><span>Phone Number</span></label>
-                      <label htmlFor="image_url"><input name='image_url' type="checkbox" onChange={handleCheckboxChange} 
-                      checked={selectedOptions.image_url || false}
+                      <label htmlFor="email"><input name='email' type="checkbox" onChange={handleCheckboxChange} 
+                      checked={selectedOptions.email || false}
                       /><span>Image</span></label>
                       <label htmlFor="grade_name"><input name='grade_name' type="checkbox" onChange={handleCheckboxChange} 
                       checked={selectedOptions.grade_name || false}
