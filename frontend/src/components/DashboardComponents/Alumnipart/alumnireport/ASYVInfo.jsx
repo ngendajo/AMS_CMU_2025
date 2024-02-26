@@ -399,7 +399,7 @@ const workbook = new Excel.Workbook();
                       /><span>Phone Number</span></label>
                       <label htmlFor="email"><input name='email' type="checkbox" onChange={handleCheckboxChange} 
                       checked={selectedOptions.email || false}
-                      /><span>Image</span></label>
+                      /><span>Email</span></label>
                       <label htmlFor="grade_name"><input name='grade_name' type="checkbox" onChange={handleCheckboxChange} 
                       checked={selectedOptions.grade_name || false}
                       /><span>Grade Name</span></label>
