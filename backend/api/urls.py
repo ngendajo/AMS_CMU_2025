@@ -121,6 +121,40 @@ urlpatterns = [
     path('generate-report/', views.Generate_reports.as_view(), name='generate-report'),
 
     path('alumni_count',alumni_count),
+    
+    #Library Management System 
+    
+    #Reg Teacher of Librarian
+    
+    path('bulkeducator/', views.TeacherOrLibrarianRegistrationView.as_view(), name='auth_registereducator'),
+    path('bulkeducator/<int:id>/', views.TeacherOrLibrarianEditView.as_view(), name='auth_updateeducator'),
+    #Reg Student
+    
+    path('bulkstudent/', views.StudentRegistrationView.as_view(), name='auth_registerstudent'),
+    path('cstudent/', views.CheckStudentView.as_view(), name='checkstudent'),
+    path('student/<int:pk>/', views.StudentRegistrationUpdateAPIView.as_view(), name='student-registration-update'),   
+    #author paths
+    path('author/',views.AuthorRegistrationView.as_view()),
+    path('author/<int:pk>/delete/', views.delete_author, name='delete-author'),
+    path('author/<int:pk>/', views.update_Author, name='update_author'),
+    
+    path('usersbooks/',views.UserList.as_view(), name='user_list'),
+    
+    #category paths
+    path('category/',views.CategoryRegistrationView.as_view()),
+    path('category/<int:pk>/delete/', views.delete_category, name='delete-category'),
+    path('category/<int:pk>/', views.update_Category, name='update_category'),
+    
+    #book paths
+    path('book/',views.BookRegistrationView.as_view()),
+    path('book/<int:pk>/delete/', views.delete_book, name='delete-book'),
+    path('book/<int:pk>/', views.update_Book, name='update_book'),
+    
+    #Issue_Book paths
+    path('issue/',views.Issue_BookRegistrationView.as_view()),
+    path('issue/<int:pk>/delete/', views.delete_Issue_Book, name='delete-issue'),
+    path('issue/<int:pk>/', views.update_Issue_Book, name='update_issue'),
+    path('change-stpassword/', views.ChangeStudentPasswordView.as_view(), name='change-password'),
 
     path('', views.getRoutes)
 ]

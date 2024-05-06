@@ -7,7 +7,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from api.models import User
-from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story, Gallery
+from userprofile.models import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -64,7 +64,7 @@ class UserAdmin(ImportExportModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('email','password','id','first_name','last_name','phone1','is_active','is_staff','is_superuser','is_crc','is_alumni','image_url')
+    list_display = ('email','password','id','first_name','last_name','phone1','is_active','is_staff','is_superuser','is_crc','is_alumni','is_student','is_teacher','is_librarian','image_url')
     list_filter = ('is_superuser', )
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
@@ -76,6 +76,9 @@ class UserAdmin(ImportExportModelAdmin):
         ('is_staff', {'fields': ('is_staff', )}),
         ('is_crc', {'fields': ('is_crc', )}),
         ('is_alumni', {'fields': ('is_alumni', )}),
+        ('is_student', {'fields': ('is_student', )}),
+        ('is_teacher', {'fields': ('is_teacher', )}),
+        ('is_librarian', {'fields': ('is_librarian', )}),
         ('image_url', {'fields': ('image_url', )}),
     )
     add_fieldsets = (
@@ -131,3 +134,30 @@ class EmploymentAdmin(ImportExportModelAdmin):
 @admin.register(Gallery)
 class  GalleryAdmin(ImportExportModelAdmin):
     list_display=('id','image_url','displayed')
+    
+#Library management System 
+
+#Student table
+@admin.register(Student)
+class StudentAdmin(ImportExportModelAdmin):
+    list_display =('id','user','family','combination','studentid')
+    
+#Autho table
+@admin.register(Author)
+class AuthorAdmin(ImportExportModelAdmin):
+    list_display =('id','author_name')
+    
+#Category table
+@admin.register(Category)
+class CategoryAdmin(ImportExportModelAdmin):
+    list_display =('id','category_name')
+    
+#Book table
+@admin.register(Book)
+class BookAdmin(ImportExportModelAdmin):
+    list_display =('id','book_name','isbnumber','number_of_books','category','author')
+    
+#Issue Books table
+@admin.register(Issue_Book)
+class Issue_BookAdmin(ImportExportModelAdmin):
+    list_display =('id','book','borrower','library_number','issuedate','returndate')

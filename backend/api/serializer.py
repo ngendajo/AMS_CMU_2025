@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from api.models import User
-from userprofile.models import CrcProfile, Grade, Family, Combination, Ep, Alumni, Opportunity, Event, Employment, Studie, Story, Gallery, News
+from userprofile.models import *
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 
 
 User = get_user_model()
@@ -45,7 +46,7 @@ class StaffUserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
         level_data = validated_data.pop('level')
-        print(level_data)
+        #print(level_data)
         if(level_data=="is_crc"):
             user = User.objects.create_crcuser(**validated_data)
             CrcProfile.objects.create(
@@ -624,3 +625,220 @@ class UpdateNewsSerializer(serializers.ModelSerializer):
         model = News
         fields = ('title', 'description', 'date', 'pinned')
 
+#Library management System
+
+#Register a librarian or a teacher        
+class TeacherOrLibrarianRegistrationSerializer(serializers.ModelSerializer):
+    image_url = serializers.ImageField(required=False)
+    role = serializers.CharField(max_length=200,required=False)
+
+    class Meta:
+        model = User 
+        fields = ('id', 'email', 'first_name', 'last_name', 'phone1', 'password', 'image_url', 'role')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        role_data = validated_data.pop('role', None)  # Extract 'role' from validated_data
+        image_url = validated_data.pop('image_url', None)  # Extract 'image_url' from validated_data
+
+        if image_url:
+            create_method = User.objects.create_user
+        else:
+            create_method = User.objects.create_user1
+
+        if create_method == User.objects.create_user:
+            user = create_method(image_url=image_url, **validated_data)
+        else:
+            user = create_method(**validated_data)
+
+        if role_data == "librarian":
+            user.is_librarian = True
+        elif role_data == "teacher":
+            user.is_teacher = True
+
+        user.save()
+        return user
+    
+#View a librarian or a teacher 
+class TeacherAndLibrarianSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = ('id', 'email', 'first_name', 'last_name', 'phone1', 'is_teacher', 'is_librarian', 'image_url')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Include instances that are either a teacher or a librarian
+        if instance.is_teacher or instance.is_librarian:
+            return data
+        else:
+            # Exclude instances that are neither a teacher nor a librarian
+            return None
+        
+#Register a student        
+class StudentRegistrationSerializer(serializers.ModelSerializer):
+    image_url = serializers.ImageField(required=False)
+    studentid = serializers.CharField(max_length=200,required=False)
+    combination = serializers.IntegerField(required=False)
+    family_id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = User 
+        fields = ('id', 'email', 'first_name', 'last_name', 'phone1', 'password', 'image_url', 'family_id', 'studentid', 'combination')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        family_id = validated_data.pop('family_id', None)
+        combination_data = validated_data.pop('combination', None)
+        studentid_data = validated_data.pop('studentid', None)
+        image_url = validated_data.pop('image_url', None)
+
+        if image_url:
+            create_method = User.objects.create_user
+        else:
+            create_method = User.objects.create_user1
+
+        if create_method == User.objects.create_user:
+            user = create_method(image_url=image_url, **validated_data)
+        else:
+            user = create_method(**validated_data)
+
+        if family_id and combination_data and studentid_data:
+            user.is_student = True
+            user.save()
+            Student.objects.create(
+                user=user,
+                studentid=studentid_data,
+                combination_id=combination_data,
+                family_id=family_id
+            )
+
+        return user
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone1 = validated_data.get('phone1', instance.phone1)
+        
+        # Update image_url only if provided
+        if 'image_url' in validated_data:
+            instance.image_url = validated_data['image_url']
+        
+        instance.save()
+
+        # Update related Student object if it exists
+        student_data = {
+            'studentid': validated_data.get('studentid', instance.student.studentid),
+            'combination_id': validated_data.get('combination', instance.student.combination_id),
+            'family_id': validated_data.get('family_id', instance.student.family_id)
+        }
+
+        try:
+            student = instance.student
+            for attr, value in student_data.items():
+                setattr(student, attr, value)
+            student.save()
+        except ObjectDoesNotExist:
+            pass  # Student object does not exist, no need to update
+
+        return instance
+
+
+    
+#View students
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student 
+        fields = '__all__'
+        depth = 3
+        
+#author data serializer
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = '__all__'
+
+#end author serilizer
+
+#category data serializer
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+#end category serilizer
+
+#book data serializer
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
+        
+class DisplayBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
+        depth=3
+
+#end book serilizer
+
+#Issue_Book data serializer
+class Issue_BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue_Book
+        fields = '__all__'
+        
+class DisplayIssue_BookSerializer(serializers.ModelSerializer):
+    student_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Issue_Book
+        fields = ['id', 'book', 'borrower', 'library_number', 'issuedate', 'returndate', 'student_info']
+        depth = 3
+
+    def get_student_info(self, obj):
+        try:
+            student = obj.borrower.student  # Accessing the related Student through the User
+            serializer = StudentSerializer(student)
+            return serializer.data
+        except Student.DoesNotExist:
+            return None
+
+
+#end Issue_Book serilizer
+
+class CheckStudentSerializer(serializers.ModelSerializer):
+    grade_name = serializers.CharField(source='student.family.grade.grade_name', max_length=200)
+    family_name = serializers.CharField(source='student.family.family_name', max_length=200)
+    combination_name = serializers.CharField(source='student.combination.combination_name', max_length=200)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'grade_name', 'family_name', 'combination_name')
+        
+class ChangeStudentPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    confirm_password = serializers.CharField()
+
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match")
+        return data
+
+
+class UsersSerializer(serializers.ModelSerializer):
+    borrowings = DisplayIssue_BookSerializer(source='borrow.all', many=True)
+    student_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'is_active', 'is_staff', 'is_superuser', 'is_crc', 'is_alumni', 'is_student', 'is_teacher', 'is_librarian', 'first_name', 'last_name', 'phone1', 'image_url', 'borrowings','student_info')
+        
+    def get_student_info(self, obj):
+        try:
+            student = obj.student
+            serializer = StudentSerializer(student)
+            return serializer.data
+        except Student.DoesNotExist:
+            return None
+        

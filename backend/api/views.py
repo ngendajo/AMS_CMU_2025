@@ -23,6 +23,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 import pandas as pd
+from django.contrib.auth.hashers import make_password
 
 from userprofile.models import Alumni
 
@@ -276,6 +277,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_superuser'] = user.is_superuser
         token['is_crc'] = user.is_crc
         token['is_alumni'] = user.is_alumni
+        token['is_librarian'] = user.is_librarian
+        token['is_teacher'] = user.is_teacher
+        token['is_student'] = user.is_student
         token['id'] = user.id
         # ...
 
@@ -2198,3 +2202,374 @@ FROM
             wb.save(response)
 
             return response
+        
+        
+        
+#Library Management System
+
+#TeacherOrLibrarian Reg. View
+#useful link http://127.0.0.1:8000/api/bulkeducator/?id=129&?email=fifi@asyv.org
+class TeacherOrLibrarianRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = TeacherOrLibrarianRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        try:
+            user_id = request.query_params.get('id')
+            user_email = request.query_params.get('email')
+            users_query = ("SELECT api_user.id as id, api_user.email as email, "
+                           "api_user.phone1 as phone1, api_user.first_name as first_name, "
+                           "api_user.last_name as last_name, api_user.image_url, "
+                           "api_user.is_teacher, api_user.is_librarian "
+                           "FROM api_user WHERE ")
+            if user_id and user_email:
+                users_query += f"api_user.id = {user_id} AND api_user.email = '{user_email}'"
+            elif user_id:
+                users_query += f"api_user.id = {user_id}"
+            elif user_email:
+                users_query += f"api_user.email = '{user_email}'"
+            else:
+                users_query += "api_user.is_teacher OR api_user.is_librarian"
+                
+            users = User.objects.raw(users_query)
+            serializer = TeacherAndLibrarianSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class TeacherOrLibrarianEditView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def put(self, request, *args, **kwargs):
+        try:
+            user_id = kwargs.get('id')
+            user = User.objects.get(id=user_id)
+            serializer = TeacherOrLibrarianRegistrationSerializer(user, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+class StudentRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def post(self, request):
+        serializer = StudentRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        try:
+            # Checking for the parameters from the URL
+            if request.query_params:
+                stud = Student.objects.filter(**request.query_params.dict())
+                serializer = StudentSerializer(stud, many=True)
+                return Response(serializer.data)
+            else:
+                stud = Student.objects.all()
+                serializer = StudentSerializer(stud, many=True)
+                return Response(serializer.data)
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+class StudentRegistrationUpdateAPIView(APIView):
+   
+    def put(self, request, pk, format=None):
+        try:
+            user = User.objects.get(pk=pk)  # Provide pk as a keyword argument
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = StudentRegistrationSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+# Author data view
+
+class AuthorRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = AuthorSerializer(data=request.data)
+        # validating for already existing data
+        if Author.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            # checking for the parameters from the URL
+            if request.query_params:
+                autho = Author.objects.filter(**request.query_params.dict())
+            else:
+                autho = Author.objects.all()
+
+            # if there is something in items else raise error
+            if autho:
+                serializer = AuthorSerializer(autho, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_Author(request, pk):
+    autho = Author.objects.get(pk=pk)
+    data = AuthorSerializer(instance=autho, data=request.data)
+
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_author(request, pk):
+    autho = get_object_or_404(Author, pk=pk)
+    autho.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
+# end
+
+# Category data view
+
+class CategoryRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+        # validating for already existing data
+        if Category.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            # checking for the parameters from the URL
+            if request.query_params:
+                cat = Category.objects.filter(**request.query_params.dict())
+            else:
+                cat = Category.objects.all()
+
+            # if there is something in items else raise error
+            if cat:
+                serializer = CategorySerializer(cat, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_Category(request, pk):
+    cat = Category.objects.get(pk=pk)
+    data = CategorySerializer(instance=cat, data=request.data)
+
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_category(request, pk):
+    cat = get_object_or_404(Category, pk=pk)
+    cat.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
+# end
+
+# Book data view
+
+class BookRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = BookSerializer(data=request.data)
+        # validating for already existing data
+        if Book.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            # checking for the parameters from the URL
+            if request.query_params:
+                book = Book.objects.filter(**request.query_params.dict())
+            else:
+                book = Book.objects.all()
+
+            # if there is something in items else raise error
+            if book:
+                serializer = DisplayBookSerializer(book, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_Book(request, pk):
+    book = Book.objects.get(pk=pk)
+    data = BookSerializer(instance=book, data=request.data)
+
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    book.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
+# end
+
+# Issue_Book data view
+
+class Issue_BookRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = Issue_BookSerializer(data=request.data)
+        # validating for already existing data
+        if Issue_Book.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            # checking for the parameters from the URL
+            if request.query_params:
+                issue = Issue_Book.objects.filter(**request.query_params.dict())
+            else:
+                issue = Issue_Book.objects.all()
+
+            # if there is something in items else raise error
+            if issue:
+                serializer = DisplayIssue_BookSerializer(issue, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PATCH'])
+#@permission_classes([IsAuthenticated])
+def update_Issue_Book(request, pk):
+    try:
+        issue = Issue_Book.objects.get(pk=pk)
+    except Issue_Book.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    data = {'returndate': request.data.get('returndate')}
+    serializer = Issue_BookSerializer(instance=issue, data=data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_Issue_Book(request, pk):
+    issue = get_object_or_404(Issue_Book, pk=pk)
+    issue.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
+# end
+
+#Check student
+
+        
+class CheckStudentView(APIView):
+    def get(self, request):
+        try:
+            user_email = request.query_params.get('email')
+            if user_email:
+                users = User.objects.filter(email=user_email, student__isnull=False).select_related('student__family__grade', 'student__combination')
+            else:
+                users = User.objects.filter(student__isnull=False).select_related('student__family__grade', 'student__combination')
+                
+            serializer = CheckStudentSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class ChangeStudentPasswordView(APIView):
+    def post(self, request):
+        serializer = ChangeStudentPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            user = User.objects.filter(email=email).first()
+            if user:
+                user.set_password(password)
+                user.save()
+                return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserList(generics.ListAPIView):
+    queryset = User.objects.prefetch_related('borrow','student').all()
+    serializer_class = UsersSerializer

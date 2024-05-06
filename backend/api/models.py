@@ -82,6 +82,22 @@ class UserManager(BaseUserManager):
 		user.save()
 		return user
 
+	def create_studentuser(self, email, first_name, last_name, phone1, password, image_url):
+		if password is None:
+			raise TypeError('Student must have a password')
+		user = self.create_user(email, first_name, last_name, phone1, password, image_url)
+		user.is_student = True
+		user.save()
+		return user
+	
+	def create_studentuserwithoutimage(self, email, first_name, last_name, phone1, password):
+		if password is None:
+			raise TypeError('Student must have a password')
+		user = self.create_user1(email, first_name, last_name, phone1, password)
+		user.is_student = True
+		user.save()
+		return user
+
 	def create_staffuser(self, email, first_name, last_name, phone1, password, image_url):
 		if password is None:
 			raise TypeError('Staff must have a password')
@@ -102,6 +118,9 @@ class User(AbstractBaseUser):
 	is_superuser = models.BooleanField(default=False)
 	is_crc = models.BooleanField(default=False)
 	is_alumni = models.BooleanField(default=False)
+	is_student = models.BooleanField(default=False)
+	is_teacher = models.BooleanField(default=False)
+	is_librarian = models.BooleanField(default=False)
 	first_name = models.CharField(max_length=200)
 	last_name = models.CharField(max_length=200)
 	phone1 = models.CharField(max_length=200, blank=True, unique=True)
