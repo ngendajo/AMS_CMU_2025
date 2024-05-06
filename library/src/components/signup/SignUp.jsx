@@ -89,6 +89,7 @@ export default function SignUp() {
        <Header/>
        <div className="loginform">
         <h2>Student Signup Form</h2>
+        <p className= "errmsg">{errMsg}</p>
         
         <form className='formelement' onSubmit={handleSubmit}>
           <label htmlFor="email">Enter Email</label>
