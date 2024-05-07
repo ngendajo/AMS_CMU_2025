@@ -312,3 +312,18 @@ li {
 .addfamily .icons{
   font-size: 20px;
 }
+.dropzone {
+  text-align: center;
+  padding:20px 10px;
+  border: 3px dashed #eeeeee;
+  background-color: #fafafa;
+  color: #bdbdbd;
+  cursor: pointer;
+  width: 30%;
+  margin-bottom: 20px;
+}
+.browse {
+  padding: 0.2rem;
+  color: #F49D47;
+  cursor: pointer;
+}

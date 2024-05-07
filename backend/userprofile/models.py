@@ -228,6 +228,7 @@ class Student(models.Model):
 # Authors models
 class Author(models.Model):
     author_name = models.CharField(max_length=500)
+    author_id = models.IntegerField(unique=True,null=True)
 
     def __str__(self):
         return str(self.author_name)
@@ -235,6 +236,7 @@ class Author(models.Model):
 # Category models
 class Category(models.Model):
     category_name = models.CharField(max_length=500)
+    category_id = models.IntegerField(unique=True,null=True)
 
     def __str__(self):
         return str(self.category_name)

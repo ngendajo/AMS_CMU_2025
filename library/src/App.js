@@ -43,6 +43,7 @@ import EditStaff from './components/pages/EditStaff';
 import EditGrade from './components/pages/EditGrade';
 import EditStudent from './components/pages/EditStudent';
 import ReturnBook from './components/pages/ReturnBook';
+import UploadBooks from './components/pages/UploadBooks';
 
 
 
@@ -103,6 +104,9 @@ function App() {
                       <Route path='grstatistics' element={<Grstatistics/>}/>
                       <Route path='fastatistics' element={<Fastatistics/>}/>
                       <Route path='costatistics' element={<Costatistics/>}/>
+                    </Route>
+                    <Route element={<AuthCheck allowedRoles={["superuser"]} />}>
+                      <Route path='upbook' element={<UploadBooks/>}/>
                     </Route>
                     <Route element={<AuthCheck allowedRoles={["teacher","student"]} />}>
                       <Route path='borrowed' element={<Borrowed />}/>

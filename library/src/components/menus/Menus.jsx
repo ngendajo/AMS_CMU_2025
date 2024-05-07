@@ -116,12 +116,19 @@ export default function Menus() {
                             <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/borrowed`}> Borrowed Books </Link> </li>
                             <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/boverdue`}> Overdue Books </Link> </li>
                         </>:
-                            <>
-                            
-                            </>
+                                <>
+                                
+                                </>
                             
                         
                     }
+                    { user.is_superuser ?
+                            <>
+                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
+                            </>:
+                                <>
+                                
+                                </>}
                     
                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/pass`}> Password </Link> </li>
 

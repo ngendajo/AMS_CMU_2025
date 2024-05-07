@@ -117,6 +117,9 @@ urlpatterns = [
     path('export-excel/', views.UsersExcelExportView.as_view()),
     path('excel-upload/', views.ExcelUploadAPIView.as_view(), name='excel-upload'),
     
+    #upload data
+    path('excel-data-upload/', views.AutoDataExcelUploadAPIView.as_view(), name='excel-data-upload'),
+    
     #Genereting report
     path('generate-report/', views.Generate_reports.as_view(), name='generate-report'),
 

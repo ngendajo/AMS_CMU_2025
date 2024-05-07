@@ -2573,3 +2573,121 @@ class ChangeStudentPasswordView(APIView):
 class UserList(generics.ListAPIView):
     queryset = User.objects.prefetch_related('borrow','student').all()
     serializer_class = UsersSerializer
+    
+class AutoDataExcelUploadAPIView(APIView):
+    parser_classes = (MultiPartParser,)
+
+    def post(self, request, format=None):
+        file = request.FILES.get('file')
+        if file:
+            if is_excel_file(file):
+                print("The uploaded file is an Excel file.")
+                
+                workbook = openpyxl.load_workbook(file)
+                sheet_names = workbook.sheetnames
+                data = {}
+                expected_sheet_names=['author','category','book']
+                if set(sheet_names) ==set(expected_sheet_names):
+                    for sheet_name in sheet_names:
+                        sheet = workbook[sheet_name]
+                        rows = []
+
+                        for row in sheet.iter_rows(values_only=True):
+                            rows.append(row)
+
+                        data[sheet_name] = rows
+                    
+                    #...........validate author data.........................
+                    
+                    if 'author' in data:
+                        # Extract headers and data
+                        author_headers = data['author'][0]
+                        if set(data['author'][0]) == set(('id', 'author_name')):
+                            author_rows=data['author'][1:]
+                            if(len(author_rows)>0):
+                                # Create a DataFrame
+                                author= pd.DataFrame(author_rows, columns=author_headers)
+                                
+                                # Check for null values in the entire DataFrame
+                                # Sum the null values in each column
+                                null_countsauthor = author.isnull().sum()
+                                if(null_countsauthor>0).all():
+                                    print("\nNull counts in each column in profile:")
+                                    print(null_countsauthor)
+                                    data["error"]="there are some empty cells in author"
+                                    return Response(data)
+                                else:
+                                    #Data validation on Category
+                                    # Extract headers and data
+                                    category_headers = data['category'][0]
+                                    if(set(category_headers)==set(('id', 'category_name'))):
+                                        category_rows=data['category'][1:]
+                                        if(len(category_rows)>0):
+                                            # Create a DataFrame
+                                            category= pd.DataFrame(category_rows, columns=category_headers)
+                                            
+                                            # Check for null values in the entire DataFrame
+                                            # Sum the null values in each column
+                                            null_countscategory = category.isnull().sum()
+                                            if(null_countscategory>0).all():
+                                                print("\nNull counts in each column in category:")
+                                                print(null_countscategory)
+                                                data["error"]="there are some empty cells in category"
+                                                return Response(data)
+                                            else:     
+                                                #Data validation on Book
+                                                # Extract headers and data
+                                                book_headers = data['book'][0]
+                                                if(set(book_headers)==set(('id', 'book_name', 'isbnumber', 'number_of_books', 'category', 'author'))):
+                                                    book_rows=data['book'][1:]
+                                                    if(len(book_rows)>0):
+                                                        # Create a DataFrame
+                                                        book= pd.DataFrame(book_rows, columns=book_headers)
+                                                        
+                                                        null_countsbook = book.isnull().sum()
+                                                        if(null_countsbook>0).all():
+                                                            print("\nNull counts in each column in book:")
+                                                            print(null_countsbook)
+                                                            data["error"]="there are some empty cells in book"
+                                                            return Response(data)
+                                                        else:
+                                       
+                                                            for index, row in author.iterrows():
+                                                                #print(f"Index: {index}, id: {row['id']} Author Name: {row['author_name']}")
+                                                                Author.objects.create(author_name=row['author_name'],author_id=row['id'])
+                                                            for index, row in category.iterrows():
+                                                                #print(f"Index: {index}, id: {row['id']} Author Name: {row['author_name']}")
+                                                                Category.objects.create(category_name=row['category_name'],category_id=row['id'])
+                                                                
+                                                            for index, row in book.iterrows():
+                                                                #print(f"Index: {index}, id: {row['id']} Author Name: {row['author_name']}")
+                                                                try:
+                                                                    # Attempt to retrieve the category instance
+                                                                    category = Category.objects.get(category_id=row['category'])
+                                                                except Category.DoesNotExist:
+                                                                    # Handle the case where the author doesn't exist
+                                                                    print("Category with ID {} does not exist".format(row['id']))
+                                                                    continue;
+                                                                try:
+                                                                    # Attempt to retrieve the author instance
+                                                                    author = Author.objects.get(author_id=row['author'])
+                                                                except Author.DoesNotExist:
+                                                                    # Handle the case where the author doesn't exist
+                                                                    print("Author with ID {} does not exist".format(row['id']))
+                                                                    continue;
+                                                                Book.objects.create(book_name=row['book_name'],isbnumber=row['isbnumber'],number_of_books=row['number_of_books'],category=category,author=author)
+                                          
+                                                    else:
+                                                        data['error']="book sheet is empty!"
+                                                        print('book sheet is empty!')
+                                                        return Response(data)
+                     
+                                    
+                                    
+                     
+            else:
+                data={"error":"The uploaded file is not an Excel file."}
+                print("The uploaded file is not an Excel file.")
+                return Response(data)
+        return Response({"error": "Data uploaded successfully"})
+    
