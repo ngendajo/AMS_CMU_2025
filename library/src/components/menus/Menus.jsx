@@ -55,7 +55,6 @@ export default function Menus() {
                     </li>
                     {user.is_superuser || user.is_librarian ?
                     <>
-                        <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
                         <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Categories <FiChevronDown /> </Link>
                             <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/category`}> New Category </Link> </li>
@@ -123,13 +122,13 @@ export default function Menus() {
                             
                         
                     }
-                    {/* { user.is_superuser ?
+                    { user.is_superuser ?
                             <>
-                                
+                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
                             </>:
                                 <>
                                 
-                                </>} */}
+                                </>}
                     
                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/pass`}> Password </Link> </li>
 
