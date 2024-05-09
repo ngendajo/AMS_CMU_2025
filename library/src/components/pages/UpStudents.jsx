@@ -4,8 +4,7 @@ import axios from 'axios';
 import useAuth from '../../hooks/useAuth';
 import baseUrl from '../../api/baseUrl';
 
-export default function UploadBooks() {
-  
+export default function UpStudents() {
     const [msg,setMsg]=useState("");
   
     const {auth} = useAuth(); 
@@ -30,7 +29,7 @@ export default function UploadBooks() {
       
       formData.append('file', files[0]);
 
-      const response = await axios.post(baseUrl+"/excel-data-upload/",
+      const response = await axios.post(baseUrl+"/excel-students-upload/",
           formData,{
               headers: {
                   "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -39,9 +38,10 @@ export default function UploadBooks() {
               withCredentials:true 
           }
           )
-          console.log(response.data)
+          console.log(response.data['msg'])
           if(response.data["error"]){
-            setMsg(response.data["error"])
+            console.log(response.data)
+            setMsg("There problem in your data")
           }
           /* .catch((error) => {
             console.error('Error uploading file:', error);
@@ -57,25 +57,26 @@ export default function UploadBooks() {
  
   return (
     <div className='formelement'>
-      <h1>Bulk Books</h1>
+        <h1>Bulk Students</h1>
               
-      <div>
-        <Dropzone onDrop={handleFileUpload} multiple={false}> 
-          {({ getRootProps, getInputProps }) => (
-          <section>
-              <div {...getRootProps({ className: "dropzone" })}>
-              <input {...getInputProps()} />
-                      
-                    <span><strong className="browse">Browse</strong> <strong>a excel .xlsx file</strong><br/> or drag and drop</span>
-                
-                </div>
-            </section>
-            )}
-        </Dropzone>
+        <div>
+            <Dropzone onDrop={handleFileUpload} multiple={false}> 
+                {({ getRootProps, getInputProps }) => (
+                <section>
+                    <div {...getRootProps({ className: "dropzone" })}>
+                    <input {...getInputProps()} />
+                    
+                        <span><strong className="browse">Browse</strong> <strong>a excel .xlsx file</strong><br/> or drag and drop</span>
+                    
+                    </div>
+                </section>
+                )}
+            </Dropzone>
+        </div>
+        <div className="invalid">
+            <h2>{msg}</h2>
+        </div>
       </div>
-      <div className="invalid">
-        <h2>{msg}</h2>
-      </div>
-    </div>
   )
 }
+

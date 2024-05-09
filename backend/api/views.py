@@ -2691,3 +2691,89 @@ class AutoDataExcelUploadAPIView(APIView):
                 return Response(data)
         return Response({"error": "Data uploaded successfully"})
     
+class AutoStudentDataExcelUploadAPIView(APIView):
+    parser_classes = (MultiPartParser,)
+
+    def post(self, request, format=None):
+        file = request.FILES.get('file')
+        if file:
+            if is_excel_file(file):
+                workbook = openpyxl.load_workbook(file)
+                sheet_names = workbook.sheetnames
+                data = {}
+                expected_sheet_names=['students']
+                if set(sheet_names) ==set(expected_sheet_names):
+                    for sheet_name in sheet_names:
+                        sheet = workbook[sheet_name]
+                        rows = []
+
+                        for row in sheet.iter_rows(values_only=True):
+                            rows.append(row)
+
+                        data[sheet_name] = rows
+                    
+                    #...........validate students data.........................
+                    
+                    if 'students' in data:
+                        # Extract headers and data
+                        students_headers = data['students'][0]
+                        if set(data['students'][0]) == set(("email", 'first_name', 'last_name', 'phone1', 'password','studentid','family','combination')):
+                            students_rows=data['students'][1:]
+                            if(len(students_rows)>0):
+                                # Create a DataFrame
+                                students= pd.DataFrame(students_rows, columns=students_headers)
+                                
+                                # Check for null values in the entire DataFrame
+                                # Sum the null values in each column
+                                null_countsstudents = students.isnull().sum()
+                                if(null_countsstudents>0).all():
+                                    data["error"]="there are some empty cells in students sheet:"+str(null_countsstudents)
+                                    return Response(data)
+                                else:
+                                    nofamilies=[]
+                                    nocombs=[]
+                                    for index, row in students.iterrows():
+                                        try:
+                                            # Attempt to retrieve the family instance
+                                            family = Family.objects.get(family_name=row['family'])
+                                            #print(family)
+                                        except Family.DoesNotExist:
+                                            # Handle the case where the family doesn't exist
+                                            #print(row['family'])
+                                            nofamilies.append(row['family'])
+                                            continue;
+                                        try:
+                                            # Attempt to retrieve the author instance
+                                            combination = Combination.objects.get(combination_name=row['combination'])
+                                            #print(combination)
+                                        except Combination.DoesNotExist:
+                                            # Handle the case where the combination doesn't exist
+                                            nocombs.append(row['combination'])
+                                            #print(row['combination'])
+                                            continue;
+                                        if len(nofamilies) > 0 or len(nocombs) > 0:
+                                            data['error']=[nocombs,nofamilies]
+                                            return Response(data)
+                                        else:
+                                            user=User.objects.create_studentuserwithoutimage(row['first_name'],row['last_name'],row['phone1'],row['password'])
+                                            Student.objects.create(user=user,family=family,combination=combination,studentid=row['studentid'])
+                            else:
+                                data['error']="students sheet is empty!"
+                                return Response(data)
+                        else:
+                            data={"error":"Students sheets have different headers.","sheet":students_headers}
+                            return Response(data)
+                    else:
+                        data={"error":"The uploaded file doesn't contain students sheet."}
+                        return Response(data)
+                else:
+                    data={"error":"The uploaded file contains different sheets."}
+                    return Response(data)
+            else:
+                data={"error":"The uploaded file is not an Excel file."}
+                return Response(data)
+        else:
+            data={"error":"The uploaded file is not a file."}
+            return Response(data)
+        return Response({"msg": "Data uploaded successfully"})
+    

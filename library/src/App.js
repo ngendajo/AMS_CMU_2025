@@ -44,6 +44,7 @@ import EditGrade from './components/pages/EditGrade';
 import EditStudent from './components/pages/EditStudent';
 import ReturnBook from './components/pages/ReturnBook';
 import UploadBooks from './components/pages/UploadBooks';
+import UpStudents from './components/pages/UpStudents';
 
 
 
@@ -107,6 +108,7 @@ function App() {
                     </Route>
                     <Route element={<AuthCheck allowedRoles={["superuser"]} />}>
                       <Route path='upbook' element={<UploadBooks/>}/>
+                      <Route path='upstudent' element={<UpStudents/>}/>
                     </Route>
                     <Route element={<AuthCheck allowedRoles={["teacher","student"]} />}>
                       <Route path='borrowed' element={<Borrowed />}/>

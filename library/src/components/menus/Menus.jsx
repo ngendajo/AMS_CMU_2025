@@ -124,7 +124,12 @@ export default function Menus() {
                     }
                     { user.is_superuser ?
                             <>
+                                <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Uploads <FiChevronDown /> </Link>
+                                    <ul className={boxClassSubMenu.join(' ')} > 
                                 <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
+                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upstudent`}> Upload Students </Link> </li>
+                                    </ul>
+                                </li>
                             </>:
                                 <>
                                 
