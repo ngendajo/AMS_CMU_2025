@@ -110,6 +110,12 @@ export default function Menus() {
                                 <li><Link onClick={toggleClass} className='is-active' to={`/costatistics`}> Statistics per Class </Link> </li>
                             </ul>
                         </li>
+                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Uploads <FiChevronDown /> </Link>
+                            <ul className={boxClassSubMenu.join(' ')} > 
+                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
+                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upstudent`}> Upload Students </Link> </li>
+                            </ul>
+                        </li>
                     </>:
                     user.is_teacher || user.is_student ?
                         <>
@@ -122,18 +128,6 @@ export default function Menus() {
                             
                         
                     }
-                    { user.is_superuser ?
-                            <>
-                                <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Uploads <FiChevronDown /> </Link>
-                                    <ul className={boxClassSubMenu.join(' ')} > 
-                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
-                                <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upstudent`}> Upload Students </Link> </li>
-                                    </ul>
-                                </li>
-                            </>:
-                                <>
-                                
-                                </>}
                     
                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/pass`}> Password </Link> </li>
 
