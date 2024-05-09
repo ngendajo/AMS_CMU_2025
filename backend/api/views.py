@@ -2751,10 +2751,13 @@ class AutoStudentDataExcelUploadAPIView(APIView):
                                             nocombs.append(row['combination'])
                                             #print(row['combination'])
                                             continue;
-                                        if len(nofamilies) > 0 or len(nocombs) > 0:
-                                            data['error']=[nocombs,nofamilies]
-                                            return Response(data)
-                                        else:
+                                    if len(nofamilies) > 0 or len(nocombs) > 0:
+                                        data['error']=[nocombs,nofamilies]
+                                        return Response(data)
+                                    else:
+                                        for index, row in students.iterrows():
+                                            family = Family.objects.get(family_name=row['family'])
+                                            combination = Combination.objects.get(combination_name=row['combination'])
                                             user=User.objects.create_studentuserwithoutimage(row['first_name'],row['last_name'],row['phone1'],row['password'])
                                             Student.objects.create(user=user,family=family,combination=combination,studentid=row['studentid'])
                             else:
