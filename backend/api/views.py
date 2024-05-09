@@ -2210,7 +2210,7 @@ FROM
 #TeacherOrLibrarian Reg. View
 #useful link http://127.0.0.1:8000/api/bulkeducator/?id=129&?email=fifi@asyv.org
 class TeacherOrLibrarianRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = TeacherOrLibrarianRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -2243,7 +2243,7 @@ class TeacherOrLibrarianRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
 class TeacherOrLibrarianEditView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def put(self, request, *args, **kwargs):
         try:
             user_id = kwargs.get('id')
@@ -2257,7 +2257,7 @@ class TeacherOrLibrarianEditView(APIView):
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
 class StudentRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = StudentRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -2297,7 +2297,7 @@ class StudentRegistrationUpdateAPIView(APIView):
 # Author data view
 
 class AuthorRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = AuthorSerializer(data=request.data)
@@ -2356,7 +2356,7 @@ def delete_author(request, pk):
 # Category data view
 
 class CategoryRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
@@ -2415,7 +2415,7 @@ def delete_category(request, pk):
 # Book data view
 
 class BookRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = BookSerializer(data=request.data)
@@ -2474,7 +2474,7 @@ def delete_book(request, pk):
 # Issue_Book data view
 
 class Issue_BookRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = Issue_BookSerializer(data=request.data)
@@ -2508,7 +2508,7 @@ class Issue_BookRegistrationView(APIView):
 
 
 @api_view(['PATCH'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_Issue_Book(request, pk):
     try:
         issue = Issue_Book.objects.get(pk=pk)
@@ -2527,7 +2527,7 @@ def update_Issue_Book(request, pk):
 
 
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_Issue_Book(request, pk):
     issue = get_object_or_404(Issue_Book, pk=pk)
     issue.delete()
@@ -2540,6 +2540,7 @@ def delete_Issue_Book(request, pk):
 
         
 class CheckStudentView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def get(self, request):
         try:
             user_email = request.query_params.get('email')
@@ -2556,6 +2557,7 @@ class CheckStudentView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class ChangeStudentPasswordView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = ChangeStudentPasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -2571,10 +2573,12 @@ class ChangeStudentPasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class UserList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, ]
     queryset = User.objects.prefetch_related('borrow','student').all()
     serializer_class = UsersSerializer
     
 class AutoDataExcelUploadAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     parser_classes = (MultiPartParser,)
 
     def post(self, request, format=None):
@@ -2692,91 +2696,71 @@ class AutoDataExcelUploadAPIView(APIView):
         return Response({"error": "Data uploaded successfully"})
     
 class AutoStudentDataExcelUploadAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     parser_classes = (MultiPartParser,)
 
     def post(self, request, format=None):
         file = request.FILES.get('file')
-        if file:
-            if is_excel_file(file):
-                workbook = openpyxl.load_workbook(file)
-                sheet_names = workbook.sheetnames
-                data = {}
-                expected_sheet_names=['students']
-                if set(sheet_names) ==set(expected_sheet_names):
-                    for sheet_name in sheet_names:
-                        sheet = workbook[sheet_name]
-                        rows = []
+        data = {}
 
-                        for row in sheet.iter_rows(values_only=True):
-                            rows.append(row)
-
-                        data[sheet_name] = rows
-                    
-                    #...........validate students data.........................
-                    
-                    if 'students' in data:
-                        # Extract headers and data
-                        students_headers = data['students'][0]
-                        if set(data['students'][0]) == set(("email", 'first_name', 'last_name', 'phone1', 'password','studentid','family','combination')):
-                            students_rows=data['students'][1:]
-                            if(len(students_rows)>0):
-                                # Create a DataFrame
-                                students= pd.DataFrame(students_rows, columns=students_headers)
-                                
-                                # Check for null values in the entire DataFrame
-                                # Sum the null values in each column
-                                null_countsstudents = students.isnull().sum()
-                                if(null_countsstudents>0).all():
-                                    data["error"]="there are some empty cells in students sheet:"+str(null_countsstudents)
-                                    return Response(data)
-                                else:
-                                    nofamilies=[]
-                                    nocombs=[]
-                                    for index, row in students.iterrows():
-                                        try:
-                                            # Attempt to retrieve the family instance
-                                            family = Family.objects.get(family_name=row['family'])
-                                            #print(family)
-                                        except Family.DoesNotExist:
-                                            # Handle the case where the family doesn't exist
-                                            #print(row['family'])
-                                            nofamilies.append(row['family'])
-                                            continue;
-                                        try:
-                                            # Attempt to retrieve the author instance
-                                            combination = Combination.objects.get(combination_name=row['combination'])
-                                            #print(combination)
-                                        except Combination.DoesNotExist:
-                                            # Handle the case where the combination doesn't exist
-                                            nocombs.append(row['combination'])
-                                            #print(row['combination'])
-                                            continue;
-                                    if len(nofamilies) > 0 or len(nocombs) > 0:
-                                        data['error']=[nocombs,nofamilies]
-                                        return Response(data)
-                                    else:
-                                        for index, row in students.iterrows():
-                                            family = Family.objects.get(family_name=row['family'])
-                                            combination = Combination.objects.get(combination_name=row['combination'])
-                                            user=User.objects.create_studentuserwithoutimage(row['first_name'],row['last_name'],row['phone1'],row['password'])
-                                            Student.objects.create(user=user,family=family,combination=combination,studentid=row['studentid'])
-                            else:
-                                data['error']="students sheet is empty!"
-                                return Response(data)
-                        else:
-                            data={"error":"Students sheets have different headers.","sheet":students_headers}
-                            return Response(data)
-                    else:
-                        data={"error":"The uploaded file doesn't contain students sheet."}
-                        return Response(data)
-                else:
-                    data={"error":"The uploaded file contains different sheets."}
-                    return Response(data)
-            else:
-                data={"error":"The uploaded file is not an Excel file."}
-                return Response(data)
-        else:
-            data={"error":"The uploaded file is not a file."}
+        if not file:
+            data["error"] = "The uploaded file is missing."
             return Response(data)
+
+        if not is_excel_file(file):
+            data["error"] = "The uploaded file is not an Excel file."
+            return Response(data)
+
+        try:
+            workbook = openpyxl.load_workbook(file)
+            sheet_names = workbook.sheetnames
+            expected_sheet_names = ['students']
+
+            if set(sheet_names) != set(expected_sheet_names):
+                data["error"] = "The uploaded file contains different sheets."
+                return Response(data)
+
+            sheet = workbook['students']
+            df_students = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
+
+            if not df_students.empty:
+                if set(df_students.columns) != set(["email", 'first_name', 'last_name', 'phone1', 'password', 'studentid', 'family', 'combination']):
+                    data["error"] = "Students sheets have different headers."
+                    return Response(data)
+
+                families = df_students['family'].unique()
+                combinations = df_students['combination'].unique()
+                missing_families = []
+                missing_combinations = []
+
+                for family_name in families:
+                    if not Family.objects.filter(family_name=family_name).exists():
+                        missing_families.append(family_name)
+
+                for combination_name in combinations:
+                    if not Combination.objects.filter(combination_name=combination_name).exists():
+                        missing_combinations.append(combination_name)
+
+                if missing_families or missing_combinations:
+                    data["error"] = {
+                        "missing_families": missing_families,
+                        "missing_combinations": missing_combinations
+                    }
+                    return Response(data)
+
+                # Now create student instances since all families and combinations exist
+                for index, row in df_students.iterrows():
+                    family = Family.objects.get(family_name=row['family'])
+                    combination = Combination.objects.get(combination_name=row['combination'])
+                    user = User.objects.create_studentuser_without_image(row['email'],row['first_name'], row['last_name'], row['phone1'], row['password'])
+                    Student.objects.create(user=user, family=family, combination=combination, studentid=row['studentid'])
+
+            else:
+                data["error"] = "Students sheet is empty!"
+                return Response(data)
+
+        except Exception as e:
+            data["error"] = str(e)
+            return Response(data)
+
         return Response({"msg": "Data uploaded successfully"})
-    
