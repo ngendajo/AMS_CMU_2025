@@ -2752,7 +2752,7 @@ class AutoStudentDataExcelUploadAPIView(APIView):
                 for index, row in df_students.iterrows():
                     family = Family.objects.get(family_name=row['family'])
                     combination = Combination.objects.get(combination_name=row['combination'])
-                    user = User.objects.create_studentuser_without_image(row['email'],row['first_name'], row['last_name'], row['phone1'], row['password'])
+                    user = User.objects.create_studentuserwithoutimage(row['email'],row['first_name'], row['last_name'], row['phone1'], row['password'])
                     Student.objects.create(user=user, family=family, combination=combination, studentid=row['studentid'])
 
             else:
