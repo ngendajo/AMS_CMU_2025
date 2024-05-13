@@ -121,6 +121,8 @@ urlpatterns = [
     path('excel-data-upload/', views.AutoDataExcelUploadAPIView.as_view(), name='excel-data-upload'),
     path('excel-students-upload/', views.AutoStudentDataExcelUploadAPIView.as_view(), name='excel-students-upload'),
     
+    path('excel-issue-upload/', views.AutoIssueDataExcelUploadAPIView.as_view(), name='excel-issue-upload'),
+    
     #Genereting report
     path('generate-report/', views.Generate_reports.as_view(), name='generate-report'),
 

@@ -2764,3 +2764,85 @@ class AutoStudentDataExcelUploadAPIView(APIView):
             return Response(data)
 
         return Response({"msg": "Data uploaded successfully"})
+    
+
+class AutoIssueDataExcelUploadAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    parser_classes = (MultiPartParser,)
+
+    def post(self, request, format=None):
+        file = request.FILES.get('file')
+        data = {}
+
+        if not file:
+            data["error"] = "The uploaded file is missing."
+            return Response(data)
+
+        if not is_excel_file(file):
+            data["error"] = "The uploaded file is not an Excel file."
+            return Response(data)
+
+        try:
+            workbook = openpyxl.load_workbook(file)
+            sheet_names = workbook.sheetnames
+            expected_sheet_names = ['issue']
+
+            if set(sheet_names) != set(expected_sheet_names):
+                data["error"] = "The uploaded file contains different sheets."
+                return Response(data)
+
+            sheet = workbook['issue']
+            df_issue = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
+
+            if not df_issue.empty:
+                if set(df_issue.columns) != set(["book", 'borrower', 'library_number', 'issuedate', 'returndate']):
+                    data["error"] = "Issue sheets have different headers."
+                    return Response(data)
+
+                books = df_issue['book'].unique()
+                borrowers = df_issue['borrower'].unique()
+                missing_books = []
+                missing_borrowers = []
+
+                for book_id in books:
+                    if not Book.objects.filter(isbnumber=book_id).exists():
+                        missing_books.append(book_id)
+
+                for borrower in borrowers:
+                    # Query the Student model based on the studentid
+                    try:
+                        student = Student.objects.get(studentid=borrower)
+                        user_instance = student.user  # Access the User instance associated with the Student
+                        # Check if user_instance is not None (i.e., it exists)
+                        if user_instance is not None:
+                            print(user_instance)
+                        else:
+                            # If user_instance is None, handle the case where the associated User doesn't exist
+                            missing_borrowers.append(borrower)
+                    except Student.DoesNotExist:
+                        # Handle the case where no Student with the given studentid exists
+                        missing_borrowers.append(borrower)
+
+                if missing_books or missing_borrowers:
+                    data["error"] = {
+                        "missing_books": missing_books,
+                        "missing_borrowers": missing_borrowers
+                    }
+                    return Response(data)
+
+                # Now create Issue instances since all books and borrowers exist
+                for index, row in df_issue.iterrows():
+                    book = Book.objects.filter(isbnumber=row['book'])
+                    student = Student.objects.get(studentid=row['borrower'])
+                    user_instance = student.user 
+                    Issue_Book.objects.create(book=book, borrower=user_instance, library_number=row['library_number'], issuedate=row['issuedate'], returndate=row['returndate'])
+
+            else:
+                data["error"] = "Issue sheet is empty!"
+                return Response(data)
+
+        except Exception as e:
+            data["error"] = str(e)
+            return Response(data)
+
+        return Response({"msg": "Data uploaded successfully"})

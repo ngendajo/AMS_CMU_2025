@@ -127,6 +127,7 @@ export default function Menus() {
                                 <ul className={boxClassSubMenu.join(' ')} > 
                                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
                                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upstudent`}> Upload Students </Link> </li>
+                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upissue`}> Upload Issued Books </Link> </li>
                                 </ul>
                             </li>:
                                 <>
