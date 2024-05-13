@@ -9,22 +9,33 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 
 export default function IssuedBooks() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(0);
+  const [next, setNext] = useState("");
+  const [previous, setPrevious] = useState("");
+  const [url, setUrl] = useState(baseUrl+'/issue/');
+  
   let {auth} = useAuth();
+  
 
   useEffect(() =>{
-  
       const getData = async () =>{
           try{
-              const response = await axios.get(baseUrl+'/issue/',{
+              const response = await axios.get(url,{
                   headers: {
                       "Authorization": 'Bearer ' + String(auth.accessToken),
                       "Content-Type": 'multipart/form-data'
                   },
                   withCredentials:true 
               });
+              console.log(response.data)
+              setLoading(false);
+              setCount(response.data.count)
+              setNext(response.data.next)
+              setPrevious(response.data.previous)
               var booklist=[]
               var i=1
-              response.data.forEach(e=>{
+              response.data.results.forEach(e=>{
                   booklist.push({
                   No:i,
                   Student_ID:e.student_info.studentid,
@@ -53,11 +64,23 @@ export default function IssuedBooks() {
   
       getData();
   
-  },[auth])
+  },[auth,url])
 return (
   <div>
     <h2 >Issue Books</h2>
-    <DynamicTable mockdata={data} />
+    {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+            <DynamicTable mockdata={data} />
+            <h1 onClick={() => setUrl(previous)}>Previous</h1>
+            <h1 onClick={() => setUrl(next)}>Next</h1>
+            <h1>{count}</h1>
+        </>
+    
+    
+      )
+    }
   </div>
 )
 }
