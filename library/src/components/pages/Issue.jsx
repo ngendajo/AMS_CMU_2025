@@ -38,6 +38,7 @@ export default function Issue() {
                 },
                 withCredentials:true 
             });
+            console.log(response.data)
             setData(response.data)
             
         }catch(err) {
