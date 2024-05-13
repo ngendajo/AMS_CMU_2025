@@ -153,7 +153,9 @@ export default function Issue() {
                   {student.first_name} {student.last_name}, Student ID: {student.student_info.studentid}, Email: {student.email}, From {student.student_info.family.grade.grade_name} Grade, {student.student_info.family.family_name} Family, {student.student_info.combination.combination_name} Class
                   <input type="hidden" name="borrower" value={student.id}/>
                 </label>
-                <label className="invalid">Number of Books you have :{student.borrowings.length}</label>
+                <label className="invalid">Number of Books you have :{student.borrowings.filter(
+                      (borr) => borr.returndate === "Not yet Returned"
+                    ).length}</label>
                 {(student.borrowings.filter(
                       (borr) => borr.returndate === "Not yet Returned"
                     ).length)>0?
@@ -194,6 +196,7 @@ export default function Issue() {
                           onBlur={(e) => getbook(e.target.value)}
                           required
                         />
+                        <p></p>
                         {isbnumber==="" || (student.borrowings.filter(
                             (borr) => borr.returndate === isbnumber
                           ).length)>1?
@@ -202,7 +205,7 @@ export default function Issue() {
                           {library_numberOptions.length>0?
                           <>
                           <span>{book_name}, ISB Nmuber: {isbnumber}, No.Books: {number_of_books}</span>
-                          <select value={library_number} onChange={(e) => setLibrary_number(e.target.value)}>
+                          <select className='credentials'  value={library_number} onChange={(e) => setLibrary_number(e.target.value)}>
                             {library_numberOptions.map((option) => (
                             <option key={option} value={option}>
                               {option}
