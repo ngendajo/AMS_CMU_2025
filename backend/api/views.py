@@ -1,8 +1,9 @@
+
+from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import status,generics, viewsets,response
-from rest_framework.pagination import PageNumberPagination
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
@@ -43,7 +44,7 @@ User = get_user_model()
 
 class CustomPagination(PageNumberPagination):
     page_size = 20
-    page_size_query_param = 'page'
+    page_size_query_param = 'page_size'
     max_page_size = 100
 
 
@@ -2497,6 +2498,10 @@ class Issue_BookRegistrationView(APIView):
 
     def get(self, request):
         try:
+            # Get the page number and page size from query parameters
+            page_number = request.query_params.get('page', 1)
+            page_size = request.query_params.get('page_size', 20)
+
             # checking for the parameters from the URL
             if request.query_params:
                 issue = Issue_Book.objects.filter(**request.query_params.dict())
