@@ -2573,7 +2573,7 @@ class ChangeStudentPasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class UserList(generics.ListAPIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     queryset = User.objects.prefetch_related('borrow','student').all()
     serializer_class = UsersSerializer
     
