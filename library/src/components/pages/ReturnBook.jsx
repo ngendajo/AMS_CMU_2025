@@ -51,7 +51,9 @@ export default function ReturnBook() {
               returndate:returndate
             }),
             {
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  'Content-Type': 'application/json' },
                 withCredentials:true
             }
             );
