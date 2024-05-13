@@ -206,6 +206,7 @@ export default function Issue() {
                           <>
                           <span>{book_name}, ISB Nmuber: {isbnumber}, No.Books: {number_of_books}</span>
                           <select className='credentials'  value={library_number} onChange={(e) => setLibrary_number(e.target.value)}>
+                          <option value="" disabled>select Book Number</option>
                             {library_numberOptions.map((option) => (
                             <option key={option} value={option}>
                               {option}
