@@ -1,5 +1,6 @@
 import axios from "axios";
 import {React,useState, useEffect} from "react";
+import moment from 'moment';
 import useAuth from "../../hooks/useAuth";
 import { Link,useNavigate } from "react-router-dom";
 import baseUrl from "../../api/baseUrl";
@@ -125,7 +126,7 @@ export default function Issue() {
   return (
     <div className="loginform">
         <h2>Issue a new Book Form</h2>
-        <p>Current Date and Time: {issuedate.toLocaleString()}</p>
+        <p>Current Date and Time: {moment(issuedate).format("Do MMMM YYYY, h:mm:ss a").toLocaleString()}</p>
         <form className='formelement' onSubmit={handleSubmit}>
           <label htmlFor="book">Enter Student ID</label>
           <input 
@@ -155,7 +156,7 @@ export default function Issue() {
                           .filter((borr) => borr.returndate === "Not yet Returned")
                           .map((borr, index) => (
                             <span key={index}>
-                              {index + 1}. {borr.book.book_name}, ISB:{borr.book.isbnumber}, library number:{borr.library_number}, No. day(s) pass:{Math.floor((issuedate.getTime() - new Date(borr.issuedate).getTime()) / (1000 * 60 * 60 * 24))}  <br/>
+                              {index + 1}. {borr.book.book_name}, ISB:{borr.book.isbnumber}, library number:{borr.library_number}, Issued Date:{moment(borr.issuedate).format("Do MMMM YYYY, h:mm:ss a")}, No. day(s) pass:{Math.floor((issuedate.getTime() - new Date(borr.issuedate).getTime()) / (1000 * 60 * 60 * 24))}  <br/>
                             </span>
                           ))}
                       </span>

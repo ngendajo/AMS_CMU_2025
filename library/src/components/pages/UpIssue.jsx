@@ -43,6 +43,9 @@ export default function UpIssue() {
           if(response.data["error"]){
             setMsg("There are some problems")
           }
+          if(response.data["msg"]){
+            setMsg(response.data["msg"])
+          }
           /* .catch((error) => {
             console.error('Error uploading file:', error);
           }); */
