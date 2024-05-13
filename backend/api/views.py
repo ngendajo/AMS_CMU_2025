@@ -2502,19 +2502,24 @@ class Issue_BookRegistrationView(APIView):
             page_number = request.query_params.get('page', 1)
             page_size = request.query_params.get('page_size', 20)
 
-            # checking for the parameters from the URL
-            if request.query_params:
-                issue = Issue_Book.objects.filter(**request.query_params.dict())
-            else:
-                issue = Issue_Book.objects.all()
+            # Extract pagination parameters from the request query params
+            query_params = request.query_params.copy()
+            page_number = query_params.pop('page', 1)
+            page_size = query_params.pop('page_size', 20)
+
+            # Filtering issue objects based on query params
+            issue = Issue_Book.objects.all()
+            for key, value in query_params.items():
+                issue = issue.filter(**{key: value})
 
             # Pagination
             paginator = self.pagination_class()
             paginated_issue = paginator.paginate_queryset(issue, request)
+
             # Serializing paginated data
             serializer = DisplayIssue_BookSerializer(paginated_issue, many=True)
             return paginator.get_paginated_response(serializer.data)
-            
+
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
