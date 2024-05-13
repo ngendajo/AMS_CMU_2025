@@ -6,7 +6,7 @@ import { FaSearch } from 'react-icons/fa';
 const DynamicTable = ({ mockdata }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(itemsPerPage);
   const [selectedRows, setSelectedRows] = useState([]);
 
