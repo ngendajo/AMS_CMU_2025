@@ -2480,7 +2480,7 @@ def delete_book(request, pk):
 # Issue_Book data view
 
 class Issue_BookRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     pagination_class = CustomPagination  # Use custom pagination class
 
     def post(self, request):
