@@ -28,7 +28,7 @@ from django.contrib.auth.hashers import make_password
 
 from userprofile.models import Alumni
 
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse,Http404
 import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl import Workbook
@@ -37,7 +37,6 @@ from dateutil import parser
 import numpy as np
 import os
 from rest_framework.parsers import MultiPartParser
-from django.http import HttpResponse
 
 User = get_user_model()
 
@@ -2580,16 +2579,21 @@ class ChangeStudentPasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class UserList(generics.ListAPIView):
-    permission_classes = [IsAuthenticated, ]
+    # permission_classes = [IsAuthenticated, ]
     serializer_class = UsersSerializer
-    pagination_class = CustomPagination
 
     def get_queryset(self):
-        queryset = User.objects.prefetch_related('borrow', 'student').all()
-        student_id = self.request.query_params.get('student_id', None)
+        student_id = self.request.query_params.get('student_info__studentid', None)
         if student_id is not None:
-            queryset = queryset.filter(student_info__studentid=student_id)
-        return queryset
+            queryset = User.objects.filter(student__studentid=student_id).prefetch_related('borrow', 'student').all()
+            return queryset
+        else:
+            raise Http404("Please provide a valid student ID.")
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
     
 class AutoDataExcelUploadAPIView(APIView):
     permission_classes = [IsAuthenticated, ]

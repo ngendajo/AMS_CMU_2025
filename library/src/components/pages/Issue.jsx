@@ -9,7 +9,6 @@ export default function Issue() {
   const {auth} = useAuth();
   const navigate =useNavigate()
   const [bookid, setBookid] = useState('');
-  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [library_number, setLibrary_number] = useState('');
   const [library_numberOptions, setLibrary_numberOptions] = useState('');
@@ -27,11 +26,11 @@ export default function Issue() {
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, []);
-  useEffect(() =>{
-    
-    const getData = async () =>{
+  
+    const getstudent = async (id) =>{
+      setStudentid(id)
         try{
-            const response = await axios.get(baseUrl+'/usersbooks/',{
+            const response = await axios.get(baseUrl+'/usersbooks/?student_info__studentid='+id,{
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
                     "Content-Type": 'multipart/form-data'
@@ -39,7 +38,11 @@ export default function Issue() {
                 withCredentials:true 
             });
             console.log(response.data)
-            setData(response.data)
+            if(id!==""){
+              setFilteredData(response.data)
+            }else{
+              setFilteredData([])
+            }
             
         }catch(err) {
             console.log(err);
@@ -47,26 +50,29 @@ export default function Issue() {
         }
     }
 
-    getData();
-
-},[auth])
-  function getstudent(id){
+  /* function getstudent(id){
     setStudentid(id)
-    let da=data.filter((item) => {
-      // Check if student_info exists and studentid is not null
-      if (item.student_info && item.student_info.studentid) {
-        return item.student_info.studentid.includes(id);
+    if (Array.isArray(data)) {
+      let da = data.filter((item) => {
+        // Check if student_info exists and studentid is not null
+        if (item.student_info && item.student_info.studentid) {
+          return item.student_info.studentid.includes(id);
+        }
+        return false; // Exclude items without student_info or studentid
+      });
+    
+      if (da.length > 0) {
+        setFilteredData(da);
+      } else {
+        setFilteredData([]);
       }
-      return false; // Exclude items without student_info or studentid
-    })
-    if (da.length>0){
-      setFilteredData(da)
-    }else{
-      setFilteredData([])
+    } else {
+      // Handle the case where data is not an array
+      console.error("Data is not an array.");
     }
     
   }
-  //console.log(data)
+  console.log(data) */
  
   const getbook = async (id) =>{
     
