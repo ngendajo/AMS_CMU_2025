@@ -2,6 +2,7 @@ from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import status,generics, viewsets,response
+from rest_framework.pagination import PageNumberPagination
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
@@ -39,6 +40,12 @@ from rest_framework.parsers import MultiPartParser
 from django.http import HttpResponse
 
 User = get_user_model()
+
+
+class CustomPagination(PageNumberPagination):
+    page_size = 50
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 # Create your views here.
@@ -2474,7 +2481,7 @@ def delete_book(request, pk):
 # Issue_Book data view
 
 class Issue_BookRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = Issue_BookSerializer(data=request.data)
@@ -2573,9 +2580,16 @@ class ChangeStudentPasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class UserList(generics.ListAPIView):
-    #permission_classes = [IsAuthenticated, ]
-    queryset = User.objects.prefetch_related('borrow','student').all()
+    permission_classes = [IsAuthenticated, ]
     serializer_class = UsersSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        queryset = User.objects.prefetch_related('borrow', 'student').all()
+        student_id = self.request.query_params.get('student_id', None)
+        if student_id is not None:
+            queryset = queryset.filter(student_info__studentid=student_id)
+        return queryset
     
 class AutoDataExcelUploadAPIView(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -2767,7 +2781,7 @@ class AutoStudentDataExcelUploadAPIView(APIView):
     
 
 class AutoIssueDataExcelUploadAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     parser_classes = (MultiPartParser,)
 
     def post(self, request, format=None):
