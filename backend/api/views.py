@@ -42,7 +42,7 @@ User = get_user_model()
 
 
 class CustomPagination(PageNumberPagination):
-    page_size = 50
+    page_size = 20
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -2481,6 +2481,7 @@ def delete_book(request, pk):
 
 class Issue_BookRegistrationView(APIView):
     permission_classes = [IsAuthenticated, ]
+    pagination_class = CustomPagination  # Use custom pagination class
 
     def post(self, request):
         serializer = Issue_BookSerializer(data=request.data)
@@ -2502,12 +2503,12 @@ class Issue_BookRegistrationView(APIView):
             else:
                 issue = Issue_Book.objects.all()
 
-            # if there is something in items else raise error
-            if issue:
-                serializer = DisplayIssue_BookSerializer(issue, many=True)
-                return Response(serializer.data)
-            else:
-                return Response([])
+            # Pagination
+            paginator = self.pagination_class()
+            paginated_issue = paginator.paginate_queryset(issue, request)
+            # Serializing paginated data
+            serializer = DisplayIssue_BookSerializer(paginated_issue, many=True)
+            return paginator.get_paginated_response(serializer.data)
             
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)

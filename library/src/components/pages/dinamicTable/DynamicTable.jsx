@@ -121,9 +121,9 @@ const DynamicTable = ({ mockdata }) => {
           value={selectedItemsPerPage}
           onChange={handleItemsPerPageChange}
         >
-          <option value="5">20</option>
-          <option value="10">50</option>
-          <option value="20">100</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
         </select>
       </div>
 

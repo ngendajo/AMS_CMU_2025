@@ -57,6 +57,7 @@ export default function ReturnBook() {
                 withCredentials:true
             }
             );
+            alert("Book Returned Successfully")
             console.log(response.data)
             navigate("/issued")
     } catch(err) {
