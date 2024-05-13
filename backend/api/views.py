@@ -2832,7 +2832,7 @@ class AutoIssueDataExcelUploadAPIView(APIView):
 
                 # Now create Issue instances since all books and borrowers exist
                 for index, row in df_issue.iterrows():
-                    book = Book.objects.filter(isbnumber=row['book'])
+                    book = Book.objects.get(isbnumber=row['book'])
                     student = Student.objects.get(studentid=row['borrower'])
                     user_instance = student.user 
                     Issue_Book.objects.create(book=book, borrower=user_instance, library_number=row['library_number'], issuedate=row['issuedate'], returndate=row['returndate'])
