@@ -14,8 +14,8 @@ export default function IssuedBooks() {
   const [count, setCount] = useState(0);
   const [next, setNext] = useState("");
   const [previous, setPrevious] = useState("");
-  const [url, setUrl] = useState(baseUrl+'/issue/?page=1');
-  const [url1, setUrl1] = useState(baseUrl+'/issue/?page=1');
+  const [url, setUrl] = useState(baseUrl+'/issue/');
+  const [url1, setUrl1] = useState(baseUrl+'/issue/');
   
   let {auth} = useAuth();
   const handleFilter = async (last_name) =>{
