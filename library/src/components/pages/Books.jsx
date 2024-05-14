@@ -14,7 +14,7 @@ export default function Books() {
     
         const getData = async () =>{
             try{
-                const response = await axios.get(baseUrl+'/book/',{
+                const response = await axios.get(baseUrl+'/books/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -28,8 +28,8 @@ export default function Books() {
                     No:i,
                     book_name:e.book_name,
                     ISBN_NUMBER:e.isbnumber,
-                    Category:e.category.category_name,
-                    Author:e.author.author_name,
+                    Category:e.category_name,
+                    Author:e.author_name,
                     Number_of_books:e.number_of_books,
                     Edit:<span>
                         <Link to={`/book/${e.id}`}><BiEditAlt className='icon'/></Link>
