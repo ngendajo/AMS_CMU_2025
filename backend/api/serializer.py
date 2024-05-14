@@ -859,4 +859,14 @@ class IssuedBookDisplaySerializer(serializers.Serializer):
     issuedate = serializers.CharField()
     returndate = serializers.CharField()
     id = serializers.IntegerField()
+    
+class StudentListDisplaySerializer(serializers.Serializer):
+    grade_name = serializers.CharField()
+    studentid = serializers.CharField()
+    family_name = serializers.CharField()
+    combination_name = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.CharField()
+    id = serializers.IntegerField()
         

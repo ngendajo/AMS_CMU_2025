@@ -2915,7 +2915,7 @@ class IssuedBookDisplayAPIView(APIView):
                 INNER JOIN userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
                 INNER JOIN userprofile_category ON userprofile_book.category_id = userprofile_category.id 
                 INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id 
-                WHERE returndate = 'Not yet Returned'
+                WHERE returndate = 'Not yet Returned order by issuedate desc;
             """
 
             # Execute the SQL query
@@ -2945,6 +2945,49 @@ class IssuedBookDisplayAPIView(APIView):
                     })
 
             serializer = IssuedBookDisplaySerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)
+        
+class StudentListDisplayAPIView(APIView):
+    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
+    def get(self, request, *args, **kwargs):
+        try:
+            # Get data
+            sql_query1 = """
+                select grade_name,studentid,family_name,combination_name,
+                first_name,last_name,email,userprofile_student.id as id from 
+                api_user  inner join userprofile_student on 
+                api_user.id=userprofile_student.user_id inner join 
+                userprofile_family on userprofile_student.family_id=userprofile_family.id inner join 
+                userprofile_grade on userprofile_family.grade_id=userprofile_grade.id inner join 
+                userprofile_combination on userprofile_student.combination_id=userprofile_combination.id ;
+            """
+
+            # Execute the SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query1)
+                data1 = cursor.fetchall()
+
+            data = []
+            if data1 is not None:
+                for i in data1:
+                    data.append({
+                        'grade_name': i[0],
+                        'studentid': i[1],
+                        'family_name': i[2],
+                        'combination_name': i[3],
+                        'first_name': i[4],
+                        'last_name': i[5],
+                        'email': i[6],
+                        'id': i[7]
+                    })
+
+            serializer = StudentListDisplaySerializer(data=data, many=True)
             serializer.is_valid()  # Validate serializer data
             return Response(serializer.data)
 

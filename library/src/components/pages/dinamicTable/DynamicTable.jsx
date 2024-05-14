@@ -98,7 +98,7 @@ const DynamicTable = ({ mockdata }) => {
           />
         </td>
         {Object.keys(item).map((header) => (
-          <td key={header}>{item[header]}</td>
+          <td key={header} className={item[header]==="Not yet Returned" ? 'invalid' : ''}>{item[header]}</td>
         ))}
       </tr>
     ));

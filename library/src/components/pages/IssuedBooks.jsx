@@ -23,7 +23,7 @@ export default function IssuedBooks() {
                   },
                   withCredentials:true 
               });
-              console.log(response.data)
+              //console.log(response.data)
               setLoading(false);
               var booklist=[]
               response.data.forEach(e=>{
