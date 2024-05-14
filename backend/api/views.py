@@ -2994,3 +2994,42 @@ class StudentListDisplayAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+        
+class BookListDisplayAPIView(APIView):
+    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
+    def get(self, request, *args, **kwargs):
+        try:
+            # Get data
+            sql_query1 = """
+                SELECT book_name, isbnumber, category_name, author_name, number_of_books, 
+                       userprofile_book.id AS id  FROM  userprofile_book 
+                INNER JOIN userprofile_category ON userprofile_book.category_id = userprofile_category.id 
+                INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id  
+                order by book_name desc;
+            """
+
+            # Execute the SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query1)
+                data1 = cursor.fetchall()
+
+            data = []
+            if data1 is not None:
+                for i in data1:
+                    data.append({
+                        'book_name': i[0],
+                        'isbnumber': i[1],
+                        'category_name': i[2],
+                        'author_name': i[3],
+                        'number_of_books': i[4],
+                        'id': i[5]
+                    })
+
+            serializer = BookListDisplaySerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)

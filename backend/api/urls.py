@@ -154,6 +154,7 @@ urlpatterns = [
     
     #book paths
     path('book/',views.BookRegistrationView.as_view()),
+    path('books/',views.BookListDisplayAPIView.as_view()),
     path('book/<int:pk>/delete/', views.delete_book, name='delete-book'),
     path('book/<int:pk>/', views.update_Book, name='update_book'),
     
