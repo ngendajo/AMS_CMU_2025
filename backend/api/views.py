@@ -2575,7 +2575,7 @@ def delete_Issue_Book(request, pk):
 
         
 class CheckStudentView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def get(self, request):
         try:
             user_email = request.query_params.get('email')
