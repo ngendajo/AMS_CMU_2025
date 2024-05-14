@@ -2905,7 +2905,7 @@ class IssuedBookDisplayAPIView(APIView):
             sql_query1 = """
                 SELECT grade_name, studentid, family_name, combination_name, first_name, last_name, 
                        email, book_name, isbnumber, category_name, author_name, library_number, 
-                       issuedate, returndate, api_user.id AS id 
+                       issuedate, returndate, userprofile_issue_book.id AS id 
                 FROM api_user 
                 INNER JOIN userprofile_issue_book ON api_user.id = userprofile_issue_book.borrower_id 
                 INNER JOIN userprofile_student ON api_user.id = userprofile_student.user_id 
