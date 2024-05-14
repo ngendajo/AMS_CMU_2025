@@ -20,7 +20,7 @@ export default function ResponsiveTable({data}) {
             {data.map((row, rowIndex) => (
               <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'even-row' : ''}>
                 {headers.map((header, colIndex) => (
-                  <td key={colIndex}>{row[header]}</td>
+                  <td key={colIndex} className={row[header]==="Not yet Returned" ? 'invalid' : ''}>{row[header]}</td>
                 ))}
               </tr>
             ))}
