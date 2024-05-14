@@ -2523,17 +2523,6 @@ class Issue_BookRegistrationView(APIView):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        
-@api_view(['GET'])
-#@permission_classes([IsAuthenticated])
-def filter_issue_books_by_student(request):
-    student_id = request.query_params.get('student_info__id')
-    if student_id is not None:
-        issue = Issue_Book.objects.filter(student_info__id=student_id)
-        serializer = DisplayIssue_BookSerializer(issue, many=True)
-        return Response(serializer.data)
-    else:
-        return Response({"detail": "Query parameter 'student_info__id' is required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])
