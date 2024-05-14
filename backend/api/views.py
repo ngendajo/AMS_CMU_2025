@@ -2525,7 +2525,7 @@ class Issue_BookRegistrationView(APIView):
         
         
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def filter_issue_books_by_student(request):
     student_id = request.query_params.get('student_info__id')
     if student_id is not None:
