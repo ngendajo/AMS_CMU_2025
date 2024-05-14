@@ -14,7 +14,7 @@ export default function Students() {
     
         const getData = async () =>{
             try{
-                const response = await axios.get(baseUrl+'/bulkstudent/',{
+                const response = await axios.get(baseUrl+'/students/',{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
@@ -26,12 +26,12 @@ export default function Students() {
                 response.data.forEach(e=>{
                     studentlist.push({
                     No:i,
-                    Names:e.user.first_name+" "+e.user.last_name,
+                    Names:e.last_name+" "+e.first_name,
                     Reg_No:e.studentid,
-                    Email:e.user.email,
-                    Grade:e.family.grade.grade_name,
-                    Family:e.family.family_name,
-                    Combinamtion:e.combination.combination_name,
+                    Email:e.email,
+                    Grade:e.grade_name,
+                    Family:e.family_name,
+                    Combinamtion:e.combination_name,
                     Edit:<span>
                         <Link to={`/student/${e.id}`}><BiEditAlt className='icon'/></Link>
                     </span>
