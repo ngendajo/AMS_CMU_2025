@@ -137,7 +137,7 @@ urlpatterns = [
     #Reg Student
     
     path('bulkstudent/', views.StudentRegistrationView.as_view(), name='auth_registerstudent'),
-    path('students/', views.StudentRegistrationView.as_view(), name='students'),
+    path('students/', views.StudentListDisplayAPIView.as_view(), name='students'),
     path('cstudent/', views.CheckStudentView.as_view(), name='checkstudent'),
     path('student/<int:pk>/', views.StudentRegistrationUpdateAPIView.as_view(), name='student-registration-update'),   
     #author paths
