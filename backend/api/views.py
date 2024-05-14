@@ -2592,7 +2592,7 @@ class CheckStudentView(APIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class ChangeStudentPasswordView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = ChangeStudentPasswordSerializer(data=request.data)
         if serializer.is_valid():
