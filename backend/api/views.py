@@ -2510,7 +2510,10 @@ class Issue_BookRegistrationView(APIView):
             # Filtering issue objects based on query params
             issue = Issue_Book.objects.all()
             for key, value in query_params.items():
-                issue = issue.filter(**{key: value})
+                if key == 'student_info__id':
+                    issue = issue.filter(student_info__id=value)
+                else:
+                    issue = issue.filter(**{key: value})
 
             # Pagination
             paginator = self.pagination_class()
@@ -2522,7 +2525,6 @@ class Issue_BookRegistrationView(APIView):
 
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
 
 
 @api_view(['PATCH'])
