@@ -2519,6 +2519,9 @@ class Issue_BookRegistrationView(APIView):
                 user = student.user
                 # Add filter condition for borrower
                 filter_conditions['borrower'] = user
+            
+            # Add the condition for 'returnedate' to filter for "Not yet Returned"
+            filter_conditions['returnedate'] = "Not yet Returned"
 
             # Apply remaining filter conditions
             for key, value in query_params.items():
