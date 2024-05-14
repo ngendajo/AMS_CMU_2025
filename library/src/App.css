@@ -327,3 +327,27 @@ li {
   color: #F49D47;
   cursor: pointer;
 }
+.responsivetable-container {
+  overflow-x: auto;
+}
+
+.responsivetable-container table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.responsivetable-container th, .responsivetable-container td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+.even-row {
+  background-color: lightblue;
+}
+
+@media screen and (max-width: 600px) {
+  .responsivetable-container th, .responsivetable-container td {
+    font-size: 14px;
+  }
+}

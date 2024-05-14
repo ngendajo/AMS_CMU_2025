@@ -1,22 +1,26 @@
 import React, {useState, useEffect} from 'react'
+import { FaSearch } from 'react-icons/fa';
 import moment from 'moment';
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { BiEditAlt } from "react-icons/bi";
 import baseUrl from "../../api/baseUrl";
-import DynamicTable from "./dinamicTable/DynamicTable";
+import ResponsiveTable from './ResponsiveTable';
 
 export default function IssuedBooks() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [next, setNext] = useState("");
+  const [keyName, setKeyName] = useState("student_info__studentid");
   const [previous, setPrevious] = useState("");
   const [url, setUrl] = useState(baseUrl+'/issue/?page=1');
   
   let {auth} = useAuth();
-  
+  function handleFilter(id){
+    setUrl(baseUrl+'/issue/?'+keyName+"="+id)
+  }
 
   useEffect(() =>{
       const getData = async () =>{
@@ -34,10 +38,8 @@ export default function IssuedBooks() {
               setNext(response.data.next)
               setPrevious(response.data.previous)
               var booklist=[]
-              var i=1
               response.data.results.forEach(e=>{
                   booklist.push({
-                  No:i,
                   Student_ID:e.student_info.studentid,
                   Name:e.borrower.first_name+' '+e.borrower.last_name,
                   Email:e.borrower.email,
@@ -53,7 +55,6 @@ export default function IssuedBooks() {
                       <Link to={`/issue/${e.id}`}><BiEditAlt className='icon'/></Link>
                   </span>
               })
-              i=i+1
               })
               setData(booklist);
           }catch(err) {
@@ -72,10 +73,35 @@ return (
         <p>Loading...</p>
       ) : (
         <>
-            <DynamicTable mockdata={data} />
-            <h1 onClick={() => setUrl(previous)}>Previous</h1>
-            <h1 onClick={() => setUrl(next)}>Next</h1>
-            <h1>{count}</h1>
+            <center>
+                <div className="custom-select-container">
+                    <label>Search By:</label>
+                    <select className="custom-select" value={keyName} onChange={(e) => setKeyName(e.target.value)}>
+                        <option value="student_info__studentid">Student ID</option>
+                        <option value="borrower__first_name">First Name</option>
+                        <option value="borrower__last_name">Last Name</option>
+                    </select>
+                </div>
+                <div className="input-wrapper filter-container">
+                    <FaSearch id="search-icon" />
+                    <input
+                    type="text"
+                    placeholder="Search..."
+                    onChange={(e) => handleFilter(e.target.value)}
+                    />
+                </div>
+            </center>
+            <ResponsiveTable data={data} />
+            {previous!==null?
+            <button className="prenext" onClick={() => setUrl(previous)} >Previous</button>:<></>
+            }
+            <button className="prenext">No of Entries:{count}</button>
+            {next===null?
+            <></>:
+            <button className="prenext" onClick={() => setUrl(next)}>Next</button>
+            }
+            
+            
         </>
     
     
