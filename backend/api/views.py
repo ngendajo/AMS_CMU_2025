@@ -2915,7 +2915,7 @@ class IssuedBookDisplayAPIView(APIView):
                 INNER JOIN userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
                 INNER JOIN userprofile_category ON userprofile_book.category_id = userprofile_category.id 
                 INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id 
-                WHERE returndate = 'Not yet Returned order by issuedate desc;
+                WHERE returndate = 'Not yet Returned' order by issuedate desc;
             """
 
             # Execute the SQL query
