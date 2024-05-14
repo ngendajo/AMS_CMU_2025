@@ -42,9 +42,8 @@ export default function IssuedBooks() {
             response.data.results.forEach(e=>{
                 booklist.push({
                 Student_ID:e.student_info.studentid,
-                Name:e.borrower.first_name+' '+e.borrower.last_name,
+                Name:e.borrower.first_name+' '+e.borrower.last_name+" ("+e.student_info? e.student_info.family.grade.grade_name+", "+e.student_info.family.family_name+", "+e.student_info.combination.combination_name+")":"",
                 Email:e.borrower.email,
-                From:e.student_info? e.student_info.family.grade.grade_name+" Grade "+e.student_info.family.family_name+" Family "+e.student_info.combination.combination_name+" Class":"",
                 Book_name:e.book.book_name,
                 ISBNumber:e.book.isbnumber,
                 Category:e.book.category.category_name,
@@ -100,9 +99,8 @@ function compareBooks(a, b) {
               response.data.results.forEach(e=>{
                   booklist.push({
                   Student_ID:e.student_info.studentid,
-                  Name:e.borrower.first_name+' '+e.borrower.last_name,
+                  Name:e.student_info?e.borrower.first_name+' '+e.borrower.last_name+" ("+ e.student_info.family.grade.grade_name+", "+e.student_info.family.family_name+", "+e.student_info.combination.combination_name+")":e.borrower.first_name+' '+e.borrower.last_name,
                   Email:e.borrower.email,
-                  From:e.student_info? e.student_info.family.grade.grade_name+" Grade "+e.student_info.family.family_name+" Family "+e.student_info.combination.combination_name+" Class":"",
                   Book_name:e.book.book_name,
                   ISBNumber:e.book.isbnumber,
                   Category:e.book.category.category_name,

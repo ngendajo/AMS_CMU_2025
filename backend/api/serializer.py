@@ -841,4 +841,22 @@ class UsersSerializer(serializers.ModelSerializer):
             return serializer.data
         except Student.DoesNotExist:
             return None
+
+#report data from library database    
+class IssuedBookDisplaySerializer(serializers.Serializer):
+    grade_name = serializers.CharField()
+    studentid = serializers.CharField()
+    family_name = serializers.CharField()
+    combination_name = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.CharField()
+    book_name = serializers.CharField()
+    isbnumber = serializers.CharField()
+    category_name = serializers.CharField()
+    author_name = serializers.CharField()
+    library_number = serializers.CharField()
+    issuedata = serializers.CharField()
+    returndate = serializers.CharField()
+    id = serializers.IntegerField()
         
