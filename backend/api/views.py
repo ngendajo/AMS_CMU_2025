@@ -2897,38 +2897,52 @@ class AutoIssueDataExcelUploadAPIView(APIView):
     
 #report data from library database 
 class IssuedBookDisplayAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
     def get(self, request, *args, **kwargs):
-        
-            
-            #get data
-        sql_query1 = "select grade_name,studentid,family_name,combination_name,first_name,last_name,email,book_name,isbnumber,category_name,author_name,library_number,issuedate,returndate,api_user.id as id from api_user inner join userprofile_issue_book on api_user.id=userprofile_issue_book.borrower_id inner join userprofile_student on api_user.id=userprofile_student.user_id inner join userprofile_family on userprofile_student.family_id=userprofile_family.id inner join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id inner join userprofile_combination on userprofile_student.combination_id=userprofile_combination.id inner join userprofile_book on userprofile_issue_book.book_id=userprofile_book.id inner join userprofile_category on userprofile_book.category_id=userprofile_category.id inner join userprofile_author on userprofile_book.author_id=userprofile_author.id  where returndate='Not yet Returned'"
+        # Get data
+        sql_query1 = """
+            SELECT grade_name, studentid, family_name, combination_name, first_name, last_name, 
+                   email, book_name, isbnumber, category_name, author_name, library_number, 
+                   issuedate, returndate, api_user.id AS id 
+            FROM api_user 
+            INNER JOIN userprofile_issue_book ON api_user.id = userprofile_issue_book.borrower_id 
+            INNER JOIN userprofile_student ON api_user.id = userprofile_student.user_id 
+            INNER JOIN userprofile_family ON userprofile_student.family_id = userprofile_family.id 
+            INNER JOIN userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id 
+            INNER JOIN userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id 
+            INNER JOIN userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
+            INNER JOIN userprofile_category ON userprofile_book.category_id = userprofile_category.id 
+            INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id 
+            WHERE returndate = 'Not yet Returned'
+        """
 
         # Execute the SQL query
-        with connection.cursor() as cursor1:
-            cursor1.execute(sql_query1)
-            data1 = cursor1.fetchall()
-            
-        data=[]   
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query1)
+            data1 = cursor.fetchall()
+
+        data = []
         if data1 is not None:
             for i in data1:
                 data.append({
-                        'grade_name': i[0],
-                        'studentid': i[1],
-                        'family_name': i[2],
-                        'combination_name': i[3],
-                        'first_name': i[4],
-                        'last_name': i[5],
-                        'email': i[6],
-                        'book_name': i[7],
-                        'isbnumber': i[8],
-                        'category_name': i[9],
-                        'author_name': i[10],
-                        'library_number': i[11],
-                        'issuedate': i[12],
-                        'returndate': i[13],
-                        'id': i[14]
+                    'grade_name': i[0],
+                    'studentid': i[1],
+                    'family_name': i[2],
+                    'combination_name': i[3],
+                    'first_name': i[4],
+                    'last_name': i[5],
+                    'email': i[6],
+                    'book_name': i[7],
+                    'isbnumber': i[8],
+                    'category_name': i[9],
+                    'author_name': i[10],
+                    'library_number': i[11],
+                    'issuedate': i[12],
+                    'returndate': i[13],
+                    'id': i[14]
                 })
 
-        serializer = IssuedBookDisplaySerializer(data, many=True)
+        serializer = IssuedBookDisplaySerializer(data=data, many=True)
+        serializer.is_valid()  # Validate serializer data
         return Response(serializer.data)
