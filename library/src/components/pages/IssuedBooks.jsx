@@ -140,7 +140,7 @@ return (
                     <FaSearch id="search-icon" />
                     <input
                     type="text"
-                    placeholder="Search By Lasst Name..."
+                    placeholder="Search By Last Name..."
                     onChange={(e) => handleFilter(e.target.value)}
                     />
                 </div>
