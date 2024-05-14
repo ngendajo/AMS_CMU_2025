@@ -29,7 +29,7 @@ export default function IssuedBooks() {
               response.data.forEach(e=>{
                   booklist.push({
                   Student_ID:e.studentid,
-                  Name:e.first_name+' '+e.last_name+" ("+ e.grade_name+", "+e.family_name+", "+e.combination_name+")",
+                  Name:e.last_name+' '+e.first_name+" ("+ e.grade_name+", "+e.family_name+", "+e.combination_name+")",
                   Email:e.email,
                   Book_name:e.book_name,
                   ISBNumber:e.isbnumber,
