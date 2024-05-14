@@ -856,7 +856,7 @@ class IssuedBookDisplaySerializer(serializers.Serializer):
     category_name = serializers.CharField()
     author_name = serializers.CharField()
     library_number = serializers.CharField()
-    issuedata = serializers.CharField()
+    issuedate = serializers.CharField()
     returndate = serializers.CharField()
     id = serializers.IntegerField()
         
