@@ -2507,13 +2507,25 @@ class Issue_BookRegistrationView(APIView):
             page_number = query_params.pop('page', 1)
             page_size = query_params.pop('page_size', 20)
 
-            # Filtering issue objects based on query params
-            issue = Issue_Book.objects.all()
+            # Initialize filter conditions
+            filter_conditions = {}
+
+            # Extract special filter condition for studentid
+            studentid = query_params.pop('studentid', None)
+            if studentid:
+                # Retrieve the Student instance based on the studentid
+                student = Student.objects.get(studentid=studentid)
+                # Access the associated User instance
+                user = student.user
+                # Add filter condition for borrower
+                filter_conditions['borrower'] = user
+
+            # Apply remaining filter conditions
             for key, value in query_params.items():
-                if key == 'student_info__id':
-                    issue = issue.filter(student_info__id=value)
-                else:
-                    issue = issue.filter(**{key: value})
+                filter_conditions[key] = value
+
+            # Filtering issue objects based on query params
+            issue = Issue_Book.objects.filter(**filter_conditions)
 
             # Pagination
             paginator = self.pagination_class()
