@@ -40,8 +40,8 @@ import os
 from rest_framework.parsers import MultiPartParser
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from django.shortcuts import render
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 User = get_user_model()
 
@@ -3083,8 +3083,11 @@ class BookReportExportAPIView(APIView):
             doc = SimpleDocTemplate(response, pagesize=letter)
             elements = []
 
-            # Add title
-            elements.append(title)
+            # Add title as Paragraph
+            styles = getSampleStyleSheet()
+            title_style = styles['Title']
+            title_paragraph = Paragraph(title, title_style)
+            elements.append(title_paragraph)
 
             # Add data table
             table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
