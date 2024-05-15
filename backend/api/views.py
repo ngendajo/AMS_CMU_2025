@@ -3108,7 +3108,7 @@ class BookReportExportAPIView(APIView):
             for i in range(len(data)):
                 for j in range(len(data[i])):
                     cell_style = ParagraphStyle(name='WrapStyle', wordWrap='LTR')
-                    cell_content = Paragraph(data[i][j], cell_style)
+                    cell_content = Paragraph(str(data[i][j]), cell_style)  # Convert to string before creating Paragraph
                     table._argW[i][j] = cell_content
 
             elements.append(table)
