@@ -3093,7 +3093,7 @@ class BookReportExportAPIView(APIView):
                         'issued_books': i[5]
                     })
             title = "LFHS@ASYV List of Books"
-            name = "list_of_books"
+            name = "list_of_books.pdf"
             # Generate PDF using the data and title
             msg=generate_pdf(data, title,name)
             return Response({"msg":msg})
