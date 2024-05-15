@@ -3039,84 +3039,62 @@ class BookListDisplayAPIView(APIView):
             return Response({'error': str(e)}, status=500)
         
 class BookReportExportAPIView(APIView):
-    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+    def get_data_from_database(self):
+        sql_query = """
+            SELECT  book_name, isbnumber, category_name, author_name, number_of_books, 
+            COUNT(userprofile_issue_book.book_id) as issued_books 
+            FROM  userprofile_book  
+            INNER JOIN userprofile_category ON userprofile_book.category_id = userprofile_category.id   
+            INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id   
+            LEFT JOIN userprofile_issue_book ON userprofile_issue_book.book_id = userprofile_book.id  
+            WHERE  returndate = 'Not yet Returned'  
+            GROUP BY  userprofile_book.book_name, userprofile_book.isbnumber,  
+            userprofile_category.category_name, userprofile_author.author_name, 
+            userprofile_book.number_of_books   
+            ORDER BY  book_name ASC;
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query)
+            return cursor.fetchall()
+
+    def generate_pdf(self, data):
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="list_of_books.pdf"'
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Add title
+        styles = getSampleStyleSheet()
+        title_style = styles['Title']
+        title_paragraph = Paragraph("LFHS@ASYV List of Books", title_style)
+        elements.append(title_paragraph)
+
+        # Add data table
+        table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        table_data = [['Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books']]
+        table_data.extend(data)
+
+        table = Table(table_data)
+        table.setStyle(table_style)
+
+        elements.append(table)
+        doc.build(elements)
+        return response
 
     def get(self, request, *args, **kwargs):
         try:
-            # Get data
-            sql_query1 = """
-                SELECT  book_name, isbnumber, category_name, author_name, number_of_books, 
-                COUNT(userprofile_issue_book.book_id) as id FROM  userprofile_book  INNER JOIN 
-                userprofile_category ON userprofile_book.category_id = userprofile_category.id   
-                INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id   
-                LEFT JOIN userprofile_issue_book ON userprofile_issue_book.book_id = userprofile_book.id  
-                WHERE  returndate = 'Not yet Returned'  GROUP BY  userprofile_book.book_name, 
-                userprofile_book.isbnumber,  userprofile_category.category_name,  
-                userprofile_author.author_name, userprofile_book.number_of_books   
-                ORDER BY  book_name ASC;
-            """
-
-            # Execute the SQL query
-            with connection.cursor() as cursor:
-                cursor.execute(sql_query1)
-                data1 = cursor.fetchall()
-
-            data = []
-            if data1 is not None:
-                for i in data1:
-                    data.append([
-                        i[0],  # book_name
-                        i[1],  # isbnumber
-                        i[2],  # category_name
-                        i[3],  # author_name
-                        i[4],  # number_of_books
-                        i[5],  # issued_books
-                    ])
-
-            title = "LFHS@ASYV List of Books"
-            filename = "list_of_books.pdf"
-
-             # Generate PDF
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
-
-            doc = SimpleDocTemplate(response, pagesize=landscape(letter))
-            elements = []
-
-            # Add title as Paragraph
-            styles = getSampleStyleSheet()
-            title_style = styles['Title']
-            title_paragraph = Paragraph(title, title_style)
-            elements.append(title_paragraph)
-
-            # Add data table
-            table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                      ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                      ('GRID', (0, 0), (-1, -1), 1, colors.black)])
-
-            table = Table(data)
-            table.setStyle(table_style)
-
-            # Ensure table._argW is initialized
-            table._argW = [[0] * len(data[0]) for _ in range(len(data))]
-
-            # Wrap content in table cells
-            for i in range(len(data)):
-                for j in range(len(data[i])):
-                    cell_style = ParagraphStyle(name='WrapStyle', wordWrap='LTR')
-                    cell_content = Paragraph(str(data[i][j]), cell_style)  # Convert to string before creating Paragraph
-                    table._argW[i][j] = cell_content
-
-            elements.append(table)
-
-            doc.build(elements)
-
-            return response
-
+            data = self.get_data_from_database()
+            if data:
+                return self.generate_pdf(data)
+            else:
+                return Response({'error': 'No data found.'}, status=404)
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+        
