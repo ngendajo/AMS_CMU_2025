@@ -3072,24 +3072,33 @@ class BookReportExportAPIView(APIView):
 
         # Add data table
         table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        
         table_data = [['Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books']]
         table_data.extend(data)
 
-        table = Table(table_data)
+        # Calculate maximum column widths based on available page width
+        available_width = doc.width
+        num_cols = len(table_data[0])
+        max_col_width = available_width / num_cols
+
+        # Add table content with wrapped paragraphs
+        wrapped_table_data = []
+        for row in table_data:
+            wrapped_row = []
+            for cell in row:
+                cell_style = ParagraphStyle(name='WrapStyle', wordWrap='LTR')
+                wrapped_cell = Paragraph(str(cell), cell_style)
+                wrapped_row.append(wrapped_cell)
+            wrapped_table_data.append(wrapped_row)
+
+        table = Table(wrapped_table_data)
         table.setStyle(table_style)
-
-        # Calculate column widths dynamically based on content
-        col_widths = []
-        for col in zip(*table_data):
-            col_widths.append(max([len(str(cell)) for cell in col]) * 12)  # Adjust the multiplier for appropriate scaling
-
-        table._argW = col_widths
 
         elements.append(table)
         doc.build(elements)
