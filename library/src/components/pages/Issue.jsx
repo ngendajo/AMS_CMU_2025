@@ -85,12 +85,27 @@ export default function Issue() {
             },
             withCredentials:true
         });
+        const response2 = await axios.get(baseUrl+'/issue/?book__isbnumber='+id,{
+          headers: {
+              "Authorization": 'Bearer ' + String(auth.accessToken),
+              "Content-Type": 'multipart/form-data'
+          },
+          withCredentials:true
+      });
+        var library_numbers_list=[]
+        response2.data.results.forEach(e=>{
+          if(e.returndate==="Not yet Returned"){
+            library_numbers_list.push(e.library_number)
+          }
+      })
+      console.log(library_numbers_list)
         let data=response.data;
         if (data && data.length > 0) {
             setBookid(data[0].id);
             setBook_name(data[0].book_name);
             setNumber_of_books(data[0].number_of_books);
-            setLibrary_numberOptions(Array.from({ length: data[0].number_of_books }, (_, index) => index + 1))
+            setLibrary_numberOptions((Array.from({ length: data[0].number_of_books }, (_, index) => index + 1)).filter(item => !((library_numbers_list).map(item => parseInt(item, 10))).includes(item)))
+
           } else {
             setBookid('');
             setBook_name('');
