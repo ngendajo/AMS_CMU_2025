@@ -39,9 +39,9 @@ import numpy as np
 import os
 from rest_framework.parsers import MultiPartParser
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import landscape, letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 User = get_user_model()
 
@@ -3076,11 +3076,11 @@ class BookReportExportAPIView(APIView):
             title = "LFHS@ASYV List of Books"
             filename = "list_of_books.pdf"
 
-            # Generate PDF
+             # Generate PDF
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
 
-            doc = SimpleDocTemplate(response, pagesize=letter)
+            doc = SimpleDocTemplate(response, pagesize=landscape(letter))
             elements = []
 
             # Add title as Paragraph
@@ -3100,6 +3100,14 @@ class BookReportExportAPIView(APIView):
 
             table = Table(data)
             table.setStyle(table_style)
+
+            # Wrap content in table cells
+            for i in range(len(data)):
+                for j in range(len(data[i])):
+                    cell_style = ParagraphStyle(name='WrapStyle', wordWrap='LTR')
+                    cell_content = Paragraph(data[i][j], cell_style)
+                    table._argW[i][j] = cell_content
+
             elements.append(table)
 
             doc.build(elements)
