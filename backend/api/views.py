@@ -3038,14 +3038,6 @@ class BookListDisplayAPIView(APIView):
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
         
-from django.http import HttpResponse
-from django.db import connection
-from reportlab.lib.pagesizes import landscape, letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-from rest_framework.views import APIView
-from rest_framework.response import Response
 
 class BookReportExportAPIView(APIView):
     def get_data_from_database(self):
