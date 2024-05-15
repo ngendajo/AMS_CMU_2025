@@ -3064,16 +3064,18 @@ class BookReportExportAPIView(APIView):
             data = []
             if data1 is not None:
                 for i in data1:
-                    data.append({
-                        'book_name': i[0],
-                        'isbnumber': i[1],
-                        'category_name': i[2],
-                        'author_name': i[3],
-                        'number_of_books': i[4],
-                        'issued_books': i[5]
-                    })
+                    data.append([
+                        i[0],  # book_name
+                        i[1],  # isbnumber
+                        i[2],  # category_name
+                        i[3],  # author_name
+                        i[4],  # number_of_books
+                        i[5],  # issued_books
+                    ])
+
             title = "LFHS@ASYV List of Books"
             filename = "list_of_books.pdf"
+
             # Generate PDF
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
@@ -3086,12 +3088,13 @@ class BookReportExportAPIView(APIView):
 
             # Add data table
             table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                    ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+                                      ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                      ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                      ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                      ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                      ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
             table = Table(data)
             table.setStyle(table_style)
             elements.append(table)
