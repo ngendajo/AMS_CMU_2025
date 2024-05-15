@@ -212,14 +212,12 @@ export default function Issue() {
                           required
                         />
                         <p></p>
-                        {isbnumber==="" || (student.borrowings.filter(
-                            (borr) => borr.returndate === isbnumber
-                          ).length)>1?
+                        {isbnumber===""?
                         <p className="invalid">Enter SSBNumber</p>:
                         <>
                           {library_numberOptions.length>0?
                           <>
-                          <span>{book_name}, ISB Nmuber: {isbnumber}, No.Books: {number_of_books}</span>
+                          <span>{book_name},<br/> ISB Nmuber: {isbnumber}</span><br/>
                           <select className='credentials'  value={library_number} onChange={(e) => setLibrary_number(e.target.value)}>
                           <option value="" disabled>select Book Number</option>
                             {library_numberOptions.map((option) => (
