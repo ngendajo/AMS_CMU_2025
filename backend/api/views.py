@@ -3043,6 +3043,7 @@ class BookReportExportAPIView(APIView):
     def get_data_from_database(self):
         sql_query = """
             select
+                ROW_NUMBER() OVER (ORDER BY category_name ASC) AS "Number",
                 userprofile_book.book_name,
                 userprofile_book.isbnumber,
                 userprofile_category.category_name,
@@ -3092,7 +3093,7 @@ class BookReportExportAPIView(APIView):
                                   ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
         
-        table_data = [['Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books','current_books']]
+        table_data = [['Number','Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books','current_books']]
         table_data.extend(data)
 
         # Calculate maximum column widths based on available page width
