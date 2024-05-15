@@ -3038,6 +3038,15 @@ class BookListDisplayAPIView(APIView):
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
         
+from django.http import HttpResponse
+from django.db import connection
+from reportlab.lib.pagesizes import landscape, letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 class BookReportExportAPIView(APIView):
     def get_data_from_database(self):
         sql_query = """
@@ -3082,6 +3091,10 @@ class BookReportExportAPIView(APIView):
 
         table = Table(table_data)
         table.setStyle(table_style)
+
+        # Adjust column widths dynamically based on content
+        for i in range(len(table_data[0])):
+            table._argW[i] = 'auto'
 
         elements.append(table)
         doc.build(elements)
