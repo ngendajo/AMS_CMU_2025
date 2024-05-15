@@ -3101,6 +3101,9 @@ class BookReportExportAPIView(APIView):
             table = Table(data)
             table.setStyle(table_style)
 
+            # Ensure table._argW is initialized
+            table._argW = [[0] * len(data[0]) for _ in range(len(data))]
+
             # Wrap content in table cells
             for i in range(len(data)):
                 for j in range(len(data[i])):
