@@ -3093,7 +3093,7 @@ class BookReportExportAPIView(APIView):
                                   ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
         
-        table_data = [['Number','Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books','current_books']]
+        table_data = [['#','Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books','current_books']]
         table_data.extend(data)
 
         # Calculate maximum column widths based on available page width
