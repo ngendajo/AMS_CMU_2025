@@ -49,7 +49,7 @@ export default function Books() {
     },[auth])
   return (
     <div>
-      <h2 >Averable Books</h2>
+      <center><h2 >Averable Books <button className="prenext">Generate PDF</button></h2></center>
       <DynamicTable mockdata={data} />
     </div>
   )
