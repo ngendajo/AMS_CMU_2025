@@ -3072,21 +3072,24 @@ class BookReportExportAPIView(APIView):
 
         # Add data table
         table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                ('GRID', (0, 0), (-1, -1), 1, colors.black)])
         table_data = [['Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books']]
         table_data.extend(data)
 
         table = Table(table_data)
         table.setStyle(table_style)
 
-        # Adjust column widths dynamically based on content
-        for i in range(len(table_data[0])):
-            table._argW[i] = 'auto'
+        # Calculate column widths dynamically based on content
+        col_widths = []
+        for col in zip(*table_data):
+            col_widths.append(max([len(str(cell)) for cell in col]) * 12)  # Adjust the multiplier for appropriate scaling
+
+        table._argW = col_widths
 
         elements.append(table)
         doc.build(elements)
