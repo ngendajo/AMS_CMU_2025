@@ -3047,7 +3047,7 @@ class BookReportExportAPIView(APIView):
             FROM  userprofile_book  
             INNER JOIN userprofile_category ON userprofile_book.category_id = userprofile_category.id   
             INNER JOIN userprofile_author ON userprofile_book.author_id = userprofile_author.id   
-            RIGHT JOIN userprofile_issue_book ON userprofile_issue_book.book_id = userprofile_book.id  
+            FULL OUTER JOIN userprofile_issue_book ON userprofile_issue_book.book_id = userprofile_book.id  
             WHERE  returndate = 'Not yet Returned'  
             GROUP BY  userprofile_book.book_name, userprofile_book.isbnumber,  
             userprofile_category.category_name, userprofile_author.author_name, 
