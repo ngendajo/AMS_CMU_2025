@@ -38,8 +38,10 @@ from dateutil import parser
 import numpy as np
 import os
 from rest_framework.parsers import MultiPartParser
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.shortcuts import render
 
 User = get_user_model()
 
@@ -49,28 +51,6 @@ class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
-def generate_pdf(data, title,name):
-    pdf_file = name  # Name of the PDF file to be generated
-    
-    # Create a canvas
-    c = canvas.Canvas(pdf_file, pagesize=letter)
-    
-    # Add title
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(100, 750, title)
-    
-    # Add data to the PDF
-    y = 720  # Initial y position
-    for item in data:
-        y -= 20  # Move to the next line
-        for key, value in item.items():
-            c.drawString(100, y, f"{key.capitalize()}: {value}")
-            y -= 15  # Move to the next line
-        y -= 10  # Extra space between items
-        
-    # Save the PDF
-    c.save()
-    return ("PDF generated successfully!")
 
 # Create your views here.
 
@@ -3093,10 +3073,32 @@ class BookReportExportAPIView(APIView):
                         'issued_books': i[5]
                     })
             title = "LFHS@ASYV List of Books"
-            name = "list_of_books.pdf"
-            # Generate PDF using the data and title
-            msg=generate_pdf(data, title,name)
-            return Response({"msg":msg})
+            filename = "list_of_books.pdf"
+            # Generate PDF
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
+
+            doc = SimpleDocTemplate(response, pagesize=letter)
+            elements = []
+
+            # Add title
+            elements.append(title)
+
+            # Add data table
+            table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                    ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+            table = Table(data)
+            table.setStyle(table_style)
+            elements.append(table)
+
+            doc.build(elements)
+
+            return response
 
         except Exception as e:
             # Log the exception or return a custom error response
