@@ -38,6 +38,8 @@ from dateutil import parser
 import numpy as np
 import os
 from rest_framework.parsers import MultiPartParser
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 User = get_user_model()
 
@@ -47,6 +49,28 @@ class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
+def generate_pdf(data, title,name):
+    pdf_file = name  # Name of the PDF file to be generated
+    
+    # Create a canvas
+    c = canvas.Canvas(pdf_file, pagesize=letter)
+    
+    # Add title
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(100, 750, title)
+    
+    # Add data to the PDF
+    y = 720  # Initial y position
+    for item in data:
+        y -= 20  # Move to the next line
+        for key, value in item.items():
+            c.drawString(100, y, f"{key.capitalize()}: {value}")
+            y -= 15  # Move to the next line
+        y -= 10  # Extra space between items
+        
+    # Save the PDF
+    c.save()
+    return ("PDF generated successfully!")
 
 # Create your views here.
 
@@ -3066,12 +3090,13 @@ class BookReportExportAPIView(APIView):
                         'category_name': i[2],
                         'author_name': i[3],
                         'number_of_books': i[4],
-                        'id': i[5]
+                        'issued_books': i[5]
                     })
-
-            serializer = BookListDisplaySerializer(data=data, many=True)
-            serializer.is_valid()  # Validate serializer data
-            return Response(serializer.data)
+            title = "LFHS@ASYV List of Books"
+            name = "list_of_books"
+            # Generate PDF using the data and title
+            msg=generate_pdf(data, title,name)
+            return Response({"msg":msg})
 
         except Exception as e:
             # Log the exception or return a custom error response
