@@ -3203,20 +3203,13 @@ class Issued_BookReportExportAPIView(APIView):
         )
         title_paragraph = Paragraph("LFHS@ASYV Library List of Issued Books", base_title_style)
         elements.append(title_paragraph)
-        table_style = TableStyle([
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Align all cells to the center
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Set font to bold for header row
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Header row background color
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Header row text color
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Add padding to bottom of header row
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),  # Table data background color
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Add grid lines to cells
-            ('WORDWRAP', (0, 0), (-1, -1), True),  # Enable word wrap for all cells
-        ])
-
-        # Set column widths
-        col_widths = [30, 70, 70, 70, 100, 100, 80, 80, 80, 80, 80]  # Define widths for each column
-        table_style.add('COLWIDTHS', col_widths)  # Apply column widths to the table
+        table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                  ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
 
         # Group data by grade_name
         grouped_data = {}
