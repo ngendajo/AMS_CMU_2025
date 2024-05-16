@@ -8,6 +8,8 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 
 export default function Books() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingpdf, setLoadingpdf] = useState(false);
     let {auth} = useAuth();
 
     useEffect(() =>{
@@ -23,6 +25,7 @@ export default function Books() {
                 });
                 var booklist=[]
                 var i=1
+                setLoading(false);
                 response.data.forEach(e=>{
                     booklist.push({
                     No:i,
@@ -47,10 +50,39 @@ export default function Books() {
         getData();
     
     },[auth])
+    const bookReprtpdf = async () => {
+      setLoadingpdf(true);
+      try {
+        const response = await axios.get(baseUrl + '/exportbooks/', {
+          headers: {
+            "Authorization": 'Bearer ' + String(auth.accessToken),
+            "Content-Type": 'application/pdf', // Set correct content type
+          },
+          responseType: 'blob', // Set response type to blob
+          withCredentials: true
+        });
+    
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'list_of_books.pdf');
+        document.body.appendChild(link);
+        link.click();
+        setLoadingpdf(false);
+      } catch (err) {
+        console.error('Error exporting books:', err);
+        setLoadingpdf(false);
+      }
+    }
   return (
     <div>
-      <center><h2 >Averable Books <button className="prenext">Generate PDF</button></h2></center>
-      <DynamicTable mockdata={data} />
+      <center><h2 >Averable Books <button className="prenext" onClick={bookReprtpdf} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export Books in PDF'}</button></h2></center>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+              <DynamicTable mockdata={data} /> 
+          )
+        }
     </div>
   )
 }

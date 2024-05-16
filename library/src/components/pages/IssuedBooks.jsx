@@ -55,7 +55,7 @@ export default function IssuedBooks() {
   },[auth])
 return (
   <div>
-    <h2 >Issue Books</h2>
+    <center><h2 >Issue Books</h2></center>
     {loading ? (
         <p>Loading...</p>
       ) : (

@@ -8,6 +8,7 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 
 export default function Students() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
     let {auth} = useAuth();
 
     useEffect(() =>{
@@ -23,6 +24,7 @@ export default function Students() {
                 });
                 var studentlist=[]
                 var i=1
+                setLoading(false);
                 response.data.forEach(e=>{
                     studentlist.push({
                     No:i,
@@ -50,8 +52,13 @@ export default function Students() {
     },[auth])
   return (
     <div>
-      <h2 >List of Students</h2>
-      <DynamicTable mockdata={data} />
+     <center><h2 >List of Students</h2></center> 
+        {loading ? (
+            <p>Loading...</p>
+          ) : (
+                <DynamicTable mockdata={data} /> 
+          )
+        }
     </div>
   )
 }
