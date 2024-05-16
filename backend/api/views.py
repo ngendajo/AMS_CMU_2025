@@ -3139,4 +3139,119 @@ class BookReportExportAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
-        
+
+class Issued_BookReportExportAPIView(APIView):
+    def get_data_from_database(self):
+        sql_query = """
+            SELECT 
+                grade_name,family_name,combination_name,studentid, last_name, first_name,book_name,isbnumber,
+                category_name, author_name,issuedate,returndate 
+            FROM 
+                userprofile_grade 
+            INNER JOIN 
+                userprofile_family ON userprofile_grade.id = userprofile_family.grade_id 
+            INNER JOIN 
+                userprofile_student ON userprofile_family.id = userprofile_student.family_id 
+            INNER JOIN 
+                api_user ON userprofile_student.user_id = api_user.id 
+            INNER JOIN 
+                userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id 
+            INNER JOIN 
+                userprofile_issue_book ON userprofile_issue_book.borrower_id = api_user.id 
+            INNER JOIN 
+                userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
+            INNER JOIN 
+                userprofile_category ON userprofile_book.category_id = userprofile_category.id 
+            INNER JOIN 
+                userprofile_author ON userprofile_book.author_id = userprofile_author.id 
+            WHERE 
+                returndate = 'Not yet Returned' 
+            ORDER BY 
+                grade_name ASC, 
+                family_name ASC;
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query)
+            data = cursor.fetchall()
+
+        return data
+
+    def generate_pdf(self, data):
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="list_of_books.pdf"'
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Define styles
+        styles = getSampleStyleSheet()
+        title_style = styles['Title']
+        table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                  ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
+        # Group data by grade_name
+        grouped_data = {}
+        for row in data:
+            grade_name = row['grade_name']
+            family_name = row['family_name']
+            if grade_name not in grouped_data:
+                grouped_data[grade_name] = {}
+            if family_name not in grouped_data[grade_name]:
+                grouped_data[grade_name][family_name] = []
+            grouped_data[grade_name][family_name].append(row)
+
+        # Create tables for each grade_name
+        for grade_name, families in grouped_data.items():
+            # Add grade_name as title
+            grade_title = Paragraph(grade_name, title_style)
+            elements.append(grade_title)
+            
+            # Create tables for each family_name
+            for family_name, family_data in families.items():
+                # Add family_name as title
+                family_title = Paragraph(family_name, title_style)
+                elements.append(family_title)
+                
+                # Prepare data for table
+                table_data = [['#', 'Combination Name', 'Student ID', 'Last Name', 'First Name', 
+                               'Book Name', 'ISBN Number', 'Category', 'Author', 
+                               'Issue Date', 'Return Date']]
+                for idx, item in enumerate(family_data, start=1):
+                    table_data.append([
+                        idx,
+                        item['combination_name'],
+                        item['studentid'],
+                        item['last_name'],
+                        item['first_name'],
+                        item['book_name'],
+                        item['isbnumber'],
+                        item['category_name'],
+                        item['author_name'],
+                        item['issuedate'],
+                        item['returndate']
+                    ])
+
+                # Create table
+                table = Table(table_data)
+                table.setStyle(table_style)
+                elements.append(table)
+
+        # Build the PDF document
+        doc.build(elements)
+
+        return response
+
+    def get(self, request, *args, **kwargs):
+        try:
+            data = self.get_data_from_database()
+            if data:
+                return self.generate_pdf(data)
+            else:
+                return Response({'error': 'No data found.'}, status=404)
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)

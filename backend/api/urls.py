@@ -162,6 +162,7 @@ urlpatterns = [
     #Issue_Book paths
     path('issue/', views.Issue_BookRegistrationView.as_view(), name='issue_book_api'),
     path('issued/', views.IssuedBookDisplayAPIView.as_view(), name='issued_book_api'),
+    path('exportissued/', views.Issued_BookReportExportAPIView.as_view(), name='issued_book_api_in_pdf'),
     path('issue/<int:pk>/delete/', views.delete_Issue_Book, name='delete-issue'),
     path('issue/<int:pk>/', views.update_Issue_Book, name='update_issue'),
     path('change-stpassword/', views.ChangeStudentPasswordView.as_view(), name='change-password'),
