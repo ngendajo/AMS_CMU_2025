@@ -3186,16 +3186,41 @@ class Issued_BookReportExportAPIView(APIView):
         doc = SimpleDocTemplate(response, pagesize=landscape(letter))
         elements = []
 
-        # Define styles
-        styles = getSampleStyleSheet()
-        title_style = styles['Title']
-        table_style = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                  ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        # Define a base style for titles
+        base_title_style = getSampleStyleSheet()['Title']
+
+        # Define different title styles with different font sizes
+        title_style_small = ParagraphStyle(
+            'TitleSmall',
+            parent=base_title_style,
+            fontSize=12  # Set the font size to 12
+        )
+
+        title_style_medium = ParagraphStyle(
+            'TitleMedium',
+            parent=base_title_style,
+            fontSize=18  # Set the font size to 18
+        )
+        title_paragraph = Paragraph("LFHS@ASYV Library List of Issued Books", base_title_style)
+        elements.append(title_paragraph)
+
+        # Calculate maximum column widths based on available page width
+        available_width = doc.width
+        num_cols = 11  # Number of columns in the table
+        max_col_width = available_width / num_cols
+
+        # Define table style with word wrap
+        table_style = TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Align all cells to the center
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Set font to bold for header row
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Header row background color
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Header row text color
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Add padding to bottom of header row
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),  # Table data background color
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Add grid lines to cells
+            ('WORDWRAP', (0, 0), (-1, -1), True),  # Enable word wrap for all cells
+            ('COLWIDTHS', [max_col_width] * num_cols)  # Set maximum column widths
+        ])
 
         # Group data by grade_name
         grouped_data = {}
@@ -3208,35 +3233,33 @@ class Issued_BookReportExportAPIView(APIView):
                 grouped_data[grade_name][family_name] = []
             # Exclude grade_name and family_name when extending the list
             grouped_data[grade_name][family_name].append(tuple(row[2:]))  # Start from the third element
-            
-        # Log grouped_data
-        logging.debug("Grouped data: %s", grouped_data)
 
         # Create tables for each grade_name
         for grade_name, families in grouped_data.items():
             # Add grade_name as title
-            grade_title = Paragraph(grade_name, title_style)
+            grade_title = Paragraph(grade_name + " Grade", title_style_medium)
             elements.append(grade_title)
 
             # Create tables for each family_name
             for family_name, family_data in families.items():
                 # Add family_name as title
-                family_title = Paragraph(family_name, title_style)
+                family_title = Paragraph("Books Issued in " + family_name + " Family from " + grade_name + " Grade",
+                                        title_style_small)
                 elements.append(family_title)
 
                 # Prepare data for table
-                table_data = [['#', 'Combination Name', 'Student ID', 'Last Name', 'First Name',
-                               'Book Name', 'ISBN Number', 'Category', 'Author',
-                               'Issue Date', 'Return Date']]
+                table_data = [['#', 'Student ID', 'Last Name', 'First Name', 'Combination Name',
+                            'Book Name', 'ISBN Number', 'Category', 'Author',
+                            'Issue Date', 'Return Date']]
                 for idx, item in enumerate(family_data, start=1):
                     logging.debug("Item tuple: %s", item)  # Log the contents of item
                     table_data.append([
                         idx,
                         item[0],
-                        item[1],
+                        item[4],
                         item[2],
                         item[3],
-                        item[4],
+                        item[1],
                         item[5],
                         item[6],
                         item[7],
