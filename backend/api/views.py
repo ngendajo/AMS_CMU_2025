@@ -3182,7 +3182,7 @@ class Issued_BookReportExportAPIView(APIView):
 
     def generate_pdf(self, data):
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="list_of_books.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="list_of_Issued_books.pdf"'
         doc = SimpleDocTemplate(response, pagesize=landscape(letter))
         elements = []
 
