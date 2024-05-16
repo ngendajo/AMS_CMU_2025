@@ -3078,7 +3078,7 @@ class BookReportExportAPIView(APIView):
         total_current = sum(row[7] for row in data)
 
         # Append totals as a new row
-        total_row = ["Total", "", "", "", "", total_books, total_issued, total_current]
+        total_row = ["", "Total", "", "", "", total_books, total_issued, total_current]
         data.append(total_row)
 
         return data
