@@ -3070,7 +3070,18 @@ class BookReportExportAPIView(APIView):
         """
         with connection.cursor() as cursor:
             cursor.execute(sql_query)
-            return cursor.fetchall()
+            data = cursor.fetchall()
+
+        # Calculate totals
+        total_books = sum(row[5] for row in data)
+        total_issued = sum(row[6] for row in data)
+        total_current = sum(row[7] for row in data)
+
+        # Append totals as a new row
+        total_row = ["Total", "", "", "", "", total_books, total_issued, total_current]
+        data.append(total_row)
+
+        return data
 
     def generate_pdf(self, data):
         response = HttpResponse(content_type='application/pdf')
@@ -3086,12 +3097,12 @@ class BookReportExportAPIView(APIView):
 
         # Add data table
         table_style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                                  ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                                  ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                  ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                  ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                                  ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                                  ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                                ('GRID', (0, 0), (-1, -1), 1, colors.black)])
         
         table_data = [['#','Book Name', 'ISBN Number', 'Category', 'Author', 'Number of Books', 'Issued Books','current_books']]
         table_data.extend(data)
