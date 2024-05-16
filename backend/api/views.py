@@ -42,6 +42,10 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape, letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+import logging
+
+# Configure logging
+logging.basicConfig(filename='debug.log', level=logging.DEBUG)
 
 User = get_user_model()
 
@@ -3221,18 +3225,19 @@ class Issued_BookReportExportAPIView(APIView):
                                'Book Name', 'ISBN Number', 'Category', 'Author',
                                'Issue Date', 'Return Date']]
                 for idx, item in enumerate(family_data, start=1):
+                    logging.debug("Item tuple: %s", item)  # Log the contents of item
                     table_data.append([
                         idx,
-                        item[0],
-                        item[1],
-                        item[2],
-                        item[3],
-                        item[4],
-                        item[5],
-                        item[6],
-                        item[7],
-                        item[8],
-                        item[9]
+                        item['combination_name'],
+                        item['studentid'],
+                        item['last_name'],
+                        item['first_name'],
+                        item['book_name'],
+                        item['isbnumber'],
+                        item['category_name'],
+                        item['author_name'],
+                        item['issuedate'],
+                        item['returndate']
                     ])
 
                 # Create table
