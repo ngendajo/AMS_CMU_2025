@@ -3206,7 +3206,8 @@ class Issued_BookReportExportAPIView(APIView):
                 grouped_data[grade_name] = {}
             if family_name not in grouped_data[grade_name]:
                 grouped_data[grade_name][family_name] = []
-            grouped_data[grade_name][family_name].extend(row)
+            # Exclude grade_name and family_name when extending the list
+            grouped_data[grade_name][family_name].extend(row[2:])  # Start from the third element
             
         # Log grouped_data
         logging.debug("Grouped data: %s", grouped_data)
