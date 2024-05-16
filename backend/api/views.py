@@ -3196,8 +3196,8 @@ class Issued_BookReportExportAPIView(APIView):
         # Group data by grade_name
         grouped_data = {}
         for row in data:
-            grade_name = row[0]['grade_name'] # Assuming grade_name is in the first position of each tuple
-            family_name = row[0]['family_name'] # Assuming family_name is in the second position of each tuple
+            grade_name = row[0]['grade_name']  # Assuming grade_name is in the first position of each tuple
+            family_name = row[0]['family_name']  # Assuming family_name is in the second position of each tuple
             if grade_name not in grouped_data:
                 grouped_data[grade_name] = {}
             if family_name not in grouped_data[grade_name]:
@@ -3209,16 +3209,16 @@ class Issued_BookReportExportAPIView(APIView):
             # Add grade_name as title
             grade_title = Paragraph(grade_name, title_style)
             elements.append(grade_title)
-            
+
             # Create tables for each family_name
             for family_name, family_data in families.items():
                 # Add family_name as title
                 family_title = Paragraph(family_name, title_style)
                 elements.append(family_title)
-                
+
                 # Prepare data for table
-                table_data = [['#', 'Combination Name', 'Student ID', 'Last Name', 'First Name', 
-                               'Book Name', 'ISBN Number', 'Category', 'Author', 
+                table_data = [['#', 'Combination Name', 'Student ID', 'Last Name', 'First Name',
+                               'Book Name', 'ISBN Number', 'Category', 'Author',
                                'Issue Date', 'Return Date']]
                 for idx, item in enumerate(family_data, start=1):
                     table_data.append([
