@@ -3196,13 +3196,13 @@ class Issued_BookReportExportAPIView(APIView):
         # Group data by grade_name
         grouped_data = {}
         for row in data:
-            grade_name = row['grade_name']
-            family_name = row['family_name']
+            grade_name = row[0]['grade_name'] # Assuming grade_name is in the first position of each tuple
+            family_name = row[0]['family_name'] # Assuming family_name is in the second position of each tuple
             if grade_name not in grouped_data:
                 grouped_data[grade_name] = {}
             if family_name not in grouped_data[grade_name]:
                 grouped_data[grade_name][family_name] = []
-            grouped_data[grade_name][family_name].append(row)
+            grouped_data[grade_name][family_name].extend(row)
 
         # Create tables for each grade_name
         for grade_name, families in grouped_data.items():
