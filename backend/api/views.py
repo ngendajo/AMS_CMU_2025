@@ -3223,16 +3223,16 @@ class Issued_BookReportExportAPIView(APIView):
                 for idx, item in enumerate(family_data, start=1):
                     table_data.append([
                         idx,
-                        item['combination_name'],
-                        item['studentid'],
-                        item['last_name'],
-                        item['first_name'],
-                        item['book_name'],
-                        item['isbnumber'],
-                        item['category_name'],
-                        item['author_name'],
-                        item['issuedate'],
-                        item['returndate']
+                        item[0],
+                        item[1],
+                        item[2],
+                        item[3],
+                        item[4],
+                        item[5],
+                        item[6],
+                        item[7],
+                        item[8],
+                        item[9]
                     ])
 
                 # Create table
