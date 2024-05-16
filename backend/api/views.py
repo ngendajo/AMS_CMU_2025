@@ -3196,8 +3196,8 @@ class Issued_BookReportExportAPIView(APIView):
         # Group data by grade_name
         grouped_data = {}
         for row in data:
-            grade_name = row[0]['grade_name']  # Assuming grade_name is in the first position of each tuple
-            family_name = row[0]['family_name']  # Assuming family_name is in the second position of each tuple
+            grade_name = row[0]  # Assuming grade_name is in the first position of each tuple
+            family_name = row[1]  # Assuming family_name is in the second position of each tuple
             if grade_name not in grouped_data:
                 grouped_data[grade_name] = {}
             if family_name not in grouped_data[grade_name]:
