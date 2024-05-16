@@ -35,9 +35,9 @@ export default function IssuedBooks() {
                   ISBNumber:e.isbnumber,
                   Category:e.category_name,
                   Author:e.author_name,
-                  Library_number:e.library_number,
-                  Issuedate:moment(e.issuedate).format("Do MMMM YYYY, h:mm:ss a"),
-                  Returndate:e.returndate,
+                  "Book Number":e.library_number,
+                  "Issue Date":moment(e.issuedate).format("Do MMMM YYYY, h:mm:ss a"),
+                  "Return Date":e.returndate,
                   Edit:<span>
                       <Link to={`/issue/${e.id}`}><BiEditAlt className='icon'/></Link>
                   </span>
