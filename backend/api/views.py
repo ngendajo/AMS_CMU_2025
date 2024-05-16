@@ -3261,8 +3261,15 @@ class Issued_BookReportExportAPIView(APIView):
                 # Create table
                 table = Table(table_data)
                 table.setStyle(table_style)
-                # Set auto page break
-                table._argW[0] = 'auto'  # Set width of the first column to 'auto', allowing it to adjust based on content
+
+                # Calculate column widths dynamically based on content
+                column_widths = []
+                for col in range(len(table_data[0])):
+                    max_width = max([len(str(row[col])) for row in table_data])  # Find maximum width of content in each column
+                    column_widths.append(max_width * 12)  # Adjust the factor as needed to get appropriate width
+
+                # Set column widths
+                table._argW = column_widths
 
                 elements.append(table)
 
