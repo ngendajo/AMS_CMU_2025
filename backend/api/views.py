@@ -3261,6 +3261,9 @@ class Issued_BookReportExportAPIView(APIView):
                 # Create table
                 table = Table(table_data)
                 table.setStyle(table_style)
+                # Set auto page break
+                table._argW[0] = 'auto'  # Set width of the first column to 'auto', allowing it to adjust based on content
+
                 elements.append(table)
 
         # Build the PDF document
