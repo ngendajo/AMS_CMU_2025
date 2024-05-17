@@ -3199,7 +3199,7 @@ class Issued_BookReportExportAPIView(APIView):
         title_style_medium = ParagraphStyle(
             'TitleMedium',
             parent=base_title_style,
-            fontSize=18  # Set the font size to 18
+            fontSize=14  # Set the font size to 18
         )
         title_paragraph = Paragraph("LFHS@ASYV Library List of Issued Books", base_title_style)
         elements.append(title_paragraph)
