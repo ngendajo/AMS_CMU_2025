@@ -10,6 +10,7 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 export default function IssuedBooks() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingpdf, setLoadingpdf] = useState(false);
   
   let {auth} = useAuth();
 
@@ -53,9 +54,33 @@ export default function IssuedBooks() {
       getData();
   
   },[auth])
+  const issuedbookReprtpdf = async () => {
+    setLoadingpdf(true);
+    try {
+      const response = await axios.get(baseUrl + '/exportissued/', {
+        headers: {
+          "Authorization": 'Bearer ' + String(auth.accessToken),
+          "Content-Type": 'application/pdf', // Set correct content type
+        },
+        responseType: 'blob', // Set response type to blob
+        withCredentials: true
+      });
+  
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'list_of_books.pdf');
+      document.body.appendChild(link);
+      link.click();
+      setLoadingpdf(false);
+    } catch (err) {
+      console.error('Error exporting issued books:', err);
+      setLoadingpdf(false);
+    }
+  }
 return (
   <div>
-    <center><h2 >Issue Books</h2></center>
+    <center><h2 >Issue Books <button className="prenext" onClick={issuedbookReprtpdf} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export issued Books in PDF'}</button></h2></center>
     {loading ? (
         <p>Loading...</p>
       ) : (
