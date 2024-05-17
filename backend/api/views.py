@@ -3239,18 +3239,15 @@ class Issued_BookReportExportAPIView(APIView):
                 elements.append(family_title)
 
                 # Prepare data for table
-                table_data = [['#','Student ID', 'Last Name', 'First Name','Combination Name',
-                               'Book Name', 'ISBN Number', 'Category', 'Author',
+                table_data = [['#','Student ID', 'Name','Book Name', 'ISBN Number', 'Category', 'Author',
                                'Issue Date', 'Return Date']]
                 for idx, item in enumerate(family_data, start=1):
                     logging.debug("Item tuple: %s", item)  # Log the contents of item
                     table_data.append([
                         idx,
-                        item[0],
-                        item[4],
-                        item[2],
-                        item[3],
                         item[1],
+                        item[2]+" "+item[3]+" ("+item[0]+")",
+                        item[4],
                         item[5],
                         item[6],
                         item[7],
@@ -3261,16 +3258,6 @@ class Issued_BookReportExportAPIView(APIView):
                 # Create table
                 table = Table(table_data)
                 table.setStyle(table_style)
-
-                # Calculate column widths dynamically based on content
-                column_widths = []
-                for col in range(len(table_data[0])):
-                    max_width = max([len(str(row[col])) for row in table_data])  # Find maximum width of content in each column
-                    column_widths.append(max_width * 12)  # Adjust the factor as needed to get appropriate width
-
-                # Set column widths
-                table._argW = column_widths
-
                 elements.append(table)
 
         # Build the PDF document
