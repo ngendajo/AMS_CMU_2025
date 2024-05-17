@@ -3225,7 +3225,7 @@ class Issued_BookReportExportAPIView(APIView):
             
         # Log grouped_data
         
-
+        available_width = doc.width
         # Create tables for each grade_name
         for grade_name, families in grouped_data.items():
             # Add grade_name as title
@@ -3254,11 +3254,27 @@ class Issued_BookReportExportAPIView(APIView):
                         item[8],
                         item[9]
                     ])
+                
+                # Calculate maximum column widths based on available page width
+                
+                num_cols = len(table_data[0])
+                max_col_width = available_width / num_cols
 
-                # Create table
-                table = Table(table_data)
+                # Add table content with wrapped paragraphs
+                wrapped_table_data = []
+                for row in table_data:
+                    wrapped_row = []
+                    for cell in row:
+                        cell_style = ParagraphStyle(name='WrapStyle', wordWrap='LTR')
+                        wrapped_cell = Paragraph(str(cell), cell_style)
+                        wrapped_row.append(wrapped_cell)
+                    wrapped_table_data.append(wrapped_row)
+
+                table = Table(wrapped_table_data)
                 table.setStyle(table_style)
+
                 elements.append(table)
+                
 
         # Build the PDF document
         doc.build(elements)
