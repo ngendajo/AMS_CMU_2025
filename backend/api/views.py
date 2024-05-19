@@ -3244,7 +3244,7 @@ class Issued_BookReportExportAPIView(APIView):
                 table_data = [['#','Student ID', 'Name','Book Name', 'ISBN Number', 'Category', 'Author',
                                'Issue Date', 'Return Date']]
                 for idx, item in enumerate(family_data, start=1):
-                    logging.debug("Item tuple: %s", item)  # Log the contents of item
+                    #logging.debug("Item tuple: %s", item)  # Log the contents of item
                     table_data.append([
                         idx,
                         item[1],
@@ -3405,7 +3405,7 @@ class Overdue_BookReportExportAPIView(APIView):
                 table_data = [['#','Student ID', 'Name','Book Name', 'ISBN Number', 'Category', 'Author',
                                'Issue Date', 'days_overdue']]
                 for idx, item in enumerate(family_data, start=1):
-                    logging.debug("Item tuple: %s", item)  # Log the contents of item
+                    #logging.debug("Item tuple: %s", item)  # Log the contents of item
                     table_data.append([
                         idx,
                         item[1],
