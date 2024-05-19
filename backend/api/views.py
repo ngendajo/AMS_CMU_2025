@@ -3296,33 +3296,43 @@ class Overdue_BookReportExportAPIView(APIView):
     def get_data_from_database(self):
         sql_query = """
            select 
-            grade_name,family_name,combination_name,studentid,last_name, book_name,
-            isbnumber, category_name,author_name, issuedate,returndate,
-            NOW()::date - issuedate::date AS days_overdue
-        FROM 
-            userprofile_grade 
-        INNER JOIN 
-            userprofile_family ON userprofile_grade.id = userprofile_family.grade_id 
-        INNER JOIN 
-            userprofile_student ON userprofile_family.id = userprofile_student.family_id 
-        INNER JOIN   
-            api_user ON userprofile_student.user_id = api_user.id 
-        INNER JOIN 
-            userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id 
-        INNER JOIN  
-            userprofile_issue_book ON userprofile_issue_book.borrower_id = api_user.id 
-        INNER JOIN  
-            userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
-        INNER JOIN 
-            userprofile_category ON userprofile_book.category_id = userprofile_category.id  
-        INNER JOIN  
-            userprofile_author ON userprofile_book.author_id = userprofile_author.id  
-        WHERE  
-            returndate = 'Not yet Returned' 
-            AND (NOW()::date - issuedate::date) > interval '1 month' 
-        ORDER BY   
-            grade_name ASC,  
-            family_name ASC;
+                grade_name,
+                family_name,
+                combination_name,
+                studentid,
+                last_name,
+                first_name,
+                book_name,
+                isbnumber,
+                category_name,
+                author_name,
+                issuedate,
+                returndate,
+                (NOW()::date - issuedate::date) AS days_overdue
+            FROM 
+                userprofile_grade 
+            INNER JOIN 
+                userprofile_family ON userprofile_grade.id = userprofile_family.grade_id 
+            INNER JOIN 
+                userprofile_student ON userprofile_family.id = userprofile_student.family_id 
+            INNER JOIN   
+                api_user ON userprofile_student.user_id = api_user.id 
+            INNER JOIN 
+                userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id 
+            INNER JOIN  
+                userprofile_issue_book ON userprofile_issue_book.borrower_id = api_user.id 
+            INNER JOIN  
+                userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
+            INNER JOIN 
+                userprofile_category ON userprofile_book.category_id = userprofile_category.id  
+            INNER JOIN  
+                userprofile_author ON userprofile_book.author_id = userprofile_author.id  
+            WHERE  
+                returndate = 'Not yet Returned' 
+                AND (NOW()::date - issuedate::date) > 30  -- Comparing the difference in days to 30
+            ORDER BY   
+                grade_name ASC,  
+                family_name ASC;
         """
         with connection.cursor() as cursor:
             cursor.execute(sql_query)
