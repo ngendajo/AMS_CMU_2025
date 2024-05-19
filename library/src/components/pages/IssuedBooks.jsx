@@ -69,7 +69,31 @@ export default function IssuedBooks() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'list_of_books.pdf');
+      link.setAttribute('download', 'list_of_Issued_books.pdf');
+      document.body.appendChild(link);
+      link.click();
+      setLoadingpdf(false);
+    } catch (err) {
+      console.error('Error exporting issued books:', err);
+      setLoadingpdf(false);
+    }
+  }
+  const overduebookReprtpdf = async () => {
+    setLoadingpdf(true);
+    try {
+      const response = await axios.get(baseUrl + '/exportoverdue/', {
+        headers: {
+          "Authorization": 'Bearer ' + String(auth.accessToken),
+          "Content-Type": 'application/pdf', // Set correct content type
+        },
+        responseType: 'blob', // Set response type to blob
+        withCredentials: true
+      });
+  
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'list_of_Overdue_books.pdf');
       document.body.appendChild(link);
       link.click();
       setLoadingpdf(false);
@@ -80,7 +104,7 @@ export default function IssuedBooks() {
   }
 return (
   <div>
-    <center><h2 >Issue Books <button className="prenext" onClick={issuedbookReprtpdf} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export issued Books in PDF'}</button></h2></center>
+    <center><h2 >Issue Books <button className="prenext" onClick={issuedbookReprtpdf} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export issued Books in PDF'}</button> <button className="prenext" onClick={overduebookReprtpdf} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export Overdue Books in PDF'}</button></h2></center>
     {loading ? (
         <p>Loading...</p>
       ) : (
