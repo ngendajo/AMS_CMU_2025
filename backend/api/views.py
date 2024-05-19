@@ -2905,7 +2905,7 @@ class AutoIssueDataExcelUploadAPIView(APIView):
     
 #report data from library database 
 class IssuedBookDisplayAPIView(APIView):
-    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+    permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
     def get(self, request, *args, **kwargs):
         try:
@@ -2961,7 +2961,7 @@ class IssuedBookDisplayAPIView(APIView):
             return Response({'error': str(e)}, status=500)
         
 class StudentListDisplayAPIView(APIView):
-    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+    permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
     def get(self, request, *args, **kwargs):
         try:
@@ -3004,7 +3004,7 @@ class StudentListDisplayAPIView(APIView):
             return Response({'error': str(e)}, status=500)
         
 class BookListDisplayAPIView(APIView):
-    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+    permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
     def get(self, request, *args, **kwargs):
         try:
@@ -3044,6 +3044,7 @@ class BookListDisplayAPIView(APIView):
         
 
 class BookReportExportAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def get_data_from_database(self):
         sql_query = """
             select
@@ -3145,6 +3146,7 @@ class BookReportExportAPIView(APIView):
             return Response({'error': str(e)}, status=500)
 
 class Issued_BookReportExportAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def get_data_from_database(self):
         sql_query = """
             SELECT 
@@ -3293,6 +3295,7 @@ class Issued_BookReportExportAPIView(APIView):
             return Response({'error': str(e)}, status=500)
         
 class Overdue_BookReportExportAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
     def get_data_from_database(self):
         sql_query = """
            select 
