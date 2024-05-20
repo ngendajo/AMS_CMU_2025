@@ -3562,22 +3562,19 @@ class StudentsReportExportAPIView(APIView):
 
         # Get the active worksheet
         ws = wb.active
-        ws.append(["No","Last Name","First Name","Reg.No","Grade","Family","Class"])
+        ws.append(["No", "Last Name", "First Name", "Reg.No", "Grade", "Family", "Class"])
         # Add rows
         alumni_data_name = 'students_data'
         ws.title = alumni_data_name
-        logging.debug(data)
+        #logging.debug(data)
+        
         for row_data in data:
             ws.append(row_data)
 
-            # Save the workbook
-            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=LFHS_students_data.xlsx'
-            wb.save(response)
-
-            return response
-
-        return response
+        # Save the workbook
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=LFHS_students_data.xlsx'
+        wb.save(response)
 
     def get(self, request, *args, **kwargs):
         try:
