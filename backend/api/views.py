@@ -3566,12 +3566,13 @@ class StudentsReportExportAPIView(APIView):
         # Add rows
         alumni_data_name = 'students_data'
         ws.title = alumni_data_name
+        logging.debug(data)
         for row_data in data:
             ws.append(row_data)
 
             # Save the workbook
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=my_data.xlsx'
+            response['Content-Disposition'] = 'attachment; filename=LFHS_students_data.xlsx'
             wb.save(response)
 
             return response
