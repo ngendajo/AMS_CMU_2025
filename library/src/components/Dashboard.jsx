@@ -40,7 +40,6 @@ export default function Dashboard() {
         }
        </span>
        }
-       <p>{user.email}</p>
     </div>
   )
 }

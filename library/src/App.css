@@ -351,3 +351,35 @@ li {
     font-size: 14px;
   }
 }
+
+.general-report-item-container{
+  border-radius: 5px;
+  border: 7px rgb(112, 110, 110);
+  background-color: #c7cacb;
+  width: 200px;
+  margin: 30px 20px;
+}
+.general-report-item{
+  color: #000;
+  text-decoration: none;
+  padding: 30px;
+}
+.libarryreports{
+  font-size: 80px;
+  color: #47805F;
+}
+.books{
+  font-size: 30px;
+  font-weight: 700;
+  color: #002F6C;
+}
+.books-label{
+  color: #4b4641;
+  font-weight: 700;
+}
+.general-report{
+  display: flex;  
+  flex-wrap: wrap;
+  align-items: center;
+  margin-left: 15%;
+}

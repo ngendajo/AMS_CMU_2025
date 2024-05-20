@@ -1,9 +1,11 @@
 import React from 'react'
+import LibrarianDashBoard from './LibrarianDashBoard'
 
 export default function AdminDashBoard() {
   return (
-    <div>
+    <center>
         <h2>Hello LMS Admin</h2>
-    </div>
+        <LibrarianDashBoard/>
+    </center>
   )
 }

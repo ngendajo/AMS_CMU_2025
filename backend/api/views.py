@@ -2296,7 +2296,7 @@ class StudentRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
 class StudentRegistrationUpdateAPIView(APIView):
-   
+    permission_classes = [IsAuthenticated, ]
     def put(self, request, pk, format=None):
         try:
             user = User.objects.get(pk=pk)  # Provide pk as a keyword argument
@@ -2346,7 +2346,7 @@ class AuthorRegistrationView(APIView):
 
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_Author(request, pk):
     autho = Author.objects.get(pk=pk)
     data = AuthorSerializer(instance=autho, data=request.data)
@@ -2359,7 +2359,7 @@ def update_Author(request, pk):
 
 
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_author(request, pk):
     autho = get_object_or_404(Author, pk=pk)
     autho.delete()
@@ -2405,7 +2405,7 @@ class CategoryRegistrationView(APIView):
 
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_Category(request, pk):
     cat = Category.objects.get(pk=pk)
     data = CategorySerializer(instance=cat, data=request.data)
@@ -2418,7 +2418,7 @@ def update_Category(request, pk):
 
 
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def delete_category(request, pk):
     cat = get_object_or_404(Category, pk=pk)
     cat.delete()
@@ -3456,7 +3456,7 @@ class Overdue_BookReportExportAPIView(APIView):
             return Response({'error': str(e)}, status=500)
         
 class GeneralReportDisplayAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+    permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
     def get(self, request, *args, **kwargs):
         try:
@@ -3517,6 +3517,73 @@ class GeneralReportDisplayAPIView(APIView):
             serializer.is_valid()  # Validate serializer data
             return Response(serializer.data)
 
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)
+        
+class StudentsReportExportAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get_data_from_database(self):
+        sql_query = """
+           SELECT 
+                api_user.last_name,
+                api_user.first_name,
+                userprofile_student.studentid,
+                userprofile_grade.grade_name,
+                userprofile_family.family_name,
+                userprofile_combination.combination_name
+            FROM 
+                api_user
+            INNER JOIN 
+                userprofile_student ON api_user.id = userprofile_student.user_id
+            INNER JOIN 
+                userprofile_family ON userprofile_family.id = userprofile_student.family_id
+            INNER JOIN 
+                userprofile_combination ON userprofile_combination.id = userprofile_student.combination_id
+            INNER JOIN 
+                userprofile_grade ON userprofile_grade.id = userprofile_family.grade_id
+            WHERE 
+                api_user.is_student
+            ORDER BY 
+                userprofile_grade.grade_name, 
+                userprofile_combination.combination_name;
+
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query)
+            data = cursor.fetchall()
+
+        return data
+
+    def generate_excel(self, data):
+        # Create a new Workbook
+        wb = Workbook()
+
+        # Get the active worksheet
+        ws = wb.active
+        ws.append(["No","Last Name","First Name","Reg.No","Grade","Family","Class"])
+        # Add rows
+        alumni_data_name = 'students_data'
+        ws.title = alumni_data_name
+        for row_data in data:
+            ws.append(row_data)
+
+            # Save the workbook
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=my_data.xlsx'
+            wb.save(response)
+
+            return response
+
+        return response
+
+    def get(self, request, *args, **kwargs):
+        try:
+            data = self.get_data_from_database()
+            if data:
+                return self.generate_excel(data)
+            else:
+                return Response({'error': 'No data found.'}, status=404)
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)

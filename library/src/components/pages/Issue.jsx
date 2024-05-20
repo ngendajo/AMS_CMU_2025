@@ -15,7 +15,6 @@ export default function Issue() {
    const [book_name, setBook_name] = useState('');
    const [studentid, setStudentid] = useState('')
    const [isbnumber, setIsbnumber] = useState('')
-   const [number_of_books,setNumber_of_books]=useState('')
    const [issuedate, setIssuedate] = useState(new Date());
    
 
@@ -103,13 +102,11 @@ export default function Issue() {
         if (data && data.length > 0) {
             setBookid(data[0].id);
             setBook_name(data[0].book_name);
-            setNumber_of_books(data[0].number_of_books);
             setLibrary_numberOptions((Array.from({ length: data[0].number_of_books }, (_, index) => index + 1)).filter(item => !((library_numbers_list).map(item => parseInt(item, 10))).includes(item)))
 
           } else {
             setBookid('');
             setBook_name('');
-            setNumber_of_books('');
             setLibrary_numberOptions([])
             console.log("No data")// Handle the case when data is undefined or empty
           }

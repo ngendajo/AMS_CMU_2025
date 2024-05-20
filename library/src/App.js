@@ -46,6 +46,7 @@ import ReturnBook from './components/pages/ReturnBook';
 import UploadBooks from './components/pages/UploadBooks';
 import UpStudents from './components/pages/UpStudents';
 import UpIssue from './components/pages/UpIssue';
+import OverdueBooks from './components/pages/OverdueBooks';
 
 
 
@@ -90,6 +91,7 @@ function App() {
                       <Route path='book/:id' element={<EditBook/>}/>
                       <Route path='issue' element={<Issue />}/>
                       <Route path='issued' element={<IssuedBooks />}/>
+                      <Route path='overdue' element={<OverdueBooks />}/>
                       <Route path='issue/:id' element={<ReturnBook/>}/>
                       <Route path='grade' element={<NewGrade />}/>
                       <Route path='grades' element={<Grades />}/>
