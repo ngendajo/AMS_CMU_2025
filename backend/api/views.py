@@ -3575,6 +3575,7 @@ class StudentsReportExportAPIView(APIView):
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=LFHS_students_data.xlsx'
         wb.save(response)
+        return response
 
     def get(self, request, *args, **kwargs):
         try:
