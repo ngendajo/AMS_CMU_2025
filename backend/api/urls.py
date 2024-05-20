@@ -140,7 +140,7 @@ urlpatterns = [
     path('students/', views.StudentListDisplayAPIView.as_view(), name='students'),
     path('cstudent/', views.CheckStudentView.as_view(), name='checkstudent'),
     path('student/<int:pk>/', views.StudentRegistrationUpdateAPIView.as_view(), name='student-registration-update'),  
-    path('exportstudentexcel/<int:pk>/', views.StudentsReportExportAPIView.as_view(), name='student-export-data'),   
+    path('exportstudentexcel/', views.StudentsReportExportAPIView.as_view(), name='student-export-data'),   
     #author paths
     path('author/',views.AuthorRegistrationView.as_view()),
     path('author/<int:pk>/delete/', views.delete_author, name='delete-author'),
