@@ -9,6 +9,7 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 export default function Students() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingpdf, setLoadingpdf] = useState(false);
     let {auth} = useAuth();
 
     useEffect(() =>{
@@ -50,9 +51,23 @@ export default function Students() {
         getData();
     
     },[auth])
+    const studentReprtexcel = async () => {
+        setLoadingpdf(true);
+          const response = await fetch(`${baseUrl}/exportstudentexcel/`);
+          const blob = await response.blob();
+  
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'LFHS_students_data.xlsx');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setLoadingpdf(false);
+        };
   return (
     <div>
-     <center><h2 >List of Students</h2></center> 
+     <center><h2 >List of Students <button className="prenext" onClick={studentReprtexcel} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export List of Students in Excel'}</button></h2></center> 
         {loading ? (
             <p>Loading...</p>
           ) : (
