@@ -878,4 +878,11 @@ class BookListDisplaySerializer(serializers.Serializer):
     author_name = serializers.CharField()
     number_of_books = serializers.CharField()
     id = serializers.IntegerField()
+    
+class GeneralReportDisplaySerializer(serializers.Serializer):
+    nbook_types = serializers.IntegerField()
+    nbooks = serializers.IntegerField()
+    nstudents = serializers.IntegerField()
+    nissued_books = serializers.IntegerField()
+    noverdue_books = serializers.IntegerField()
         

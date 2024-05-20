@@ -167,6 +167,8 @@ urlpatterns = [
     path('issue/<int:pk>/delete/', views.delete_Issue_Book, name='delete-issue'),
     path('issue/<int:pk>/', views.update_Issue_Book, name='update_issue'),
     path('change-stpassword/', views.ChangeStudentPasswordView.as_view(), name='change-password'),
+    #General report
+    path('general/', views.GeneralReportDisplayAPIView.as_view(), name='general_report'),
 
     path('', views.getRoutes)
 ]

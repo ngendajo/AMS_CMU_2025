@@ -3454,3 +3454,69 @@ class Overdue_BookReportExportAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+        
+class GeneralReportDisplayAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
+    def get(self, request, *args, **kwargs):
+        try:
+            # Combined SQL Query
+            sql_query = """
+                with book_data as (
+                    select 
+                        count(userprofile_book.id) as nbook_types, 
+                        sum(cast(userprofile_book.number_of_books as integer)) as nbooks 
+                    from 
+                        userprofile_book
+                ),
+                student_data as (
+                    select 
+                        count(api_user.id) as nstudents 
+                    from 
+                        api_user 
+                    where 
+                        api_user.is_student
+                ),
+                issue_data as (
+                    select 
+                        count(userprofile_issue_book.id) as nissued_books,
+                        sum(case when (now()::date - issuedate::date) > 30 then 1 else 0 end) as noverdue_books 
+                    from 
+                        userprofile_issue_book 
+                    where 
+                        returndate = 'Not yet Returned'
+                )
+                select 
+                    bd.nbook_types,
+                    bd.nbooks,
+                    sd.nstudents,
+                    id.nissued_books,
+                    id.noverdue_books
+                from 
+                    book_data bd,
+                    student_data sd,
+                    issue_data id;
+            """
+
+            # Execute the SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query)
+                data1 = cursor.fetchall()
+
+            data = []
+            if data1:
+                data.append({
+                    "nbook_types": data1[0][0],
+                    "nbooks": data1[0][1],
+                    "nstudents": data1[0][2],
+                    "nissued_books": data1[0][3],
+                    "noverdue_books": data1[0][4]
+                })
+
+            serializer = GeneralReportDisplaySerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)
