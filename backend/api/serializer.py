@@ -900,5 +900,4 @@ class BorrowerByGradeDisplaySerializer(serializers.Serializer):
     combination_name = serializers.CharField()
     borrowers = serializers.IntegerField()
     students = serializers.IntegerField()
-    borrows = serializers.IntegerField()
         

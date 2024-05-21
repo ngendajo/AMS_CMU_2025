@@ -3826,8 +3826,7 @@ class BorrowerByGradeDisplayAPIView(APIView):
                         'family_name': i[1],
                         'combination_name': i[2],
                         'borrowers': i[3],
-                        'students': i[4],
-                        'borrows': i[3]/i[4]
+                        'students': i[4]
                     })
 
             serializer = BorrowerByGradeDisplaySerializer(data=data, many=True)
