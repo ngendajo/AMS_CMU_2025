@@ -3613,8 +3613,12 @@ class MostBorrowerDisplayAPIView(APIView):
                 # SQL query for the specified date range
                 sql_query = f"""
                     SELECT 
-                            api_user.id,
-                            COUNT(userprofile_issue_book.id) AS max_issue_count
+                            api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name, 
+                        COUNT(userprofile_issue_book.id) AS issue_count
                         FROM 
                             api_user
                         INNER JOIN 
@@ -3644,15 +3648,19 @@ class MostBorrowerDisplayAPIView(APIView):
                         GROUP BY 
                             api_user.id
                         ORDER BY 
-                            max_issue_count DESC
+                            issue_count DESC
                         LIMIT 5
                 """
             else:
                 # SQL query for the current month
                 sql_query = """
                     SELECT 
-                            api_user.id,
-                            COUNT(userprofile_issue_book.id) AS max_issue_count
+                            api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name, 
+                        COUNT(userprofile_issue_book.id) AS issue_count
                         FROM 
                             api_user
                         INNER JOIN 
@@ -3681,7 +3689,7 @@ class MostBorrowerDisplayAPIView(APIView):
                         GROUP BY 
                             api_user.id
                         ORDER BY 
-                            max_issue_count DESC
+                            issue_count DESC
                         LIMIT 5
                 """
 
