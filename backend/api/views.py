@@ -3661,7 +3661,7 @@ class MostBorrowerDisplayAPIView(APIView):
                 INNER JOIN 
                     MaxIssueCount 
                 ON 
-                    COUNT(userprofile_issue_book.id) = MaxIssueCount.max_issue_count
+                    TRUE -- Join condition for CTE
                 WHERE 
                     api_user.is_student = true
                     AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
@@ -3671,8 +3671,11 @@ class MostBorrowerDisplayAPIView(APIView):
                     userprofile_grade.grade_name, 
                     userprofile_family.family_name, 
                     userprofile_combination.combination_name
+                HAVING 
+                    COUNT(userprofile_issue_book.id) = (SELECT max_issue_count FROM MaxIssueCount)
                 ORDER BY 
                     issue_count DESC;
+
 
             """
 
