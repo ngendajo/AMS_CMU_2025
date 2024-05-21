@@ -10,11 +10,14 @@ import { MdLibraryBooks } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
 import { FaBookReader } from "react-icons/fa";
 import { FaBookDead } from "react-icons/fa";
+import MostBorrowerDisplay from "./pages/MostBorrowerDisplay";
 
 export default function LibrarianDashBoard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [issuedate, setIssuedate] = useState(new Date());
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   let {auth} = useAuth();
   const user= jwtDecode(auth.accessToken);
 
@@ -88,6 +91,20 @@ if (!data.length) {
             <div><span className='books'>{data[0].noverdue_books}</span> <span className='books-label'>Overdue Books</span></div>
           </Link>
         </div>
+      </div>
+      <div className="borrowers">
+        <h1>Most Borrower Student(s)</h1>
+        <form>
+          <label>
+            Start Date:
+            <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+          </label>
+          <label>
+            End Date:
+            <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} required />
+          </label>
+        </form>
+        <MostBorrowerDisplay start_date={startDate} end_date={endDate} />
       </div>
     </center>
   )

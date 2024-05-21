@@ -3592,6 +3592,7 @@ from rest_framework.response import Response
 from django.db import connection
 from datetime import datetime
 
+#example of url: api/mostborrower/ or api/mostborrower/?start_date=2023-09-25T00:00:00&end_date=2024-05-31T23:59:59
 class MostBorrowerDisplayAPIView(APIView):
     # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
