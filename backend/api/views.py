@@ -3587,16 +3587,74 @@ class StudentsReportExportAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.db import connection
+from datetime import datetime
+
 class MostBorrowerDisplayAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
     def get(self, request, *args, **kwargs):
         try:
-            # Get data
-            sql_query1 = """
-                WITH MaxIssueCount AS (
+            # Get query parameters for start_date and end_date
+            start_date = request.query_params.get('start_date')
+            end_date = request.query_params.get('end_date')
+
+            if start_date and end_date:
+                # Ensure start_date and end_date are in the correct format
+                try:
+                    start_date = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
+                    end_date = datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%S')
+                except ValueError:
+                    return Response({'error': 'Invalid date-time format. Use YYYY-MM-DDTHH:MM:SS.'}, status=400)
+                
+                # SQL query for the specified date range
+                sql_query = f"""
+                    WITH MaxIssueCount AS (
+                        SELECT 
+                            api_user.id,
+                            COUNT(userprofile_issue_book.id) AS max_issue_count
+                        FROM 
+                            api_user
+                        INNER JOIN 
+                            userprofile_issue_book 
+                        ON 
+                            api_user.id = userprofile_issue_book.borrower_id
+                        INNER JOIN 
+                            userprofile_student 
+                        ON 
+                            api_user.id = userprofile_student.user_id
+                        INNER JOIN 
+                            userprofile_family 
+                        ON 
+                            userprofile_student.family_id = userprofile_family.id
+                        INNER JOIN 
+                            userprofile_grade 
+                        ON 
+                            userprofile_family.grade_id = userprofile_grade.id
+                        INNER JOIN 
+                            userprofile_combination 
+                        ON 
+                            userprofile_student.combination_id = userprofile_combination.id
+                        WHERE 
+                            api_user.is_student = true
+                            AND userprofile_issue_book.issuedate >= '{start_date}'
+                            AND userprofile_issue_book.issuedate <= '{end_date}'
+                        GROUP BY 
+                            api_user.id
+                        ORDER BY 
+                            max_issue_count DESC
+                        LIMIT 1
+                    )
+
                     SELECT 
-                        COUNT(userprofile_issue_book.id) AS max_issue_count
+                        api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name, 
+                        COUNT(userprofile_issue_book.id) AS issue_count
                     FROM 
                         api_user
                     INNER JOIN 
@@ -3619,69 +3677,115 @@ class MostBorrowerDisplayAPIView(APIView):
                         userprofile_combination 
                     ON 
                         userprofile_student.combination_id = userprofile_combination.id
+                    INNER JOIN 
+                        MaxIssueCount 
+                    ON 
+                        api_user.id = MaxIssueCount.id
+                    WHERE 
+                        api_user.is_student = true
+                        AND userprofile_issue_book.issuedate >= '{start_date}'
+                        AND userprofile_issue_book.issuedate <= '{end_date}'
+                    GROUP BY 
+                        api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name
+                    HAVING 
+                        COUNT(userprofile_issue_book.id) = (SELECT max_issue_count FROM MaxIssueCount)
+                    ORDER BY 
+                        issue_count DESC;
+                """
+            else:
+                # SQL query for the current month
+                sql_query = """
+                    WITH MaxIssueCount AS (
+                        SELECT 
+                            api_user.id,
+                            COUNT(userprofile_issue_book.id) AS max_issue_count
+                        FROM 
+                            api_user
+                        INNER JOIN 
+                            userprofile_issue_book 
+                        ON 
+                            api_user.id = userprofile_issue_book.borrower_id
+                        INNER JOIN 
+                            userprofile_student 
+                        ON 
+                            api_user.id = userprofile_student.user_id
+                        INNER JOIN 
+                            userprofile_family 
+                        ON 
+                            userprofile_student.family_id = userprofile_family.id
+                        INNER JOIN 
+                            userprofile_grade 
+                        ON 
+                            userprofile_family.grade_id = userprofile_grade.id
+                        INNER JOIN 
+                            userprofile_combination 
+                        ON 
+                            userprofile_student.combination_id = userprofile_combination.id
+                        WHERE 
+                            api_user.is_student = true
+                            AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
+                        GROUP BY 
+                            api_user.id
+                        ORDER BY 
+                            max_issue_count DESC
+                        LIMIT 1
+                    )
+
+                    SELECT 
+                        api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name, 
+                        COUNT(userprofile_issue_book.id) AS issue_count
+                    FROM 
+                        api_user
+                    INNER JOIN 
+                        userprofile_issue_book 
+                    ON 
+                        api_user.id = userprofile_issue_book.borrower_id
+                    INNER JOIN 
+                        userprofile_student 
+                    ON 
+                        api_user.id = userprofile_student.user_id
+                    INNER JOIN 
+                        userprofile_family 
+                    ON 
+                        userprofile_student.family_id = userprofile_family.id
+                    INNER JOIN 
+                        userprofile_grade 
+                    ON 
+                        userprofile_family.grade_id = userprofile_grade.id
+                    INNER JOIN 
+                        userprofile_combination 
+                    ON 
+                        userprofile_student.combination_id = userprofile_combination.id
+                    INNER JOIN 
+                        MaxIssueCount 
+                    ON 
+                        api_user.id = MaxIssueCount.id
                     WHERE 
                         api_user.is_student = true
                         AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
                     GROUP BY 
-                        api_user.id
+                        api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name
+                    HAVING 
+                        COUNT(userprofile_issue_book.id) = (SELECT max_issue_count FROM MaxIssueCount)
                     ORDER BY 
-                        max_issue_count DESC
-                    LIMIT 1
-                )
-
-                SELECT 
-                    api_user.last_name, 
-                    api_user.first_name, 
-                    userprofile_grade.grade_name, 
-                    userprofile_family.family_name, 
-                    userprofile_combination.combination_name, 
-                    COUNT(userprofile_issue_book.id) AS issue_count
-                FROM 
-                    api_user
-                INNER JOIN 
-                    userprofile_issue_book 
-                ON 
-                    api_user.id = userprofile_issue_book.borrower_id
-                INNER JOIN 
-                    userprofile_student 
-                ON 
-                    api_user.id = userprofile_student.user_id
-                INNER JOIN 
-                    userprofile_family 
-                ON 
-                    userprofile_student.family_id = userprofile_family.id
-                INNER JOIN 
-                    userprofile_grade 
-                ON 
-                    userprofile_family.grade_id = userprofile_grade.id
-                INNER JOIN 
-                    userprofile_combination 
-                ON 
-                    userprofile_student.combination_id = userprofile_combination.id
-                INNER JOIN 
-                    MaxIssueCount 
-                ON 
-                    TRUE -- Join condition for CTE
-                WHERE 
-                    api_user.is_student = true
-                    AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
-                GROUP BY 
-                    api_user.last_name, 
-                    api_user.first_name, 
-                    userprofile_grade.grade_name, 
-                    userprofile_family.family_name, 
-                    userprofile_combination.combination_name
-                HAVING 
-                    COUNT(userprofile_issue_book.id) = (SELECT max_issue_count FROM MaxIssueCount)
-                ORDER BY 
-                    issue_count DESC;
-
-
-            """
+                        issue_count DESC;
+                """
 
             # Execute the SQL query
             with connection.cursor() as cursor:
-                cursor.execute(sql_query1)
+                cursor.execute(sql_query)
                 data1 = cursor.fetchall()
 
             data = []
@@ -3703,3 +3807,4 @@ class MostBorrowerDisplayAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+
