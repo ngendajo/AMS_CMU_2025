@@ -3825,7 +3825,7 @@ class BorrowerByGradeDisplayAPIView(APIView):
                         'borrows': i[3]
                     })
 
-            serializer = MostBorrowerDisplaySerializer(data=data, many=True)
+            serializer = BorrowerByGradeDisplaySerializer(data=data, many=True)
             serializer.is_valid()  # Validate serializer data
             return Response(serializer.data)
 
