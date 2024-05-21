@@ -885,4 +885,12 @@ class GeneralReportDisplaySerializer(serializers.Serializer):
     nstudents = serializers.IntegerField()
     nissued_books = serializers.IntegerField()
     noverdue_books = serializers.IntegerField()
+    
+class MostBorrowerDisplaySerializer(serializers.Serializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    grade_name = serializers.CharField()
+    family_name = serializers.CharField()
+    combination_name = serializers.CharField()
+    issue_count = serializers.IntegerField()
         

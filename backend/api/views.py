@@ -3587,3 +3587,116 @@ class StudentsReportExportAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+class MostBorrowerDisplayAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
+    def get(self, request, *args, **kwargs):
+        try:
+            # Get data
+            sql_query1 = """
+                WITH MaxIssueCount AS (
+                    SELECT 
+                        COUNT(userprofile_issue_book.id) AS max_issue_count
+                    FROM 
+                        api_user
+                    INNER JOIN 
+                        userprofile_issue_book 
+                    ON 
+                        api_user.id = userprofile_issue_book.borrower_id
+                    INNER JOIN 
+                        userprofile_student 
+                    ON 
+                        api_user.id = userprofile_student.user_id
+                    INNER JOIN 
+                        userprofile_family 
+                    ON 
+                        userprofile_student.family_id = userprofile_family.id
+                    INNER JOIN 
+                        userprofile_grade 
+                    ON 
+                        userprofile_family.grade_id = userprofile_grade.id
+                    INNER JOIN 
+                        userprofile_combination 
+                    ON 
+                        userprofile_student.combination_id = userprofile_combination.id
+                    WHERE 
+                        api_user.is_student = true
+                        AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
+                    GROUP BY 
+                        api_user.id
+                    ORDER BY 
+                        max_issue_count DESC
+                    LIMIT 1
+                )
+
+                SELECT 
+                    api_user.last_name, 
+                    api_user.first_name, 
+                    userprofile_grade.grade_name, 
+                    userprofile_family.family_name, 
+                    userprofile_combination.combination_name, 
+                    COUNT(userprofile_issue_book.id) AS issue_count
+                FROM 
+                    api_user
+                INNER JOIN 
+                    userprofile_issue_book 
+                ON 
+                    api_user.id = userprofile_issue_book.borrower_id
+                INNER JOIN 
+                    userprofile_student 
+                ON 
+                    api_user.id = userprofile_student.user_id
+                INNER JOIN 
+                    userprofile_family 
+                ON 
+                    userprofile_student.family_id = userprofile_family.id
+                INNER JOIN 
+                    userprofile_grade 
+                ON 
+                    userprofile_family.grade_id = userprofile_grade.id
+                INNER JOIN 
+                    userprofile_combination 
+                ON 
+                    userprofile_student.combination_id = userprofile_combination.id
+                INNER JOIN 
+                    MaxIssueCount 
+                ON 
+                    COUNT(userprofile_issue_book.id) = MaxIssueCount.max_issue_count
+                WHERE 
+                    api_user.is_student = true
+                    AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
+                GROUP BY 
+                    api_user.last_name, 
+                    api_user.first_name, 
+                    userprofile_grade.grade_name, 
+                    userprofile_family.family_name, 
+                    userprofile_combination.combination_name
+                ORDER BY 
+                    issue_count DESC;
+
+            """
+
+            # Execute the SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query1)
+                data1 = cursor.fetchall()
+
+            data = []
+            if data1 is not None:
+                for i in data1:
+                    data.append({
+                        'last_name': i[0],
+                        'first_name': i[1],
+                        'grade_name': i[2],
+                        'family_name': i[3],
+                        'combination_name': i[4],
+                        'issue_count': i[5]
+                    })
+
+            serializer = MostBorrowerDisplaySerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)
