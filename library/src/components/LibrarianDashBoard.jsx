@@ -4,7 +4,6 @@ import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import baseUrl from "../api/baseUrl";
-import { jwtDecode } from 'jwt-decode';
 import { SiBookstack } from "react-icons/si";
 import { MdLibraryBooks } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
@@ -19,7 +18,6 @@ export default function LibrarianDashBoard() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   let {auth} = useAuth();
-  const user= jwtDecode(auth.accessToken);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -38,7 +36,7 @@ export default function LibrarianDashBoard() {
                 },
                 withCredentials:true 
             });
-            console.log(response.data)
+            //console.log(response.data)
             setData(response.data);
             setLoading(false);
         }catch(err) {
@@ -58,7 +56,6 @@ if (!data.length) {
 }
   return (
     <center>
-      {user.is_librarian ? <h2>Hello Librarian</h2>:<></>}
       <p>{moment(issuedate).format("Do MMMM YYYY, h:mm:ss a").toLocaleString()}</p>
       <div className='general-report'>
         <div className='general-report-item-container'>
@@ -94,7 +91,7 @@ if (!data.length) {
       </div>
       <div className="borrowers">
         <h1>Most Borrower Student(s)</h1>
-        <form>
+        <form className='mostborrowers'>
           <label>
             Start Date:
             <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
