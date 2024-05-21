@@ -3749,7 +3749,8 @@ class BorrowerByGradeDisplayAPIView(APIView):
                         userprofile_grade.grade_name,
                         userprofile_family.family_name,
                         userprofile_combination.combination_name,
-                        COUNT(userprofile_issue_book.id) AS borrows
+                        COUNT(DISTINCT(userprofile_issue_book.borrower_id)) AS borrows,
+                        COUNT(DISTINCT(api_user.id)) AS students
                     FROM 
                         api_user
                     INNER JOIN 
@@ -3771,43 +3772,45 @@ class BorrowerByGradeDisplayAPIView(APIView):
                         userprofile_family.family_name,
                         userprofile_combination.combination_name
                     ORDER BY 
-                        userprofile_grade.grade_name,
-                        userprofile_family.family_name,
-                        userprofile_combination.combination_name,  
+                        userprofile_grade.grade_name ASC,
+                        userprofile_family.family_name ASC,
+                        userprofile_combination.combination_name ASC,  
                         borrows DESC;
                 """
             else:
                 # SQL query for the current month
                 sql_query = """
                     SELECT 
-                            userprofile_grade.grade_name,
-                            userprofile_family.family_name,
-                            userprofile_combination.combination_name,
-                            COUNT(userprofile_issue_book.id) AS borrows
-                        FROM 
-                            api_user
-                        INNER JOIN 
-                            userprofile_student ON api_user.id = userprofile_student.user_id
-                        INNER JOIN 
-                            userprofile_family ON userprofile_student.family_id = userprofile_family.id
-                        INNER JOIN  
-                            userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
-                        INNER JOIN 
-                            userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
-                        LEFT JOIN 
-                            userprofile_issue_book ON api_user.id = userprofile_issue_book.borrower_id 
-                            AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
-                        WHERE 
-                            api_user.is_student = true
-                        GROUP BY 
-                            userprofile_grade.grade_name,
-                            userprofile_family.family_name,
-                            userprofile_combination.combination_name
-                        ORDER BY 
-                            userprofile_grade.grade_name,
-                            userprofile_family.family_name,
-                            userprofile_combination.combination_name,  
-                            borrows DESC;
+                        userprofile_grade.grade_name,
+                        userprofile_family.family_name,
+                        userprofile_combination.combination_name,
+                        COUNT(DISTINCT(userprofile_issue_book.borrower_id)) AS borrows,
+                        COUNT(DISTINCT(api_user.id)) AS students
+                    FROM 
+                        api_user
+                    INNER JOIN 
+                        userprofile_student ON api_user.id = userprofile_student.user_id
+                    INNER JOIN 
+                        userprofile_family ON userprofile_student.family_id = userprofile_family.id
+                    INNER JOIN  
+                        userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
+                    INNER JOIN 
+                        userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
+                    LEFT JOIN 
+                        userprofile_issue_book ON api_user.id = userprofile_issue_book.borrower_id 
+                        AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
+                    WHERE 
+                        api_user.is_student = true
+                    GROUP BY 
+                        userprofile_grade.grade_name,
+                        userprofile_family.family_name,
+                        userprofile_combination.combination_name
+                    ORDER BY 
+                        userprofile_grade.grade_name ASC,
+                        userprofile_family.family_name ASC,
+                        userprofile_combination.combination_name ASC,  
+                        borrows DESC;
+
                 """
 
             # Execute the SQL query
@@ -3822,7 +3825,9 @@ class BorrowerByGradeDisplayAPIView(APIView):
                         'grade_name': i[0],
                         'family_name': i[1],
                         'combination_name': i[2],
-                        'borrows': i[3]
+                        'borrowers': i[3],
+                        'students': i[4],
+                        'borrows': i[3]/i[4]
                     })
 
             serializer = BorrowerByGradeDisplaySerializer(data=data, many=True)

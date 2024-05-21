@@ -9,6 +9,7 @@ import ResponsiveTable from './ResponsiveTable';
 const MostBorrowerDisplay = ({ start_date, end_date }) => {
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   let {auth} = useAuth();
@@ -29,6 +30,7 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
     const fetchData = async () => {
       try {
         let url = baseUrl+'/mostborrower/';
+        let url1 = baseUrl+'/gborrower/';
 
         // Check if start_date and end_date props are provided
         if (start_date && end_date) {
@@ -37,6 +39,7 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
             }else{
                 setError("")
                 url += `?start_date=${formatDate(start_date)}&end_date=${formatDate(end_date)}`;
+                url1 += `?start_date=${formatDate(start_date)}&end_date=${formatDate(end_date)}`;
             }
           
         }
@@ -47,6 +50,15 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
             },
             withCredentials:true 
         });
+        const response1 = await axios.get(url1,{
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'multipart/form-data'
+            },
+            withCredentials:true 
+        });
+        console.log(response1.data)
+        setData2(response1.data);
         setData(response.data);
         var borrowerlist=[]
                 var i=1

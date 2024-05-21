@@ -898,5 +898,7 @@ class BorrowerByGradeDisplaySerializer(serializers.Serializer):
     grade_name = serializers.CharField()
     family_name = serializers.CharField()
     combination_name = serializers.CharField()
+    borrowers = serializers.IntegerField()
+    students = serializers.IntegerField()
     borrows = serializers.IntegerField()
         
