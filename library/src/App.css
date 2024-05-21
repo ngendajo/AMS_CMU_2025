@@ -408,3 +408,12 @@ li {
   border-radius: 5px;
   font-size: 16px;
 }
+
+.issuinganalysis{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.issuinganalysis-box{
+  width: 45%;
+}

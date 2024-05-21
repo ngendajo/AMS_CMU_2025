@@ -90,7 +90,6 @@ if (!data.length) {
         </div>
       </div>
       <div className="borrowers">
-        <h1>Most Borrower Student(s)</h1>
         <form className='mostborrowers'>
           <label>
             Start Date:
