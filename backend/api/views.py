@@ -3646,7 +3646,11 @@ class MostBorrowerDisplayAPIView(APIView):
                             AND userprofile_issue_book.issuedate >= '{start_date}'
                             AND userprofile_issue_book.issuedate <= '{end_date}'
                         GROUP BY 
-                            api_user.id
+                        api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name
                         ORDER BY 
                             issue_count DESC
                         LIMIT 5
@@ -3687,7 +3691,11 @@ class MostBorrowerDisplayAPIView(APIView):
                             api_user.is_student = true
                             AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
                         GROUP BY 
-                            api_user.id
+                        api_user.last_name, 
+                        api_user.first_name, 
+                        userprofile_grade.grade_name, 
+                        userprofile_family.family_name, 
+                        userprofile_combination.combination_name
                         ORDER BY 
                             issue_count DESC
                         LIMIT 5
