@@ -893,4 +893,10 @@ class MostBorrowerDisplaySerializer(serializers.Serializer):
     family_name = serializers.CharField()
     combination_name = serializers.CharField()
     issue_count = serializers.IntegerField()
+    
+class BorrowerByGradeDisplaySerializer(serializers.Serializer):
+    grade_name = serializers.CharField()
+    family_name = serializers.CharField()
+    combination_name = serializers.CharField()
+    borrows = serializers.IntegerField()
         

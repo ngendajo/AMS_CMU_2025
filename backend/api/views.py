@@ -3726,3 +3726,109 @@ class MostBorrowerDisplayAPIView(APIView):
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
 
+class BorrowerByGradeDisplayAPIView(APIView):
+    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
+    def get(self, request, *args, **kwargs):
+        try:
+            # Get query parameters for start_date and end_date
+            start_date = request.query_params.get('start_date')
+            end_date = request.query_params.get('end_date')
+
+            if start_date and end_date:
+                # Ensure start_date and end_date are in the correct format
+                try:
+                    start_date = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
+                    end_date = datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%S')
+                except ValueError:
+                    return Response({'error': 'Invalid date-time format. Use YYYY-MM-DDTHH:MM:SS.'}, status=400)
+                
+                # SQL query for the specified date range
+                sql_query = f"""
+                    SELECT 
+                        userprofile_grade.grade_name,
+                        userprofile_family.family_name,
+                        userprofile_combination.combination_name,
+                        COUNT(userprofile_issue_book.id) AS borrows
+                    FROM 
+                        api_user
+                    INNER JOIN 
+                        userprofile_student ON api_user.id = userprofile_student.user_id
+                    INNER JOIN 
+                        userprofile_family ON userprofile_student.family_id = userprofile_family.id
+                    INNER JOIN  
+                        userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
+                    INNER JOIN 
+                        userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
+                    LEFT JOIN 
+                        userprofile_issue_book ON api_user.id = userprofile_issue_book.borrower_id 
+                        AND userprofile_issue_book.issuedate >= '{start_date}'
+                        AND userprofile_issue_book.issuedate <= '{end_date}'
+                    WHERE 
+                        api_user.is_student = true
+                    GROUP BY 
+                        userprofile_grade.grade_name,
+                        userprofile_family.family_name,
+                        userprofile_combination.combination_name
+                    ORDER BY 
+                        userprofile_grade.grade_name,
+                        userprofile_family.family_name,
+                        userprofile_combination.combination_name,  
+                        borrows DESC;
+                """
+            else:
+                # SQL query for the current month
+                sql_query = """
+                    SELECT 
+                            userprofile_grade.grade_name,
+                            userprofile_family.family_name,
+                            userprofile_combination.combination_name,
+                            COUNT(userprofile_issue_book.id) AS borrows
+                        FROM 
+                            api_user
+                        INNER JOIN 
+                            userprofile_student ON api_user.id = userprofile_student.user_id
+                        INNER JOIN 
+                            userprofile_family ON userprofile_student.family_id = userprofile_family.id
+                        INNER JOIN  
+                            userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
+                        INNER JOIN 
+                            userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
+                        LEFT JOIN 
+                            userprofile_issue_book ON api_user.id = userprofile_issue_book.borrower_id 
+                            AND DATE_TRUNC('month', CAST(userprofile_issue_book.issuedate AS DATE)) = DATE_TRUNC('month', CURRENT_DATE)
+                        WHERE 
+                            api_user.is_student = true
+                        GROUP BY 
+                            userprofile_grade.grade_name,
+                            userprofile_family.family_name,
+                            userprofile_combination.combination_name
+                        ORDER BY 
+                            userprofile_grade.grade_name,
+                            userprofile_family.family_name,
+                            userprofile_combination.combination_name,  
+                            borrows DESC;
+                """
+
+            # Execute the SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query)
+                data1 = cursor.fetchall()
+
+            data = []
+            if data1 is not None:
+                for i in data1:
+                    data.append({
+                        'grade_name': i[0],
+                        'family_name': i[1],
+                        'combination_name': i[2],
+                        'borrows': i[3]
+                    })
+
+            serializer = MostBorrowerDisplaySerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)
