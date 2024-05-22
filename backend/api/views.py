@@ -171,9 +171,9 @@ class StaffUserView(APIView):
     def get(self, request):
         try:
             if request.query_params:
-                crc = User.objects.filter(**request.query_params.dict(), is_alumni=False)
+                crc = User.objects.filter(**request.query_params.dict(), is_alumni=False,is_student=False)
             else:
-                crc = User.objects.filter(is_alumni=False)
+                crc = User.objects.filter(is_alumni=False,is_student=False)
 
             # if there is something in items else raise error
             if crc:

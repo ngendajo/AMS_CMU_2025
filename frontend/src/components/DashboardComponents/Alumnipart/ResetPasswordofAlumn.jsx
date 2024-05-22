@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import baseUrl from "../../../api/baseUrl";
-import baseUrlforImg from "../../../api/baseUrlforImg";
+import baseUrl1 from "../../../api/baseUrl1";
 
 export default function ResetPasswordofAlumn() {
     const [userid, setUserid]=useState([]);
@@ -52,7 +52,7 @@ export default function ResetPasswordofAlumn() {
                 );
                 let formData2 = new FormData();
                 formData2.append('password',"Agahozo@12");
-                const response2 = await axios.patch(baseUrlforImg+"/"+response.data.message,
+                const response2 = await axios.patch(baseUrl1+response.data.message,
                 formData2,{
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),

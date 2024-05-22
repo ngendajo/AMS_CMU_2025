@@ -31,7 +31,7 @@ export default function Staff() {
                 },
                 withCredentials:true
             });
-            console.log(response.data);
+            //console.log(response.data);
             setResults1(response.data);
             setResults(response.data);
         }catch(err) {
