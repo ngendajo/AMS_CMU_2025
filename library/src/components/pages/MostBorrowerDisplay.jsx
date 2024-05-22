@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
-import 'chart.js/auto';
+import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import useAuth from "../../hooks/useAuth";
 import baseUrl from "../../api/baseUrl";
 import moment from 'moment';
 //import DynamicTable from './dinamicTable/DynamicTable';
 import ResponsiveTable from './ResponsiveTable';
+
+// Register the plugin
+Chart.register(ChartDataLabels);
 
 const MostBorrowerDisplay = ({ start_date, end_date }) => {
   const [data, setData] = useState([]);
@@ -104,7 +108,7 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
       grade_name: grade,
       students: gradeMap[grade].students,
       borrowers: gradeMap[grade].borrowers,
-      percentageBorrowers: (gradeMap[grade].borrowers / gradeMap[grade].students) * 100
+      percentageBorrowers: Math.round((gradeMap[grade].borrowers / gradeMap[grade].students) * 100)
     }));
 
     setGradeData(gradeDataArray);
@@ -131,7 +135,7 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
         family_name: family,
         students: gradeFamilyMap[grade][family].students,
         borrowers: gradeFamilyMap[grade][family].borrowers,
-        percentageBorrowers: (gradeFamilyMap[grade][family].borrowers / gradeFamilyMap[grade][family].students) * 100
+        percentageBorrowers: Math.round((gradeFamilyMap[grade][family].borrowers / gradeFamilyMap[grade][family].students) * 100)
       }))
     }));
 
@@ -159,7 +163,7 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
         combination_name: combination,
         students: gradeCombinationMap[grade][combination].students,
         borrowers: gradeCombinationMap[grade][combination].borrowers,
-        percentageBorrowers: (gradeCombinationMap[grade][combination].borrowers / gradeCombinationMap[grade][combination].students) * 100
+        percentageBorrowers: Math.round((gradeCombinationMap[grade][combination].borrowers / gradeCombinationMap[grade][combination].students) * 100)
       }))
     }));
 
@@ -256,6 +260,24 @@ const BarChart = ({ data, title, xKey, yKeys }) => {
     };
   
     const options = {
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          color: '#000',
+          font: {
+            weight: 'bold'
+          },
+          formatter: (value, context) => {
+            if (context.dataset.label === 'percentageBorrowers') {
+              return value + '%'; // Append '%' to the value
+            }
+            else {
+              return value ; // Append 'borrowers' to the value
+            }
+          }
+        }
+      },
       scales: {
         y: {
           beginAtZero: true

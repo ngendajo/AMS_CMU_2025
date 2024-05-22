@@ -105,9 +105,9 @@ export default function Menus() {
                         </li>
                         <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Reports <FiChevronDown /> </Link>
                             <ul className={boxClassSubMenu.join(' ')} > 
-                                <li> <Link onClick={toggleClass} className='is-active'  to={`/grstatistics`}> Statistics per Grade </Link> </li>
-                                <li><Link onClick={toggleClass} className='is-active' to={`/fastatistics`}> Statistics per Family </Link> </li>
-                                <li><Link onClick={toggleClass} className='is-active' to={`/costatistics`}> Statistics per Class </Link> </li>
+                                <li> <Link onClick={toggleClass} className='is-active'  to={`/grstatistics`}> Library Books </Link> </li>
+                                <li><Link onClick={toggleClass} className='is-active' to={`/fastatistics`}> E-Books </Link> </li>
+                                <li><Link onClick={toggleClass} className='is-active' to={`/costatistics`}> Others </Link> </li>
                             </ul>
                         </li>
                     </>:
