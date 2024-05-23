@@ -3891,7 +3891,7 @@ class AllBorrowersDisplayAPIView(APIView):
                     userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
                 LEFT JOIN
                     userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
-                WHERE is_student='{is_student}' OR is_alumni='{is_alumni}' OR is_staff='{is_staff}';
+                ;
             """
 
             # Execute the SQL query
@@ -3915,9 +3915,12 @@ class AllBorrowersDisplayAPIView(APIView):
                         'category_name': i[9],
                         'author_name': i[10],
                         'issuedate': i[11],
-                        'returndate': i[12],
-                        'student_id': i[13],
-                        'user_id': i[14]
+                        'is_student':i[12],
+                        'is_alumni':i[13],
+                        'is_staff':i[14],
+                        'returndate': i[15],
+                        'student_id': i[16],
+                        'user_id': i[17]
                     })
 
             serializer = AllBorrowersDisplaySerializer(data=data, many=True)
