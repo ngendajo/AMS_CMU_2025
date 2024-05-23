@@ -3851,20 +3851,7 @@ class AllBorrowersDisplayAPIView(APIView):
     # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
     def get(self, request, *args, **kwargs):
-        try:
-            # Initialize variables with default values
-            is_student = False
-            is_alumni = False
-            is_staff = False
-
-            # Get query parameters and update variables if provided
-            if 'is_student' in request.query_params:
-                is_student = request.query_params['is_student'].lower() == 'true'
-            if 'is_alumni' in request.query_params:
-                is_alumni = request.query_params['is_alumni'].lower() == 'true'
-            if 'is_staff' in request.query_params:
-                is_staff = request.query_params['is_staff'].lower() == 'true'
-                
+        try:   
             # SQL query for the specified date range
             sql_query = f"""
                 SELECT
@@ -3880,6 +3867,9 @@ class AllBorrowersDisplayAPIView(APIView):
                     category_name,
                     author_name,
                     issuedate,
+                    is_student,
+                    is_alumni,
+                    is_staff,
                     returndate,
                     userprofile_student.id AS student_id,
                     api_user.id AS user_id

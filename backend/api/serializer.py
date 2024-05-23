@@ -917,4 +917,7 @@ class AllBorrowersDisplaySerializer(serializers.Serializer):
     returndate = serializers.CharField()
     student_id= serializers.IntegerField()
     user_id= serializers.IntegerField()
+    is_student=serializers.BooleanField()
+    is_alumni=serializers.BooleanField()
+    is_staff=serializers.BooleanField()
         
