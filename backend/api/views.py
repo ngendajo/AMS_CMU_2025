@@ -3854,13 +3854,18 @@ class AllBorrowersDisplayAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            is_student=False
-            is_alumni=False
-            is_staff=False
-            # Get query parameters 
-            is_student=request.query_params.get('is_student')
-            is_alumni=request.query_params.get('is_alumni')
-            is_staff=request.query_params.get('is_staff')
+            # Initialize variables with default values
+            is_student = False
+            is_alumni = False
+            is_staff = False
+
+            # Get query parameters and update variables if provided
+            if 'is_student' in request.query_params:
+                is_student = request.query_params['is_student'].lower() == 'true'
+            if 'is_alumni' in request.query_params:
+                is_alumni = request.query_params['is_alumni'].lower() == 'true'
+            if 'is_staff' in request.query_params:
+                is_staff = request.query_params['is_staff'].lower() == 'true'
                 
             # SQL query for the specified date range
             sql_query = f"""
