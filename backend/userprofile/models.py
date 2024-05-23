@@ -266,7 +266,7 @@ class Issue_Book(models.Model):
     
 #Attendance System
 class Atendance(models.Model):
-    user = models.ForeignKey(User,on_delete=models.PROTECT, related_name="student")
+    user = models.ForeignKey(User,on_delete=models.PROTECT, related_name="atend")
     atendance_date = models.CharField(max_length=70)
     period = models.CharField(max_length=30)
     
