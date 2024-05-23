@@ -3847,8 +3847,6 @@ class BorrowerByGradeDisplayAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
-        
-        
 class AllBorrowersDisplayAPIView(APIView):
     # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
 
@@ -3881,7 +3879,6 @@ class AllBorrowersDisplayAPIView(APIView):
                     isbnumber,
                     category_name,
                     author_name,
-                    library_number,
                     issuedate,
                     returndate,
                     userprofile_student.id AS student_id,
@@ -3904,10 +3901,8 @@ class AllBorrowersDisplayAPIView(APIView):
                     userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
                 LEFT JOIN
                     userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
-                    where is_student='{is_student}' or is_alumni='{is_alumni}' or is_staff='{is_staff}';
-
+                WHERE is_student='{is_student}' OR is_alumni='{is_alumni}' OR is_staff='{is_staff}';
             """
-            
 
             # Execute the SQL query
             with connection.cursor() as cursor:
@@ -3915,25 +3910,24 @@ class AllBorrowersDisplayAPIView(APIView):
                 data1 = cursor.fetchall()
 
             data = []
-            if data1 is not None:
+            if data1:
                 for i in data1:
                     data.append({
-                        'first_name':i[0],
-                        'last_name':i[1],
-                        'phone1':i[2],
-                        'email':i[3],
-                        'grade_name':i[4],
-                        'family_name':i[5],
-                        'combination_name':i[6],
-                        'book_name':i[7],
-                        'isbnumber':i[8],
-                        'category_name':i[9],
-                        'author_name':i[10],
-                        'library_number':[11],
-                        'issuedate':[12],
-                        'returndate':i[13],
-                        'student_id':i[14],
-                        'user_id':i[15]
+                        'first_name': i[0],
+                        'last_name': i[1],
+                        'phone1': i[2],
+                        'email': i[3],
+                        'grade_name': i[4],
+                        'family_name': i[5],
+                        'combination_name': i[6],
+                        'book_name': i[7],
+                        'isbnumber': i[8],
+                        'category_name': i[9],
+                        'author_name': i[10],
+                        'issuedate': i[11],
+                        'returndate': i[12],
+                        'student_id': i[13],
+                        'user_id': i[14]
                     })
 
             serializer = AllBorrowersDisplaySerializer(data=data, many=True)
@@ -3943,3 +3937,4 @@ class AllBorrowersDisplayAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+

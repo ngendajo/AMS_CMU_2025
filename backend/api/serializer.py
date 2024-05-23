@@ -913,7 +913,6 @@ class AllBorrowersDisplaySerializer(serializers.Serializer):
     isbnumber=serializers.CharField()
     category_name=serializers.CharField()
     author_name=serializers.CharField()
-    library_number=serializers.CharField()
     issuedate = serializers.CharField()
     returndate = serializers.CharField()
     student_id= serializers.IntegerField()
