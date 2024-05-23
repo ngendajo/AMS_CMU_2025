@@ -900,4 +900,22 @@ class BorrowerByGradeDisplaySerializer(serializers.Serializer):
     combination_name = serializers.CharField()
     borrowers = serializers.IntegerField()
     students = serializers.IntegerField()
+    
+class AllBorrowersDisplaySerializer(serializers.Serializer):
+    first_name=serializers.CharField()
+    last_name=serializers.CharField()
+    phone1=serializers.CharField()
+    email=serializers.CharField()
+    grade_name=serializers.CharField()
+    family_name=serializers.CharField()
+    combination_name=serializers.CharField()
+    book_name=serializers.CharField()
+    isbnumber=serializers.CharField()
+    category_name=serializers.CharField()
+    author_name=serializers.CharField()
+    library_number=serializers.CharField()
+    issuedate = serializers.CharField()
+    returndate = serializers.CharField()
+    student_id= serializers.IntegerField()
+    user_id= serializers.IntegerField()
         

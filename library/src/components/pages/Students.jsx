@@ -5,52 +5,64 @@ import { Link } from 'react-router-dom';
 import { BiEditAlt } from "react-icons/bi";
 import baseUrl from "../../api/baseUrl";
 import DynamicTable from "./dinamicTable/DynamicTable";
+import { IoEye } from "react-icons/io5";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 export default function Students() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingpdf, setLoadingpdf] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
     let {auth} = useAuth();
 
-    useEffect(() =>{
-    
-        const getData = async () =>{
-            try{
-                const response = await axios.get(baseUrl+'/students/',{
+      useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await axios.get(baseUrl + '/students/', {
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                         "Content-Type": 'multipart/form-data'
                     },
-                    withCredentials:true 
+                    withCredentials: true
                 });
-                var studentlist=[]
-                var i=1
+    
+                var studentlist = [];
+                var i = 1;
                 setLoading(false);
-                response.data.forEach(e=>{
+                console.log(response.data)
+                response.data.forEach(student => {
                     studentlist.push({
-                    No:i,
-                    Names:e.last_name+" "+e.first_name,
-                    Reg_No:e.studentid,
-                    Email:e.email,
-                    Grade:e.grade_name,
-                    Family:e.family_name,
-                    Combinamtion:e.combination_name,
-                    Edit:<span>
-                        <Link to={`/student/${e.id}`}><BiEditAlt className='icon'/></Link>
-                    </span>
-                })
-                i=i+1
-                })
+                        No: i,
+                        Names: student.last_name + " " + student.first_name,
+                        Reg_No: student.studentid,
+                        Email: student.email,
+                        Grade: student.grade_name,
+                        Family: student.family_name,
+                        Combination: student.combination_name,
+                        Edit: <span>
+                            <Link to={`/student/${student.id}`}><BiEditAlt className='icon' /></Link>
+                        </span>,
+                        Books: <Popup
+                            trigger={<button><IoEye /></button>}
+                            position="left center"
+                        >
+                            <div>GeeksforGeeks</div>
+                            <button>Click here</button>
+                        </Popup>
+                    });
+                    i = i + 1;
+                });
                 setData(studentlist);
-            }catch(err) {
+            } catch (err) {
                 console.log(err);
                 //navigate('/error');
             }
-        }
+        };
     
         getData();
+    }, [auth]);
     
-    },[auth])
     const studentReprtexcel = async () => {
         setLoadingpdf(true);
           const response = await fetch(`${baseUrl}/exportstudentexcel/`);
@@ -65,6 +77,7 @@ export default function Students() {
           document.body.removeChild(link);
           setLoadingpdf(false);
         };
+        
   return (
     <div>
      <center><h2 >List of Students <button className="prenext" onClick={studentReprtexcel} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export List of Students in Excel'}</button></h2></center> 

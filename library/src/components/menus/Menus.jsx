@@ -53,7 +53,7 @@ export default function Menus() {
                     <li  className="menu-item" >
                         <Link className='is-active' onClick={toggleClass} to={`/`}> Dashboard </Link> 
                     </li>
-                    {user.is_superuser || user.is_librarian ?
+                    {user.is_superuser || user.is_librarian || user.is_crc ?
                     <>
                         <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Categories <FiChevronDown /> </Link>
                             <ul className={boxClassSubMenu.join(' ')} > 

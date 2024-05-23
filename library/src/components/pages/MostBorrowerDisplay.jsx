@@ -245,7 +245,11 @@ const MostBorrowerDisplay = ({ start_date, end_date }) => {
 };
 const BarChart = ({ data, title, xKey, yKeys }) => {
     const hexColors = [
-        '#002F6C', '#47805F', '#F49B45',
+        '#498160', '#6d5736', '#f49c46'
+        // Add more colors if needed
+      ];
+      const hexColors2 = [
+        '#957967','#d8b040'
         // Add more colors if needed
       ];
     const chartData = {
@@ -253,8 +257,8 @@ const BarChart = ({ data, title, xKey, yKeys }) => {
       datasets: yKeys.map((key, index) => ({
         label: key,
         data: data.map(item => item[key]),
-        backgroundColor: hexColors[index % hexColors.length] + '99', // Adding transparency with '99' for 60%
-      borderColor: hexColors[index % hexColors.length],
+        backgroundColor: hexColors[index % hexColors.length], // Adding transparency with '99' for 60%
+      borderColor: hexColors[index % hexColors2.length],
         borderWidth: 1,
       }))
     };

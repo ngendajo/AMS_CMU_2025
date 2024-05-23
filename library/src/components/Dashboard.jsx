@@ -22,7 +22,7 @@ export default function Dashboard() {
         <LibrarianDashBoard/>:
           <span>
             {user.is_crc ?
-        <h2>Hello CRC staff</h2>:
+        <LibrarianDashBoard/>:
           <span>
             <span>
             {user.is_superuser ?

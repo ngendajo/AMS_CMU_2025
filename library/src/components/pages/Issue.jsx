@@ -36,7 +36,7 @@ export default function Issue() {
                 },
                 withCredentials:true 
             });
-            console.log(response.data)
+            //console.log(response.data)
             if(id!==""){
               setFilteredData(response.data)
             }else{

@@ -172,6 +172,7 @@ urlpatterns = [
     path('general/', views.GeneralReportDisplayAPIView.as_view(), name='general_report'),
     path('mostborrower/', views.MostBorrowerDisplayAPIView.as_view(), name='most_borrower_report'),
     path('gborrower/', views.BorrowerByGradeDisplayAPIView.as_view(), name='grade_borrower_report'),
+    path('borrowers/', views.AllBorrowersDisplayAPIView.as_view(), name='borrowers_report'),
 
     path('', views.getRoutes)
 ]

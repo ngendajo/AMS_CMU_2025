@@ -79,7 +79,7 @@ function App() {
                 <Route element={<RequireAuth />}>
                   <Route path='/' element={<MainDashboard />}>
                     <Route path='/' element={<Dashboard />}/>
-                    <Route element={<AuthCheck allowedRoles={["superuser","librarian"]} />}>
+                    <Route element={<AuthCheck allowedRoles={["superuser","librarian","crc"]} />}>
                       <Route path='author' element={<Author />}/>
                       <Route path='authors' element={<Authors />}/>
                       <Route path='author/:id' element={<Editauthor/>}/>

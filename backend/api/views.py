@@ -8,7 +8,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.db.models import Count, Case, When, IntegerField
+from django.db.models import Count, Case, When, IntegerField,Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -171,10 +171,21 @@ class StaffUserView(APIView):
     def get(self, request):
         try:
             if request.query_params:
-                crc = User.objects.filter(**request.query_params.dict(), is_alumni=False,is_student=False)
+                query_params = request.query_params.dict()
+                crc = User.objects.filter(
+                    Q(is_crc=True) |
+                    Q(is_teacher=True) |
+                    Q(is_librarian=True) |
+                    Q(is_superuser=True),
+                    **query_params
+                )
             else:
-                crc = User.objects.filter(is_alumni=False,is_student=False)
-
+                crc = User.objects.filter(
+                    Q(is_crc=True) |
+                    Q(is_teacher=True) |
+                    Q(is_librarian=True) |
+                    Q(is_superuser=True)
+                )
             # if there is something in items else raise error
             if crc:
                 serializer = StaffUserSerializer(crc, many=True)
@@ -3830,6 +3841,97 @@ class BorrowerByGradeDisplayAPIView(APIView):
                     })
 
             serializer = BorrowerByGradeDisplaySerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except Exception as e:
+            # Log the exception or return a custom error response
+            return Response({'error': str(e)}, status=500)
+        
+        
+class AllBorrowersDisplayAPIView(APIView):
+    # permission_classes = [IsAuthenticated, ]  # You can add authentication if needed
+
+    def get(self, request, *args, **kwargs):
+        try:
+            is_student=False
+            is_alumni=False
+            is_staff=False
+            # Get query parameters 
+            is_student=request.query_params.get('is_student')
+            is_alumni=request.query_params.get('is_alumni')
+            is_staff=request.query_params.get('is_staff')
+                
+            # SQL query for the specified date range
+            sql_query = f"""
+                SELECT
+                    first_name,
+                    last_name,
+                    phone1,
+                    email,
+                    grade_name,
+                    family_name,
+                    combination_name,
+                    book_name,
+                    isbnumber,
+                    category_name,
+                    author_name,
+                    library_number,
+                    issuedate,
+                    returndate,
+                    userprofile_student.id AS student_id,
+                    api_user.id AS user_id
+                FROM
+                    api_user
+                INNER JOIN
+                    userprofile_issue_book ON userprofile_issue_book.borrower_id = api_user.id
+                INNER JOIN
+                    userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id
+                INNER JOIN
+                    userprofile_category ON userprofile_book.category_id = userprofile_category.id
+                INNER JOIN
+                    userprofile_author ON userprofile_author.id = userprofile_book.author_id
+                LEFT JOIN
+                    userprofile_student ON api_user.id = userprofile_student.user_id
+                LEFT JOIN
+                    userprofile_family ON userprofile_student.family_id = userprofile_family.id
+                LEFT JOIN
+                    userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
+                LEFT JOIN
+                    userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id
+                    where is_student='{is_student}' or is_alumni='{is_alumni}' or is_staff='{is_staff}';
+
+            """
+            
+
+            # Execute the SQL query
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query)
+                data1 = cursor.fetchall()
+
+            data = []
+            if data1 is not None:
+                for i in data1:
+                    data.append({
+                        'first_name':i[0],
+                        'last_name':i[1],
+                        'phone1':i[2],
+                        'email':i[3],
+                        'grade_name':i[4],
+                        'family_name':i[5],
+                        'combination_name':i[6],
+                        'book_name':i[7],
+                        'isbnumber':i[8],
+                        'category_name':i[9],
+                        'author_name':i[10],
+                        'library_number':[11],
+                        'issuedate':[12],
+                        'returndate':i[13],
+                        'student_id':i[14],
+                        'user_id':i[15]
+                    })
+
+            serializer = AllBorrowersDisplaySerializer(data=data, many=True)
             serializer.is_valid()  # Validate serializer data
             return Response(serializer.data)
 
