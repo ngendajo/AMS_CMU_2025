@@ -343,7 +343,7 @@ li {
   border-bottom: 1px solid #ddd;
 }
 .even-row {
-  background-color: lightblue;
+  background-color: #498160;
 }
 
 @media screen and (max-width: 600px) {

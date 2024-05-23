@@ -920,4 +920,28 @@ class AllBorrowersDisplaySerializer(serializers.Serializer):
     is_student=serializers.BooleanField()
     is_alumni=serializers.BooleanField()
     is_staff=serializers.BooleanField()
+    
+
+#atandance
+class AtendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Atendance
+        fields = '__all__'
+        
+class DisplayAtendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Atendance
+        fields = '__all__'
+        depth=2
+        
+class TermSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Term
+        fields = '__all__'
+        
+class DisplayTermSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Term
+        fields = '__all__'
+        depth=2
         

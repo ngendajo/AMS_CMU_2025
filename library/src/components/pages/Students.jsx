@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import moment from 'moment';
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import { Link } from 'react-router-dom';
@@ -16,7 +17,28 @@ export default function Students() {
   const [filteredData, setFilteredData] = useState([]);
     let {auth} = useAuth();
 
-      useEffect(() => {
+    useEffect(() => {
+        const getData1 = async () => {
+            try {
+                const response = await axios.get(baseUrl + '/borrowers/', {
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": 'multipart/form-data'
+                    },
+                    withCredentials: true
+                });
+                //console.log(response.data);
+                setFilteredData(response.data);
+            } catch (err) {
+                console.log(err);
+                // navigate('/error');
+            }
+        };
+    
+        getData1();
+    }, [auth]);
+    
+    useEffect(() => {
         const getData = async () => {
             try {
                 const response = await axios.get(baseUrl + '/students/', {
@@ -30,10 +52,40 @@ export default function Students() {
                 var studentlist = [];
                 var i = 1;
                 setLoading(false);
-                console.log(response.data)
-                response.data.forEach(student => {
+                response.data.forEach(async (student) => {
+                    const studentBooks = filteredData
+                        .filter(item => item.student_id === student.id)
+                        .map((item, index) => ({
+                            No: index + 1,
+                            book_name: item.book_name,
+                            isbnumber: item.isbnumber,
+                            category_name: item.category_name,
+                            author_name: item.author_name,
+                            issuedate: item.issuedate === "Not yet Issued" ? "Not yet Issued" : moment(item.issuedate).format("Do MMMM YYYY, h:mm:ss a").toLocaleString(),
+                            returndate: item.returndate === "Not yet Returned" ? "Not yet Returned" : moment(item.returndate).format("Do MMMM YYYY, h:mm:ss a").toLocaleString()
+                        }))
+                        .sort((a, b) => {
+                            if (a.returndate === "Not yet Returned" && b.returndate !== "Not yet Returned") {
+                                return -1; // 'a' comes first
+                            } else if (a.returndate !== "Not yet Returned" && b.returndate === "Not yet Returned") {
+                                return 1; // 'b' comes first
+                            } else {
+                                return 0; // no change in order
+                            }
+                        });
+
+                    
                     studentlist.push({
                         No: i,
+                        Books: <Popup
+                                    trigger={<button><IoEye /></button>}
+                                    position="right center"
+                                    contentStyle={{ width: 'auto', maxWidth: 'fit-content' }} // Adjust the contentStyle to fit the content dynamically
+                                >
+                                    {studentBooks.length > 0 ?
+                                        <DynamicTable mockdata={studentBooks} /> : <p>No books found</p>
+                                    }
+                                </Popup>,
                         Names: student.last_name + " " + student.first_name,
                         Reg_No: student.studentid,
                         Email: student.email,
@@ -42,26 +94,20 @@ export default function Students() {
                         Combination: student.combination_name,
                         Edit: <span>
                             <Link to={`/student/${student.id}`}><BiEditAlt className='icon' /></Link>
-                        </span>,
-                        Books: <Popup
-                            trigger={<button><IoEye /></button>}
-                            position="left center"
-                        >
-                            <div>GeeksforGeeks</div>
-                            <button>Click here</button>
-                        </Popup>
+                        </span>
                     });
-                    i = i + 1;
+                    i++;
                 });
                 setData(studentlist);
             } catch (err) {
                 console.log(err);
-                //navigate('/error');
+                // navigate('/error');
             }
         };
     
         getData();
-    }, [auth]);
+    }, [auth, filteredData]);
+    
     
     const studentReprtexcel = async () => {
         setLoadingpdf(true);

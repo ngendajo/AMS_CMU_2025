@@ -3930,4 +3930,115 @@ class AllBorrowersDisplayAPIView(APIView):
         except Exception as e:
             # Log the exception or return a custom error response
             return Response({'error': str(e)}, status=500)
+        
+#atendance  
+class AtendanceRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = AtendanceSerializer(data=request.data)
+        # validating for already existing data
+        if Atendance.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            # checking for the parameters from the URL
+            if request.query_params:
+                atendance = Atendance.objects.filter(**request.query_params.dict())
+            else:
+                atendance =Atendance.objects.all()
+
+            # if there is something in items else raise error
+            if atendance:
+                serializer = DisplayAtendanceSerializer(atendance, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_Atendance(request, pk):
+    atendance = Atendance.objects.get(pk=pk)
+    data = Atendance(instance=atendance, data=request.data)
+
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_atendance(request, pk):
+    atendance = get_object_or_404(Atendance, pk=pk)
+    atendance.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class TermRegistrationView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = TermSerializer(data=request.data)
+        # validating for already existing data
+        if Term.objects.filter(**request.data).exists():
+            raise serializers.ValidationError('This data already exists')
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        try:
+            # checking for the parameters from the URL
+            if request.query_params:
+                term = Term.objects.filter(**request.query_params.dict())
+            else:
+                term =Term.objects.all()
+
+            # if there is something in items else raise error
+            if term:
+                serializer = DisplayTermSerializer(term, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def update_term(request, pk):
+    term = Term.objects.get(pk=pk)
+    data = Term(instance=term, data=request.data)
+
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def delete_term(request, pk):
+    term = get_object_or_404(Term, pk=pk)
+    term.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
 

@@ -263,4 +263,23 @@ class Issue_Book(models.Model):
 
     def __str__(self):
         return str(self.book.book_name + self.borrower.first_name + "borrow")
+    
+#Attendance System
+class Atendance(models.Model):
+    user = models.ForeignKey(User,on_delete=models.PROTECT, related_name="student")
+    atendance_date = models.CharField(max_length=70)
+    period = models.CharField(max_length=30)
+    
+
+    def __str__(self):
+        return str(self.user.first_name + "student")
+    
+class Term(models.Model):
+    term_name = models.CharField(max_length=70)
+    startdate = models.CharField(max_length=70)
+    enddate = models.CharField(max_length=70)
+    
+
+    def __str__(self):
+        return str(self.term_name)
 
