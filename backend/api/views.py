@@ -3968,7 +3968,7 @@ class AtendanceRegistrationView(APIView):
 
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
-def update_Atendance(request, pk):
+def update_atendance(request, pk):
     atendance = Atendance.objects.get(pk=pk)
     data = Atendance(instance=atendance, data=request.data)
 
