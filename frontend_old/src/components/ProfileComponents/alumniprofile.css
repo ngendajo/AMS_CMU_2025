@@ -1,0 +1,116 @@
+.alumni-profile-main{
+    margin: 1%;
+    width: 98%;
+    display: flex;
+    gap: 10px;
+
+}
+.alumni-profile-top-left{
+    background-color: white;
+    flex: 3;
+    border-radius: 5px;
+    padding: 5px;
+}
+.basic-info{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.alumni-profile-img{
+    width: 10%;
+    border-radius: 50%;
+}
+.alumni-profile-info{
+    width: 89%;
+    margin: 5px;
+}
+.alumni-profile-info-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 2%;
+}
+.message-edit{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 5px;
+    border: solid #939292;
+    padding: 3px 8px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.opportinuties-shared{
+    width: 20%;
+    margin-top: 20px;
+    background-color: #EDF6FE;
+    border-radius: 5px;
+}
+.alumni-profile-top-right{
+    background-color: white;
+    flex: 1;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.academic-perfomance{
+    display: flex;
+    justify-content: space-between;
+}
+.alumni-profile-img-same-grade{
+    border-radius: 50%;
+}
+.list-of-alumni-in-the-same-grade{
+    display: flex;
+    align-items: center;
+}
+.list-of-alumni-in-the-same-grade strong{
+    background-color: #D9D9D9;
+    color: #F49D47;
+    padding: 3px;
+    border-radius: 50%;
+}
+.alumni-profile-personal-info{
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 1%;
+    width: 98%;
+}
+.academic-progress{
+    margin: 20px 5%;
+}
+.academic-progress table {  
+    font-family:sans-serif;
+    th, td {
+      padding:.20em .5em;
+      text-align:left;
+      &:nth-child(2) {
+        text-align:right;
+      }
+    }
+    td {
+      background-color:#eee;    
+    }
+    th {
+      background-color:rgb(21, 111, 2);
+      color:#fff;
+    }
+  }
+  
+  .zigzag {
+    border-collapse:separate;
+    border-spacing:.25em 1em;
+    tbody tr:nth-child(odd) {
+      transform:rotate(0.5deg);
+    }
+    thead tr,
+    tbody tr:nth-child(even) {
+      transform:rotate(-0.5deg);
+    }
+  }

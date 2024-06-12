@@ -1,0 +1,81 @@
+.alumni-list-heading{
+    background-color: #FFF;
+    width: 98%;
+    margin: 10px 1%;
+    padding: 15px;
+    border-radius: 7px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+.displayed{
+    background-color: #F49D47;
+    color: #FFF;
+    border-radius: 7px;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 7px;
+    text-decoration: none;
+}
+.notdisplayed{
+    color: #3f3f3f;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.alumni-header-right{
+    float: right;
+    margin-right: 2%;
+}
+.alumni-list-body{
+    background-color: #FFF;
+    border-radius: 7px;
+    width: 98%;
+    margin: 20px 1%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.alumni-data-body{
+    background-color: #FFF;
+    border-radius: 7px;
+    width: 98%;
+    margin: 20px 1%;
+    padding: 15px;  
+}
+.grades-link{
+    color: #3d3d3d;
+    text-decoration: none;
+}
+.uploadeddata{
+    overflow-x:auto;
+    width: 80%;
+}
+.uploadeddata table {
+    border-collapse: collapse;
+    table-layout: auto;
+    width: 180px; 
+    border-spacing: 0;
+    border: 1px solid #ddd;
+  }
+  
+  .uploadeddata th, td {
+    text-align: left;
+    padding: 1px;
+  }
+  
+  .uploadeddata tr:nth-child(even){background-color: #f2f2f2}
+
+  .wellchecked h1{
+    color: green;
+  }
+  .wellchecked h2{
+    color: white;
+    cursor: pointer;
+    background-color: red;
+    padding: 4px;
+    border-radius: 3px;
+    width: 150px;
+  }

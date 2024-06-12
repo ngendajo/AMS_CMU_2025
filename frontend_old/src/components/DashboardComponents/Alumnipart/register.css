@@ -1,0 +1,120 @@
+
+.form-element{
+    margin: 10px 3%;
+    display: flex;
+    flex-direction: column;
+}
+.grade-info{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 1%;
+}
+.form-element input[type="text"],.form-element input[type="number"],
+.form-element input[type="email"]{
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  width: 200px;
+}
+.form-element button {
+    font-size: 16px;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    width: 100px;
+    margin: 5px;
+    cursor: pointer;
+}
+.family-info-input input{
+    margin-right: 5px;
+}
+.grade-info label{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+.family-info{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
+    align-items: center;
+}
+.family-info span{
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    
+}
+.line{
+    text-decoration: none;
+    color: rgb(1, 20, 3);
+    font-size: 16px;
+}
+/* Grades */
+.grades-list{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+    width: 98%;
+    margin: 30px 1%;
+    background-color: #FFF;
+    
+}
+.grade-details:hover{
+    background-color: rgb(238, 240, 241);
+    transition: 250ms;
+}
+.grade-details{
+    background-color: rgb(242, 239, 239);
+    color: rgb(16, 18, 55);
+    
+    padding: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    -webkit-box-shadow: 5px 1px 5px -2px rgba(158,158,158,0.77);
+    -moz-box-shadow: 5px 1px 5px -2px rgba(158,158,158,0.77);
+    box-shadow: 5px 1px 5px -2px rgba(158,158,158,0.77);
+    
+}
+.edit-grade{
+    cursor: pointer;
+    text-decoration: none;
+    padding: 30px;
+    text-align: center;
+    color: red;
+}
+.family-detail li{
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.errormessage{
+    color:red;
+}
+
+.view-grade-alumni, .view-family-alumni{
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    
+}
+.view-grade-alumni:hover{
+    color: rgb(58, 58, 56);
+    background-color: green;
+}
+.view-family-alumni:hover{
+    color: rgb(60, 63, 62);
+    background-color: black;
+}
+.comb_name{
+    text-decoration: none;
+    color: black;
+}
+.comb_name:hover{
+    color: red;
+}
