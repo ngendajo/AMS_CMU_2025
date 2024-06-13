@@ -2,6 +2,7 @@ import { React,useState, useEffect } from "react"
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
+import { Card } from "../../components/Card";
 
 import axios from "../../api/axios";
 
@@ -92,6 +93,22 @@ export default function Home() {
             <Link to="/home" className="forgetpass">Forgot password?</Link>
             <center><button>Login</button></center>
         </form>
+
+        <div className="App">
+      <div className="col">
+        <Card
+          imgSrc="https://picsum.photos/id/201/300/200"
+          imgAlt="Card Image 1"
+          title="Alumni 1"
+          description="This is the card description section"
+         buttonText="Learn More"
+          link="card2"
+        />
+       
+      </div>
+      
+     
+    </div>
     </div>
   )
 }
