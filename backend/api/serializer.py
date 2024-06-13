@@ -214,6 +214,7 @@ class DisplayEmploymentSerializer(serializers.Serializer):
     phone1 = serializers.CharField(max_length=30, required=True)
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
+    reg_number = serializers.CharField(max_length=50, required=True)
     image_url =serializers.ImageField(required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
     family_name = serializers.CharField(max_length=200, required=True)
@@ -229,7 +230,7 @@ class DisplayEmploymentSerializer(serializers.Serializer):
     career = serializers.CharField(max_length=200, required=True)
 
     class Meta:
-        fields = ('id','alumn_id', 'email','phone1', 'first_name','last_name','end','image_url','grade_name','family_name','combination_name', 'title','company','description','start_date','status', 'emp_id','career')
+        fields = ('id','alumn_id', 'email','phone1', 'first_name','reg_number','last_name','end','image_url','grade_name','family_name','combination_name', 'title','company','description','start_date','status', 'emp_id','career')
 
 # Alumni data serializers
 
@@ -237,18 +238,18 @@ class AlumniInfoRegSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','date_of_birth','user','marital_status','gender','family','combination','Eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
+        fields = ('id','date_of_birth','user','marital_status','gender','family','combination','Eps','kids','father','mother','reg_number','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
 
 class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
     Eps = EpSerializer(many=True, read_only=True)
     class Meta:
         model = Alumni
-        fields = ('id','marital_status','gender','family','combination','Eps','kids','father','mother','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
+        fields = ('id','marital_status','gender','family','combination','Eps','kids','father','mother','reg_number','place_of_birth','currresidence','s4marks','s5marks','s6marks','ne','maxforne','decision','life_status')
 
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
-        fields = ('decision','date_of_birth','life_status','id','user','marital_status','gender','family','combination','eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne')
+        fields = ('decision','date_of_birth','life_status','id','user','marital_status','reg_number','gender','family','combination','eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne')
         depth = 3
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
@@ -266,6 +267,7 @@ class AlumniListsSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
     phone1 = serializers.CharField(max_length=200, required=True)
+    reg_number = serializers.CharField(max_length=200, required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
     family_name = serializers.CharField(max_length=200, required=True)
     combination_name = serializers.CharField(max_length=200, required=True)
@@ -275,7 +277,7 @@ class AlumniListsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id')
+        fields = ('id','email','image_url','first_name','last_name','reg_number','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id')
         
 class AlumniListbyEPSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=True)
@@ -283,6 +285,7 @@ class AlumniListbyEPSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
+    reg_number= serializers.CharField(max_length=200, required=True)
     phone1 = serializers.CharField(max_length=200, required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
     family_name = serializers.CharField(max_length=200, required=True)
@@ -295,7 +298,7 @@ class AlumniListbyEPSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id','email','image_url','first_name','last_name','phone1', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id','ep_title','ep_id')
+        fields = ('id','email','image_url','first_name','last_name','phone1','reg_number', 'grade_name','grade_id','family_name','family_id','combination_name','combination_id','ep_title','ep_id')
         
  
 class AlumniBulkRegistrationSerializer(serializers.ModelSerializer):
@@ -450,6 +453,7 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
     phone1 = serializers.CharField(max_length=30, required=True)
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
+    reg_number = serializers.CharField(max_length=200, required=True)
     image_url =serializers.ImageField(required=True)
     degree = serializers.CharField(max_length=200, required=True)
     university = serializers.CharField(max_length=200, required=True)
@@ -462,7 +466,7 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Studie
-        fields = ('id','alumn_id','email','phone1','first_name','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
+        fields = ('id','alumn_id','email','phone1','first_name','reg_number','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
 
 
 
@@ -945,3 +949,86 @@ class DisplayTermSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth=2
         
+#New Alumni and Kids at ASYV Database
+class KidsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Kids
+        fields = ['names', 'age']  # Include 'age' field
+
+class KidsAlumniSerializer(serializers.ModelSerializer):
+    kids = KidsSerializer(many=True)
+
+    class Meta:
+        model = Kids_alumni
+        fields = '__all__'
+
+    def create(self, validated_data):
+        kids_data = validated_data.pop('kids')
+        combination_data = validated_data.pop('combination', None)
+        eps_data = validated_data.pop('eps', None)
+
+        kids_alumni = Kids_alumni.objects.create(**validated_data)
+
+        for kid_data in kids_data:
+            kid, created = Kids.objects.get_or_create(**kid_data)
+            kids_alumni.kids.add(kid)
+
+        if combination_data:
+            for comb_id in combination_data:
+                try:
+                    #comb = Combination.objects.get(id=comb_id)
+                    kids_alumni.combination.add(comb_id)
+                except ObjectDoesNotExist:
+                    # Handle the case where the Combination does not exist
+                    # You can log this or take any other appropriate action
+                    pass
+
+        if eps_data:
+            for ep_id in eps_data:
+                try:
+                    #ep = Ep.objects.get(id=ep_id)
+                    kids_alumni.eps.add(ep_id)
+                except ObjectDoesNotExist:
+                    # Handle the case where the Ep does not exist
+                    # You can log this or take any other appropriate action
+                    pass
+
+        return kids_alumni
+
+    def update(self, instance, validated_data):
+        kids_data = validated_data.pop('kids', None)
+        combination_data = validated_data.pop('combination', None)
+        eps_data = validated_data.pop('eps', None)
+
+        instance = super().update(instance, validated_data)
+
+        if kids_data:
+            instance.kids.clear()
+            for kid_data in kids_data:
+                kid, created = Kids.objects.get_or_create(names=kid_data['names'], age=kid_data['age'])
+                instance.kids.add(kid)
+
+        if combination_data:
+            instance.combination.clear()
+            for comb_id in combination_data:
+                try:
+                    #comb = Combination.objects.get(id=comb_id)
+                    instance.combination.add(comb_id)
+                except ObjectDoesNotExist:
+                    # Handle the case where the Combination does not exist
+                    # You can log this or take any other appropriate action
+                    pass
+
+        if eps_data:
+            instance.eps.clear()
+            for ep_id in eps_data:
+                try:
+                    #ep = Ep.objects.get(id=ep_id)
+                    instance.eps.add(ep_id)
+                except ObjectDoesNotExist:
+                    # Handle the case where the Ep does not exist
+                    # You can log this or take any other appropriate action
+                    pass
+
+        instance.save()
+        return instance

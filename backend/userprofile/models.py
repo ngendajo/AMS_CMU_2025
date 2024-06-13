@@ -62,6 +62,7 @@ class Alumni(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
     date_of_birth = models.CharField(max_length=200,default="")
     gender = models.CharField(max_length=500)
+    reg_number = models.CharField(max_length=50,default="")
     father = models.CharField(max_length=500,default="")
     mother = models.CharField(max_length=500,default="")
     place_of_birth = models.CharField(max_length=500,default="")
@@ -282,4 +283,49 @@ class Term(models.Model):
 
     def __str__(self):
         return str(self.term_name)
+    
+#New Alumni and Kids at ASYV Database
+
+# Kids model
+class Kids(models.Model):
+    names = models.CharField(max_length=500)
+    age = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.names)
+class Kids_alumni(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='kid_alumn')
+    date_of_birth = models.CharField(max_length=200,default="")
+    gender = models.CharField(max_length=500)
+    reg_number = models.CharField(max_length=50,default="")
+    other_emails = models.CharField(max_length=500,default="")
+    other_phones = models.CharField(max_length=500,default="")
+    father = models.CharField(max_length=500,default="")
+    mother = models.CharField(max_length=500,default="")
+    did_you_born_in_rwanda = models.BooleanField(default=True)
+    place_of_birth_district_or_country = models.CharField(max_length=500,default="")
+    place_of_birth_sector_or_city = models.CharField(max_length=500,default="")
+    life = (
+        ('A', 'Alive'),
+        ('D', 'Died'),
+    ) 
+    life_status = models.CharField(max_length=2,choices=life,default="A")
+    marital_status = models.CharField(max_length=500) 
+    currresidence_in_rwanda = models.BooleanField(default=True)
+    currresidence_district_or_country = models.CharField(max_length=500,default="")
+    currresidence_sector_or_city = models.CharField(max_length=500,default="")
+    kids = models.ManyToManyField(Kids, related_name="alumnikids",blank=True)
+    family = models.ForeignKey(Family,on_delete=models.PROTECT, related_name="alumnifamily")
+    combination = models.ManyToManyField(Combination,related_name="alumnicombs",blank=True)
+    eps = models.ManyToManyField(Ep, related_name="kidsalumni",blank=True)
+    s4marks =models.FloatField(default=0.0)
+    s5marks =models.FloatField(default=0.0)
+    s6marks =models.FloatField(default=0.0)
+    ne =models.FloatField(default=0.0)
+    maxforne =models.FloatField(default=0.0)
+    dec = (
+        ('P', 'Pass'),
+        ('F', 'Fail'),
+    ) 
+    decision = models.CharField(max_length=2,choices=dec,default="P")
 
