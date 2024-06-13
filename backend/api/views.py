@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db import connection
+from django.db import connection,DatabaseError
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -4041,4 +4041,161 @@ def delete_term(request, pk):
     term.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 
+#New Alumni and Kids at ASYV Database
+class KidsAlumniViewSet(viewsets.ModelViewSet):
+    queryset = Kids_alumni.objects.all()
+    serializer_class = KidsAlumniSerializer
 
+    def list(self, request):
+        try:
+            kids_alumni = Kids_alumni.objects.all()
+            if not kids_alumni:
+                return Response({'detail': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+            serializer = KidsAlumniSerializer(kids_alumni, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'detail': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def create(self, request):
+        try:
+            serializer = KidsAlumniSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'detail': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def retrieve(self, request, pk=None):
+        try:
+            instance = Kids_alumni.objects.get(pk=pk)
+            serializer = KidsAlumniSerializer(instance)
+            return Response(serializer.data)
+        except Kids_alumni.DoesNotExist:
+            return Response({'detail': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        try:
+            instance = Kids_alumni.objects.get(pk=pk)
+            serializer = KidsAlumniSerializer(instance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Kids_alumni.DoesNotExist:
+            return Response({'detail': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, pk=None):
+        try:
+            instance = Kids_alumni.objects.get(pk=pk)
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Kids_alumni.DoesNotExist:
+            return Response({'detail': 'No data found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+def alumni_view(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                WITH life_status_mapping AS (
+                    SELECT 'A' AS code, 'Alive' AS status
+                    UNION ALL
+                    SELECT 'D', 'Died'
+                ),
+                decision_mapping AS (
+                    SELECT 'P' AS code, 'Pass' AS decision
+                    UNION ALL
+                    SELECT 'F', 'Fail'
+                ),
+                ep_type_mapping AS (
+                    SELECT 'A' AS code, 'Art' AS ep_type
+                    UNION ALL
+                    SELECT 'S', 'Sport'
+                    UNION ALL
+                    SELECT 'SC', 'Sciences'
+                    UNION ALL
+                    SELECT 'C', 'Club'
+                    UNION ALL
+                    SELECT 'P', 'Professional'
+                )
+                SELECT 
+                    u.id,
+                    u.first_name,
+                    u.last_name,
+                    u.email,
+                    u.phone1,
+                    u.image_url,
+                    ka.date_of_birth,
+                    ka.gender,
+                    ka.reg_number,
+                    ka.other_emails,
+                    ka.other_phones,
+                    ka.father,
+                    ka.mother,
+                    ka.did_you_born_in_rwanda,
+                    ka.place_of_birth_district_or_country,
+                    ka.place_of_birth_sector_or_city,
+                    ls.status AS life_status,
+                    dm.decision AS decision,
+                    ka.marital_status,
+                    ka.currresidence_in_rwanda,
+                    ka.currresidence_district_or_country,
+                    ka.currresidence_sector_or_city,
+                    ka.s4marks,
+                    ka.s5marks,
+                    ka.s6marks,
+                    ka.ne,
+                    ka.maxforne,
+                    f.family_name,
+                    f.family_mother,
+                    f.family_mother_tel,
+                    gr.grade_name,
+                    STRING_AGG(DISTINCT ('kid_id:' || k.id || ', name:' || k.names || ', Age: ' || k.age)::text, ', ') AS kids,
+                    STRING_AGG(DISTINCT ('comb_id:' || c.id || ', comb_name:' || c.combination_name || ', id: ' || c.id)::text, ', ') AS combinations,
+                    STRING_AGG(DISTINCT ('ep_id:' || e.id || ', ep_title:' || e.title || ', Type: ' || et.ep_type)::text, ', ') AS eps
+                FROM 
+                    api_user u
+                INNER JOIN
+                    userprofile_kids_alumni ka ON u.id = ka.user_id
+                INNER JOIN
+                    userprofile_family f ON ka.family_id = f.id
+                INNER JOIN 
+                    userprofile_grade gr ON f.grade_id = gr.id
+                LEFT JOIN 
+                    userprofile_kids_alumni_kids kak ON ka.id = kak.kids_alumni_id
+                LEFT JOIN 
+                    userprofile_kids k ON kak.kids_id = k.id
+                LEFT JOIN 
+                    userprofile_kids_alumni_combination kac ON ka.id = kac.kids_alumni_id
+                LEFT JOIN 
+                    userprofile_combination c ON kac.combination_id = c.id
+                LEFT JOIN 
+                    userprofile_kids_alumni_eps kae ON ka.id = kae.kids_alumni_id
+                LEFT JOIN 
+                    userprofile_ep e ON kae.ep_id = e.id
+                LEFT JOIN 
+                    life_status_mapping ls ON ka.life_status = ls.code
+                LEFT JOIN 
+                    decision_mapping dm ON ka.decision = dm.code
+                LEFT JOIN 
+                    ep_type_mapping et ON e.type = et.code
+                GROUP BY 
+                    ka.id, u.id, f.id, gr.id, ls.status, dm.decision, et.ep_type;
+
+            """)
+            columns = [col[0] for col in cursor.description]
+            rows = cursor.fetchall()
+            results = []
+            for row in rows:
+                results.append(dict(zip(columns, row)))
+        return JsonResponse(results, safe=False)
+    except DatabaseError as e:
+        # Handle database errors, you can log the error or return an appropriate response
+        error_message = str(e)
+        return JsonResponse({'error': error_message}, status=500)

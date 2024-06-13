@@ -1,12 +1,15 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
-
+from rest_framework.routers import DefaultRouter
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView, 
 )
 
 from .views import alumni_count
+
+router = DefaultRouter()
+router.register(r'kids_alumni', views.KidsAlumniViewSet)
 
 urlpatterns = [
     # user paths
@@ -182,6 +185,10 @@ urlpatterns = [
     path('term/',views.TermRegistrationView.as_view()),
     path('term/<int:pk>/delete/', views.delete_term, name='delete-term'),
     path('term/<int:pk>/', views.update_term, name='update_term'),
+    
+    #New Alumni and Kids at ASYV Database
+    path('', include(router.urls)),
+    path('alumnis/', views.alumni_view, name='alumni_info'),
 
     path('', views.getRoutes)
 ]
