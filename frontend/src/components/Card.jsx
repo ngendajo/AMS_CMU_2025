@@ -1,6 +1,4 @@
-
 import React from "react";
-
 import "./Card.css";
 
 export const Card = ({
@@ -16,8 +14,9 @@ export const Card = ({
       {imgSrc && imgAlt && (
         <img src={imgSrc} alt={imgAlt} className="card-img" />
       )}
-      {title && <h1 className="card-title">{title}</h1>}
+      {title && <h3 className="card-title">{title}</h3>}
       {description && <p className="card-description">{description}</p>}
+      
       {buttonText && link && (
         <a href={link} className="card-btn">
           {buttonText}
