@@ -1,10 +1,14 @@
-import { React,useState, useEffect } from "react"
+import { React, useState, useEffect } from "react"
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 import { Card } from "../../components/Card";
 
 import axios from "../../api/axios";
+
+import './Home.css'
+import HomeHeader from '../../components/home/home_header'
+import HomeFooter from '../../components/home/home_footer'
 
 const LOGIN_URL = '/token/';
 
@@ -61,6 +65,8 @@ export default function Home() {
 
   return (
     <div>
+        <HomeHeader/>
+        <HomeFooter/>
         <h3>Welcome back to our alumni system! Enter your credentials to log in.</h3>
         <p className={errMsg ? "errmsg" :
             "offscreen"} aria-live="assertive">
