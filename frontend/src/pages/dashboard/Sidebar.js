@@ -3,11 +3,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
+import Profile from '../../static/images/profile.jpg';
 
 const SidebarNav = styled.nav`
-  background: #fff;
-  width: 200px;
-  height: 100vh;
+  background: var(--black);
+  width: 264px;
+  height: 832px;
   display: flex;
   justify-content: center;
   position: fixed;
@@ -15,23 +16,94 @@ const SidebarNav = styled.nav`
   left: 0;
   transition: 350ms;
   z-index: 10;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 `;
 
 const SidebarWrap = styled.div`
   width: 100%;
+  padding: 20px 0;
+`;
+
+const ProfileSection = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+`;
+
+const ProfileImage = styled.img`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-right: 15px;
+`;
+
+const ProfileDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ProfileName = styled.span`
+  font-family: Bold;
+  font-size: 20px;
+  color: var(--yellow);
+`;
+
+const ProfileRole = styled.span`
+  font-family: Medium;
+  color:var(--white);
+`;
+
+const ProfileEmail = styled.span`
+  font-family: Light;
+  color: var(--white);
+  font-size: 12px;
+`;
+
+const SidebarLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  color: var(--yellow);
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s;
+  &:hover {
+    background: var(--green);
+    color: var(--white);
+  }
+`;
+
+const SidebarIcon = styled.div`
+  margin-right: 15px;
+  svg {
+    font-size: 1.5rem;
+  }
+`;
+
+const SidebarText = styled.span`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
 `;
 
 const Sidebar = () => {
   return (
     <SidebarNav>
       <SidebarWrap>
+      <ProfileSection>
+          <ProfileImage src={Profile} alt="Profile" />
+          <ProfileDetails>
+            <ProfileName>John Doe</ProfileName>
+            <ProfileRole>Alumni</ProfileRole>
+            <ProfileEmail>johndoe@gmail.com</ProfileEmail>
+          </ProfileDetails>
+        </ProfileSection>
         {SidebarData.map((item, index) => (
-          <Link to={item.path} key={index} className={item.cName}>
-            <div>
-              <span dangerouslySetInnerHTML={{ __html: item.icon }}></span>
-              <span>{item.title}</span>
-            </div>
-          </Link>
+          <SidebarLink to={item.path} key={index} className={item.cName}>
+            <SidebarIcon dangerouslySetInnerHTML={{ __html: item.icon }} />
+            <SidebarText>{item.title}</SidebarText>
+          </SidebarLink>
         ))}
       </SidebarWrap>
     </SidebarNav>
