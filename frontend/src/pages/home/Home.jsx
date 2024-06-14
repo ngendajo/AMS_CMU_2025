@@ -7,6 +7,7 @@ import axios from "../../api/axios";
 
 import './Home.css'
 import HomeHeader from '../../components/home/home_header'
+import HomeBanner from '../../components/home/home_banner'
 import HomeFooter from '../../components/home/home_footer'
 
 const LOGIN_URL = '/token/';
@@ -62,9 +63,10 @@ export default function Home() {
         
     }
 
-  return (
+    return (
     <div>
         <HomeHeader/>
+        <HomeBanner/>
         <HomeFooter/>
         <h3>Welcome back to our alumni system! Enter your credentials to log in.</h3>
         <p className={errMsg ? "errmsg" :

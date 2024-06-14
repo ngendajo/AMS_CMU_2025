@@ -1,71 +1,62 @@
 import React from 'react';
-import { MdPhone } from 'react-icons/md';
-import { HiOutlineMail } from 'react-icons/hi';
+import Charity from '../../static/images/charity.png';
+import Candid from '../../static/images/candid.jpeg';
 import { AiOutlineTwitter } from 'react-icons/ai';
 import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 
-export default function HomeHeader() {
-    const containerStyle = {
-        marginTop: '20px',
-        marginBottom: '20px',
-        paddingLeft: '5%',
-        paddingRight: '5%'
-    };
-
-    const barStyle = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    };
-
-    const contactIcon = {
-        fontSize: 23,
-        color: '#F0A459'
-    };
-
-    const paragraphStyle = {
-      fontSize: 13,
-      fontFamily: 'Arial',
-      color: '#575757'
-    };
-
-    const mediaIcon = {
-        fontSize: 16,
-        color: '#F49C46',
-        margin: 5,
-        cursor: 'pointer'
-    };
+export default function HomeFooter() {
 
     return (
-        <div style={containerStyle}>
-            <div style={barStyle}>
+        <div className="HomeFooter">
 
-                <div className="HomeTopBarLeft">
-                    <div className="HomeTopBarLeftContent">
-                        <MdPhone style={contactIcon} />
-                        <p style={paragraphStyle}>+25073691194</p>
-                    </div>
-                    <div className="HomeTopBarLeftContent">
-                        <HiOutlineMail style={contactIcon} />
-                        <p style={paragraphStyle}>julius@asyv.org</p>
+            <div className="HomeFooterLeft">
+
+                <div className="HomeFooterAddress">
+                    <p className="HomeFooterText">
+                        <span className="HomeFooterBold">Mailing Address -</span><br />
+                        Agahozo-Shalom Youth Village<br />
+                        P.O. Box 7299<br />
+                        Kigali, Rwanda<br /><br />
+                        <span className="HomeFooterBold">Visiting Address -</span><br />
+                        Agahozo-Shalom Youth Village<br />
+                        Rwamagana District, Rubona Sector, Rwanda<br />
+                        <span className="HomeFooterBold">Email: </span>lnfhs@asyv.org
+                    </p>
+                </div>
+                
+                <div className="HomeFooterContact">
+                    <p className="HomeFooterText">
+                        <span className="HomeFooterBold">U.S. Office -</span><br />
+                        234 5th Avenue<br />
+                        2nd Floor, Suite 209<br />
+                        New York, NY 10001<br /><br />
+                        <span className="HomeFooterBold">Phone: </span>+250 73691194<br />
+                        <span className="HomeFooterBold">Email: </span>julius@asyv.org
+                    </p>
+                    <div className="HomeFooterIcon">
+                        <a href="https://www.instagram.com/agahozoshalom/"
+                            target="_blank" rel="noopener noreferrer">
+                            <FaInstagram className="WhiteIcon" />
+                        </a>
+                        <a href="https:/twitter.com/asyv"
+                            target="_blank" rel="noopener noreferrer">
+                            <AiOutlineTwitter className="WhiteIcon" />
+                        </a>
+                        <a href="https://www.facebook.com/AgahozoShalom/"
+                            target="_blank" rel="noopener noreferrer">
+                            <FaFacebook className="WhiteIcon" />
+                        </a>
+                        <a href="https://www.linkedin.com/in/julius-kaboyo?originalSubdomain=rw"
+                            target="_blank" rel="noopener noreferrer">
+                            <FaLinkedinIn className="WhiteIcon" />
+                        </a>
                     </div>
                 </div>
-
-                <div className="HomeHeaderRight">
-                    <a href="https://www.instagram.com/agahozoshalom/" target="_blank" rel="noopener noreferrer">
-                        <FaInstagram style={mediaIcon} />
-                    </a>
-                    <a href="https:/twitter.com/asyv" target="_blank" rel="noopener noreferrer">
-                        <AiOutlineTwitter style={mediaIcon} />
-                    </a>
-                    <a href="https://www.facebook.com/AgahozoShalom/">
-                        <FaFacebook style={mediaIcon} />
-                    </a>
-                    <a href="https://www.linkedin.com/in/julius-kaboyo?originalSubdomain=rw" target="_blank" rel="noopener noreferrer">
-                        <FaLinkedinIn style={mediaIcon} />
-                    </a>
-                </div>
-
+            </div>
+            
+            <div className="HomeFooterRight">
+                <img src={Charity} alt="Charity Navitator" />
+                <img src={Candid} alt="Platinum Transparency 2023 Candid" />
             </div>
         </div>
     );

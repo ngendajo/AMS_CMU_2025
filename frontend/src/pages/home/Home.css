@@ -1,18 +1,195 @@
-
+/* 1. HOME HEADER - Annie */
 .HomeHeader{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin: 0px 5%;
-} 
-.HomeHeaderLeft{
-    width: 28%;
+    /* display */
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-top: -12px;
+    /* color block */
+    background-color: var(--white);
+    position: fixed;
+    top: 0;
+    box-shadow: 0 6px 6px var(--blackopa);
+    /* box */
+    width: 100%;
+    padding: 5px 50px;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+.HomeHeaderLeft{
+    /* display */
+    display: inline-flex;
+    align-items: center;
+    /* box */
+    width: 25%;
+}
+.HomeHeaderLeft img{
+    /* box */
+    width: 90px;
+    margin-left: -15px;
 }
 .HomeHeaderLeft p{
-    margin-left: 5px;
+    /* font */
+    color: var(--green);
+    font-family: Regular;
+    font-size: 16px;
+    line-height: 1.2;
+}
+.HomeHeaderRight{
+    /* display */
+    display: flex;
+    align-items: center;
+}
+.HomeHeaderMenu{
+    /* box */
+    margin-right: 20px;
+}
+.HomeHeaderMenu a{
+    /* display */
+    display: inline-flex;
+    align-items: center;
+    /* font */
+    color: var(--green);
+    font-family: Medium;
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.1s;
+    /* box */
+    margin: 0 10px;
+}
+.HomeHeaderMenu a:hover,
+.HomeHeaderMenu a.active{
+    /* font */
+    color: var(--orange);
+    border-bottom: 2px var(--orange) solid;
+}
+.HomeHeaderLogin{
+    /* box */
+    margin-right: 40px;
+}
+.HomeHeaderLogin a{
+    /* font */
+    color: var(--orange);
+    font-family: Medium;
+    font-size: 18px;
+    text-decoration: none;
+    /* box */
+    width: 100%;
+    padding: 10px 10px;
+    border: 2px var(--orange) solid;
+    border-radius: 30px;
+}
+.HomeHeaderIcon{
+    /* box */
+    margin-top: 5px;
+    margin-right: -5px;
+}
+.OrangeIcon{
+    /* font */
+    color: var(--orange);
+    font-size: 20px;
+    /* box */
+    margin: 5px;
+    cursor: pointer
+}
+
+/* 2. HOME Banner - Annie */
+.HomeBanner{
+    /* display */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    /* color block */
+    background-color: var(--palegreen);
+    /* box */
+    width: 100%;
+    box-sizing: border-box;
+}
+.HomeBanner img{
+    /* box */
+    width: 100%;
+}
+.HomeBannerTitle{
+    /* font */
+    color: var(--green);
+    font-family: Medium;
+    font-size: 50px;
+    text-align: center;
+    transition: 0.2s;
+    text-shadow: 2px 2px 4px var(--greyopa);
+    /* box */
+    width: 100%;
+    margin-top: -10px;
+    margin-bottom: -50px;
+}
+
+.HomeBannerTitle:hover{
+    font-size: 55px;
+}
+.HomeBannerText{
+    /* font */
+    color: var(--black);
+    font-family: Light;
+    font-size: 18px;
+    text-align: center;
+    /* box */
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+/* 3. HOME FOOTER - Annie */
+.HomeFooter{
+    /* display */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    /* color block */
+    background-color: var(--black);
+    /* box */
+    width: 100%;
+    padding: 40px 50px;
+    box-sizing: border-box;
+}
+.HomeFooterLeft{
+    /* display */
+    display: inline-flex;
+    align-items: top;
+}
+.HomeFooterAddress{
+    /* box */
+    margin-right: 60px;
+}
+.HomeFooterText{
+    /* font */
+    color: var(--white);
+    font-family: Light;
+    font-size: 14px;
+}
+.HomeFooterBold{
+    /* font */
+    font-family: Medium;
+}
+.HomeFooterIcon{
+    /* box */
+    margin-left: -5px;
+}
+.WhiteIcon{
+    /* font */
+    color: var(--white);
+    font-size: 20px;
+    /* box */
+    margin: 5px;
+    cursor: pointer
+}
+.HomeFooterRight{
+    /* display */
+    display: inline-flex;
+    align-items: center;
+}
+.HomeFooterRight img{
+    /* box */
+    width: 100px;
+    padding: 20px;
 }
