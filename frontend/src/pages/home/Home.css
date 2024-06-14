@@ -123,7 +123,6 @@
     margin-top: -10px;
     margin-bottom: -50px;
 }
-
 .HomeBannerTitle:hover{
     font-size: 55px;
 }
@@ -137,6 +136,8 @@
     width: 100%;
     margin-bottom: 50px;
 }
+
+/* 3. HOME Banner - Annie */
 
 /* 3. HOME FOOTER - Annie */
 .HomeFooter{
