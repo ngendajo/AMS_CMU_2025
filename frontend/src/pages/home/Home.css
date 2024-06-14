@@ -32,15 +32,17 @@
     color: #6D5736;
    font-weight: 700; /* Bold */
    margin-bottom: 0.1rem;
+   color: var(--brown);
+    font-family: Bold;
 
   }
   
   .alumni-stories p {
     font-size: 1.2rem; /* Adjust the font size as needed */
     padding-top: 0;
-    color: #957967;
-    font-weight: 400; /* Regular */
-    margin-bottom: 4rem;
+    color: var(--coffee);
+    font-family: Regular;
+   margin-bottom: 4rem;
     margin-top: 0.5rem;
     
   }
