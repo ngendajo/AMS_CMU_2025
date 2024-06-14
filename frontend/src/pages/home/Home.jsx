@@ -7,6 +7,7 @@ import axios from "../../api/axios";
 import './Home.css'
 import HomeHeader from '../../components/home/home_header'
 import HomeFooter from '../../components/home/home_footer'
+import { News } from "../../components/News";
 
 const LOGIN_URL = '/token/';
 
@@ -92,6 +93,33 @@ export default function Home() {
                 <Link to="/home" className="forgetpass">Forgot password?</Link>
                 <center><button>Login</button></center>
             </form>
+
+            <section className="alumni-stories">
+        
+        <h1>NEWS & EVENTS</h1>
+        <p>Stay Updated with the Latest News and Upcoming Events</p>
+
+        </section>
+            <div className="cards-wrapper">
+            <News  imgSrc="https://www.colorhexa.com/957967.png"
+                        imgAlt="Card Image 1"
+                        description="Honoring the 30 the Commemoration of the 1994 Genocide Against the Tutsi"
+                        date="10th September 2024"
+                        link="card1"/>
+            <News  imgSrc="https://www.colorhexa.com/957967.png"
+                    imgAlt="Card Image 1"
+                    description="On the 10th Anniversary of Anne Heyman’s Passing"
+                    date="10th September 2024"
+                    link="card2"/>
+
+        <News  imgSrc="https://www.colorhexa.com/957967.png"
+                            imgAlt="Card Image 1"
+                            description="An ASYV Kid Launches Rwanda’s First Sign Language Club"
+                            date="10th September 2024"
+                            link="card3"/>
+
+            </div>
+    
       
             <section className="alumni-stories">
                 
@@ -99,6 +127,7 @@ export default function Home() {
                 <p>Discover the Inspiring Journeys of Our Alumni</p>
 
                 </section>
+              
                 <div className="cards-wrapper">
                     <Card
                         imgSrc="https://www.colorhexa.com/957967.png"

@@ -1,15 +1,12 @@
-
 import React, { useState } from "react";
-import "./Card.css";
 import "./News.css";
 
-export const Card = ({
+export const News = ({
   imgSrc,
   imgAlt,
-  title,
   description,
-  buttonText,
-  link,
+  date,
+  link
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,20 +18,20 @@ export const Card = ({
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
+
   return (
-    <div className="card-container">
-      {imgSrc && imgAlt && (
-        <img src={imgSrc} alt={imgAlt} className="card-img"  onHover= {openModal} />
-      )}
-      {title && <h3 className="card-title">{title}</h3>}
-      {description && <p className="card-description">{description}</p>}
+    <div className="News-card-container">
       
-      {buttonText && link && (
-        <a href={link} className="card-btn">
-          {buttonText}
+      {imgSrc && link && (
+        <a href={link} className="News-card-link" onHover= {openModal}>
+        {  <img src={imgSrc} alt={imgAlt} className="News-card-img" />}
         </a>
       )}
+
+
+      {description && <p className="News-card-description">{description}</p>}
+      {date && <p className="News-card-btn">{date}</p>}
+
       {isModalOpen && (
         <div id="myModal" className="modal" onClick={closeModal}>
           <span className="close" onClick={closeModal}>&times;</span>

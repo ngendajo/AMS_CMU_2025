@@ -22,14 +22,16 @@
 .alumni-stories {
     font-family: 'Poppins', sans-serif;
     color: #6D5736;
-
     padding: 0  57px; /* Add padding to the sides */
+    margin-top: 7rem; /* Adjust the space above the alumni stories section */
+  
   }
 
   .alumni-stories h1 {
     font-size: 2rem; /* Adjust the font size as needed */
     color: #6D5736;
    font-weight: 700; /* Bold */
+   margin-bottom: 0.1rem;
 
   }
   
@@ -38,6 +40,8 @@
     padding-top: 0;
     color: #957967;
     font-weight: 400; /* Regular */
+    margin-bottom: 4rem;
+    margin-top: 0.5rem;
     
   }
   
@@ -48,4 +52,5 @@
     flex-wrap: wrap; /* Allow the cards to wrap to the next line on smaller screens */
     gap: 20px; /* Add space between the cards */
     margin-top: 20px;
+  
   }
