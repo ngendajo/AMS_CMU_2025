@@ -1,6 +1,6 @@
 import React from 'react';
 import Guitar from '../../static/images/home-banner.jpg';
-// height: 1000
+// height: 3600 * 1440
 
 export default function HomeBanner() {
 

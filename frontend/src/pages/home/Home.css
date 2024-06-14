@@ -46,7 +46,47 @@
   }
   
   
-.cards-wrapper {
+  .cards-wrapper {
+    display: flex;
+    justify-content: center; /* Center the cards horizontally */
+    flex-wrap: wrap; /* Allow the cards to wrap to the next line on smaller screens */
+    gap: 20px; /* Add space between the cards */
+    margin-top: 20px;
+  
+  }
+  
+.HomeBannerTitle{
+    /* font */
+    color: var(--green);
+    font-family: Medium;
+    font-size: 50px;
+    text-align: center;
+    transition: 0.2s;
+    text-shadow: 2px 2px 4px var(--greyopa);
+    /* box */
+    width: 100%;
+    margin-top: -10px;
+    margin-bottom: -50px;
+}
+.HomeBannerTitle:hover{
+    font-size: 55px;
+}
+.HomeBannerText{
+    /* font */
+    color: var(--black);
+    font-family: Light;
+    font-size: 18px;
+    text-align: center;
+    /* box */
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+/* 3. HOME Banner - Annie */
+
+/* 3. HOME FOOTER - Annie */
+.HomeFooter{
+    /* display */
     display: flex;
     justify-content: center; /* Center the cards horizontally */
     flex-wrap: wrap; /* Allow the cards to wrap to the next line on smaller screens */
