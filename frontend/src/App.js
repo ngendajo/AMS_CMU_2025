@@ -11,6 +11,9 @@ import Error from './pages/Error';
 import Unauthorized from './pages/Unauthorized';
 import Dashboard from './pages/dashboard/Dashboard';
 import Home from './pages/home/Home';
+import Profile from './pages/profile/Profile';
+import Events from './pages/events/Events';
+
 
 
 function App() {
@@ -36,10 +39,14 @@ function App() {
                 <Route path='home' element={<Home />}/>
                 <Route path='error' element={<Error />}/>
                 <Route path='unauthorized' element={<Unauthorized />}/>
+             
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>
                   <Route path='/' element={<Dashboard />}/>
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/events" element={<Events />} />
+               
                 </Route>
 
                 {/* catch all */}
