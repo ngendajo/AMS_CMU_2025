@@ -1,12 +1,12 @@
 import React from 'react';
-import Guitar from '../../static/images/home-banner.jpg';
+import Banner from '../../static/images/home-banner.jpg';
 // height: 3600 * 1440
 
 export default function HomeBanner() {
 
     return (
         <div className="HomeBanner">
-            <img src={Guitar} alt="Boys Playing Guitar"/>
+            <img src={Banner} alt="Graduation Picture"/>
             <div className="HomeBannerTitle">
                 <p>Welcome to ASYV Alumni Platform</p>
             </div>
