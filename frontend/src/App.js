@@ -10,7 +10,10 @@ import Error from './pages/Error';
 //import AuthCheck from './context/AuthCheck';
 import Unauthorized from './pages/Unauthorized';
 import Dashboard from './pages/dashboard/Dashboard';
+
 import Home from './pages/home/Home';
+import NewsEvents from './pages/home/NewsEvents';
+import AlumniStories from './pages/home/AlumniStories';
 
 
 function App() {
@@ -34,6 +37,8 @@ function App() {
             <Route path='/' element={<Layout />}>
               {/* public routes*/}
                 <Route path='home' element={<Home />}/>
+                <Route path='/news_and_events' element={<NewsEvents />}/>
+                <Route path='/alumni_stories' element={<AlumniStories />}/>
                 <Route path='error' element={<Error />}/>
                 <Route path='unauthorized' element={<Unauthorized />}/>
 

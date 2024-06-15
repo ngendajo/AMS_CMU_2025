@@ -15,7 +15,6 @@ root.render(
         </Routes>
       </AuthProvider>
     </BrowserRouter>
-    
-    </React.Fragment>
+  </React.Fragment>
   
 );

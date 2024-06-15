@@ -7,7 +7,7 @@ import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 export default function HomeFooter() {
 
     return (
-        <div className="HomeFooter">
+        <div className="HomeFooter" id="contact">
 
             <div className="HomeFooterLeft">
 

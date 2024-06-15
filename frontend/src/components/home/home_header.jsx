@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from '../../static/images/logo.png';
 import { AiOutlineTwitter } from 'react-icons/ai';
 import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 
-export default function HomeHeader() {
+export default function HomeHeader({onLoginClick}) {
 
     return (
         <div className="HomeHeader">
@@ -14,14 +15,13 @@ export default function HomeHeader() {
 
             <div className="HomeHeaderRight">
                 <div className="HomeHeaderMenu">
-                    <a className="active" href="/">Home</a>
-                    <a href="/news_and_events">News & Events</a>
-                    <a href="/alumni_stories">Alumni Stories</a>
+                    <Link to="/" className="active">Home</Link>
+                    <Link to="/news_and_events">News & Events</Link>
+                    <Link to="/alumni_stories">Alumni Stories</Link>
                     <a href="#contact">Contact</a>
                 </div>
-
                 <div className="HomeHeaderLogin">
-                    <a href="/login">Login</a>
+                    <button onClick={onLoginClick}>Login</button>
                 </div>
 
                 <div className="HomeHeaderIcon">
