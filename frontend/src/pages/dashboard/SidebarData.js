@@ -51,7 +51,43 @@ export const SidebarData = [
   },
   {
     title: 'Social & Networking',
-    path: '/nerworking',
+    path: '/networking',
+    icon: '<i class="fas fa-chart-line"></i>',
+    cName: 'nav-text'
+  },
+  {
+    title: 'Events',
+    path: '/events',
+    icon: '<i class="fas fa-chart-line"></i>',
+    cName: 'nav-text'
+  },
+  {
+    title: 'Discussion Forums',
+    path: '/forum',
+    icon: '<i class="fas fa-chart-line"></i>',
+    cName: 'nav-text'
+  },
+  {
+    title: 'Contact CRC Staff',
+    path: ' ',
+    icon: '<i class="fas fa-chart-line"></i>',
+    cName: 'nav-text'
+  },
+  {
+    title: 'Inquiry',
+    path: '/inquiry',
+    icon: '<i class="fas fa-chart-line"></i>',
+    cName: 'nav-text'
+  },
+  {
+    title: 'Alumni Story Posts',
+    path: '/alumni-story',
+    icon: '<i class="fas fa-chart-line"></i>',
+    cName: 'nav-text'
+  },
+  {
+    title: 'Job Posts',
+    path: '/job-post',
     icon: '<i class="fas fa-chart-line"></i>',
     cName: 'nav-text'
   }

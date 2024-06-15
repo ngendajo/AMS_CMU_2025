@@ -3,7 +3,7 @@ import Logo from '../../static/images/logo.png';
 import { AiOutlineTwitter } from 'react-icons/ai';
 import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 
-export default function HomeHeader() {
+export default function HomeHeader({ onLoginClick }) {
 
     return (
         <div className="HomeHeader">
@@ -21,7 +21,7 @@ export default function HomeHeader() {
                 </div>
 
                 <div className="HomeHeaderLogin">
-                    <a href="/login">Login</a>
+                <button onClick={onLoginClick}>Login</button>
                 </div>
 
                 <div className="HomeHeaderIcon">

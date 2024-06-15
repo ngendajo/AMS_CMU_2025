@@ -14,7 +14,7 @@
     }
   }
   .mainbody{
-    background: #e1f1fa;
+    background: var(--palegreen);
     width:100%;
   }
   

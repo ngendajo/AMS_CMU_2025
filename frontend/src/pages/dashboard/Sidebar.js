@@ -17,11 +17,24 @@ const SidebarNav = styled.nav`
   transition: 350ms;
   z-index: 10;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Add vertical scroll */
 `;
 
 const SidebarWrap = styled.div`
   width: 100%;
   padding: 20px 0;
+`;
+
+const ScrollableSidebarWrap = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px); /* Adjust based on the profile section height */
+  padding-right: 10px; /* Space for scrollbar */
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  &::-webkit-scrollbar {
+    display: none;  /* For WebKit browsers */
+  }
 `;
 
 const ProfileSection = styled.div`
@@ -37,6 +50,7 @@ const ProfileImage = styled.img`
   height: 70px;
   border-radius: 50%;
   margin-right: 15px;
+  margin-left: 15px;
 `;
 
 const ProfileDetails = styled.div`
@@ -64,8 +78,9 @@ const ProfileEmail = styled.span`
 const SidebarLink = styled(Link)`
   display: flex;
   align-items: center;
-  padding: 15px 20px;
-  font-size: 1.1rem;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-family: Medium;
   color: var(--yellow);
   text-decoration: none;
   transition: background 0.3s, color 0.3s;
@@ -99,12 +114,14 @@ const Sidebar = () => {
             <ProfileEmail>johndoe@gmail.com</ProfileEmail>
           </ProfileDetails>
         </ProfileSection>
+        <ScrollableSidebarWrap>
         {SidebarData.map((item, index) => (
           <SidebarLink to={item.path} key={index} className={item.cName}>
             <SidebarIcon dangerouslySetInnerHTML={{ __html: item.icon }} />
             <SidebarText>{item.title}</SidebarText>
           </SidebarLink>
         ))}
+           </ScrollableSidebarWrap>
       </SidebarWrap>
     </SidebarNav>
   );

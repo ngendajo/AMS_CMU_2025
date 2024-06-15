@@ -1,7 +1,7 @@
 const Profile = () => {
     return (
       <div style={{ marginLeft: '200px', padding: '20px' }}>
-        <h1>Products</h1>
+        <h1>Profile</h1>
         
       </div>
     );
