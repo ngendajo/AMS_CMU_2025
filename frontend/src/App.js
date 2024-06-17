@@ -16,6 +16,7 @@ import NewsEvents from './pages/home/NewsEvents';
 import AlumniStories from './pages/home/AlumniStories';
 import Profile from './pages/profile/Profile';
 import Events from './pages/events/Events';
+import EventsCalendar  from './pages/events/Events-calendar'
 
 
 
@@ -51,6 +52,8 @@ function App() {
                   <Route path='/' element={<Dashboard />}/>
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/events" element={<Events />} />
+                  <Route path="/calendar" element={<EventsCalendar />} />
+                  
                
                 </Route>
 

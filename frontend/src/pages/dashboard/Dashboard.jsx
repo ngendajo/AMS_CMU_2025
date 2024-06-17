@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Sidebar from './Sidebar';
 import { DashboardCard } from './Dashboard-card';
-
 import DashboardHeader from './Dashboard-header';
 
 const DashboardContainer = styled.div`
@@ -29,8 +28,9 @@ const Dashboard = () => {
   return (
     <>
     <DashboardHeader />
+    <Sidebar />
     <DashboardContainer>
-      <Sidebar />
+   
       <ContentContainer>
         <CardsContainer>
           <DashboardCard

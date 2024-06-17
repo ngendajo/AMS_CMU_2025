@@ -1,19 +1,73 @@
 // src/components/ProfileCard/ProfileCard.jsx
-
+import styled from 'styled-components';
 import React, { useState } from 'react';
 import './ProfileCard.css';
+import Profile from '../static/images/profile.jpg';
+
+const ProfileSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-left: 2px;
+  
+`;
+
+const ProfileImage = styled.img`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-right: 15px;
+  margin-left: 15px;
+  align: center;
+`;
+
+const ProfileDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ProfileName = styled.span`
+  font-family: Medium;
+  font-size: 20px;
+  color: var(--Black);
+`;
+
+const ProfileContact = styled.span`
+  font-family: Light;
+  color:var(--black);
+  font-size: 12px;
+`;
+
+const ProfileEmail = styled.span`
+  font-family: Light;
+  color: var(--black);
+  font-size: 14px;
+`;
 
 const ProfileCard = () => {
   const [activeTab, setActiveTab] = useState('personal');
 
   const renderContent = () => {
+   
     switch (activeTab) {
       case 'personal':
         return (
+          
           <div>
-            <h2>John Doe</h2>
-            <p>Age: 30</p>
-            <p>Location: New York, USA</p>
+             <ProfileSection>
+    <ProfileImage src={Profile} alt="Profile" />
+    <ProfileDetails>
+      <ProfileName>John Doe</ProfileName>
+      <ProfileEmail>johndoe@gmail.com</ProfileEmail>
+      <ProfileContact>123-456-7890</ProfileContact>
+    </ProfileDetails>
+  </ProfileSection>
+            <p>Gender</p>
+            <p>Female</p>
+            <p>Location</p>
+            <p>New York, USA</p>
             {/* Add more personal details */}
           </div>
         );

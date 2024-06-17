@@ -1,0 +1,87 @@
+
+
+/* Center-align content vertically and add padding */
+.EventsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px; /* Adjust padding as needed */
+    padding-left: 284px;
+  }
+  
+  /* Flex container for cards, with wrapping and centered alignment */
+  .CardsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Individual card styling */
+
+  .News-card-container {
+    width: 360px; /* Customize width as needed */
+    /* Customize margin between cards */
+    margin-bottom: 10px;
+    margin-left: 45px;
+    overflow: hidden;
+    padding-top: 60px;
+  
+   
+  }
+  
+  .News-card-img {
+    height: 195px;
+    width: 357px;
+    border-radius: 8px;
+    box-shadow: 0px 1px 5px #b3b3b3;
+  }
+
+
+  /* Events.css */
+
+.events-page {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+  }
+  
+  .events-content {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .events-event-cards {
+    margin-left: 20px;
+    flex: 1;
+  }
+  
+ 
+  
+  @media (max-width: 768px) {
+    .events-content {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .events-event-cards {
+      margin-left: 0;
+      margin-top: 20px;
+    }
+  }
+  .calendar-view-button {
+
+    text-align: center;
+    background-color: var(--orange);
+    color: var(--white);
+    font-family: Medium;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 10px 10px;
+    border-radius: 30px; 
+    margin-left: 90%;/* Adjust margin if needed */
+  }
+  
+  .calendar-view-button:hover {
+    background-color: var(--green);
+  }
+  
