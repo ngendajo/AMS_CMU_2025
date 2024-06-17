@@ -6,7 +6,7 @@
     flex-direction: column;
     align-items: center;
     padding-top: 20px; /* Adjust padding as needed */
-    padding-left: 284px;
+    padding-left: 240px;
   }
   
   /* Flex container for cards, with wrapping and centered alignment */
@@ -78,7 +78,7 @@
     text-decoration: none;
     padding: 10px 10px;
     border-radius: 30px; 
-    margin-left: 90%;/* Adjust margin if needed */
+    margin-left: 70%;/* Adjust margin if needed */
   }
   
   .calendar-view-button:hover {
