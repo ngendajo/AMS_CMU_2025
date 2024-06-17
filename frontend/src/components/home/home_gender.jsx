@@ -1,0 +1,121 @@
+import React, { useRef, useState, useEffect } from 'react';
+import styled from 'styled-components';
+
+const BarChartContainer = styled.div`
+    // display
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // box
+    margin-top: 150px;
+`;
+
+const BarTitle = styled.div`
+    // font
+    color: var(--brown);
+    font-family: Bold;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    // box
+    margin-bottom: -50px;
+`;
+
+const Chart = styled.div`
+    // display
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    // box
+    width: 900px;
+    height: 300px;
+    border-bottom: 2px solid var(--brown);
+    transition: height 0.5s ease;
+`;
+
+const Bar = styled.div`
+    // color block
+    background-color: ${props => props.color || 'var(--black)'};
+    position: relative;
+    // box
+    width: 350px;
+    height: 100%;
+    margin: 0 50px;
+    transition: height 1s ease;
+`;
+
+const BarText = styled.span`
+    // font
+    color: var(--brown);
+    font-family: Medium;
+    font-size: 18px;
+    // box
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+`;
+
+const BarNumber = styled.span`
+    // font
+    color: var(--brown);
+    font-family: Regular;
+    font-size: 16px;
+    // box
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+`;  
+
+const GenderChart = ({ females, males }) => {
+    const total = females + males;
+    const femalePercentage = (females / total) * 100;
+    const malePercentage = (males / total) * 100;
+
+    const [isVisible, setIsVisible] = useState(false);
+    const chartRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, {
+            threshold: 0.8 // Trigger when 50% of the element is in view
+        });
+
+        if (chartRef.current) {
+            observer.observe(chartRef.current);
+        }
+
+        return () => {
+            if (chartRef.current) {
+                observer.unobserve(chartRef.current);
+            }
+        };
+    }, []);
+
+    return (
+        <BarChartContainer>
+            <BarTitle>Gender Distribution</BarTitle>
+            <Chart ref={chartRef}>
+                <Bar color="var(--green)" style={{ height: isVisible ? `${femalePercentage}%` : '0%' }}>
+                    <BarText>Females</BarText>
+                    <BarNumber>{females}</BarNumber>
+                </Bar>
+                <Bar color="var(--orange)" style={{ height: isVisible ? `${malePercentage}%` : '0%' }}>
+                    <BarText>Males</BarText>
+                    <BarNumber>{males}</BarNumber>
+                </Bar>
+            </Chart>
+        </BarChartContainer>
+        
+    );
+};
+
+export default GenderChart;

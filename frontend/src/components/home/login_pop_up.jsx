@@ -2,6 +2,7 @@ import { React, useState, useEffect } from "react"
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
+import Logo from '../../static/images/logo.png';
 
 import axios from "../../api/axios";
 
@@ -45,34 +46,41 @@ export default function LoginPopUp({showLogin, toggleLoginPopup}) {
                 setEmail('');
                 setPwd('');
                 navigate(from, {replace:true})
-        } catch(err) {
-            if(!err?.response){
-                setErrMsg("Missing Email or Password");
-            }else if (err.response?.status === 401){
-                setErrMsg('Unauthorised');
-            }else{
-                setErrMsg('Login Failed: ' + err);
-            }
-            setErrMsg('Login Failed');
-        }
-        
-    }
+            } catch (err) {
+                if (!err?.response) {
+                    setErrMsg("No response from server. Please check your internet connection.");
+                } else if (err.response.status === 401) {
+                    setErrMsg('Unauthorized: Incorrect email or password.');
+                } else if (err.response.status === 403) {
+                    setErrMsg('Forbidden: You do not have permission to access this resource.');
+                } else if (err.response.status === 404) {
+                    setErrMsg('Not Found: The requested resource could not be found.');
+                } else if (err.response.status === 500) {
+                    setErrMsg('Internal Server Error: Please try again later.');
+                } else {
+                    setErrMsg('Login Failed: ' + err.message);
+                }
+            }}
 
     return (
         <div>
-            <p className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
-                {errMsg}
-            </p>
             {showLogin && (
-                <div className="PopUpWindow">
-                    <div className="PopUpContent">
-                        <div className="LoginTitle">Agahozo-Shalom Youth Village Alumni Platform</div>
+                <div className="PopUpOverlay">
+                    <div className="PopUpWindow">
+                        <button className="CloseButton" onClick={toggleLoginPopup}>x</button>
+                        <div className="LoginTitle">
+                            <img src={Logo} alt="ASYV Logo"/>
+                            <p>Welcome back to ASYV Alumni Platform!</p>
+                        </div>
+                        <p className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+                            {errMsg}
+                        </p>
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="email">
-                                Email:
                                 <input
                                     type="email"
                                     id="email"
+                                    placeholder="Email"
                                     autoComplete="off"
                                     onChange={(e) => setEmail(e.target.value)}
                                     value={email}
@@ -81,19 +89,18 @@ export default function LoginPopUp({showLogin, toggleLoginPopup}) {
                             </label>
 
                             <label htmlFor="password">
-                                Password:
                                 <input
                                     type="password"
                                     id="password"
+                                    placeholder="Password"
                                     autoComplete="off"
                                     onChange={(e) => setPwd(e.target.value)}
                                     value={pwd}
                                     required
                                 />
                             </label>
-                            <div className="ConfirmButtons">
+                            <div className="ConfirmButton">
                                 <button type="submit">Login</button>
-                                <button type="button" onClick={toggleLoginPopup}>Close</button>
                             </div>
                             <Link to="/home" className="ForgetPassword">Forgot Password?</Link>
                         </form>
