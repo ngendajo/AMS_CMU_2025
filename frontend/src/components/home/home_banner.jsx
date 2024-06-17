@@ -1,6 +1,6 @@
 import React from 'react';
 import Banner from '../../static/images/home-banner.jpg';
-// height: 3600 * 1440
+// height: 3600 * 1380
 
 export default function HomeBanner() {
 

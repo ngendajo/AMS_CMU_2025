@@ -2,6 +2,8 @@ import { React, useState } from "react"
 import './Home.css'
 import HomeHeader from '../../components/home/home_header'
 import HomeBanner from '../../components/home/home_banner'
+import GenderChart from '../../components/home/home_gender'
+import CombinationChart from '../../components/home/home_combination'
 import { News } from "../../components/home/home_news";
 import { Alumni } from "../../components/home/home_alumni";
 import HomeFooter from '../../components/home/home_footer'
@@ -9,6 +11,15 @@ import LoginPopUp from '../../components/home/login_pop_up'
 
 export default function Home() {
 
+    const females = 853;
+    const males = 511;
+    
+    const hgl = 123;
+    const mce = 456;
+    const meg = 789;
+    const mpc = 234;
+    const pcb = 567;
+    
     const [showLogin, setShowLogin] = useState(false);
 
     const toggleLoginPopup = () => {
@@ -23,7 +34,15 @@ export default function Home() {
         {/* 2. banner: */}
         <HomeBanner/>
         
-        {/* 3. info: */}
+        {/* 3. gender: */}
+        {/* 4. combination: */}
+        <div className="charts">
+            <GenderChart females={females} males={males} />
+            <CombinationChart hgl={hgl} mce={mce} meg={meg} mpc={mpc} pcb={pcb} />
+            <div className="Mission">
+                <p>Through healing, education, and love, the Agahozo-Shalom Youth Village empowers orphaned and vulnerable Rwandan youth to build lives of dignity and contribute to a better world.</p>
+            </div>
+        </div>
 
         {/* 4. gallery: */}
 
