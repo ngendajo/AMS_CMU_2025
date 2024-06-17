@@ -4,7 +4,7 @@ import Logo from '../../static/images/logo.png';
 import { AiOutlineTwitter } from 'react-icons/ai';
 import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 
-export default function HomeHeader({onLoginClick}{ onLoginClick }) {
+export default function HomeHeader({onLoginClick}) {
 
     return (
         <div className="HomeHeader">

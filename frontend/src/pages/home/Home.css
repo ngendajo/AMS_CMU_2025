@@ -1,5 +1,6 @@
 /* 1. Home Header - Annie */
 .HomeHeader{
+    /* display */
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -101,51 +102,16 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-top: -12px;
+    /* color block */
+    background-color: var(--palegreen);
+    /* box */
+    width: 100%;
+    box-sizing: border-box;
 }
-.HomeHeaderLeft p{
-    margin-left: 5px;
+.HomeBanner img{
+    /* box */
+    width: 100%;
 }
-
-
-.alumni-stories {
-    font-family: 'Poppins', sans-serif;
-    color: #6D5736;
-    padding: 0  57px; /* Add padding to the sides */
-    margin-top: 7rem; /* Adjust the space above the alumni stories section */
-  
-  }
-
-  .alumni-stories h1 {
-    font-size: 2rem; 
-    color: #6D5736;
-   font-weight: 700; /* Bold */
-   margin-bottom: 0.1rem;
-   color: var(--brown);
-    font-family: Bold;
-
-  }
-  
-  .alumni-stories p {
-    font-size: 1.2rem; /* Adjust the font size as needed */
-    padding-top: 0;
-    color: var(--coffee);
-    font-family: Regular;
-   margin-bottom: 4rem;
-    margin-top: 0.5rem;
-    
-  }
-  
-  
-  .cards-wrapper {
-    display: flex;
-    justify-content: center; /* Center the cards horizontally */
-    flex-wrap: wrap; /* Allow the cards to wrap to the next line on smaller screens */
-    gap: 20px; /* Add space between the cards */
-    margin-top: 20px;
-  
-  }
-  
 .HomeBannerTitle{
     /* font */
     color: var(--green);
@@ -176,7 +142,44 @@
 /* 3. Home Info - Annie */
 
 /* 4. Home Gallery - Anushka */
+.gallery{
+    background-color: var(--green);
+    font-family: Regular;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+.GalleryText{
+        /* font */
+        color: var(--white);
+        font-family: Regular;
+        font-size: 18px;
+        text-align: center;
+        /* box */
+        width: 100%;
+        margin-bottom: 10px;
+        padding-left: 25px;
+        padding-right: 25px;
+
+}
+
+.learn-more-button {
+    background-color: var(--yellow);
+    color: var(--white);
+    font-family: Medium;
+    font-size: 16x;
+  border: 0px;
+   
+    padding: 10px 10px;
+   
+    border-radius: 30px;
+  }
+  
+  .learn-more-button:hover {
+    background-color: var(--orange);
+  }
 /* 5. Home News - Anushka (Aligned) */
 /* 6. Home Alumni - Anushka (Aligned) */
 .cards{
@@ -250,20 +253,31 @@
     font-family: Light;
     font-size: 14px;
 }
-
-.hidden {
-  display: none;
+.HomeFooterBold{
+    /* font */
+    font-family: Medium;
 }
-
-.errmsg {
-  color: red;
-  font-weight: bold;
-  margin: 1rem 0;
+.HomeFooterIcon{
+    /* box */
+    margin-left: -5px;
 }
-
-.offscreen {
-  position: absolute;
-  left: -9999px;
+.WhiteIcon{
+    /* font */
+    color: var(--white);
+    font-size: 20px;
+    /* box */
+    margin: 5px;
+    cursor: pointer
+}
+.HomeFooterRight{
+    /* display */
+    display: inline-flex;
+    align-items: center;
+}
+.HomeFooterRight img{
+    /* box */
+    width: 100px;
+    padding: 20px;
 }
 
 /* 8. Login Pop Up - Annie */

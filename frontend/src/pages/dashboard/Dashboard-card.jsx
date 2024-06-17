@@ -1,14 +1,14 @@
 
 import React, { useState } from "react";
 import "./Dashboard-card.css";
-
+import { Link } from "react-router-dom";
 
 export const DashboardCard = ({
   imgSrc,
   imgAlt,
   buttonText,
 
-  link,
+  path,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -27,11 +27,14 @@ export const DashboardCard = ({
         <img src={imgSrc} alt={imgAlt} className="Dash-card-img"  onHover= {openModal} />
       )}
        
-      {buttonText && link && (
-        <a href={link} className="Dash-card-btn">
+     
+
+{buttonText && (
+        <Link to ={path} className="Dash-card-btn">
           {buttonText}
-        </a>
+        </Link>
       )}
+
       {isModalOpen && (
         <div id="myModal" className="modal" onClick={closeModal}>
           <span className="close" onClick={closeModal}>&times;</span>

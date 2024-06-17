@@ -6,6 +6,7 @@ import { News } from "../../components/home/home_news";
 import { Alumni } from "../../components/home/home_alumni";
 import HomeFooter from '../../components/home/home_footer'
 import LoginPopUp from '../../components/home/login_pop_up'
+import GalleryCarousel from "../../components/home/gallery";
 
 export default function Home() {
 
@@ -26,6 +27,15 @@ export default function Home() {
         {/* 3. info: */}
 
         {/* 4. gallery: */}
+        <div className="gallery">
+        <GalleryCarousel />
+        <div className="GalleryText">
+                <p>Liquidnet Family High School education doesn't end after graduation. 
+                    LFHS offers programs & resources to alumni at every phase of their career.</p>  </div>
+                    <button className="learn-more-button">Learn More</button>
+           
+        </div>
+     
 
         {/* 5. news: */}
         <div className="cards">
