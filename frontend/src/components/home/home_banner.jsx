@@ -6,7 +6,7 @@ export default function HomeBanner() {
 
     return (
         <div className="HomeBanner">
-            <img src={Banner} alt="Graduation Picture"/>
+            <img src={Banner} alt="All graduates"/>
             <div className="HomeBannerTitle">
                 <p>Welcome to ASYV Alumni Platform</p>
             </div>

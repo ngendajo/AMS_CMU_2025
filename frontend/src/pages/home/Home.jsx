@@ -2,12 +2,17 @@ import { React, useState } from "react"
 import './Home.css'
 import HomeHeader from '../../components/home/home_header'
 import HomeBanner from '../../components/home/home_banner'
+import GalleryCarousel from "../../components/home/home_gallery"
 import GenderChart from '../../components/home/home_gender'
 import CombinationChart from '../../components/home/home_combination'
-import { News } from "../../components/home/home_news";
-import { Alumni } from "../../components/home/home_alumni";
+import { News } from "../../components/home/home_news"
+import { Alumni } from "../../components/home/home_alumni"
 import HomeFooter from '../../components/home/home_footer'
 import LoginPopUp from '../../components/home/login_pop_up'
+
+import placeholder1 from '../../static/images/gallery1.jpg'
+import placeholder2 from '../../static/images/gallery2.jpg'
+import placeholder3 from '../../static/images/gallery3.jpg'
 
 export default function Home() {
 
@@ -34,8 +39,17 @@ export default function Home() {
         {/* 2. banner: */}
         <HomeBanner/>
         
-        {/* 3. gender: */}
-        {/* 4. combination: */}
+        {/* 3. gallery: */}
+        <div className="gallery">
+        <GalleryCarousel />
+            <div className="GalleryText">
+                <p>At <span className="GalleryBold">Liquidnet Family High School</span>, education extends beyond graduation. LFHS provides alumni with programs and resources to support them at every stage of their careers.</p>
+                <button>Learn More</button>
+            </div> 
+        </div>
+        
+        {/* 4. gender: */}
+        {/* 5. combination: */}
         <div className="charts">
             <GenderChart females={females} males={males} />
             <CombinationChart hgl={hgl} mce={mce} meg={meg} mpc={mpc} pcb={pcb} />
@@ -44,9 +58,7 @@ export default function Home() {
             </div>
         </div>
 
-        {/* 4. gallery: */}
-
-        {/* 5. news: */}
+        {/* 6. news: */}
         <div className="cards">
             <section className="cards-title">
                 <h1>NEWS & EVENTS</h1>
@@ -54,21 +66,21 @@ export default function Home() {
             </section>
             <div className="cards-wrapper">
                 <News
-                    imgSrc="https://www.colorhexa.com/957967.png"
+                    imgSrc={placeholder1}
                     imgAlt="image1"
                     description="Honoring the 30th Commemoration of the 1994 Genocide Against the Tutsi"
                     date="Apr 30, 2024"
                     link="card1"
                 />
                 <News
-                    imgSrc="https://www.colorhexa.com/957967.png"
+                    imgSrc={placeholder2}
                     imgAlt="image2"
                     description="On the 10th Anniversary of Anne Heyman's Passing"
                     date="Jan 31, 2024"
                     link="card2"
                 />
                 <News
-                    imgSrc="https://www.colorhexa.com/957967.png"
+                    imgSrc={placeholder3}
                     imgAlt="image3"
                     description="An ASYV Kid Launches Rwanda's First Sign Language Club"
                     date="Feb 29, 2024"
@@ -77,7 +89,7 @@ export default function Home() {
             </div>
         </div>
 
-        {/* 6. alumni: */}
+        {/* 7. alumni: */}
         <div className="cards">
             <section className="cards-title">
                 <h1>ALUMNI STORIES</h1>
@@ -85,7 +97,7 @@ export default function Home() {
             </section>
             <div className="cards-wrapper">
                 <Alumni
-                    imgSrc="https://www.colorhexa.com/957967.png"
+                    imgSrc={placeholder1}
                     imgAlt="image1"
                     title="A Story of Transformation"
                     description="Salem Isezerano '23"
@@ -93,7 +105,7 @@ export default function Home() {
                     link="card1"
                 />
                 <Alumni
-                    imgSrc="https://www.colorhexa.com/957967.png"
+                    imgSrc={placeholder2}
                     imgAlt="image2"
                     title="Anne's Vision for Me, and All of Rwanda"
                     description="Emmanuel Nkundunkundiye '12"
@@ -101,7 +113,7 @@ export default function Home() {
                     link="card2"
                 />
                 <Alumni
-                    imgSrc="https://www.colorhexa.com/957967.png"
+                    imgSrc={placeholder3}
                     imgAlt="image3"
                     title="What ASYV Means to Me"
                     description="Pacifique Rutamu '13"
@@ -111,10 +123,10 @@ export default function Home() {
             </div>
         </div>
 
-        {/* 7. footer: */}
+        {/* 8. footer: */}
         <HomeFooter/>
 
-        {/* 8. login: */}
+        {/* 9. login: */}
         <LoginPopUp showLogin={showLogin} toggleLoginPopup={toggleLoginPopup}/>
         
     </div>

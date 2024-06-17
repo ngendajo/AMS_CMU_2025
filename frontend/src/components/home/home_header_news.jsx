@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../static/images/logo.png';
+// npm install react-icons
 import { AiOutlineTwitter } from 'react-icons/ai';
 import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 

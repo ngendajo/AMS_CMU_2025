@@ -1,6 +1,7 @@
 import React from 'react';
 import Charity from '../../static/images/charity.png';
 import Candid from '../../static/images/candid.jpeg';
+// npm install react-icons
 import { AiOutlineTwitter } from 'react-icons/ai';
 import { FaLinkedinIn, FaInstagram, FaFacebook } from 'react-icons/fa';
 

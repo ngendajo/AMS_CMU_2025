@@ -21,15 +21,15 @@ export const Alumni = ({
   };
   
   return (
-    <div className="card-container">
+    <div className="Alumni-card-container">
       {imgSrc && imgAlt && (
-        <img src={imgSrc} alt={imgAlt} className="card-img"  onHover= {openModal} />
+        <img src={imgSrc} alt={imgAlt} className="Alumni-card-img"  onHover= {openModal} />
       )}
-      {title && <h3 className="card-title">{title}</h3>}
-      {description && <p className="card-description">{description}</p>}
+      {title && <h3 className="Alumni-card-title">{title}</h3>}
+      {description && <p className="Alumni-card-description">{description}</p>}
       
       {buttonText && link && (
-        <a href={link} className="card-btn">
+        <a href={link} className="Alumni-card-btn">
           {buttonText}
         </a>
       )}

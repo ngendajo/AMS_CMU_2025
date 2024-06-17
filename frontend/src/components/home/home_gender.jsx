@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+// npm install styled-components
 import styled from 'styled-components';
 
 const BarChartContainer = styled.div`
@@ -78,6 +79,7 @@ const GenderChart = ({ females, males }) => {
     const chartRef = useRef(null);
 
     useEffect(() => {
+        const chartElement = chartRef.current;
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -86,22 +88,22 @@ const GenderChart = ({ females, males }) => {
                 }
             });
         }, {
-            threshold: 0.8 // Trigger when 50% of the element is in view
+            threshold: 0.8 // Trigger when 80% of the element is in view
         });
 
-        if (chartRef.current) {
-            observer.observe(chartRef.current);
+        if (chartElement) {
+            observer.observe(chartElement);
         }
 
         return () => {
-            if (chartRef.current) {
-                observer.unobserve(chartRef.current);
+            if (chartElement) {
+                observer.unobserve(chartElement);
             }
         };
     }, []);
 
     return (
-        <BarChartContainer>
+        <BarChartContainer ref={chartRef}>
             <BarTitle>Gender Distribution</BarTitle>
             <Chart ref={chartRef}>
                 <Bar color="var(--green)" style={{ height: isVisible ? `${femalePercentage}%` : '0%' }}>

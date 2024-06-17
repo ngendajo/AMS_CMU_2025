@@ -30,7 +30,7 @@ export const News = ({
 
 
       {description && <p className="News-card-description">{description}</p>}
-      {date && <p className="News-card-btn">{date}</p>}
+      {date && <p className="News-card-date">{date}</p>}
 
       {isModalOpen && (
         <div id="myModal" className="modal" onClick={closeModal}>

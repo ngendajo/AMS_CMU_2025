@@ -6,6 +6,10 @@ import { Alumni } from "../../components/home/home_alumni";
 import HomeFooter from '../../components/home/home_footer'
 import LoginPopUp from '../../components/home/login_pop_up'
 
+import placeholder1 from '../../static/images/gallery1.jpg'
+import placeholder2 from '../../static/images/gallery2.jpg'
+import placeholder3 from '../../static/images/gallery3.jpg'
+
 const AlumniStories = () => {
 
   const [showLogin, setShowLogin] = useState(false);
@@ -26,7 +30,7 @@ const AlumniStories = () => {
       <div className="cards">
         <div className="cards-wrapper">
             <Alumni
-                imgSrc="https://www.colorhexa.com/957967.png"
+                imgSrc={placeholder1}
                 imgAlt="image1"
                 title="A Story of Transformation"
                 description="Salem Isezerano '23"
@@ -34,7 +38,7 @@ const AlumniStories = () => {
                 link="card1"
             />
             <Alumni
-                imgSrc="https://www.colorhexa.com/957967.png"
+                imgSrc={placeholder2}
                 imgAlt="image2"
                 title="Anne's Vision for Me, and All of Rwanda"
                 description="Emmanuel Nkundunkundiye '12"
@@ -42,7 +46,7 @@ const AlumniStories = () => {
                 link="card2"
             />
             <Alumni
-                imgSrc="https://www.colorhexa.com/957967.png"
+                imgSrc={placeholder3}
                 imgAlt="image3"
                 title="What ASYV Means to Me"
                 description="Pacifique Rutamu '13"

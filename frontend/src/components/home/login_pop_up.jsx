@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react"
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+// npm install jwt-decode
 import { jwtDecode } from 'jwt-decode';
 import Logo from '../../static/images/logo.png';
 
