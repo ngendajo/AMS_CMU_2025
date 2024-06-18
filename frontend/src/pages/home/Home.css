@@ -1,3 +1,7 @@
+body {
+    background-color: var(--palegreen);
+}
+
 /* 1. Home Header - Annie */
 .HomeHeader{
     /* display */
@@ -185,7 +189,7 @@
     text-decoration: none;
     cursor: pointer;
     /* box */
-    padding: 8px 20px;
+    padding: 10px 40px;
     box-shadow: 0 1px 5px var(--blackopa);
     border: 2px var(--yellow) solid;
     border-radius: 30px;
@@ -264,7 +268,7 @@
     margin-top: 10px;
     margin-bottom: 40px;
 }
-.cards-wrapper {
+.cards-wrapper{
     /* display */
     display: flex;
     flex-wrap: wrap;
@@ -273,7 +277,41 @@
     background-color: var(--palegreen);
     /* box */
     gap: 60px;
-    padding-bottom: 120px;
+}
+.view-button-news{
+    /* display */
+    display: flex;
+    justify-content: center;
+    /* box */
+    padding: 15px 0
+}
+.view-button-alumni{
+    /* display */
+    display: flex;
+    justify-content: center;
+    /* box */
+    padding: 35px 0
+}
+.ViewMore{
+    /* font */
+    background-color: var(--yellow);
+    color: var(--white);
+    font-family: Medium;
+    font-size: 18px;
+    text-decoration: none;
+    cursor: pointer;
+    /* box */
+    padding: 10px 40px;
+    margin-top: 10px;
+    box-shadow: 0 1px 5px var(--blackopa);
+    border: 2px var(--yellow) solid;
+    border-radius: 30px;
+}
+.ViewMore:hover{
+    /* font */
+    background-color: var(--green);
+    /* box */
+    border: 2px var(--green) solid;
 }
 
 /* 8. Home Footer - Annie */
@@ -289,6 +327,7 @@
     width: 100%;
     padding: 40px 100px;
     box-sizing: border-box;
+    margin-top: 60px;
 }
 .HomeFooterLeft{
     /* display */

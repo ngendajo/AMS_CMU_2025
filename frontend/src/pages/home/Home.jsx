@@ -1,4 +1,5 @@
-import { React, useState } from "react"
+import { React, useState, useEffect } from "react"
+import { Link } from 'react-router-dom';
 import './Home.css'
 import HomeHeader from '../../components/home/home_header'
 import HomeBanner from '../../components/home/home_banner'
@@ -31,8 +32,18 @@ export default function Home() {
         setShowLogin(!showLogin);
     };
 
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash === '#top1') {
+            const element = document.getElementById('top1');
+            if (element) {
+                element.scrollIntoView();
+            }
+        }
+    }, []);
+
     return (
-    <div>
+    <div id="top1">
         {/* 1. header: */}
         <HomeHeader onLoginClick={toggleLoginPopup}/>
         
@@ -87,6 +98,9 @@ export default function Home() {
                     link="card3"
                 />
             </div>
+            <div class="view-button-news">
+                <Link to="/news_and_events#top2" className="ViewMore">View More</Link>
+            </div>
         </div>
 
         {/* 7. alumni: */}
@@ -120,6 +134,9 @@ export default function Home() {
                     buttonText="READ MORE"
                     link="card3"
                 />
+            </div>
+            <div class="view-button-alumni">
+                <Link to="/alumni_stories#top3" className="ViewMore">View More</Link>
             </div>
         </div>
 

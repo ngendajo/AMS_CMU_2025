@@ -17,8 +17,8 @@ export default function HomeHeader({onLoginClick}) {
             <div className="HomeHeaderRight">
                 <div className="HomeHeaderMenu">
                     <Link to="/" className="active">Home</Link>
-                    <Link to="/news_and_events">News & Events</Link>
-                    <Link to="/alumni_stories">Alumni Stories</Link>
+                    <Link to="/news_and_events#top2">News & Events</Link>
+                    <Link to="/alumni_stories#top3">Alumni Stories</Link>
                     <a href="#contact">Contact</a>
                 </div>
                 <div className="HomeHeaderLogin">

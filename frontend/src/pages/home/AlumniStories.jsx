@@ -1,4 +1,4 @@
-import { React, useState } from "react"
+import { React, useState, useEffect } from "react"
 import './Home.css'
 import HomeHeaderAlumni from '../../components/home/home_header_alumni'
 import HomeBannerAlumni from '../../components/home/home_banner_alumni'
@@ -18,8 +18,18 @@ const AlumniStories = () => {
     setShowLogin(!showLogin);
   };
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === '#top3') {
+        const element = document.getElementById('top3');
+        if (element) {
+            element.scrollIntoView();
+        }
+    }
+}, []);
+
   return (
-    <div>
+    <div id="top3">
       {/* 1. header: */}
       <HomeHeaderAlumni onLoginClick={toggleLoginPopup}/>
 

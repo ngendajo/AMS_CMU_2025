@@ -1,4 +1,4 @@
-import { React, useState } from "react"
+import { React, useState, useEffect } from "react"
 import './Home.css'
 import HomeHeaderNews from '../../components/home/home_header_news'
 import HomeBannerNews from '../../components/home/home_banner_news'
@@ -18,8 +18,18 @@ const NewsEvents = () => {
     setShowLogin(!showLogin);
   };
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === '#top2') {
+        const element = document.getElementById('top2');
+        if (element) {
+            element.scrollIntoView();
+        }
+    }
+}, []);
+
   return (
-    <div>
+    <div id="top2">
       {/* 1. header: */}
       <HomeHeaderNews onLoginClick={toggleLoginPopup}/>
 
