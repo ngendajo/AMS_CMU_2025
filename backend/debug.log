@@ -229,15 +229,3 @@ INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\urls.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\backend\settings.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\backend\settings.py changed, reloading.
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\backend\settings.py changed, reloading.
-WARNING:django.request:Not Found: /
-WARNING:django.request:Not Found: /favicon.ico
-INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.

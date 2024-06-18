@@ -21,6 +21,7 @@ import { MdCancel } from "react-icons/md";
 const columns = [
   { header: 'No', key: 'no' },
   { header: 'Email', key: 'email' },
+  { header: 'Reg. Number', key: 'reg_number' },
   { header: 'First Name', key: 'first_name' },
   { header: 'Last Name', key: 'last_name' },
   { header: 'Phone number', key: 'phone1' },
@@ -135,7 +136,7 @@ export default function ASYVInfo() {
     }
     return epslist
     }
-      const getusers = async () =>{
+      const getusers = async () =>{ 
         try{
             const response = await axios.get(baseUrl+'/alumni/',{ /* 用 axios 库发送了一个异步 GET 请求*/
                 headers: { /* 请求头 */
@@ -155,6 +156,7 @@ export default function ASYVInfo() {
               alumnilist2.push({
                no:i,
                email:element.email,
+               reg_number:element.alumn===null?"Null":element.alumn.reg_number,
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone1:element.phone1, 

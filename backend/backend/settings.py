@@ -1,6 +1,14 @@
 from pathlib import Path
 # Add this import
+# Add this import
 from datetime import timedelta
+import os
+from django.core.management.base import BaseCommand
+from django.apps import apps
+from django.db.models import Q
+from django.conf import settings
+from django.db.models import FileField
+
 import os
 from django.core.management.base import BaseCommand
 from django.apps import apps
@@ -10,10 +18,14 @@ from django.db.models import FileField
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # URL used to access the media
+# URL used to access the media
 MEDIA_URL = '/media/'
+
+# Actual directory user files go to
 
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
@@ -21,9 +33,13 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 
 
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+# SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5ye&$4bd)ss*-p8pp%z7f5nj4@br=2!hp_2i3b(dbb@_om#zok'
 
@@ -36,6 +52,7 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost'] #for local host
 
 
 # Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,6 +98,7 @@ TEMPLATES = [
     },
 ]
 # Add this
+# Add this
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -94,7 +112,9 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
 
+
     'ALGORITHM': 'HS256',
+
 
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
@@ -102,17 +122,21 @@ SIMPLE_JWT = {
     'JWK_URL': None,
     'LEEWAY': 0,
 
+
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
+
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
+
     'JTI_CLAIM': 'jti',
+
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -124,7 +148,14 @@ SIMPLE_JWT = {
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
+
+
+WSGI_APPLICATION = 'backend.wsgi.application'
+
+
 # Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
@@ -140,7 +171,10 @@ DATABASES = {
 }
 
 
+
 # Password validation
+# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -159,18 +193,31 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
+# https://docs.djangoproject.com/en/3.2/topics/i18n/
+
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
+
 TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
+
 USE_L10N = True
 
+
 USE_TZ = True
+
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 
 
@@ -182,7 +229,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True  
 # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_ALL_ORIGINS = True  
+# If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    'http://localhost:3000', 
+]  
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`

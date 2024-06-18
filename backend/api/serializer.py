@@ -12,7 +12,7 @@ User = get_user_model()
 
 #User management serializers
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer): 
     class Meta:
         model = User
         fields = ('__all__')
@@ -255,7 +255,7 @@ class AlumniInfoUpdateSerializer(serializers.ModelSerializer):
 class AlumniListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
-        fields = ('decision','date_of_birth','life_status','id','user','marital_status','reg_number','gender','family','combination','eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne')
+        fields = ('decision','reg_number','date_of_birth','life_status','id','user','marital_status','reg_number','gender','family','combination','eps','kids','father','mother','did_you_born_in_rwanda','place_of_birth_district_or_country','place_of_birth_sector_or_city','currresidence_in_rwanda','currresidence_district_or_country','currresidence_sector_or_city','s4marks','s5marks','s6marks','ne','maxforne')
         depth = 3
 class AlumniSerializer(serializers.ModelSerializer):
     image_url =serializers.ImageField(required=False)
@@ -955,86 +955,3 @@ class DisplayTermSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth=2
         
-#New Alumni and Kids at ASYV Database
-class KidsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Kids
-        fields = ['names', 'age']  # Include 'age' field
-
-class KidsAlumniSerializer(serializers.ModelSerializer):
-    kids = KidsSerializer(many=True)
-
-    class Meta:
-        model = Kids_alumni
-        fields = '__all__'
-
-    def create(self, validated_data):
-        kids_data = validated_data.pop('kids')
-        combination_data = validated_data.pop('combination', None)
-        eps_data = validated_data.pop('eps', None)
-
-        kids_alumni = Kids_alumni.objects.create(**validated_data)
-
-        for kid_data in kids_data:
-            kid, created = Kids.objects.get_or_create(**kid_data)
-            kids_alumni.kids.add(kid)
-
-        if combination_data:
-            for comb_id in combination_data:
-                try:
-                    #comb = Combination.objects.get(id=comb_id)
-                    kids_alumni.combination.add(comb_id)
-                except ObjectDoesNotExist:
-                    # Handle the case where the Combination does not exist
-                    # You can log this or take any other appropriate action
-                    pass
-
-        if eps_data:
-            for ep_id in eps_data:
-                try:
-                    #ep = Ep.objects.get(id=ep_id)
-                    kids_alumni.eps.add(ep_id)
-                except ObjectDoesNotExist:
-                    # Handle the case where the Ep does not exist
-                    # You can log this or take any other appropriate action
-                    pass
-
-        return kids_alumni
-
-    def update(self, instance, validated_data):
-        kids_data = validated_data.pop('kids', None)
-        combination_data = validated_data.pop('combination', None)
-        eps_data = validated_data.pop('eps', None)
-
-        instance = super().update(instance, validated_data)
-
-        if kids_data:
-            instance.kids.clear()
-            for kid_data in kids_data:
-                kid, created = Kids.objects.get_or_create(names=kid_data['names'], age=kid_data['age'])
-                instance.kids.add(kid)
-
-        if combination_data:
-            instance.combination.clear()
-            for comb_id in combination_data:
-                try:
-                    #comb = Combination.objects.get(id=comb_id)
-                    instance.combination.add(comb_id)
-                except ObjectDoesNotExist:
-                    # Handle the case where the Combination does not exist
-                    # You can log this or take any other appropriate action
-                    pass
-
-        if eps_data:
-            instance.eps.clear()
-            for ep_id in eps_data:
-                try:
-                    #ep = Ep.objects.get(id=ep_id)
-                    instance.eps.add(ep_id)
-                except ObjectDoesNotExist:
-                    # Handle the case where the Ep does not exist
-                    # You can log this or take any other appropriate action
-                    pass
-
-        instance.save()
-        return instance
