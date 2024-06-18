@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import Profile from '../../static/images/profile.jpg';
+import useAuth from '../../hooks/useAuth';
 
 const SidebarNav = styled.nav`
   background: var(--black);
@@ -103,15 +104,17 @@ const SidebarText = styled.span`
 `;
 
 const Sidebar = () => {
+  const  {auth}  = useAuth();
+
   return (
     <SidebarNav>
       <SidebarWrap>
       <ProfileSection>
           <ProfileImage src={Profile} alt="Profile" />
           <ProfileDetails>
-            <ProfileName>John Doe</ProfileName>
+            <ProfileName>{auth.user.first_name} {auth.user.last_name}</ProfileName>
             <ProfileRole>Alumni</ProfileRole>
-            <ProfileEmail>johndoe@gmail.com</ProfileEmail>
+            <ProfileEmail>{auth.user.email}</ProfileEmail>
           </ProfileDetails>
         </ProfileSection>
         <ScrollableSidebarWrap>

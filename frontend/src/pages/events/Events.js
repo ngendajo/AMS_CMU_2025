@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { News } from '../../components/News';
-import Sidebar from '../dashboard/Sidebar';
-import DashboardHeader from '../dashboard/Dashboard-header';
 import './Events.css';
 import image from "../../static/images/events.jpg"
 
@@ -11,8 +9,6 @@ const Events = () => {
   
   return (
     <div>
-      <DashboardHeader />
-      <Sidebar />
       <div className="EventsContainer">
       <Link to="/calendar" className="calendar-view-button">Calendar View</Link>
         <div className="cards">

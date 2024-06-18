@@ -1,6 +1,9 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../../static/images/logo.png';
+
+import useLogout from '../../hooks/useLogout';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -45,12 +48,13 @@ const LogoutButton = styled.button`
 `;
 const DashboardHeader = () => {
    
-  
-    const handleLogout = () => {
-      // Perform logout actions here, e.g., clear authentication tokens, reset user context/state
-      // Redirect to homepage
-     
-    };
+  const navigate = useNavigate();
+  const logout = useLogout();
+
+      const handleLogout = async () => {
+          await logout();
+          navigate('/home');
+      }
   
     return (
       <HeaderContainer>

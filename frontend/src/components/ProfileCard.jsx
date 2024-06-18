@@ -1,6 +1,9 @@
 // src/components/ProfileCard/ProfileCard.jsx
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
+import baseUrl from "../api/baseUrl";
+import axios from "axios"; 
+import useAuth from "../hooks/useAuth";
 import './ProfileCard.css';
 import Profile from '../static/images/profile.jpg';
 
@@ -47,7 +50,83 @@ const ProfileEmail = styled.span`
 `;
 
 const ProfileCard = () => {
+  const [ user, setUser ] = useState([]);
+  const {auth} = useAuth()
+  const [ employment, setEmployment ] = useState([]);
+  const [ study, setStudy ] = useState([]);
   const [activeTab, setActiveTab] = useState('personal');
+
+  useEffect(() =>{
+    
+    const getusers = async () =>{
+          try{
+            const response = await axios.get(baseUrl+'/alumni/?id='+auth.user.id,{
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'multipart/form-data'
+              },
+              withCredentials:true
+          });
+          setUser(response.data)
+              
+          }catch(err) {
+              console.log(err);
+          }
+      }
+
+      getusers();
+
+  },[auth])
+
+  useEffect(() =>{
+      const getemploy = async () =>{
+        try{
+            const response = await axios.get(baseUrl+'/employment/',{
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials:true
+            });
+            console.log(response.data)
+            setEmployment(response.data)
+            
+        }catch(err) {
+            console.log(err);
+        }
+    }
+
+    getemploy();
+    
+
+  },[auth])
+
+  useEffect(() =>{
+  const getstudy = async () =>{
+    try{
+        const response = await axios.get(baseUrl+'/studie/',{
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'multipart/form-data'
+            },
+            withCredentials:true
+        });
+        setStudy(response.data);
+        console.log(response.data)
+        
+    }catch(err) {
+        console.log(err);
+    }
+  }
+
+  getstudy();
+
+
+  },[auth])
+
+  console.log(user)
+  console.log(employment)
+  console.log(study)
 
   const renderContent = () => {
    

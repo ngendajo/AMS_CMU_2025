@@ -40,9 +40,8 @@ export default function LoginPopUp({showLogin, toggleLoginPopup}) {
                 const accessToken = response?.data.access;
                 const refresh = response?.data.refresh;
                 const user =jwtDecode(accessToken); 
-                const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": "visitor"
-                console.log(user)
-                setAuth({user,roles,email, pwd, accessToken,refresh });
+                //console.log(user)
+                setAuth({user, accessToken,refresh });
                 setEmail('');
                 setPwd('');
                 navigate(from, {replace:true})

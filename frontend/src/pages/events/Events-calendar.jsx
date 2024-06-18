@@ -1,8 +1,5 @@
 import React, { useState }  from 'react';
 import { Link } from 'react-router-dom';
-import { News } from '../../components/News';
-import Sidebar from '../dashboard/Sidebar';
-import DashboardHeader from '../dashboard/Dashboard-header';
 import './Events.css';
 import image from "../../static/images/events.jpg"
 import Calendar from 'react-calendar';
@@ -63,11 +60,7 @@ const EventsCalendar = () => {
 
   return (
     <div >
-      <DashboardHeader />
-      <Sidebar />
       <div className="below-header">
-
-     
       <Link to="/events" className="card-view">Card View</Link>
       </div>
       <div className="EventsCalendarContainer">
