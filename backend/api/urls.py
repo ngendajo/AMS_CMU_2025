@@ -29,6 +29,7 @@ urlpatterns = [
     path('bulkalumni/', views.AluminiBulkRegistrationView.as_view(), name='auth_bulkregisteralumini'),
     path('alumnitotal/', views.UserCountAPIView.as_view(), name='alumni_by_gender'),
     path('alumnitotalbygrade/', views.UserCountByGradeAPIView.as_view(), name='alumni_by_grade'),
+    path('alumnitotalbycombination/', views.UserCountByCombinationAPIView.as_view(), name='alumni_by_combination'),
     path('emplbygrade/', views.EmploymentStatusByGradeAPIView.as_view(), name='empl_by_grade'),
     path('stubygrade/', views.StudieStatusByGradeAPIView.as_view(), name='stu_by_grade'),
     path('empstubygrade/', views.StudieEmployStatusByGradeAPIView.as_view(), name='empstu_by_grade'),

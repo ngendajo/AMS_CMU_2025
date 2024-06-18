@@ -1361,6 +1361,32 @@ class UserCountByGradeAPIView(APIView):
         serializer = AlumniCountByGradeSerializer(data, many=True)
         return Response(serializer.data)
     
+#Count user by combination and gender
+class UserCountByCombinationAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get(self, request, *args, **kwargs):
+        
+            
+            #count alumni by grade
+        sql_query1 = "select combination_name, sum(CASE WHEN userprofile_alumni.gender = 'Male' THEN 1 ELSE 0 END) AS male,sum(CASE WHEN userprofile_alumni.gender='Female' THEN 1 ELSE 0 END) AS female from userprofile_alumni inner join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id group by userprofile_combination.combination_name order by userprofile_combination.combination_name;"
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            data1 = cursor1.fetchall()
+            
+        data=[]   
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                        'combination_name': i[0],
+                        'male': i[1],
+                        'female': i[2],
+                        'total':i[1]+i[2]
+                })
+
+        serializer = AlumniCountByCombinationSerializer(data, many=True)
+        return Response(serializer.data)
     
 class EmploymentStatusByGradeAPIView(APIView):
     permission_classes = [IsAuthenticated, ]

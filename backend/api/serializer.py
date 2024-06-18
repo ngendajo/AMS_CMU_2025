@@ -152,6 +152,12 @@ class AlumniCountByGradeSerializer(serializers.Serializer):
     male = serializers.IntegerField()
     female = serializers.IntegerField()
     
+class AlumniCountByCombinationSerializer(serializers.Serializer):
+    combination_name = serializers.CharField()
+    male = serializers.IntegerField()
+    female = serializers.IntegerField()
+    total = serializers.IntegerField()
+    
 #Employment status by grades
 class EmploymentStatusByGradeSerializer(serializers.Serializer):
     grade_name = serializers.CharField()
