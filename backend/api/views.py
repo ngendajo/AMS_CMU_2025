@@ -89,7 +89,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    #spermission_classes = [IsAuthenticated, ]
+    spermission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
