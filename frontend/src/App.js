@@ -14,6 +14,11 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Home from './pages/home/Home';
 import NewsEvents from './pages/home/NewsEvents';
 import AlumniStories from './pages/home/AlumniStories';
+import Profile from './pages/profile/Profile';
+import Events from './pages/events/Events';
+import EventsCalendar  from './pages/events/Events-calendar'
+import Container from './pages/Container';
+
 
 
 function App() {
@@ -41,10 +46,18 @@ function App() {
                 <Route path='/alumni_stories' element={<AlumniStories />}/>
                 <Route path='error' element={<Error />}/>
                 <Route path='unauthorized' element={<Unauthorized />}/>
+             
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>
-                  <Route path='/' element={<Dashboard />}/>
+                  <Route path='/' element={<Container/>}>
+                    <Route path="/" element={<Dashboard/>} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/events" element={<Events />} />
+                    <Route path="/calendar" element={<EventsCalendar />} />
+                  </Route>
+                  
+               
                 </Route>
 
                 {/* catch all */}
