@@ -55,7 +55,9 @@ export default function Home() {
         <GalleryCarousel />
             <div className="GalleryText">
                 <p>At <span className="GalleryBold">Liquidnet Family High School</span>, education extends beyond graduation. LFHS provides alumni with programs and resources to support them at every stage of their careers.</p>
-                <button>Learn More</button>
+                <a href="https://www.asyv.org/our-alumni" target="_blank" rel="noopener noreferrer">
+                    <button>Learn More</button>
+                </a>
             </div> 
         </div>
         

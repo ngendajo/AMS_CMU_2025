@@ -56,8 +56,12 @@ export default function HomeFooter() {
             </div>
             
             <div className="HomeFooterRight">
-                <img src={Charity} alt="Charity Navitator" />
-                <img src={Candid} alt="Platinum Transparency 2023 Candid" />
+                <a href="https://www.charitynavigator.org/ein/273530769" target="_blank" rel="noopener noreferrer">
+                    <img src={Charity} alt="Charity Navigator" />
+                </a>
+                <a href="https://www.guidestar.org/profile/27-3530769" target="_blank" rel="noopener noreferrer">
+                    <img src={Candid} alt="Platinum Transparency 2023 Candid" />
+                </a>
             </div>
         </div>
     );
