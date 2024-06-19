@@ -3958,33 +3958,42 @@ class StudentswithBookReportExportInExcelAPIView(APIView):
     def get_data_from_database(self):
         sql_query = """
            SELECT 
-                ROW_NUMBER() OVER (ORDER BY userprofile_grade.grade_name, userprofile_combination.combination_name) AS number
-                , last_name, first_name,studentid,
-                grade_name,family_name,combination_name,book_name,isbnumber,
-                category_name, author_name,issuedate,returndate 
-            FROM 
-                userprofile_grade 
-            INNER JOIN 
-                userprofile_family ON userprofile_grade.id = userprofile_family.grade_id 
-            INNER JOIN 
-                userprofile_student ON userprofile_family.id = userprofile_student.family_id 
-            INNER JOIN 
-                api_user ON userprofile_student.user_id = api_user.id 
-            INNER JOIN 
-                userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id 
-            INNER JOIN 
-                userprofile_issue_book ON userprofile_issue_book.borrower_id = api_user.id 
-            INNER JOIN 
-                userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
-            INNER JOIN 
-                userprofile_category ON userprofile_book.category_id = userprofile_category.id 
-            INNER JOIN 
-                userprofile_author ON userprofile_book.author_id = userprofile_author.id 
-            WHERE 
-                returndate = 'Not yet Returned' 
-            ORDER BY 
-                grade_name ASC, 
-                family_name ASC;
+            ROW_NUMBER() OVER (ORDER BY userprofile_grade.grade_name, userprofile_combination.combination_name) AS number,
+            last_name,
+            first_name,
+            studentid,
+            grade_name,
+            family_name,
+            combination_name,
+            book_name,
+            isbnumber,
+            category_name,
+            author_name,
+            TO_CHAR(issuedate, 'YYYY-Month-DD HH24:MI:SS') AS issuedate,
+            returndate 
+        FROM 
+            userprofile_grade 
+        INNER JOIN 
+            userprofile_family ON userprofile_grade.id = userprofile_family.grade_id 
+        INNER JOIN 
+            userprofile_student ON userprofile_family.id = userprofile_student.family_id 
+        INNER JOIN 
+            api_user ON userprofile_student.user_id = api_user.id 
+        INNER JOIN 
+            userprofile_combination ON userprofile_student.combination_id = userprofile_combination.id 
+        INNER JOIN 
+            userprofile_issue_book ON userprofile_issue_book.borrower_id = api_user.id 
+        INNER JOIN 
+            userprofile_book ON userprofile_issue_book.book_id = userprofile_book.id 
+        INNER JOIN 
+            userprofile_category ON userprofile_book.category_id = userprofile_category.id 
+        INNER JOIN 
+            userprofile_author ON userprofile_book.author_id = userprofile_author.id 
+        WHERE 
+            returndate = 'Not yet Returned' 
+        ORDER BY 
+            grade_name ASC, 
+            family_name ASC;
 
         """
         with connection.cursor() as cursor:
@@ -3999,7 +4008,7 @@ class StudentswithBookReportExportInExcelAPIView(APIView):
 
         # Get the active worksheet
         ws = wb.active
-        ws.append(["No", "First Name","Last Name", "Reg.No", "Grade", "Family", "Class","Book Name","ISBN","Category","Author","Isued Date","Returned Date"])
+        ws.append(["No", "Last Name","First Name", "Reg.No", "Grade", "Family", "Class","Book Name","ISBN","Category","Author","Isued Date","Returned Date"])
         # Add rows
         isued_book_data_name = 'students_with_book_report'
         ws.title = isued_book_data_name
@@ -4010,7 +4019,7 @@ class StudentswithBookReportExportInExcelAPIView(APIView):
 
         # Save the workbook
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=LFHS_students_data.xlsx'
+        response['Content-Disposition'] = 'attachment; filename=LFHS_Issued_Books_to_students_data.xlsx'
         wb.save(response)
         return response
 
