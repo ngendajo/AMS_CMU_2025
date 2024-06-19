@@ -130,6 +130,20 @@ export default function Grstatistics() {
       document.body.removeChild(link);
       setLoadingpdf(false);
     };
+    const issuedbookReprtexcel = async () => {
+      setLoadingpdf(true);
+        const response = await fetch(`${baseUrl}/exportissuedexcel/`);
+        const blob = await response.blob();
+  
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'LFHS_Issued_Books_to_students_data.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setLoadingpdf(false);
+      };
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -160,6 +174,13 @@ export default function Grstatistics() {
             <div><FaBookReader  className='libarryreports' /></div>
             <div><span className='books'>{data[0].nissued_books}</span> <span className='books-label'>Issued Books</span></div>
             <button className="prenext" onClick={issuedbookReprtpdf} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export issued Books in PDF'}</button>
+          </Link>
+        </div>
+        <div className='general-report-item-container'>
+          <Link to={`#`} className='general-report-item'>
+            <div><PiStudentBold  className='libarryreports' /></div>
+            <div><span className='books'>{data[0].nstudents}</span> <span className='books-label'>Students</span></div>
+            <button className="prenext" onClick={issuedbookReprtexcel} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export issued books to Students in Excel'}</button>
           </Link>
         </div>
         <div className='general-report-item-container'>
