@@ -3976,7 +3976,7 @@ class StudentswithBookReportExportInExcelAPIView(APIView):
                         -- Add more formats as needed
                         ELSE NULL
                     END, 
-                    'YYYY-Month-DD HH24:MI:SS'
+                    'DD Mon, YYYY HH24:MI:SS'
                 ) AS issuedate,
                 returndate 
             FROM 
