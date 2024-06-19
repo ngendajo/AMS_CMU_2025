@@ -3969,7 +3969,7 @@ class StudentswithBookReportExportInExcelAPIView(APIView):
             isbnumber,
             category_name,
             author_name,
-            TO_CHAR(issuedate, 'YYYY-Month-DD HH24:MI:SS') AS issuedate,
+            TO_CHAR(TO_TIMESTAMP(issuedate, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-Month-DD HH24:MI:SS') AS issuedate,
             returndate 
         FROM 
             userprofile_grade 
