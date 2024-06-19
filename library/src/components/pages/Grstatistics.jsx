@@ -178,8 +178,8 @@ export default function Grstatistics() {
         </div>
         <div className='general-report-item-container'>
           <Link to={`#`} className='general-report-item'>
-            <div><PiStudentBold  className='libarryreports' /></div>
-            <div><span className='books'>{data[0].nstudents}</span> <span className='books-label'>Students</span></div>
+            <div><FaBookReader  className='libarryreports' /></div>
+            <div><span className='books'>{data[0].nissued_books}</span> <span className='books-label'>Issued Books</span></div>
             <button className="prenext" onClick={issuedbookReprtexcel} disabled={loadingpdf}>{loadingpdf ? 'Exporting...' : 'Export issued books to Students in Excel'}</button>
           </Link>
         </div>
