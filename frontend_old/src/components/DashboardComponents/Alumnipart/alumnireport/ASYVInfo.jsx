@@ -93,7 +93,7 @@ export default function ASYVInfo() {
             response.data.forEach(element => {
               alumnilist.push({
                 id:i, 
-                image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
+                image:<img src={baseUrlforImg+"/"+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
                 first_name:element.first_name,
                 last_name:element.last_name,
