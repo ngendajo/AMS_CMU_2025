@@ -89,7 +89,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    spermission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -118,28 +118,77 @@ class AluminiRegistrationView(APIView):
 class AluminiListView(APIView):
     permission_classes = [IsAuthenticated, ]
     
-    def get(self,request):
+    def get(self, request):
         try:
-            if request.query_params:
-                if(list(request.query_params.keys())[0]=="grade_id"):
-                    user = User.objects.raw('''select api_user.id,api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_grade.id as grade_id,userprofile_family.family_name, userprofile_family.id as family_id,userprofile_combination.combination_name,userprofile_combination.id as combination_id from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id left outer join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id where api_user.is_alumni and userprofile_grade.id=%s;''',[request.query_params.dict()["grade_id"]])
-                    serializer = AlumniListsSerializer(user, many=True)
-                    return Response(serializer.data)
-                elif(list(request.query_params.keys())[0]=="family_id"):
-                    user = User.objects.raw('''select api_user.id,api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_grade.id as grade_id,userprofile_family.family_name, userprofile_family.id as family_id,userprofile_combination.combination_name,userprofile_combination.id as combination_id from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id left outer join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id where api_user.is_alumni and userprofile_family.id=%s;''',[request.query_params.dict()["family_id"]])
-                    serializer = AlumniListsSerializer(user, many=True)
-                    return Response(serializer.data)
-                elif(list(request.query_params.keys())[0]=="combination_id"):
-                    user = User.objects.raw('''select api_user.id,api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_grade.id as grade_id,userprofile_family.family_name, userprofile_family.id as family_id,userprofile_combination.combination_name,userprofile_combination.id as combination_id from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id left outer join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id where api_user.is_alumni and userprofile_combination.id=%s;''',[request.query_params.dict()["combination_id"]])
-                    serializer = AlumniListsSerializer(user, many=True)
-                    return Response(serializer.data)
+            query_params = request.query_params.dict()
+            query_param_key = list(query_params.keys())[0] if query_params else None
+            query_param_value = query_params.get(query_param_key)
+
+            if query_param_key == "grade_id":
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                           FROM api_user
+                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
+                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
+                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
+                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
+                           WHERE api_user.is_alumni AND userprofile_grade.id=%s;'''
+            elif query_param_key == "family_id":
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                           FROM api_user
+                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
+                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
+                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
+                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
+                           WHERE api_user.is_alumni AND userprofile_family.id=%s;'''
+            elif query_param_key == "combination_id":
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                           FROM api_user
+                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
+                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
+                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
+                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
+                           WHERE api_user.is_alumni AND userprofile_combination.id=%s;'''
             else:
-                user = User.objects.raw("select api_user.id,api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, userprofile_grade.grade_name,userprofile_grade.id as grade_id,userprofile_family.family_name, userprofile_family.id as family_id,userprofile_combination.combination_name,userprofile_combination.id as combination_id from api_user left outer join userprofile_alumni on api_user.id=userprofile_alumni.user_id left outer join userprofile_family on userprofile_alumni.family_id=userprofile_family.id left outer join userprofile_grade on userprofile_family.grade_id=userprofile_grade.id left outer join userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id where api_user.is_alumni;")
-                serializer = AlumniListsSerializer(user, many=True)
-                return Response(serializer.data)
-            
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                           FROM api_user
+                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
+                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
+                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
+                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
+                           WHERE api_user.is_alumni;'''
+                query_param_value = None
+
+            with connection.cursor() as cursor:
+                cursor.execute(query, [query_param_value] if query_param_value else [])
+                data1 = cursor.fetchall()
+                
+                data = []
+            if data1:
+                for i in data1:
+                    data.append({
+                        'id':i[0],
+                        'email':i[1],
+                        'image_url':i[2],
+                        'first_name': i[3],
+                        'last_name': i[4],
+                        'phone1': i[5],
+                        'reg_number': i[6],
+                        'grade_name': i[7],
+                        'grade_id': i[8],
+                        'family_name': i[9],
+                        'family_id':i[10],
+                        'combination_name': i[11],
+                        'combination_id': i[12]
+                    })
+
+            serializer = AlumniListsSerializer(data=data, many=True)
+            serializer.is_valid()  # Validate serializer data
+            return Response(serializer.data)
+
+        except KeyError:
+            return Response({'error': 'Invalid query parameter.'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response(error=e,status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
    
 class AluminiListByEyView(APIView):
     permission_classes = [IsAuthenticated, ]

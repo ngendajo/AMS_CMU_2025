@@ -15,7 +15,7 @@ export default function Alumni() {
   
   const {auth} = useAuth();
 
-  return (
+  return ( 
     <div>
       {auth.user.is_alumni? null:
         <div className='alumni-list-heading'>  {/* className属性设置为'alumni-list-heading'，它是一个用于样式设计的类名 */}
