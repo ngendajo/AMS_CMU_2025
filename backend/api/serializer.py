@@ -269,7 +269,7 @@ class AlumniSerializer(serializers.ModelSerializer):
 class AlumniListsSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
     email = serializers.EmailField(required=True)
-    image_url =serializers.ImageField(required=False)
+    image_url =serializers.CharField(max_length=2000, required=True)
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
     phone1 = serializers.CharField(max_length=200, required=True)

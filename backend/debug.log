@@ -382,3 +382,9 @@ INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024
 ERROR:django.request:Internal Server Error: /api/alumnilist/
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Not Found: /
+WARNING:django.request:Unauthorized: /api/alumnilist/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\backend\settings.py changed, reloading.
