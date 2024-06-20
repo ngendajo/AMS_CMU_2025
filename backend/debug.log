@@ -388,3 +388,57 @@ INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\backend\settings.py changed, reloading.
+WARNING:django.request:Not Found: /
+ERROR:django.request:Internal Server Error: /api/opportunity/
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\response.py", line 70, in rendered_content
+    ret = renderer.render(self.data, accepted_media_type, context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\renderers.py", line 723, in render
+    context = self.get_context(data, accepted_media_type, renderer_context)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\renderers.py", line 679, in get_context
+    'content': self.get_content(renderer, data, accepted_media_type, renderer_context),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\renderers.py", line 412, in get_content
+    content = renderer.render(data, accepted_media_type, renderer_context)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\renderers.py", line 99, in render
+    ret = json.dumps(
+          ^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\utils\json.py", line 25, in dumps
+    return json.dumps(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\anaconda3\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Users\Joseph\anaconda3\Lib\json\encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "C:\Users\Joseph\anaconda3\Lib\json\encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\utils\encoders.py", line 67, in default
+    return super().default(obj)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\anaconda3\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type ProgrammingError is not JSON serializable
+WARNING:django.request:Method Not Allowed: /api/opportunity/create/
+WARNING:django.request:Bad Request: /api/opportunity/create/
+WARNING:django.request:Method Not Allowed: /api/opportunity/create/
+WARNING:django.request:Bad Request: /api/opportunity/create/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\userprofile\models.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/opportunity/create/
+WARNING:django.request:Bad Request: /api/opportunity/create/
+WARNING:django.request:Not Found: /api/opportunity/1/

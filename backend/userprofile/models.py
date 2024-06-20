@@ -124,7 +124,10 @@ class Employment(models.Model):
 class Opportunity(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='opportunities')
     title = models.CharField(max_length=5000)
+    op_type = models.CharField(max_length=100, default="Full Time")
     description = models.CharField(max_length=200)
+    diedline = models.CharField(max_length=100, default="")
+    link = models.CharField(max_length=100, default="asyv.ac.rw")
     approved = models.BooleanField(default=False)
     post_time = models.DateTimeField(default=datetime.now)
 

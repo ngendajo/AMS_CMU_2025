@@ -593,14 +593,20 @@ class OpportunitySerializer(serializers.ModelSerializer):
         # obtain data from validated_data
         user = validated_data.get('user')
         title = validated_data.get('title')
+        op_type = validated_data.get('op_type')
         description = validated_data.get('description')
+        diedline = validated_data.get('diedline')
+        link = validated_data.get('link')
         post_time = validated_data.get('post_time')
 
         # create opportunity object
         opportunity = Opportunity.objects.create(
             user=user,
             title=title,
+            op_type=op_type,
             description=description,
+            diedline=diedline,
+            link=link,
             post_time=post_time
         )
 
@@ -610,7 +616,7 @@ class OpportunitySerializer(serializers.ModelSerializer):
 class UpdateOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Opportunity
-        fields = ['title', 'description']
+        fields = ['title','op_type', 'description','diedline','link']
  
 
 class ApproveOpportunitySerializer(serializers.ModelSerializer):
