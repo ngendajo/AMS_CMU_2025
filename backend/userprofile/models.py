@@ -126,7 +126,7 @@ class Opportunity(models.Model):
     title = models.CharField(max_length=5000)
     op_type = models.CharField(max_length=100, default="Full Time")
     description = models.CharField(max_length=200)
-    diedline = models.CharField(max_length=100, default="")
+    diedline = models.CharField(max_length=100, default="2024-08-23")
     link = models.CharField(max_length=100, default="asyv.ac.rw")
     approved = models.BooleanField(default=False)
     post_time = models.DateTimeField(default=datetime.now)
