@@ -129,8 +129,10 @@ class Opportunity(models.Model):
     diedline = models.CharField(max_length=100, default="2024-08-23")
     link = models.CharField(max_length=100, default="asyv.ac.rw")
     approved = models.BooleanField(default=False)
-    post_time = models.DateTimeField(default=datetime.now)
-
+    post_time = models.CharField(
+        max_length=100, 
+        default=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    )
     def __str__(self):
         return str(self.title)
 

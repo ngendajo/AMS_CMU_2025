@@ -56,11 +56,9 @@ function Opportunities() {
   const fetchOpportunities = async () => {
     try {
       const response = await axios.get(baseUrl+'/opportunity');
-      console.log(response.data);
       setOpportunities(response.data);
     } catch (error) {
       console.log(error);
-      navigate('/error');
     }
   };
 

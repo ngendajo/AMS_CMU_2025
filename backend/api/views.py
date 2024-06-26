@@ -810,7 +810,7 @@ def delete_story(request, pk):
 
 # Employment view
 class EmploymentView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = EmploymentSerializer(data=request.data)
@@ -832,14 +832,15 @@ class EmploymentView(APIView):
                 serializer = EmploymentDisplayOneSerializer(alumn, many=True)
                 return Response(serializer.data)
             else:
-                user = User.objects.raw("SELECT api_user.id as id,userprofile_alumni.id as alumn_id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_employment.title as title,userprofile_employment.company as company,userprofile_employment.description,userprofile_employment.start_date,userprofile_employment.end_date as end,userprofile_employment.status as status,userprofile_employment.id as emp_id,userprofile_employment.career as career,userprofile_family.family_name,userprofile_grade.grade_name,userprofile_combination.combination_name  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_family on userprofile_alumni.family_id=userprofile_family.id LEFT JOIN userprofile_grade on userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id  LEFT JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id WHERE api_user.is_alumni=true;")
-        
+                user = User.objects.raw("SELECT api_user.id as id,userprofile_alumni.id as alumn_id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_alumni.reg_number,userprofile_employment.title as title,userprofile_employment.company as company,userprofile_employment.description,userprofile_employment.start_date,userprofile_employment.end_date as end,userprofile_employment.status as status,userprofile_employment.id as emp_id,userprofile_employment.career as career,userprofile_family.family_name,userprofile_grade.grade_name,userprofile_combination.combination_name  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_family on userprofile_alumni.family_id=userprofile_family.id LEFT JOIN userprofile_grade on userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_combination on userprofile_alumni.combination_id=userprofile_combination.id  LEFT JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id WHERE api_user.is_alumni=true;")
+                
             # if there is something in items else raise error
             if user:
                 serializer = DisplayEmploymentSerializer(user, many=True)
+                
                 return Response(serializer.data)
             else:
-                return Response([])
+                return Response(["jhjgj"])
 
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -906,7 +907,7 @@ class StudieView(APIView):
                 serializer = StudyWithAlumnSerializer(stud1, many=True)
                 return Response(serializer.data)
             else:
-                stud = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_alumni.id as alumn_id,userprofile_studie.level,userprofile_studie.degree,userprofile_studie.university,userprofile_studie.country,userprofile_studie.scholarship,userprofile_studie.status,userprofile_studie.id as study_id,userprofile_studie.scholarship_details  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni=true;")
+                stud = User.objects.raw("SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_alumni.id as alumn_id,userprofile_alumni.reg_number,userprofile_studie.level,userprofile_studie.degree,userprofile_studie.university,userprofile_studie.country,userprofile_studie.scholarship,userprofile_studie.status,userprofile_studie.id as study_id,userprofile_studie.scholarship_details  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id WHERE api_user.is_alumni=true;")
         
             # if there is something in items else raise error
             if stud:
@@ -1026,6 +1027,7 @@ def delete_gallery(request, pk):
 
 # Opportunity model
 @api_view(['GET'])
+#@permission_classes([IsAuthenticated])
 def read_opportunity(request):
     try:
         opportunities = Opportunity.objects.all()
@@ -1036,6 +1038,7 @@ def read_opportunity(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_opportunity(request):
     serializer = OpportunitySerializer(data=request.data)
     if serializer.is_valid():
@@ -1045,6 +1048,7 @@ def create_opportunity(request):
 
 
 class DeleteOpportunityView(APIView):
+    @permission_classes([IsAuthenticated])
     def delete(self, request, pk):
         try:
             opportunity = Opportunity.objects.get(pk=pk)
@@ -1552,7 +1556,7 @@ class UsersExcelExportView(APIView):
         alumni_profile.title = alumni_profile_name
 
         # Write headers excluding sensitive fields
-        headers = ["email","first_name","last_name","phone1","date_of_birth", "gender","did_you_born_in_rwanda","place_of_birth_district_or_country","place_of_birth_sector_or_city","grade","family","combination","eps","s4marks","s5marks","s6marks","ne","maxforne","decision","life_status","marital_status","currresidence_in_rwanda","currresidence_district_or_country","currresidence_sector_or_city","kids"]
+        headers = ["email","first_name","last_name","reg_number","phone1","date_of_birth", "gender","did_you_born_in_rwanda","place_of_birth_district_or_country","place_of_birth_sector_or_city","grade","family","combination","eps","s4marks","s5marks","s6marks","ne","maxforne","decision","life_status","marital_status","currresidence_in_rwanda","currresidence_district_or_country","currresidence_sector_or_city","kids"]
         alumni_profile.append(headers)
         column_letter_for_datavalidation = 'G' 
         start_row = 2
@@ -1597,7 +1601,7 @@ class UsersExcelExportView(APIView):
         study_sheet_name = 'futher_study'
         study_sheet = workbook.create_sheet(title=study_sheet_name)
         # Write headers excluding sensitive fields
-        study_sheet_headers = ["email","study_level","course_name","university","in_which_country","Which_scholarship_did_you_receive","Scholarship details (Example: REB, FARG,...)","Study_status"]
+        study_sheet_headers = ["email","study_level","course_name","university","in_which_country","city","Which_scholarship_did_you_receive","Scholarship details (Example: REB, FARG,...)","Study_status"]
         study_sheet.append(study_sheet_headers)
         
         # Iterate over all columns and adjust their widths
