@@ -458,6 +458,7 @@ class StorySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
+        instance.displayed = validated_data.get('draft', instance.draft)
         instance.displayed = validated_data.get('displayed', instance.displayed)
 
         # Update either image or video field based on provided data

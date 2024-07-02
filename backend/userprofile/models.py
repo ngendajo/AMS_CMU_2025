@@ -199,6 +199,7 @@ class Story(models.Model):
     description = models.CharField(max_length=5000)
     image = models.ImageField(upload_to='storyimages/', blank=True, null=True)
     video = models.FileField(upload_to='storyvideos/', blank=True, null=True)
+    draft = models.BooleanField(default=True)
     displayed = models.BooleanField(default=False)
 
     def __str__(self):
