@@ -435,8 +435,39 @@ class DisplayAllStoriesSerializer(serializers.Serializer):
     class Meta:
         fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'description','displayed','story_id')
 
+#new way of handling stories
+# serializers.py
+class StorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = '__all__'
+        read_only_fields = ('id',)  # Ensure ID is read-only
 
+    def validate(self, attrs):
+        image = attrs.get('image')
+        video = attrs.get('video')
 
+        if image and video:
+            raise serializers.ValidationError("Only one of image or video should be provided, not both.")
+
+        return attrs
+
+    def create(self, validated_data):
+        return Story.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.displayed = validated_data.get('displayed', instance.displayed)
+
+        # Update either image or video field based on provided data
+        instance.image = validated_data.get('image', instance.image)
+        instance.video = validated_data.get('video', instance.video)
+
+        instance.save()
+        return instance
+
+#end of stories
 
 #Studie serializers
 

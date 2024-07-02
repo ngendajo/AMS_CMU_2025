@@ -195,7 +195,10 @@ class Studie(models.Model):
 # Story model
 class Story(models.Model):
     alumn = models.ForeignKey(Alumni, on_delete=models.PROTECT, related_name='stories')
+    title = models.CharField(max_length=500, blank=True, null=True)
     description = models.CharField(max_length=5000)
+    image = models.ImageField(upload_to='storyimages/', blank=True, null=True)
+    video = models.FileField(upload_to='storyvideos/', blank=True, null=True)
     displayed = models.BooleanField(default=False)
 
     def __str__(self):

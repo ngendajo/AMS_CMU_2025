@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import (
 from .views import alumni_count
 
 router = DefaultRouter()
+router.register(r'stories', views.StoryViewSet)
 
 urlpatterns = [
     # user paths
@@ -80,6 +81,8 @@ urlpatterns = [
     path('deletestory/<int:pk>/delete/', views.delete_story, name='delete-stories'),
     path('displaystory/<int:pk>/', views.display_story, name='display-story'),
     path('storyhomeview/', views.StoryHomeView.as_view(), name='story-home-view'),
+    
+    path('', include(router.urls)),
 
     # studie paths
     path('studie/', views.StudieView.as_view()),
