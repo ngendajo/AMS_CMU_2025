@@ -40,7 +40,7 @@ export default function AddGallery() {
 
         try{
             const formData = new FormData();
-
+ 
             formData.append("title", e.target.title.value);
             formData.append("description", e.target.description.value,);
             formData.append("startDate", e.target.startDate.value);

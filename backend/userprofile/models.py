@@ -141,8 +141,8 @@ class Opportunity(models.Model):
 class Event(models.Model):
     title = models.CharField(max_length=5000)
     description = models.CharField(max_length=20000)
-    startDate = models.DateTimeField(auto_now=True)
-    endDate = models.DateTimeField(auto_now=True)
+    e_datetime = models.DateTimeField(auto_now=True)
+    location = models.CharField(max_length=5000)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="events")
     image_url = models.ImageField(upload_to='events', default='events/default.jpg')
 
