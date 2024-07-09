@@ -432,6 +432,9 @@ class DisplayAllStoriesSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=1000, required=True)
     displayed = serializers.BooleanField(required=True)
     story_id = serializers.IntegerField(required=True)
+    image= serializers.ImageField(required=True)
+    video = serializers.FileField(required=True)
+    draft = serializers.BooleanField(required=True)
  
     class Meta:
         fields = ('id', 'email','phone1', 'first_name','last_name','end','image_url', 'description','displayed','story_id')

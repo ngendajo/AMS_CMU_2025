@@ -89,7 +89,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -116,7 +116,7 @@ class AluminiRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
 class AluminiListView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     
     def get(self, request):
         try:
@@ -297,7 +297,7 @@ def delete_user(request, pk):
 
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def create_alumni_info(request):
     serializer = AlumniInfoRegSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -315,7 +315,7 @@ def create_alumni_info(request):
 
 
 @api_view(['PUT'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def update_alumni_info(request, pk=None):
     alumn = Alumni.objects.get(pk=pk)
 
@@ -739,7 +739,7 @@ class StoryView(APIView):
                 return Response(serializer.data)
             else:
                 story = User.objects.raw(
-                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true;")
+                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.image,userprofile_Story.video, userprofile_Story.draft,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true;")
 
             # if there is something in items else raise error
             if story:
@@ -756,7 +756,7 @@ class StoryHomeView(APIView):
         try:
             # checking for the parameters from the URL
             story = User.objects.raw(
-                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true and userprofile_Story.displayed=true;")
+                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.image,userprofile_Story.video, userprofile_Story.draft,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true and userprofile_Story.displayed=true;")
             # if there is something in items else raise error
             if story:
                 serializer = DisplayAllStoriesSerializer(story, many=True)
@@ -4240,9 +4240,9 @@ class AlumniUpdateProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = AlumniUpdateHisOrHerProfileSerializer
 
     def get_object(self):
-        user_id = self.kwargs.get('user_id')
-        user = get_object_or_404(User, id=user_id)
-        return get_object_or_404(Alumni, user=user)
+        alumni_id = self.kwargs.get('alumni_id')
+        alumn = get_object_or_404(Alumni, id=alumni_id)
+        return alumn
 
     def update(self, request, *args, **kwargs):
         try:

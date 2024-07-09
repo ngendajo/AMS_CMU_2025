@@ -24,7 +24,7 @@ urlpatterns = [
     path('users/', views.get_users, name="users"),
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
     path('alumni/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
-    path('alumnilist/', views.AluminiListView.as_view(), name='alumini'),
+    path('alumnilist/', views.AluminiListView.as_view(), name='alumini'), #It is used in new ams
     path('alumnilistbyep/', views.AluminiListByEyView.as_view(), name='aluminiep'),
     path('bulkalumni/', views.AluminiBulkRegistrationView.as_view(), name='auth_bulkregisteralumini'),
     path('alumnitotal/', views.UserCountAPIView.as_view(), name='alumni_by_gender'),
@@ -37,7 +37,7 @@ urlpatterns = [
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('alumni/info/<int:pk>/update/', views.update_alumni_info, name='alumn-info-update'),
     #Alumni update her/his profile
-    path('alumni/update-profile/<int:user_id>/', views.AlumniUpdateProfileView.as_view(), name='alumni-update-profile'),
+    path('alumni/update-profile/<int:alumni_id>/', views.AlumniUpdateProfileView.as_view(), name='alumni-update-profile'),
     
     
     path('deleteuser/<str:pk>/delete/', views.delete_user, name='delete-user'),
