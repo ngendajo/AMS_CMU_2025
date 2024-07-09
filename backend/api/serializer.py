@@ -274,6 +274,7 @@ class AlumniListsSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=200, required=True)
     phone1 = serializers.CharField(max_length=200, required=True)
     reg_number = serializers.CharField(max_length=200, required=True)
+    alumn_id = serializers.CharField(max_length=200, required=True)
     grade_name = serializers.CharField(max_length=200, required=True)
     family_name = serializers.CharField(max_length=200, required=True)
     combination_name = serializers.CharField(max_length=200, required=True)
@@ -988,4 +989,10 @@ class DisplayTermSerializer(serializers.ModelSerializer):
         model = Term
         fields = '__all__'
         depth=2
-        
+   
+   
+   #Alumni update her/his profile     
+class AlumniUpdateHisOrHerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alumni
+        fields = ('marital_status', 'kids', 'currresidence_in_rwanda', 'currresidence_district_or_country', 'currresidence_sector_or_city')

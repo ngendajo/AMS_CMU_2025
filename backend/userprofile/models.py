@@ -60,6 +60,8 @@ class Ep(models.Model):
 
 class Alumni(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alumn')
+    other_emails = models.CharField(max_length=500,default="")
+    other_phones = models.CharField(max_length=500,default="")
     date_of_birth = models.CharField(max_length=200,default="")
     gender = models.CharField(max_length=500)
     reg_number = models.CharField(max_length=50,default="")
@@ -142,7 +144,7 @@ class Event(models.Model):
     title = models.CharField(max_length=5000)
     description = models.CharField(max_length=20000)
     e_datetime = models.DateTimeField(auto_now=True)
-    location = models.CharField(max_length=5000)
+    location = models.CharField(max_length=5000 , default='NMS')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="events")
     image_url = models.ImageField(upload_to='events', default='events/default.jpg')
 

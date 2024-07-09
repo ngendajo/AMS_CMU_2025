@@ -124,7 +124,7 @@ class User(AbstractBaseUser):
 	first_name = models.CharField(max_length=200)
 	last_name = models.CharField(max_length=200)
 	phone1 = models.CharField(max_length=200, blank=True, unique=True)
-	image_url = models.ImageField(upload_to='profiles', default='profiles/default.jpeg')
+	image_url = models.ImageField(upload_to='profiles', default='profiles/kayitesid787gmail.comMon_Jul_08_2024_160828_GMT0200_South_Africa_Standard_Time.jpeg')
 	username = None
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['first_name', 'last_name', 'phone1']

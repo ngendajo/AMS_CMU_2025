@@ -89,7 +89,7 @@ class AluminiBulkRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AluminiRegistrationView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         print(request.data)
         serializer = AlumniRegistrationSerializer(data=request.data)
@@ -125,7 +125,7 @@ class AluminiListView(APIView):
             query_param_value = query_params.get(query_param_key)
 
             if query_param_key == "grade_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
                            FROM api_user
                            LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
                            LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
@@ -133,7 +133,7 @@ class AluminiListView(APIView):
                            LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
                            WHERE api_user.is_alumni AND userprofile_grade.id=%s;'''
             elif query_param_key == "family_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
                            FROM api_user
                            LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
                            LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
@@ -141,7 +141,7 @@ class AluminiListView(APIView):
                            LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
                            WHERE api_user.is_alumni AND userprofile_family.id=%s;'''
             elif query_param_key == "combination_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
                            FROM api_user
                            LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
                            LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
@@ -149,7 +149,7 @@ class AluminiListView(APIView):
                            LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
                            WHERE api_user.is_alumni AND userprofile_combination.id=%s;'''
             else:
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
                            FROM api_user
                            LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
                            LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
@@ -173,12 +173,13 @@ class AluminiListView(APIView):
                         'last_name': i[4],
                         'phone1': i[5],
                         'reg_number': i[6],
-                        'grade_name': i[7],
-                        'grade_id': i[8],
-                        'family_name': i[9],
-                        'family_id':i[10],
-                        'combination_name': i[11],
-                        'combination_id': i[12]
+                        'alumn_id': i[7],
+                        'grade_name': i[8],
+                        'grade_id': i[9],
+                        'family_name': i[10],
+                        'family_id':i[11],
+                        'combination_name': i[12],
+                        'combination_id': i[13]
                     })
 
             serializer = AlumniListsSerializer(data=data, many=True)
@@ -296,7 +297,7 @@ def delete_user(request, pk):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def create_alumni_info(request):
     serializer = AlumniInfoRegSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -314,7 +315,7 @@ def create_alumni_info(request):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def update_alumni_info(request, pk=None):
     alumn = Alumni.objects.get(pk=pk)
 
@@ -715,7 +716,7 @@ def delete_eve(request, pk):
 
 # Story data view
 class StoryView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
         serializer = StorySerializer(data=request.data)
@@ -1584,7 +1585,7 @@ class UsersExcelExportView(APIView):
         alumni_profile.title = alumni_profile_name
 
         # Write headers excluding sensitive fields
-        headers = ["email","first_name","last_name","reg_number","phone1","date_of_birth", "gender","did_you_born_in_rwanda","place_of_birth_district_or_country","place_of_birth_sector_or_city","grade","family","combination","eps","s4marks","s5marks","s6marks","ne","maxforne","decision","life_status","marital_status","currresidence_in_rwanda","currresidence_district_or_country","currresidence_sector_or_city","kids"]
+        headers = ["email" ,"first_name" ,"last_name","phone1", "other_emails", "other_phones","date_of_birth","gender","reg_number", "father" ,"mother" ,"did_you_born_in_rwanda","place_of_birth_district_or_country","place_of_birth_sector_or_city","life_status" ,"marital_status", "currresidence_in_rwanda" ,"currresidence_district_or_country","currresidence_sector_or_city" ,"kids" , "family", "combination","eps","s4marks","s5marks","s6marks","ne" ,"decision"]
         alumni_profile.append(headers)
         column_letter_for_datavalidation = 'G' 
         start_row = 2
@@ -4232,4 +4233,26 @@ def delete_term(request, pk):
     term = get_object_or_404(Term, pk=pk)
     term.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
+
+#Alumni update her/his profile  
+class AlumniUpdateProfileView(generics.RetrieveUpdateAPIView):
+    queryset = Alumni.objects.all()
+    serializer_class = AlumniUpdateHisOrHerProfileSerializer
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, id=user_id)
+        return get_object_or_404(Alumni, user=user)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
