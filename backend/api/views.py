@@ -116,7 +116,7 @@ class AluminiRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
 class AluminiListView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     
     def get(self, request):
         try:
@@ -4236,12 +4236,14 @@ def delete_term(request, pk):
 
 #Alumni update her/his profile  
 class AlumniUpdateProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated, ]
     queryset = Alumni.objects.all()
     serializer_class = AlumniUpdateHisOrHerProfileSerializer
 
     def get_object(self):
         alumni_id = self.kwargs.get('alumni_id')
         alumn = get_object_or_404(Alumni, id=alumni_id)
+        print(alumn)
         return alumn
 
     def update(self, request, *args, **kwargs):
