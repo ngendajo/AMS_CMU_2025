@@ -428,6 +428,7 @@ class DisplayAllStoriesSerializer(serializers.Serializer):
     phone1 = serializers.CharField(max_length=30, required=True)
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
+    title = serializers.CharField(max_length=200, required=True)
     image_url =serializers.ImageField(required=True)
     description = serializers.CharField(max_length=1000, required=True)
     displayed = serializers.BooleanField(required=True)

@@ -203,6 +203,7 @@ class Story(models.Model):
     video = models.FileField(upload_to='storyvideos/', blank=True, null=True)
     draft = models.BooleanField(default=True)
     displayed = models.BooleanField(default=False)
+    #createdat=models.DateTimeField()
 
     def __str__(self):
         return str(self.alumn.user.first_name + "story")

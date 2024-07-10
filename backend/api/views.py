@@ -648,7 +648,7 @@ def delete_comb(request, pk):
 # Event data view
 
 class EventView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         # validating for already existing data
@@ -739,7 +739,7 @@ class StoryView(APIView):
                 return Response(serializer.data)
             else:
                 story = User.objects.raw(
-                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.image,userprofile_Story.video, userprofile_Story.draft,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true;")
+                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.image,userprofile_Story.video,userprofile_Story.title, userprofile_Story.draft,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true;")
 
             # if there is something in items else raise error
             if story:
@@ -756,7 +756,7 @@ class StoryHomeView(APIView):
         try:
             # checking for the parameters from the URL
             story = User.objects.raw(
-                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.image,userprofile_Story.video, userprofile_Story.draft,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true and userprofile_Story.displayed=true;")
+                    "SELECT api_user.id as id, api_user.email as email, api_user.phone1 as phone1, api_user.first_name as first_name, api_user.last_name as last_name,api_user.image_url,userprofile_Story.description as description,userprofile_Story.image,userprofile_Story.title,userprofile_Story.video, userprofile_Story.draft,userprofile_Story.displayed as displayed,userprofile_Story.id as story_id  FROM api_user LEFT JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id LEFT JOIN userprofile_Story ON userprofile_alumni.id=userprofile_Story.alumn_id WHERE api_user.is_alumni=true and userprofile_Story.displayed=true;")
             # if there is something in items else raise error
             if story:
                 serializer = DisplayAllStoriesSerializer(story, many=True)
@@ -4236,7 +4236,7 @@ def delete_term(request, pk):
 
 #Alumni update her/his profile  
 class AlumniUpdateProfileView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     queryset = Alumni.objects.all()
     serializer_class = AlumniUpdateHisOrHerProfileSerializer
 
