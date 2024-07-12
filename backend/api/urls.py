@@ -10,6 +10,10 @@ from .views import alumni_count
 
 router = DefaultRouter()
 router.register(r'stories', views.StoryViewSet)
+router.register(r'announcements', views.AnnouncementViewSet)
+router.register(r'inquiries', views.InquiryViewSet)
+router.register(r'faqs', views.FrequentlyAskedQuestionViewSet)
+router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
     # user paths

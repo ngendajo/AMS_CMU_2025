@@ -206,7 +206,7 @@ class EmploymentSerializer(serializers.ModelSerializer):
 class EmploymentUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employment
-        fields=('title','status','description','company','start_date','end_date','career')
+        fields=('title','status','company','career') #add then later ,'description','company','start_date','end_date'
 
 class EmploymentDisplayOneSerializer(serializers.ModelSerializer):
     class Meta:
@@ -513,13 +513,13 @@ class StudieSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Studie
-        fields = ('id','alumn','level','degree','university','country','scholarship','status','scholarship_details')
+        fields = ('id','alumn','level','degree','university','country','city','scholarship','status','scholarship_details')
 
 
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
-        fields = ('level','degree','university','country','scholarship','status','scholarship_details')
+        fields = ('level','degree','university','country','city','scholarship','status','scholarship_details')
 
 
 #Dashboard needed data serializer
@@ -582,19 +582,6 @@ class StudyReportSerializer(serializers.ModelSerializer):
     degree = serializers.CharField(max_length=200, required=True)
 
 
-class GallerySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Studie
-        fields = ('id','level','degree')
-
-
-#Gallery serializers
-
-class GallerySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Gallery
-        fields=('__all__')
-
 #Gallery serializers
 
 class GallerySerializer(serializers.ModelSerializer):
@@ -605,10 +592,14 @@ class GallerySerializer(serializers.ModelSerializer):
  
     def create(self, validated_data):
         image_url = validated_data.get('image_url')
+        event_name = validated_data.get('event_name')
+        link = validated_data.get('link')
         displayed = validated_data.get('displayed')
 
         gallery = Gallery.objects.create(
             image_url=image_url,
+            event_name=event_name,
+            link=link,
             displayed=displayed
         )
 
@@ -1000,3 +991,24 @@ class AlumniUpdateHisOrHerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alumni
         fields = ('marital_status', 'kids', 'currresidence_in_rwanda', 'currresidence_district_or_country', 'currresidence_sector_or_city')
+        
+#new models (Announcement, Inquiries, frequentlyaskedquestions, Groups )
+class AnnouncementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Announcement
+        fields = '__all__'
+
+class InquirySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inquiry
+        fields = '__all__'
+
+class FrequentlyAskedQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FrequentlyAskedQuestion
+        fields = '__all__'
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'

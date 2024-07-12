@@ -113,7 +113,7 @@ class Employment(models.Model):
     ) 
     status = models.CharField(max_length=2, choices=emps)
     career = models.CharField(max_length=2000, default="")
-    description = models.CharField(max_length=2000)
+    description = models.CharField(max_length=2000 , default="")
     company = models.CharField(max_length=5000)
     start_date = models.CharField(max_length=100, default="")
     end_date = models.CharField(max_length=100, default="old")
@@ -128,7 +128,7 @@ class Opportunity(models.Model):
     title = models.CharField(max_length=5000)
     op_type = models.CharField(max_length=100, default="Full Time")
     description = models.CharField(max_length=200)
-    diedline = models.CharField(max_length=100, default="2024-08-23")
+    diedline = models.CharField(max_length=1000, default="2024-08-23")
     link = models.CharField(max_length=100, default="asyv.ac.rw")
     approved = models.BooleanField(default=False)
     post_time = models.CharField(
@@ -169,6 +169,7 @@ class Studie(models.Model):
     degree = models.CharField(max_length=2500)
     university = models.CharField(max_length=2500)
     country = models.CharField(max_length=200)
+    city = models.CharField(max_length=200,default="")
     Scholarships = (
         ('F', 'Full'),
         ('P', 'Partial'),
@@ -203,7 +204,7 @@ class Story(models.Model):
     video = models.FileField(upload_to='storyvideos/', blank=True, null=True)
     draft = models.BooleanField(default=True)
     displayed = models.BooleanField(default=False)
-    #createdat=models.DateTimeField()
+    createdat = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
         return str(self.alumn.user.first_name + "story")
@@ -211,6 +212,9 @@ class Story(models.Model):
 
 # Gallery model
 class Gallery(models.Model):
+    event_name = models.CharField(max_length=1000, default="Event name")
+    link = models.CharField(max_length=1000, default="asyv.ac.rw")
+    createdat = models.DateTimeField(default=datetime.now)
     image_url = models.ImageField(upload_to='galleries', default='galleries/default.jpg')
     displayed = models.BooleanField(default=True)
 
@@ -225,6 +229,32 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
+    
+#new models (Announcement, Inquiries, frequentlyaskedquestions, Groups )
+class Announcement(models.Model):
+    text = models.TextField()
+    date_time = models.DateTimeField()
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    pinned = models.BooleanField(default=False)
+
+class Inquiry(models.Model):
+    sent_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_inquiries')
+    inquiry = models.TextField()
+    email = models.EmailField()
+    time_date = models.DateTimeField()
+    answered_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answered_inquiries', null=True, blank=True)
+    answer = models.TextField(null=True, blank=True)
+
+class FrequentlyAskedQuestion(models.Model):
+    question = models.TextField()
+    answer = models.TextField()
+    pinned = models.BooleanField(default=False)
+
+class Group(models.Model):
+    group_name = models.CharField(max_length=100)
+    whatsapp_link = models.URLField()
+    qr_code = models.ImageField(upload_to='qr_codes/')
+    pinned = models.BooleanField(default=False)
     
 #Library Management System
 
