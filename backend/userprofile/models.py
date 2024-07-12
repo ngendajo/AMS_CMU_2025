@@ -233,7 +233,7 @@ class News(models.Model):
 #new models (Announcement, Inquiries, frequentlyaskedquestions, Groups )
 class Announcement(models.Model):
     text = models.TextField()
-    date_time = models.DateTimeField()
+    date_time = models.DateTimeField(default=datetime.now)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     pinned = models.BooleanField(default=False)
 
