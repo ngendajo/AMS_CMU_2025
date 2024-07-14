@@ -11,7 +11,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.db.models import Count, Case, When, IntegerField,Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.db import connection,DatabaseError
 from rest_framework import serializers
@@ -26,9 +26,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 import pandas as pd
 from django.contrib.auth.hashers import make_password
-
-from userprofile.models import Alumni
-
 from django.http import JsonResponse,HttpResponse,Http404
 import openpyxl
 from openpyxl.worksheet.datavalidation import DataValidation
@@ -525,6 +522,22 @@ def add_families_to_grade(request):
     else:
         print(data.errors)
         return Response(data.errors, status=status.HTTP_404_NOT_FOUND)
+    
+class GradesAndFamiliesView(APIView):
+    permission_classes = [IsAuthenticated, ]  
+    def get(self,request):
+        try:
+            user = User.objects.raw("select userprofile_family.id,userprofile_family.family_name,userprofile_grade.grade_name,userprofile_grade.start_academic_year, userprofile_grade.end_academic_year from userprofile_grade inner join userprofile_family on userprofile_grade.id=userprofile_family.grade_id order by userprofile_grade.start_academic_year;")
+    
+            # if there is something in items else raise error
+            if user:
+                serializer = GradesAndFamiliesSerializer(user, many=True)
+                return Response(serializer.data)
+            else:
+                return Response([])
+            
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 # End
@@ -645,70 +658,67 @@ def delete_comb(request, pk):
 
 # end
 
-# Event data view
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
 
-class EventView(APIView):
-    #permission_classes = [IsAuthenticated, ]
-    def post(self, request):
-        serializer = EventSerializer(data=request.data)
-        # validating for already existing data
-        if Event.objects.filter(**request.data).exists():
-            raise serializers.ValidationError('This data already exists')
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            self.permission_classes = [AllowAny]
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
 
-    def get(self, request):
+    def list(self, request, *args, **kwargs):
         try:
-            # checking for the parameters from the URL
-            if request.query_params:
-                eve = Event.objects.filter(**request.query_params.dict())
-            else:
-                eve = Event.objects.all()
-
-            # if there is something in items else raise error
-            if eve:
-                serializer = EventSerializer(eve, many=True)
-                return Response(serializer.data)
-            else:
-                return Response([])
-            
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
         except Exception as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except Event.DoesNotExist:
+            return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['POST']) 
-def create_Event(request):
-    serializer = EventSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        except Event.DoesNotExist:
+            return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Event.DoesNotExist:
+            return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_Event(request, pk):
-    eve = Event.objects.get(pk=pk)
-    data = UpdateEventSerializer(instance=eve, data=request.data)
-
-    if data.is_valid():
-        data.save()
-        return Response(data.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_eve(request, pk):
-    eve = get_object_or_404(Event, pk=pk)
-    eve.delete()
-    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 # end
@@ -874,22 +884,6 @@ class EmploymentView(APIView):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-class GradesAndFamiliesView(APIView):
-    permission_classes = [IsAuthenticated, ]  
-    def get(self,request):
-        try:
-            user = User.objects.raw("select userprofile_family.id,userprofile_family.family_name,userprofile_grade.grade_name,userprofile_grade.start_academic_year, userprofile_grade.end_academic_year from userprofile_grade inner join userprofile_family on userprofile_grade.id=userprofile_family.grade_id order by userprofile_grade.start_academic_year;")
-    
-            # if there is something in items else raise error
-            if user:
-                serializer = GradesAndFamiliesSerializer(user, many=True)
-                return Response(serializer.data)
-            else:
-                return Response([])
-            
-        except Exception as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -1009,51 +1003,6 @@ class StudyReportView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# Gallery data view
-
-@api_view(['GET'])  
-def read_gallery(request):
-    try:
-        galleries = Gallery.objects.all()
-        serializer = GallerySerializer(galleries, many=True)
-        return Response(serializer.data)
-    except Exception as e:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
-def create_gallery(request):
-    serializer = GallerySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_gallery(request, pk):
-    gall = Gallery.objects.get(pk=pk)
-    data = UpdateGallerySerializer(instance=gall, data=request.data)
-
-    if data.is_valid():
-        data.save()
-        return Response(data.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_gallery(request, pk):
-    stud = get_object_or_404(Gallery, pk=pk)
-    stud.delete()
-    return Response(status=status.HTTP_202_ACCEPTED)
-
-
-# end
-
-
 # Opportunity model
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
@@ -1168,67 +1117,67 @@ class EmploymentStudieReportView(APIView):
 
 
 # Gallery data view
+class GalleryViewSet(viewsets.ModelViewSet):
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
 
-class GalleryView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    def post(self, request):
-        serializer = GallerySerializer(data=request.data)
-        # validating for already existing data
-        if Gallery.objects.filter(**request.data).exists():
-            raise serializers.ValidationError('This data already exists')
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            self.permission_classes = [AllowAny]
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
 
-    def get(self, request):
+    def list(self, request, *args, **kwargs):
         try:
-            # checking for the parameters from the URL
-            if request.query_params:
-                gall = Gallery.objects.filter(**request.query_params.dict())
-            else:
-                gall = Gallery.objects.all()
-
-            # if there is something in items else raise error
-            if gall:
-                serializer = GallerySerializer(gall, many=True)
-                return Response(serializer.data)
-            else:
-                return Response([])
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
         except Exception as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except Gallery.DoesNotExist:
+            return Response({'error': 'Gallery not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['POST'])
-def create_gallery(request):
-    serializer = GallerySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        except Gallery.DoesNotExist:
+            return Response({'error': 'Gallery not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_gallery(request, pk):
-    gall = Gallery.objects.get(pk=pk)
-    data = GallerySerializer(instance=gall, data=request.data)
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Gallery.DoesNotExist:
+            return Response({'error': 'Gallery not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    if data.is_valid():
-        data.save()
-        return Response(data.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_gallery(request, pk):
-    stud = get_object_or_404(Gallery, pk=pk)
-    stud.delete()
-    return Response(status=status.HTTP_202_ACCEPTED)
 # end
 
 

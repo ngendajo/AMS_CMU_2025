@@ -14,6 +14,8 @@ router.register(r'announcements', views.AnnouncementViewSet)
 router.register(r'inquiries', views.InquiryViewSet)
 router.register(r'faqs', views.FrequentlyAskedQuestionViewSet)
 router.register(r'groups', views.GroupViewSet)
+router.register(r'events', views.EventViewSet)
+router.register(r'galleries', views.GalleryViewSet)
 
 urlpatterns = [
     # user paths
@@ -73,13 +75,8 @@ urlpatterns = [
     path('employment/',views.EmploymentView.as_view()),
     path('employment/<int:pk>/delete/', views.delete_employment, name='delete-items'),
     path('updateemployment/<int:pk>/', views.update_Employment, name='update-employment'),
-    path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),
-
-    # event paths
-    path('event/', views.EventView.as_view()),
-    path('event/create/', views.create_Event, name='create-event'),
-    path('updateevent/<int:pk>/', views.update_Event, name='update-events'),
-    path('deleteevent/<int:pk>/', views.delete_eve, name='delete-events'),
+    
+    path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),#for staffs
 
     # story paths
     path('story/', views.StoryView.as_view()),
@@ -101,12 +98,6 @@ urlpatterns = [
     path('', views.getRoutes),
     path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
     
-    #gallery paths
-    path('gallery/', views.read_gallery,name='read-gallery'),
-    path('gallery/create/', views.create_gallery, name='create-gallery'),
-    path('updategallery/<int:pk>/', views.update_gallery, name='update-gallery'),
-    path('deletegallery/<int:pk>/', views.delete_gallery, name='delete-gallery'),
-
     # opportunity paths
     path('opportunity/create/', views.create_opportunity, name='create-opportunity'),
     path('opportunity/', views.read_opportunity, name='read-opportunity'),

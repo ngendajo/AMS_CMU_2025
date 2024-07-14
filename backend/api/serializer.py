@@ -389,11 +389,6 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('__all__')
 
-class UpdateEventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-        fields = ('title','description','date')
-
 
 #Story serializers
 
@@ -588,28 +583,6 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields=('__all__')
-
- 
-    def create(self, validated_data):
-        image_url = validated_data.get('image_url')
-        event_name = validated_data.get('event_name')
-        link = validated_data.get('link')
-        displayed = validated_data.get('displayed')
-
-        gallery = Gallery.objects.create(
-            image_url=image_url,
-            event_name=event_name,
-            link=link,
-            displayed=displayed
-        )
-
-        return gallery
-
-
-class UpdateGallerySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Gallery
-        fields = ['displayed']
 
 
 class OpportunitySerializer(serializers.ModelSerializer):
