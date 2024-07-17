@@ -115,6 +115,7 @@ class Employment(models.Model):
     career = models.CharField(max_length=2000, default="")
     description = models.CharField(max_length=2000 , default="")
     company = models.CharField(max_length=5000)
+    on_going = models.BooleanField(default=False)
     start_date = models.CharField(max_length=100, default="")
     end_date = models.CharField(max_length=100, default="")
 
