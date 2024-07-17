@@ -277,6 +277,7 @@ class AlumniListsSerializer(serializers.Serializer):
     family_id = serializers.IntegerField(required=True)
     grade_id=serializers.IntegerField(required=True)
     combination_id = serializers.IntegerField(required=True)
+    career = serializers.CharField(max_length=500, required=True)
 
 class AlumniListbyEPSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=True)
