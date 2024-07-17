@@ -122,12 +122,13 @@ class AluminiListView(APIView):
             query_param_value = query_params.get(query_param_key)
 
             if query_param_key == "grade_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
+                query = '''SELECT api_user.id,userprofile_employment.career, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
                            FROM api_user
                            LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
                            LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
                            LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
                            LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
+                           LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id
                            WHERE api_user.is_alumni AND userprofile_grade.id=%s;'''
             elif query_param_key == "family_id":
                 query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id
