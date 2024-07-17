@@ -1421,7 +1421,7 @@ class UserCountByCombinationAPIView(APIView):
         return Response(serializer.data)
     
 class EmploymentStatusByGradeAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
             
@@ -1490,7 +1490,7 @@ class EmploymentStatusByGradeAPIView(APIView):
         return Response(serializer.data)
     
 class StudieStatusByGradeAPIView(APIView):
-    #permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
         # count alumni by grade
