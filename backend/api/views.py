@@ -1525,11 +1525,11 @@ class StudieStatusByGradeAPIView(APIView):
                         ELSE 0 
                     END AS stufemale,
                     CASE 
-                        WHEN u.gender='Male' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NULL AND u.life_status='A' THEN 1 
+                        WHEN u.gender='Male' AND (s.level NOT IN ('C','A1','A0','M','PHD') OR s.level IS NULL) AND u.life_status='A' THEN 1 
                         ELSE 0 
                     END AS nstumale,
                     CASE 
-                        WHEN u.gender='Female' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NULL AND u.life_status='A' THEN 1 
+                        WHEN u.gender='Female' AND (s.level NOT IN ('C','A1','A0','M','PHD') OR s.level IS NULL) AND u.life_status='A' THEN 1 
                         ELSE 0 
                     END AS nstufemale
                 FROM userprofile_alumni u
