@@ -116,7 +116,7 @@ class Employment(models.Model):
     description = models.CharField(max_length=2000 , default="")
     company = models.CharField(max_length=5000)
     start_date = models.CharField(max_length=100, default="")
-    end_date = models.CharField(max_length=100, default="old")
+    end_date = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return str(self.title)

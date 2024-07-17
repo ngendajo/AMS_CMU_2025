@@ -91,6 +91,8 @@ urlpatterns = [
     path('studie/', views.StudieView.as_view()),
     path('updatestudie/<int:pk>/', views.update_studie, name='update-studie'),
     path('deletestudie/<int:pk>/delete/', views.delete_studie, name='delete-studie'),
+    path('bulk_create_studies/', views.bulk_create_studies, name='bulk_create_studies'),
+    path('bulk-update-studie/', views.BulkUpdateStudieView.as_view(), name='bulk-update-studie'),
 
     # Dashboard data
     path('alumnreport/', views.AlumnReportView.as_view()),

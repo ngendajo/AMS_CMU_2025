@@ -1056,3 +1056,129 @@ INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+ERROR:django.request:Internal Server Error: /api/bulk_update_studies/
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py", line 1002, in bulk_update_studies
+    serializer.save()
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\serializers.py", line 726, in save
+    self.instance = self.update(self.instance, validated_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\serializers.py", line 694, in update
+    raise NotImplementedError(
+NotImplementedError: Serializers with many=True do not support multiple update by default, only multiple create. For updates it is unclear how to deal with insertions and deletions. If you need to support multiple update, use a `ListSerializer` class and override `.update()` so you can specify the behavior exactly.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Bad Request: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+ERROR:django.request:Internal Server Error: /api/bulk_update_studies/
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py", line 1002, in bulk_update_studies
+    serializer.save()
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\serializers.py", line 726, in save
+    self.instance = self.update(self.instance, validated_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py", line 508, in update
+    data_mapping = {item['id']: item for item in validated_data}
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py", line 508, in <dictcomp>
+    data_mapping = {item['id']: item for item in validated_data}
+                    ~~~~^^^^^^
+KeyError: 'id'
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_create_studies/
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+WARNING:django.request:Unauthorized: /api/studie/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk_update_studies/
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+WARNING:django.request:Bad Request: /api/bulk_update_studies/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\serializer.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\urls.py changed, reloading.
+WARNING:django.request:Method Not Allowed: /api/bulk-update-studie/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\backend\settings.py changed, reloading.

@@ -968,7 +968,34 @@ def delete_studie(request, pk):
     stud.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 
+@api_view(['POST'])
+def bulk_create_studies(request):
+    if isinstance(request.data, list):
+        serializer = StudieSerializer(data=request.data, many=True)
+    else:
+        return Response({"error": "Expected a list of items."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class BulkUpdateStudieView(APIView):
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        if not isinstance(data, list):
+            return Response({"error": "Expected a list of items"}, status=status.HTTP_400_BAD_REQUEST)
+
+        instances = []
+        for item in data:
+            instance = Studie.objects.get(id=item['id'])
+            serializer = StudieSerializer(instance, data=item, partial=True)
+            if serializer.is_valid():
+                instances.append(serializer.save())
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"success": "Bulk update successful"}, status=status.HTTP_200_OK)
 # end
 
 

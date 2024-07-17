@@ -498,16 +498,10 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
         fields = ('id','alumn_id','email','phone1','first_name','reg_number','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
-
-
-
 class StudieSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Studie
-        fields = ('id','alumn','level','degree','university','country','city','scholarship','status','scholarship_details')
-
-
+        fields = '__all__'
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studie
