@@ -1435,7 +1435,7 @@ class EmploymentStatusByGradeAPIView(APIView):
                     CASE WHEN a.gender = 'Male' AND a.life_status= 'D'  THEN 1 ELSE 0 END AS diedmale,
                     CASE WHEN a.gender = 'Female' AND a.life_status= 'D' THEN 1 ELSE 0 END AS diedfemale,
                     CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empmale,
-                    CASE WHEN a.gender = 'Female' AND a.life_status= 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status='A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
                     CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempmale,
                     CASE WHEN a.gender = 'Female' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempfemale
                 FROM userprofile_alumni a
@@ -1517,19 +1517,19 @@ class StudieStatusByGradeAPIView(APIView):
                         ELSE 0 
                     END AS diedfemale,
                     CASE 
-                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status <> 'D' THEN 1 
+                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status='A' THEN 1 
                         ELSE 0 
                     END AS stumale,
                     CASE 
-                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status <> 'D' THEN 1 
+                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status='A' THEN 1 
                         ELSE 0 
                     END AS stufemale,
                     CASE 
-                        WHEN u.gender='Male' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL AND u.life_status <> 'D' THEN 1 
+                        WHEN u.gender='Male' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NULL AND u.life_status='A' THEN 1 
                         ELSE 0 
                     END AS nstumale,
                     CASE 
-                        WHEN u.gender='Female' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL AND u.life_status <> 'D' THEN 1 
+                        WHEN u.gender='Female' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NULL AND u.life_status='A' THEN 1 
                         ELSE 0 
                     END AS nstufemale
                 FROM userprofile_alumni u
