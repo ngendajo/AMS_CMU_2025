@@ -1421,7 +1421,7 @@ class UserCountByCombinationAPIView(APIView):
         return Response(serializer.data)
     
 class EmploymentStatusByGradeAPIView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
             
@@ -1432,12 +1432,12 @@ class EmploymentStatusByGradeAPIView(APIView):
                     a.id,
                     g.grade_name,
                     g.end_academic_year,
-                    CASE WHEN a.gender = 'Male' AND e.status = 'D'  THEN 1 ELSE 0 END AS diedmale,
-                    CASE WHEN a.gender = 'Female' AND e.status = 'D' THEN 1 ELSE 0 END AS diedfemale,
-                    CASE WHEN a.gender = 'Male' AND e.status = 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empmale,
-                    CASE WHEN a.gender = 'Female' AND e.status = 'A '  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
-                    CASE WHEN a.gender = 'Male' AND e.status = 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempmale,
-                    CASE WHEN a.gender = 'Female' AND e.status = 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempfemale
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'D'  THEN 1 ELSE 0 END AS diedmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'D' THEN 1 ELSE 0 END AS diedfemale,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempfemale
                 FROM userprofile_alumni a
                 INNER JOIN userprofile_family f ON a.family_id = f.id
                 INNER JOIN userprofile_grade g ON f.grade_id = g.id
@@ -1490,11 +1490,10 @@ class EmploymentStatusByGradeAPIView(APIView):
         return Response(serializer.data)
     
 class StudieStatusByGradeAPIView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
         
-            
-            #count alumni by grade
+        # count alumni by grade
         sql_query1 = """
             SELECT 
                 grade_name,
@@ -1504,37 +1503,35 @@ class StudieStatusByGradeAPIView(APIView):
                 SUM(stumale) AS stumale,
                 SUM(stufemale) AS stufemale,
                 SUM(nstumale) AS nstumale, 
-                SUM(nstufemale) AS nstufemale,
-                SUM(noinfomale) AS noinfomale, 
-                SUM(noinfofemale) AS noinfofemale
+                SUM(nstufemale) AS nstufemale
             FROM (
                 SELECT DISTINCT ON (u.id) 
                     g.grade_name,
                     g.end_academic_year,
                     CASE 
-                        WHEN u.gender='Male' AND s.level='D' THEN 1 
+                        WHEN u.gender='Male' AND u.life_status='D' THEN 1 
                         ELSE 0 
                     END AS diedmale,
                     CASE 
-                        WHEN u.gender='Female' AND s.level='D' THEN 1 
+                        WHEN u.gender='Female' AND u.life_status='D' THEN 1 
                         ELSE 0 
                     END AS diedfemale,
                     CASE 
-                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND s.level <> 'D' THEN 1 
+                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status <> 'D' THEN 1 
                         ELSE 0 
                     END AS stumale,
                     CASE 
-                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND s.level <> 'D' THEN 1 
+                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status <> 'D' THEN 1 
                         ELSE 0 
                     END AS stufemale,
                     CASE 
-                        WHEN u.gender='Male' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL THEN 1 
+                        WHEN u.gender='Male' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL AND u.life_status <> 'D' THEN 1 
                         ELSE 0 
                     END AS nstumale,
                     CASE 
-                        WHEN u.gender='Female' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL THEN 1 
+                        WHEN u.gender='Female' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL AND u.life_status <> 'D' THEN 1 
                         ELSE 0 
-                    END AS nstufemale,
+                    END AS nstufemale
                 FROM userprofile_alumni u
                 INNER JOIN userprofile_family f ON u.family_id = f.id
                 INNER JOIN userprofile_grade g ON f.grade_id = g.id
@@ -1560,22 +1557,23 @@ class StudieStatusByGradeAPIView(APIView):
             cursor1.execute(sql_query1)
             data1 = cursor1.fetchall()
             
-        data=[]   
+        data = []
         if data1 is not None:
             for i in data1:
                 data.append({
-                        'grade_name': i[0],
-                        'diedmale': i[2],
-                        'diedfemale': i[3],
-                        'stumale': i[4],
-                        'stufemale': i[5],
-                        'nstumale': i[6],
-                        'nstufemale': i[7]
+                    'grade_name': i[0],
+                    'end_academic_year': i[1],  # include end_academic_year in the response
+                    'diedmale': i[2],
+                    'diedfemale': i[3],
+                    'stumale': i[4],
+                    'stufemale': i[5],
+                    'nstumale': i[6],
+                    'nstufemale': i[7]
                 })
 
         serializer = StudieStatusByGradeSerializer(data, many=True)
         return Response(serializer.data)
-    
+
 
 class StudieEmployStatusByGradeAPIView(APIView):
     permission_classes = [IsAuthenticated, ]

@@ -871,3 +871,188 @@ WARNING:django.request:Not Found: /api/employment/74/
 WARNING:django.request:Unauthorized: /api/updateemployment/74/
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\urls.py changed, reloading.
 INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\urls.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+ERROR:django.request:Internal Server Error: /api/stubygrade/
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.SyntaxError: syntax error at or near "FROM"
+LINE 41:                 FROM userprofile_alumni u
+                         ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py", line 1560, in get
+    cursor1.execute(sql_query1)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: syntax error at or near "FROM"
+LINE 41:                 FROM userprofile_alumni u
+                         ^
+
+WARNING:django.request:Not Found: /favicon.ico
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+ERROR:django.request:Internal Server Error: /api/stubygrade/
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.SyntaxError: syntax error at or near "FROM"
+LINE 39:                 FROM userprofile_alumni u
+                         ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py", line 1558, in get
+    cursor1.execute(sql_query1)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: syntax error at or near "FROM"
+LINE 39:                 FROM userprofile_alumni u
+                         ^
+
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+WARNING:django.request:Unauthorized: /api/stubygrade/
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+ERROR:django.request:Internal Server Error: /api/stubygrade/
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column u.status does not exist
+LINE 16:                         WHEN u.gender='Male' AND u.status='D...
+                                                          ^
+HINT:  Perhaps you meant to reference the column "s.status".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py", line 1557, in get
+    cursor1.execute(sql_query1)
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column u.status does not exist
+LINE 16:                         WHEN u.gender='Male' AND u.status='D...
+                                                          ^
+HINT:  Perhaps you meant to reference the column "s.status".
+
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
+INFO:django.utils.autoreload:C:\Users\Joseph\Desktop\myclasscampus\Class of 2024\AMS\ASYV-AMS\site\backend\api\views.py changed, reloading.
