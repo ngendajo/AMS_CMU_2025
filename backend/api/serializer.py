@@ -167,8 +167,6 @@ class EmploymentStatusByGradeSerializer(serializers.Serializer):
     empfemale = serializers.IntegerField()
     unempmale = serializers.IntegerField()
     unempfemale = serializers.IntegerField()
-    noinfomale = serializers.IntegerField()
-    noinfofemale = serializers.IntegerField()
     
     
 #Studies status by grades
@@ -180,8 +178,6 @@ class StudieStatusByGradeSerializer(serializers.Serializer):
     stufemale = serializers.IntegerField()
     nstumale = serializers.IntegerField()
     nstufemale = serializers.IntegerField()
-    noinfomale = serializers.IntegerField()
-    noinfofemale = serializers.IntegerField()
     
 #Studies and employment status by grades
 class StudieEmployStatusByGradeSerializer(serializers.Serializer):

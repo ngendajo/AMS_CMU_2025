@@ -347,6 +347,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['email'] = user.email
+        token['phone1'] = user.phone1
         token['is_superuser'] = user.is_superuser
         token['is_crc'] = user.is_crc
         token['is_alumni'] = user.is_alumni
@@ -1425,7 +1426,47 @@ class EmploymentStatusByGradeAPIView(APIView):
         
             
             #count alumni by grade
-        sql_query1 = "SELECT grade_name,end_academic_year,SUM(diedmale) AS diedmale,SUM(diedfemale) AS diedfemale, SUM(empmale) AS empmale,SUM(empfemale) AS empfemale,SUM(unempmale) AS unempmale, SUM(unempfemale) AS unempfemale,SUM(noinfomale) AS noinfomale, SUM(noinfofemale) as noinfofemale FROM (SELECT DISTINCT ON (userprofile_alumni.id) (userprofile_alumni.id),userprofile_grade.grade_name,userprofile_grade.end_academic_year,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status='D' THEN 1 ELSE 0 END) as diedmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status='D' THEN 1 ELSE 0 END) as diedfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status IN ('F','S','P','I') THEN 1 ELSE 0 END) AS empmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status IN ('F','S','P','I') THEN 1 ELSE 0 END) AS empfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status='U' THEN 1 ELSE 0 END) AS unempmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status='U' THEN 1 ELSE 0 END) AS unempfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status NOT IN ('F','S','P','I','D','U') THEN 1 ELSE 0 END) AS noinfomale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status NOT IN ('F','S','P','I','D','U') THEN 1 ELSE 0 END) AS noinfofemale FROM userprofile_alumni INNER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id INNER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id ORDER BY userprofile_alumni.id, CASE WHEN userprofile_employment.status = 'D' THEN 1 WHEN userprofile_employment.status = 'S' THEN 2 WHEN userprofile_employment.status = 'F' THEN 3 WHEN userprofile_employment.status = 'P' THEN 4 WHEN userprofile_employment.status = 'I' THEN 5 WHEN userprofile_employment.status = 'U' THEN 6 ELSE 7 END) AS employment GROUP BY grade_name,end_academic_year ORDER BY end_academic_year;"
+        sql_query1 = """
+            WITH alumni_employment AS (
+                SELECT DISTINCT ON (a.id)
+                    a.id,
+                    g.grade_name,
+                    g.end_academic_year,
+                    CASE WHEN a.gender = 'Male' AND e.status = 'D'  THEN 1 ELSE 0 END AS diedmale,
+                    CASE WHEN a.gender = 'Female' AND e.status = 'D' THEN 1 ELSE 0 END AS diedfemale,
+                    CASE WHEN a.gender = 'Male' AND e.status = 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empmale,
+                    CASE WHEN a.gender = 'Female' AND e.status = 'A '  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
+                    CASE WHEN a.gender = 'Male' AND e.status = 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempmale,
+                    CASE WHEN a.gender = 'Female' AND e.status = 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempfemale
+                FROM userprofile_alumni a
+                INNER JOIN userprofile_family f ON a.family_id = f.id
+                INNER JOIN userprofile_grade g ON f.grade_id = g.id
+                LEFT JOIN userprofile_employment e ON a.id = e.alumn_id
+                ORDER BY a.id,
+                    CASE
+                        WHEN e.status = 'D' THEN 1
+                        WHEN e.status = 'S' THEN 2
+                        WHEN e.status = 'F' THEN 3
+                        WHEN e.status = 'P' THEN 4
+                        WHEN e.status = 'I' THEN 5
+                        WHEN e.status = 'U' THEN 6
+                        ELSE 7
+                    END
+            )
+            SELECT
+                grade_name,
+                end_academic_year,
+                SUM(diedmale) AS diedmale,
+                SUM(diedfemale) AS diedfemale,
+                SUM(empmale) AS empmale,
+                SUM(empfemale) AS empfemale,
+                SUM(unempmale) AS unempmale,
+                SUM(unempfemale) AS unempfemale
+            FROM alumni_employment
+            GROUP BY grade_name, end_academic_year
+            ORDER BY end_academic_year;
+
+        """
 
         # Execute the SQL query
         with connection.cursor() as cursor1:
@@ -1442,9 +1483,7 @@ class EmploymentStatusByGradeAPIView(APIView):
                         'empmale': i[4],
                         'empfemale': i[5],
                         'unempmale': i[6],
-                        'unempfemale': i[7],
-                        'noinfomale': i[8],
-                        'noinfofemale': i[9]
+                        'unempfemale': i[7]
                 })
 
         serializer = EmploymentStatusByGradeSerializer(data, many=True)
@@ -1456,7 +1495,65 @@ class StudieStatusByGradeAPIView(APIView):
         
             
             #count alumni by grade
-        sql_query1 = "SELECT grade_name,end_academic_year,SUM(diedmale) AS diedmale,SUM(diedfemale) AS diedfemale, SUM(stumale) AS stumale,SUM(stufemale) AS stufemale,SUM(nstumale) AS nstumale, SUM(nstufemale) AS nstufemale,SUM(noinfomale) AS noinfomale, SUM(noinfofemale) as noinfofemale FROM (SELECT DISTINCT ON (userprofile_alumni.id) (userprofile_alumni.id),userprofile_grade.grade_name,userprofile_grade.end_academic_year,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_studie.level='D' THEN 1 ELSE 0 END) as diedmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_studie.level='D' THEN 1 ELSE 0 END) as diedfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_studie.level IN ('C','A1','A0','M','PHD') THEN 1 ELSE 0 END) AS stumale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_studie.level IN ('C','A1','A0','M','PHD') THEN 1 ELSE 0 END) AS stufemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_studie.level='NMS' THEN 1 ELSE 0 END) AS nstumale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_studie.level='NMS' THEN 1 ELSE 0 END) AS nstufemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_studie.level NOT IN ('C','A1','A0','M','PHD','D','NMS') THEN 1 ELSE 0 END) AS noinfomale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_studie.level NOT IN ('C','A1','A0','M','PHD','D','NMS') THEN 1 ELSE 0 END) AS noinfofemale FROM userprofile_alumni INNER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id INNER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id ORDER BY userprofile_alumni.id, CASE WHEN userprofile_studie.level = 'D' THEN 1 WHEN userprofile_studie.level = 'PHD' THEN 2 WHEN userprofile_studie.level= 'M' THEN 3 WHEN userprofile_studie.level= 'A0' THEN 4 WHEN userprofile_studie.level= 'A1' THEN 5 WHEN userprofile_studie.level= 'C' THEN 6 WHEN userprofile_studie.level= 'NMS' THEN 7 ELSE 8 END) AS studie GROUP BY grade_name,end_academic_year ORDER BY end_academic_year;"
+        sql_query1 = """
+            SELECT 
+                grade_name,
+                end_academic_year,
+                SUM(diedmale) AS diedmale,
+                SUM(diedfemale) AS diedfemale, 
+                SUM(stumale) AS stumale,
+                SUM(stufemale) AS stufemale,
+                SUM(nstumale) AS nstumale, 
+                SUM(nstufemale) AS nstufemale,
+                SUM(noinfomale) AS noinfomale, 
+                SUM(noinfofemale) AS noinfofemale
+            FROM (
+                SELECT DISTINCT ON (u.id) 
+                    g.grade_name,
+                    g.end_academic_year,
+                    CASE 
+                        WHEN u.gender='Male' AND s.level='D' THEN 1 
+                        ELSE 0 
+                    END AS diedmale,
+                    CASE 
+                        WHEN u.gender='Female' AND s.level='D' THEN 1 
+                        ELSE 0 
+                    END AS diedfemale,
+                    CASE 
+                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND s.level <> 'D' THEN 1 
+                        ELSE 0 
+                    END AS stumale,
+                    CASE 
+                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND s.level <> 'D' THEN 1 
+                        ELSE 0 
+                    END AS stufemale,
+                    CASE 
+                        WHEN u.gender='Male' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL THEN 1 
+                        ELSE 0 
+                    END AS nstumale,
+                    CASE 
+                        WHEN u.gender='Female' AND s.level NOT IN ('C','A1','A0','M','PHD') AND s.level IS NOT NULL THEN 1 
+                        ELSE 0 
+                    END AS nstufemale,
+                FROM userprofile_alumni u
+                INNER JOIN userprofile_family f ON u.family_id = f.id
+                INNER JOIN userprofile_grade g ON f.grade_id = g.id
+                LEFT JOIN userprofile_studie s ON u.id = s.alumn_id
+                ORDER BY u.id, 
+                    CASE 
+                        WHEN s.level = 'D' THEN 1 
+                        WHEN s.level = 'PHD' THEN 2 
+                        WHEN s.level= 'M' THEN 3 
+                        WHEN s.level= 'A0' THEN 4 
+                        WHEN s.level= 'A1' THEN 5 
+                        WHEN s.level= 'C' THEN 6 
+                        WHEN s.level= 'NMS' THEN 7 
+                        ELSE 8 
+                    END
+            ) AS studie
+            GROUP BY grade_name, end_academic_year 
+            ORDER BY end_academic_year;
+        """
 
         # Execute the SQL query
         with connection.cursor() as cursor1:
@@ -1473,9 +1570,7 @@ class StudieStatusByGradeAPIView(APIView):
                         'stumale': i[4],
                         'stufemale': i[5],
                         'nstumale': i[6],
-                        'nstufemale': i[7],
-                        'noinfomale': i[8],
-                        'noinfofemale': i[9]
+                        'nstufemale': i[7]
                 })
 
         serializer = StudieStatusByGradeSerializer(data, many=True)
