@@ -75,6 +75,7 @@ urlpatterns = [
     path('employment/',views.EmploymentView.as_view()),
     path('employment/<int:pk>/delete/', views.delete_employment, name='delete-items'),
     path('updateemployment/<int:pk>/', views.update_Employment, name='update-employment'),
+     path('employments/bulk_create_update/', views.EmploymentBulkCreateUpdateView.as_view(), name='employment-bulk-create-update'),
     
     path('updateposition/<str:pk>', views.update_user_position, name='update-user-position'),#for staffs
 
@@ -98,7 +99,6 @@ urlpatterns = [
     path('alumnreport/', views.AlumnReportView.as_view()),
     path('studyreport/', views.StudyReportView.as_view()),
     path('', views.getRoutes),
-    path('deletestudie/<int:pk>/', views.delete_studie, name='delete-studie'),
     
     # opportunity paths
     path('opportunity/create/', views.create_opportunity, name='create-opportunity'),

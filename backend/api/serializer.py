@@ -195,9 +195,10 @@ class StudieEmployStatusByGradeSerializer(serializers.Serializer):
 #Employment serializers
 
 class EmploymentSerializer(serializers.ModelSerializer):
+    end_date = serializers.CharField(allow_blank=True, required=False)
     class Meta:
         model = Employment
-        fields=('__all__')
+        fields = '__all__'
 
 class EmploymentUpdateSerializer(serializers.ModelSerializer):
     class Meta:

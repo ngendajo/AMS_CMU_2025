@@ -910,7 +910,32 @@ def delete_employment(request, pk):
     employment = get_object_or_404(Employment, pk=pk)
     employment.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
+class EmploymentBulkCreateUpdateView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = EmploymentSerializer(data=request.data, many=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def put(self, request, *args, **kwargs):
+        try:
+            employment_list = request.data
+            for employment_data in employment_list:
+                employment_instance = Employment.objects.get(id=employment_data['id'])
+                serializer = EmploymentSerializer(employment_instance, data=employment_data)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Bulk update successful"}, status=status.HTTP_200_OK)
+        except Employment.DoesNotExist as e:
+            return Response({'detail': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Studie data view
 
@@ -962,7 +987,7 @@ def update_studie(request, pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def delete_studie(request, pk):
     stud = get_object_or_404(Studie, pk=pk)
     stud.delete()
