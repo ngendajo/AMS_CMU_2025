@@ -257,6 +257,31 @@ class Group(models.Model):
     qr_code = models.ImageField(upload_to='qr_codes/')
     pinned = models.BooleanField(default=False)
     
+#Mentoship
+class MentorshipCard(models.Model):
+    MENTORSHIP_OPTIONS = [
+        ('Mentors', 'Mentors'),
+        ('Volunteers', 'Volunteers'),
+        ('Workshops', 'Workshops'),
+    ]
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    location = models.CharField(max_length=255)
+    date = models.DateField()
+    op_type = models.CharField(max_length=10, choices=MENTORSHIP_OPTIONS)
+
+    def __str__(self):
+        return self.title
+
+class SampleApplicationsData(models.Model):
+    mentorship = models.ForeignKey(MentorshipCard, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Application {self.id} for {self.mentorship.title} by {self.user.email}"
+    
 #Library Management System
 
 #Students

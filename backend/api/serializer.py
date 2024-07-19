@@ -234,6 +234,24 @@ class DisplayEmploymentSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('id','alumn_id', 'email','phone1', 'first_name','reg_number','last_name','end','image_url','grade_name','family_name','combination_name', 'title','company','description','start_date','status', 'emp_id','career')
+        
+#mentorship program
+class MentorshipCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MentorshipCard
+        fields = '__all__'
+
+class SampleApplicationsDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SampleApplicationsData
+        fields = '__all__'
+        read_only_fields = ['user']
+
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        if request and hasattr(request, 'user'):
+            validated_data['user'] = request.user
+        return super().create(validated_data)
 
 # Alumni data serializers
 
