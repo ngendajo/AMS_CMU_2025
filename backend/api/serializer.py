@@ -285,7 +285,7 @@ class MentorshipCardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SampleApplicationsDataDetailSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserDonateSerializer()
 
     class Meta:
         model = SampleApplicationsData
