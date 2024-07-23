@@ -285,7 +285,7 @@ class MentorshipCardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SampleApplicationsDataSerializer(serializers.ModelSerializer):
-    user = UserDonateSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = SampleApplicationsData

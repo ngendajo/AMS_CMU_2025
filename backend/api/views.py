@@ -984,30 +984,21 @@ class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     queryset = SampleApplicationsData.objects.all()
     serializer_class = SampleApplicationsDataSerializer
 
-    def list(self, request, *args, **kwargs):
-        try:
-            queryset = self.get_queryset()
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except NotFound as e:
-            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
     def create(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            # Associate user ID from the request data
+            user_id = request.data.get('user')
+            if user_id:
+                try:
+                    user = User.objects.get(id=user_id)
+                except User.DoesNotExist:
+                    return Response({"error": "User not found"}, status=status.HTTP_400_BAD_REQUEST)
+                serializer.validated_data['user'] = user
             self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         except ValidationError as e:
             return Response({"error": e.detail}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -1019,20 +1010,18 @@ class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
             serializer.is_valid(raise_exception=True)
+            # Update user ID if provided in the request data
+            user_id = request.data.get('user')
+            if user_id:
+                try:
+                    user = User.objects.get(id=user_id)
+                except User.DoesNotExist:
+                    return Response({"error": "User not found"}, status=status.HTTP_400_BAD_REQUEST)
+                serializer.validated_data['user'] = user
             self.perform_update(serializer)
             return Response(serializer.data)
         except ValidationError as e:
             return Response({"error": e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        except NotFound as e:
-            return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def destroy(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            self.perform_destroy(instance)
-            return Response(status=status.HTTP_204_NO_CONTENT)
         except NotFound as e:
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
