@@ -959,79 +959,74 @@ class MentorshipCardViewSet(viewsets.ModelViewSet):
     queryset = MentorshipCard.objects.all()
     serializer_class = MentorshipCardSerializer
 
+    def handle_exception(self, exc):
+        return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 
     def update(self, request, *args, **kwargs):
         try:
             return super().update(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 
     def destroy(self, request, *args, **kwargs):
         try:
             return super().destroy(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
- 
+            return self.handle_exception(e)
+
 class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     queryset = SampleApplicationsData.objects.all()
     serializer_class = SampleApplicationsDataSerializer
-    # permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
 
     def perform_create(self, serializer):
-        request = self.request
-        if request and hasattr(request, 'user'):
-            serializer.save(user=request.user)
+        if self.request and hasattr(self.request, 'user'):
+            serializer.save(user=self.request.user)
         else:
             serializer.save()
+
+    def handle_exception(self, exc):
+        return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 
     def update(self, request, *args, **kwargs):
         try:
             return super().update(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 
     def destroy(self, request, *args, **kwargs):
         try:
             return super().destroy(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 
     def list(self, request, *args, **kwargs):
         try:
-            data = SampleApplicationsData.objects.all()
-            response_data = []
-            for item in data:
-                user = User.objects.get(id=item.user_id)
-                item_data = SampleApplicationsDataDetailSerializer(item).data
-                item_data['user'] = UserSerializer(user).data
-                response_data.append(item_data)
-            return Response(response_data)
+            queryset = self.get_queryset()
+            serializer = SampleApplicationsDataDetailSerializer(queryset, many=True)
+            return Response(serializer.data)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 
     def retrieve(self, request, *args, **kwargs):
         try:
-            pk = kwargs.get('pk')
-            item = SampleApplicationsData.objects.get(pk=pk)
-            user = User.objects.get(id=item.user_id)
-            item_data = SampleApplicationsDataDetailSerializer(item).data
-            item_data['user'] = UserSerializer(user).data
-            return Response(item_data)
-        except SampleApplicationsData.DoesNotExist:
-            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+            instance = self.get_object()
+            serializer = SampleApplicationsDataDetailSerializer(instance)
+            return Response(serializer.data)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return self.handle_exception(e)
 # Studie data view
 
 class StudieView(APIView):
