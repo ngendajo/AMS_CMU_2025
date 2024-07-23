@@ -294,13 +294,6 @@ class SampleApplicationsDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = SampleApplicationsData
         fields = '__all__'
-        read_only_fields = ['user']
-
-    def create(self, validated_data):
-        request = self.context.get('request', None)
-        if request and hasattr(request, 'user'):
-            validated_data['user'] = request.user
-        return super().create(validated_data)
 
 # Alumni data serializers
 

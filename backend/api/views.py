@@ -980,7 +980,14 @@ class MentorshipCardViewSet(viewsets.ModelViewSet):
 class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     queryset = SampleApplicationsData.objects.all()
     serializer_class = SampleApplicationsDataSerializer
-    #permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    # permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+
+    def perform_create(self, serializer):
+        request = self.request
+        if request and hasattr(request, 'user'):
+            serializer.save(user=request.user)
+        else:
+            serializer.save()
 
     def create(self, request, *args, **kwargs):
         try:
@@ -1002,40 +1009,27 @@ class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM userprofile_sampleapplicationsdata")
-                rows = cursor.fetchall()
-                columns = [col[0] for col in cursor.description]
-                data = [dict(zip(columns, row)) for row in rows]
-                
-                # Manually adding user info to each row
-                for item in data:
-                    user = User.objects.get(id=item['user_id'])
-                    item['user'] = UserSerializer(user).data
-
-            serializer = SampleApplicationsDataDetailSerializer(data, many=True)
-            return Response(serializer.data)
+            data = SampleApplicationsData.objects.all()
+            response_data = []
+            for item in data:
+                user = User.objects.get(id=item.user_id)
+                item_data = SampleApplicationsDataDetailSerializer(item).data
+                item_data['user'] = UserSerializer(user).data
+                response_data.append(item_data)
+            return Response(response_data)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, *args, **kwargs):
         try:
             pk = kwargs.get('pk')
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM userprofile_sampleapplicationsdata WHERE id = %s", [pk])
-                row = cursor.fetchone()
-                if row:
-                    columns = [col[0] for col in cursor.description]
-                    data = dict(zip(columns, row))
-                    
-                    # Adding user info to the row
-                    user = User.objects.get(id=data['user_id'])
-                    data['user'] = UserSerializer(user).data
-
-                    serializer = SampleApplicationsDataDetailSerializer(data)
-                    return Response(serializer.data)
-                else:
-                    return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+            item = SampleApplicationsData.objects.get(pk=pk)
+            user = User.objects.get(id=item.user_id)
+            item_data = SampleApplicationsDataDetailSerializer(item).data
+            item_data['user'] = UserSerializer(user).data
+            return Response(item_data)
+        except SampleApplicationsData.DoesNotExist:
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 # Studie data view
