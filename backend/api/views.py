@@ -936,7 +936,24 @@ class EmploymentBulkCreateUpdateView(APIView):
             return Response({'detail': str(e)}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+#Donation track
+class SampleMoMoCodeViewSet(viewsets.ModelViewSet):
+    queryset = SampleMoMoCode.objects.all()
+    serializer_class = SampleMoMoCodeSerializer
+
+class SampleDonationViewSet(viewsets.ModelViewSet):
+    queryset = SampleDonation.objects.all()
+    serializer_class = SampleDonationSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except SampleDonation.DoesNotExist:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
 #Mentorship program
 class MentorshipCardViewSet(viewsets.ModelViewSet):
     queryset = MentorshipCard.objects.all()
@@ -959,7 +976,7 @@ class MentorshipCardViewSet(viewsets.ModelViewSet):
             return super().destroy(request, *args, **kwargs)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+ 
 class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     queryset = SampleApplicationsData.objects.all()
     serializer_class = SampleApplicationsDataSerializer
@@ -980,6 +997,45 @@ class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         try:
             return super().destroy(request, *args, **kwargs)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM userprofile_sampleapplicationsdata")
+                rows = cursor.fetchall()
+                columns = [col[0] for col in cursor.description]
+                data = [dict(zip(columns, row)) for row in rows]
+                
+                # Manually adding user info to each row
+                for item in data:
+                    user = User.objects.get(id=item['user_id'])
+                    item['user'] = UserSerializer(user).data
+
+            serializer = SampleApplicationsDataDetailSerializer(data, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM userprofile_sampleapplicationsdata WHERE id = %s", [pk])
+                row = cursor.fetchone()
+                if row:
+                    columns = [col[0] for col in cursor.description]
+                    data = dict(zip(columns, row))
+                    
+                    # Adding user info to the row
+                    user = User.objects.get(id=data['user_id'])
+                    data['user'] = UserSerializer(user).data
+
+                    serializer = SampleApplicationsDataDetailSerializer(data)
+                    return Response(serializer.data)
+                else:
+                    return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 # Studie data view

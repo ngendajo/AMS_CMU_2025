@@ -256,7 +256,21 @@ class Group(models.Model):
     whatsapp_link = models.URLField()
     qr_code = models.ImageField(upload_to='qr_codes/')
     pinned = models.BooleanField(default=False)
-    
+#Donation Track
+class SampleMoMoCode(models.Model):
+    code = models.CharField(max_length=6)
+
+    def __str__(self):
+        return self.code
+
+class SampleDonation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    sampleMoMoCode = models.ForeignKey(SampleMoMoCode, on_delete=models.CASCADE)
+    confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user} - {self.amount}'
 #Mentoship
 class MentorshipCard(models.Model):
     MENTORSHIP_OPTIONS = [

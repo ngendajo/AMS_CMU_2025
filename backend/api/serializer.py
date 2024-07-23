@@ -235,12 +235,61 @@ class DisplayEmploymentSerializer(serializers.Serializer):
     class Meta:
         fields = ('id','alumn_id', 'email','phone1', 'first_name','reg_number','last_name','end','image_url','grade_name','family_name','combination_name', 'title','company','description','start_date','status', 'emp_id','career')
         
+#Donation track
+class SampleMoMoCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SampleMoMoCode
+        fields = ['id', 'code']
+class UserDonateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+class FamilyDonateSerializer(serializers.ModelSerializer):
+    grade = serializers.CharField(source='grade.grade_name')
+
+    class Meta:
+        model = Family
+        fields = ['family_name', 'grade']
+
+class CombinationDonateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Combination
+        fields = ['combination_name']
+
+class AlumniDonateSerializer(serializers.ModelSerializer):
+    user = UserDonateSerializer()
+    family = FamilyDonateSerializer()
+    combination = CombinationDonateSerializer()
+
+    class Meta:
+        model = Alumni
+        fields = ['user', 'family', 'combination']
+
+class SampleDonationSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.alumn.user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.alumn.user.last_name', read_only=True)
+    email = serializers.EmailField(source='user.alumn.user.email', read_only=True)
+    grade = serializers.CharField(source='user.alumn.family.grade.grade_name', read_only=True)
+    family = serializers.CharField(source='user.alumn.family.family_name', read_only=True)
+    combination = serializers.CharField(source='user.alumn.combination.combination_name', read_only=True)
+
+    class Meta:
+        model = SampleDonation
+        fields = ['id', 'user', 'amount', 'sampleMoMoCode', 'confirmed', 'first_name', 'last_name', 'email', 'grade', 'family', 'combination']
+
 #mentorship program
 class MentorshipCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = MentorshipCard
         fields = '__all__'
 
+class SampleApplicationsDataDetailSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = SampleApplicationsData
+        fields = '__all__'
 class SampleApplicationsDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = SampleApplicationsData

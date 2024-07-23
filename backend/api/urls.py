@@ -18,6 +18,8 @@ router.register(r'events', views.EventViewSet)
 router.register(r'galleries', views.GalleryViewSet)
 router.register(r'mentorship_cards', views.MentorshipCardViewSet)
 router.register(r'sample_applications', views.SampleApplicationsDataViewSet)
+router.register(r'sampleMoMoCodes', views.SampleMoMoCodeViewSet)
+router.register(r'sampleDonations', views.SampleDonationViewSet)
 
 urlpatterns = [
     # user paths
