@@ -983,7 +983,7 @@ class MentorshipCardViewSet(viewsets.ModelViewSet):
 class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     queryset = SampleApplicationsData.objects.all()
     serializer_class = SampleApplicationsDataSerializer
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    #permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
 
     def perform_create(self, serializer):
         if self.request and hasattr(self.request, 'user'):
