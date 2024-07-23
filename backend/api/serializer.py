@@ -284,16 +284,14 @@ class MentorshipCardSerializer(serializers.ModelSerializer):
         model = MentorshipCard
         fields = '__all__'
 
-class SampleApplicationsDataDetailSerializer(serializers.ModelSerializer):
+class SampleApplicationsDataSerializer(serializers.ModelSerializer):
     user = UserDonateSerializer()
+    family = FamilyDonateSerializer(source='user.family', read_only=True)
+    combination = CombinationDonateSerializer(source='user.combination', read_only=True)
 
     class Meta:
         model = SampleApplicationsData
-        fields = '__all__'
-class SampleApplicationsDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SampleApplicationsData
-        fields = '__all__'
+        fields = ['id', 'mentorship', 'user', 'is_approved', 'family', 'combination']
 
 # Alumni data serializers
 
