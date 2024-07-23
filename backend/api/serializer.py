@@ -243,7 +243,7 @@ class SampleMoMoCodeSerializer(serializers.ModelSerializer):
 class UserDonateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['id','first_name', 'last_name', 'email']
 
 class FamilyDonateSerializer(serializers.ModelSerializer):
     grade = serializers.CharField(source='grade.grade_name')
@@ -285,12 +285,11 @@ class MentorshipCardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SampleApplicationsDataSerializer(serializers.ModelSerializer):
-    alumni = AlumniDonateSerializer(source='user.alumni')
-    mentorship = MentorshipCardSerializer()
+    user = UserDonateSerializer(read_only=True)
 
     class Meta:
         model = SampleApplicationsData
-        fields = ['mentorship', 'alumni', 'is_approved']
+        fields = ['id', 'mentorship', 'user', 'is_approved']
 
 # Alumni data serializers
 
