@@ -285,11 +285,16 @@ class MentorshipCardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SampleApplicationsDataSerializer(serializers.ModelSerializer):
-    user = user = UserDonateSerializer(read_only=True)
+    user = UserDonateSerializer(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        source='user',
+        queryset=User.objects.all(),
+        write_only=True
+    )  # Include user ID for input
 
     class Meta:
         model = SampleApplicationsData
-        fields = ['id', 'mentorship', 'user', 'is_approved']
+        fields = ['id', 'mentorship', 'user', 'user_id', 'is_approved']
 
 # Alumni data serializers
 
