@@ -980,7 +980,7 @@ class MentorshipCardViewSet(viewsets.ModelViewSet):
 class SampleApplicationsDataViewSet(viewsets.ModelViewSet):
     queryset = SampleApplicationsData.objects.all()
     serializer_class = SampleApplicationsDataSerializer
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
+    #permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
 
     def create(self, request, *args, **kwargs):
         try:
