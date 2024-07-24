@@ -4576,7 +4576,7 @@ class UpdateAlumnUploadExcelView(APIView):
         serializer = AlumniUpdatingExcelUploadSerializer(data=request.data)
         if serializer.is_valid():
             excel_file = serializer.validated_data['file']
-            sheet_name = serializer.validated_data['alumni']
+            sheet_name = 'alumni'  # Hard-code the sheet name here
             
             # Read the specified sheet from the Excel file
             try:
@@ -4584,26 +4584,35 @@ class UpdateAlumnUploadExcelView(APIView):
             except ValueError:
                 return Response({'error': f'Sheet name "{sheet_name}" does not exist in the uploaded file.'},
                                 status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Print the first few rows and column names for debugging
+            print("Columns in the DataFrame:", df.columns)
+            print(df.head())
             
             for index, row in df.iterrows():
                 try:
-                    user = User.objects.get(email=row['email'])
+                    user = User.objects.get(email=row.get('email'))
                     alumni = Alumni.objects.get(user=user)
                     
-                    alumni.reg_number = row['reg_number']
-                    alumni.did_you_born_in_rwanda = row['did_you_born_in_rwanda']
-                    alumni.place_of_birth_district_or_country = row['place_of_birth_district_or_country']
-                    alumni.place_of_birth_sector_or_city = row['place_of_birth_sector_or_city']
-                    alumni.currresidence_in_rwanda = row['currresidence_in_rwanda']
-                    alumni.currresidence_district_or_country = row['currresidence_district_or_country']
-                    alumni.currresidence_sector_or_city = row['currresidence_sector_or_city']
+                    alumni.reg_number = row.get('reg_number', alumni.reg_number)
+                    alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
+                    alumni.place_of_birth_district_or_country = row.get('place_of_birth_district_or_country', alumni.place_of_birth_district_or_country)
+                    alumni.place_of_birth_sector_or_city = row.get('place_of_birth_sector_or_city', alumni.place_of_birth_sector_or_city)
+                    alumni.currresidence_in_rwanda = row.get('currresidence_in_rwanda', alumni.currresidence_in_rwanda)
+                    alumni.currresidence_district_or_country = row.get('currresidence_district_or_country', alumni.currresidence_district_or_country)
+                    alumni.currresidence_sector_or_city = row.get('currresidence_sector_or_city', alumni.currresidence_sector_or_city)
                     
                     alumni.save()
                 
                 except User.DoesNotExist:
-                    print(f"User with email {row['email']} does not exist.")
+                    print(f"User with email {row.get('email')} does not exist.")
                 except Alumni.DoesNotExist:
-                    print(f"Alumni record for user with email {row['email']} does not exist.")
+                    print(f"Alumni record for user with email {row.get('email')} does not exist.")
             
             return Response({'success': 'Database has been updated.'}, status=status.HTTP_200_OK)
+        
+        # Print serializer errors for debugging
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

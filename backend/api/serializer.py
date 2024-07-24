@@ -1044,4 +1044,3 @@ class GroupSerializer(serializers.ModelSerializer):
 # Data updating process
 class AlumniUpdatingExcelUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
-    sheet_name = serializers.CharField(max_length=100)

@@ -52,6 +52,36 @@ export default function AddBulkASYVInfo() {
           }); */
      
           }catch(err){
+              console.log('Error uploading file:',err);
+          }
+        }
+  }
+  
+  const handleFileUploadtoupdate = async (files) => {
+    if (files.length > 0) {
+    try{
+      let formData = new FormData();
+      
+      formData.append('file', files[0]);
+
+      const response = await axios.post(baseUrl+"/update_alumni_upload_excel/",
+          formData,{
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'multipart/form-data'
+              },
+              withCredentials:true 
+          }
+          )
+          console.log(response.data)
+          if(response.data["error"]){
+            setMsg(response.data["error"])
+          }
+          /* .catch((error) => {
+            console.error('Error uploading file:', error);
+          }); */
+     
+          }catch(err){
               console.log(err);
           }
         }
@@ -69,6 +99,21 @@ export default function AddBulkASYVInfo() {
               </div>
               <div>
               <Dropzone onDrop={handleFileUpload} multiple={false}> 
+                            {({ getRootProps, getInputProps }) => (
+                            <section>
+                                <div {...getRootProps({ className: "dropzone" })}>
+                                <input {...getInputProps()} />
+                                
+                                    <span><strong className="browse">Browse</strong> <strong>a excel .xlsx file</strong><br/> or drag and drop</span>
+                                
+                                </div>
+                            </section>
+                            )}
+                        </Dropzone>
+              </div>
+              <div>
+               <center><h2>Update Alumni Info</h2></center> 
+              <Dropzone onDrop={handleFileUploadtoupdate} multiple={false}> 
                             {({ getRootProps, getInputProps }) => (
                             <section>
                                 <div {...getRootProps({ className: "dropzone" })}>
