@@ -1038,3 +1038,10 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+        
+        
+        
+# Data updating process
+class AlumniUpdatingExcelUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
+    sheet_name = serializers.CharField(max_length=100)

@@ -4568,3 +4568,42 @@ class GroupViewSet(viewsets.ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+# Data updating process
+class UpdateAlumnUploadExcelView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = AlumniUpdatingExcelUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            excel_file = serializer.validated_data['file']
+            sheet_name = serializer.validated_data['alumni']
+            
+            # Read the specified sheet from the Excel file
+            try:
+                df = pd.read_excel(excel_file, sheet_name=sheet_name)
+            except ValueError:
+                return Response({'error': f'Sheet name "{sheet_name}" does not exist in the uploaded file.'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            
+            for index, row in df.iterrows():
+                try:
+                    user = User.objects.get(email=row['email'])
+                    alumni = Alumni.objects.get(user=user)
+                    
+                    alumni.reg_number = row['reg_number']
+                    alumni.did_you_born_in_rwanda = row['did_you_born_in_rwanda']
+                    alumni.place_of_birth_district_or_country = row['place_of_birth_district_or_country']
+                    alumni.place_of_birth_sector_or_city = row['place_of_birth_sector_or_city']
+                    alumni.currresidence_in_rwanda = row['currresidence_in_rwanda']
+                    alumni.currresidence_district_or_country = row['currresidence_district_or_country']
+                    alumni.currresidence_sector_or_city = row['currresidence_sector_or_city']
+                    
+                    alumni.save()
+                
+                except User.DoesNotExist:
+                    print(f"User with email {row['email']} does not exist.")
+                except Alumni.DoesNotExist:
+                    print(f"Alumni record for user with email {row['email']} does not exist.")
+            
+            return Response({'success': 'Database has been updated.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

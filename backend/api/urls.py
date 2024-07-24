@@ -46,6 +46,7 @@ urlpatterns = [
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
     path('alumni/info/<int:pk>/update/', views.update_alumni_info, name='alumn-info-update'),
+    path('update_alumni_upload_excel/', views.UpdateAlumnUploadExcelView.as_view(), name='update_alumni_upload_excel'),
     #Alumni update her/his profile
     path('alumni/update-profile/<int:alumni_id>/', views.AlumniUpdateProfileView.as_view(), name='alumni-update-profile'),# to be use soon
     
