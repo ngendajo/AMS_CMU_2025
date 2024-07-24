@@ -561,6 +561,7 @@ class StudieWithAlumnSerializer(serializers.ModelSerializer):
         model = Studie
         fields = ('id','alumn_id','email','phone1','first_name','reg_number','last_name','image_url','level','degree','university','country','scholarship','status','study_id','scholarship_details')
 class StudieSerializer(serializers.ModelSerializer):
+    scholarship_details = serializers.CharField(allow_blank=True, required=False)
     class Meta:
         model = Studie
         fields = '__all__'
