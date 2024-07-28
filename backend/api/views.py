@@ -4576,8 +4576,9 @@ class UpdateAlumnUploadExcelView(APIView):
         serializer = AlumniUpdatingExcelUploadSerializer(data=request.data)
         if serializer.is_valid():
             excel_file = serializer.validated_data['file']
-            sheet_name = 'alumni'  # Hard-code the sheet name here
+            #sheet_name = 'alumni'  # Hard-code the sheet name here
             
+            sheet_name = 'personal'  # Hard-code the sheet name here
             # Read the specified sheet from the Excel file
             try:
                 df = pd.read_excel(excel_file, sheet_name=sheet_name)
@@ -4596,13 +4597,20 @@ class UpdateAlumnUploadExcelView(APIView):
                     user = User.objects.get(email=row.get('email'))
                     alumni = Alumni.objects.get(user=user)
                     
-                    alumni.reg_number = row.get('reg_number', alumni.reg_number)
+                    """ alumni.reg_number = row.get('reg_number', alumni.reg_number)
                     alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
                     alumni.place_of_birth_district_or_country = row.get('place_of_birth_district_or_country', alumni.place_of_birth_district_or_country)
                     alumni.place_of_birth_sector_or_city = row.get('place_of_birth_sector_or_city', alumni.place_of_birth_sector_or_city)
                     alumni.currresidence_in_rwanda = row.get('currresidence_in_rwanda', alumni.currresidence_in_rwanda)
                     alumni.currresidence_district_or_country = row.get('currresidence_district_or_country', alumni.currresidence_district_or_country)
                     alumni.currresidence_sector_or_city = row.get('currresidence_sector_or_city', alumni.currresidence_sector_or_city)
+                    """ 
+                    if(row.get('other_email')!=''):
+                        alumni.other_emails =row.get('other_email', alumni.other_emails)
+                    if(row.get('other_phones')!=''):
+                        alumni.other_phones = row.get('other_phones', alumni.other_phones)
+                    alumni.marital_status = row.get('marital_status', alumni.marital_status)
+                    alumni.kids = row.get('kids', alumni.kids)
                     
                     alumni.save()
                 
