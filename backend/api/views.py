@@ -121,42 +121,31 @@ class AluminiListView(APIView):
             query_param_key = list(query_params.keys())[0] if query_params else None
             query_param_value = query_params.get(query_param_key)
 
+            base_query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, 
+                      userprofile_alumni.reg_number, userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, 
+                                userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, 
+                                userprofile_combination.combination_name, userprofile_combination.id AS combination_id, 
+                                STRING_AGG(userprofile_employment.career, ', ' ORDER BY userprofile_employment.on_going DESC) AS career
+                            FROM api_user
+                            LEFT OUTER JOIN userprofile_alumni ON api_user.id = userprofile_alumni.user_id
+                            LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id = userprofile_family.id
+                            LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id = userprofile_grade.id
+                            LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id = userprofile_combination.id
+                            LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id = userprofile_employment.alumn_id
+                            WHERE api_user.is_alumni'''
+
+            group_by_clause = ''' GROUP BY api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1, 
+                                        userprofile_alumni.reg_number, userprofile_alumni.id, userprofile_grade.grade_name, userprofile_grade.id, 
+                                        userprofile_family.family_name, userprofile_family.id, userprofile_combination.combination_name, userprofile_combination.id'''
+
             if query_param_key == "grade_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id, STRING_AGG(userprofile_employment.career, ', ' ORDER BY userprofile_employment.on_going DESC) AS career
-                           FROM api_user
-                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
-                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
-                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
-                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
-                           LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id
-                           WHERE api_user.is_alumni AND userprofile_grade.id=%s group by api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id;'''
+                query = f"{base_query} AND userprofile_grade.id = %s{group_by_clause}"
             elif query_param_key == "family_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id,STRING_AGG(userprofile_employment.career, ', ' ORDER BY userprofile_employment.on_going DESC) AS career
-                           FROM api_user
-                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
-                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
-                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
-                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
-                           LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id
-                           WHERE api_user.is_alumni AND userprofile_family.id=%s group by api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id;'''
+                query = f"{base_query} AND userprofile_family.id = %s{group_by_clause}"
             elif query_param_key == "combination_id":
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id,STRING_AGG(userprofile_employment.career, ', ' ORDER BY userprofile_employment.on_going DESC) AS career
-                           FROM api_user
-                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
-                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
-                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
-                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
-                           LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id
-                           WHERE api_user.is_alumni AND userprofile_combination.id=%s group by api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id;'''
+                query = f"{base_query} AND userprofile_combination.id = %s{group_by_clause}"
             else:
-                query = '''SELECT api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id,STRING_AGG(userprofile_employment.career, ', ' ORDER BY userprofile_employment.on_going DESC) AS career
-                           FROM api_user
-                           LEFT OUTER JOIN userprofile_alumni ON api_user.id=userprofile_alumni.user_id
-                           LEFT OUTER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id
-                           LEFT OUTER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id
-                           LEFT OUTER JOIN userprofile_combination ON userprofile_alumni.combination_id=userprofile_combination.id
-                           LEFT OUTER JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id
-                           WHERE api_user.is_alumni group by api_user.id, api_user.email, api_user.image_url, api_user.first_name, api_user.last_name, api_user.phone1,userprofile_alumni.reg_number,userprofile_alumni.id as alumn_id, userprofile_grade.grade_name, userprofile_grade.id AS grade_id, userprofile_family.family_name, userprofile_family.id AS family_id, userprofile_combination.combination_name, userprofile_combination.id AS combination_id;'''
+                query = f"{base_query}{group_by_clause}"
                 query_param_value = None
 
             with connection.cursor() as cursor:
