@@ -4663,7 +4663,7 @@ class UpdateAlumnUploadExcelView(APIView):
                             Employment.objects.create(**employment_data5)
                             #print(employment_data5)
                             
-                    else:
+                    elif row.get('on_going'):
                         return Response({f"User with email {row.get('email')} have problem with title: {row.get('title')} and status1f: {row.get('status1f')}."})
                     
                     """ alumni.reg_number = row.get('reg_number', alumni.reg_number)
