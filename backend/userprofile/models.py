@@ -81,7 +81,7 @@ class Alumni(models.Model):
     currresidence_in_rwanda = models.BooleanField(default=True)
     currresidence_district_or_country = models.CharField(max_length=500,default="")
     currresidence_sector_or_city = models.CharField(max_length=500,default="")
-    kids = models.BooleanField(default=False)
+    kids = models.CharField(max_length=500,default="")
     family = models.ForeignKey(Family,on_delete=models.PROTECT, related_name="alumnis")
     combination = models.ForeignKey(Combination,related_name="alumnis",on_delete=models.PROTECT)
     eps = models.ManyToManyField(Ep, related_name="alumnis",blank=True)
