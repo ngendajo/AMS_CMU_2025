@@ -113,7 +113,7 @@ class AluminiRegistrationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
 class AluminiListView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    #permission_classes = [IsAuthenticated, ]
     
     def get(self, request):
         try:
