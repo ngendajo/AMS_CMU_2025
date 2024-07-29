@@ -4686,11 +4686,13 @@ class UpdateAlumnUploadExcelView(APIView):
                 except Alumni.DoesNotExist:
                     print(f"Alumni record for user with email {row.get('email')} does not exist.")
                     continue
+                except Exception as e:
+                    Response({f"An error occurred while processing row {index}: {e}"})
                     
                 
             
             return Response({'success': 'Database has been updated.'}, status=status.HTTP_200_OK)
         
         # Print serializer errors for debugging
-        print(serializer.errors)
+        #print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
