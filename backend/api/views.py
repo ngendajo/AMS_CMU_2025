@@ -4664,7 +4664,7 @@ class UpdateAlumnUploadExcelView(APIView):
                             #print(employment_data5)
                             
                     elif row.get('on_going'):
-                        return Response({f"User with email {row.get('email')} have problem with title: {row.get('title')} and status1f: {row.get('status1f')}."})
+                        return Response({f"User with reg_number: {row.get('reg_number')} have problem with title: {row.get('title')} and status1f: {row.get('status1f')}."})
                     
                     """ alumni.reg_number = row.get('reg_number', alumni.reg_number)
                     alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
