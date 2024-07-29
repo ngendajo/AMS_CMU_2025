@@ -68,7 +68,7 @@ class Alumni(models.Model):
     father = models.CharField(max_length=500,default="")
     mother = models.CharField(max_length=500,default="")
     place_of_birth = models.CharField(max_length=500,default="")
-    did_you_born_in_rwanda = models.BooleanField(default=True)
+    did_you_born_in_rwanda = models.CharField(max_length=500,default="")
     place_of_birth_district_or_country = models.CharField(max_length=500,default="")
     place_of_birth_sector_or_city = models.CharField(max_length=500,default="")
     life = (
@@ -78,7 +78,7 @@ class Alumni(models.Model):
     life_status = models.CharField(max_length=2,choices=life,default="A")
     marital_status = models.CharField(max_length=500) 
     currresidence = models.CharField(max_length=500,default="")
-    currresidence_in_rwanda = models.BooleanField(default=True)
+    currresidence_in_rwanda = models.CharField(max_length=500,default="")
     currresidence_district_or_country = models.CharField(max_length=500,default="")
     currresidence_sector_or_city = models.CharField(max_length=500,default="")
     kids = models.CharField(max_length=500,default="")
