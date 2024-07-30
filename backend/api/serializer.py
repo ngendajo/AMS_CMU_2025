@@ -190,7 +190,7 @@ class StudieEmployStatusByGradeSerializer(serializers.Serializer):
     unempstumale = serializers.IntegerField()
     unempstufemale = serializers.IntegerField()
     unempnstumale = serializers.IntegerField()
-    unempstufemale = serializers.IntegerField()
+    unempnstufemale = serializers.IntegerField()
     diedumale = serializers.IntegerField()
     diedfemale = serializers.IntegerField()
 
