@@ -1844,7 +1844,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                         'unempnstumale': i[7],
                         'unempstufemale': i[8],
                         'unempnstufemale': i[9],
-                        'diedumale': i[10],
+                        'diedmale': i[10],
                         'diedfemale': i[11]
                 })
 
