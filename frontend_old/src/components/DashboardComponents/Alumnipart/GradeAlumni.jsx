@@ -21,6 +21,7 @@ import baseUrlforImg from "../../../api/baseUrlforImg";
 const columns = [
   { header: 'No', key: 'no' },
   { header: 'Email', key: 'email' },
+  { header: 'reg_number', key: 'reg_number' },
   { header: 'First Name', key: 'first_name' },
   { header: 'Last Name', key: 'last_name' },
   { header: 'Phone number', key: 'phone1' },
@@ -98,6 +99,7 @@ export default function GradeAlumni() {
             /*当请求成功后，通过遍历 response.data 中的每个元素，构建了一个 alumnilist 数组，其中每个元素包含了校友的相关信息*/
             var alumnilist=[]
             var i=1
+            //console.log(response.data)
             var grad=""
             response.data.forEach(element => {
               if(i===1){
@@ -105,8 +107,9 @@ export default function GradeAlumni() {
               }
               alumnilist.push({
                 id:i, 
-                image:<img src={baseUrlforImg+element.image_url} alt="logo" className="user-image-icon" />,
+                image:<img src={baseUrlforImg+"/media/"+element.image_url} alt="logo" className="user-image-icon" />,
                 email:element.email,
+                reg_number:element.reg_number,
                 first_name:element.first_name,
                 last_name:element.last_name,
                 phone:element.phone1,
@@ -121,7 +124,7 @@ export default function GradeAlumni() {
                 </span>
               })
               i+=1
-            });
+            }); 
             setG(grad)
             setData(alumnilist); /* 使用 setData 更新了 data 的值为 alumnilist */
         }catch(err) {
@@ -156,6 +159,7 @@ export default function GradeAlumni() {
                   alumnilist2.push({
                     no:i,
                     email:element.email,
+                    reg_number:element.alumn==null?"reg":element.alumn.reg_number,
                      first_name:element.first_name,
                      last_name:element.last_name,
                      phone1:element.phone1, 
@@ -180,6 +184,7 @@ export default function GradeAlumni() {
                 }
               }
             });
+            console.log(alumnilist2)
             setDatatodownload(alumnilist2);
         }catch(err) {
             console.log(err);

@@ -4684,7 +4684,7 @@ class UpdateAlumnUploadExcelView(APIView):
                     return Response({f"Alumni record for user with email {row.get('email')} does not exist."})
                     continue
                 except Exception as e:
-                    return Response({f"An error occurred while processing row {index}: {e}"})
+                    return Response({f"An error occurred while processing row {index} email {row.get('email')}: {e}"})
                     
                 
             
