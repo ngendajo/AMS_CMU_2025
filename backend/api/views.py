@@ -4667,8 +4667,9 @@ class UpdateAlumnUploadExcelView(APIView):
             excel_file = serializer.validated_data['file']
             #sheet_name = 'alumni'  # Hard-code the sheet name here
             
-            sheet_name = 'employement'  # Hard-code the sheet name here
+            #sheet_name = 'employement'  # Hard-code the sheet name here
             # Read the specified sheet from the Excel file
+            sheet_name = 'studies'  # Hard-code the sheet name here
             try:
                 df = pd.read_excel(excel_file, sheet_name=sheet_name)
             except ValueError:
@@ -4679,80 +4680,56 @@ class UpdateAlumnUploadExcelView(APIView):
             
             # Print the first few rows and column names for debugging
             print("Columns in the DataFrame:", df.columns)
-            print(df[['title','title2','title3','title4','title5','career1f','career2f','career3f','career4f','career5f']])
+            print(df.head())
             
             for index, row in df.iterrows():
                 try:
-                    if not (pd.isna(row.get('title')) or pd.isna(row.get('status1f')) or not isinstance(row.get('status1f'), str) or len(row.get('status1f')) > 2):
-                        user = User.objects.get(email=row.get('email'))
-                        alumni = Alumni.objects.get(user=user)
-                        # Create new Employment record for the alumni
-                        employment_data = {
+                    user = User.objects.get(email=row.get('email'))
+                    alumni = Alumni.objects.get(user=user)
+                    if not pd.isna(row.get('level')):
+                        # Create new Study record for the alumni
+                        study_data = {
                             'alumn': alumni,
-                            'title': row.get('title', ''),
-                            'status': row.get('status1f', ''),
-                            'career': row.get('career1f', ''),
-                            'company': row.get('company', ''),
-                            'on_going': row.get('on_going', False),
-                            'start_date': '',
-                            'end_date': ''
+                            'level': row.get('level'),
+                            'degree': row.get('degree', ''),
+                            'university': row.get('university', ''),
+                            'country': row.get('country', ''),
+                            'city': row.get('city', ''),
+                            'scholarship': row.get('scholarship'),
+                            'scholarship_details': row.get('scholarship_details', ''),
+                            'status': row.get('status')
                         }
-                        Employment.objects.create(**employment_data)
-                        #print(employment_data)
-                        if not (pd.isna(row.get('title2')) or pd.isna(row.get('status2f')) or not isinstance(row.get('status2f'), str) or len(row.get('status2f')) > 2):
-                            employment_data2 = {
-                                'alumn': alumni,
-                                'title': row.get('title2', ''),
-                                'status': row.get('status2f', ''),
-                                'career': row.get('career2f', ''),
-                                'company': row.get('company2', ''),
-                                'on_going': False,
-                                'start_date': '',
-                                'end_date': ''
-                            }
-                            Employment.objects.create(**employment_data2)
-                            #print(employment_data2)
-                        if not (pd.isna(row.get('title3')) or pd.isna(row.get('status3f')) or not isinstance(row.get('status3f'), str) or len(row.get('status3f')) > 2):
-                            employment_data3 = {
-                                'alumn': alumni,
-                                'title': row.get('title3', ''),
-                                'status': row.get('status3f', ''),
-                                'career': row.get('career3f', ''),
-                                'company': row.get('company3', ''),
-                                'on_going': False,
-                                'start_date': '',
-                                'end_date': ''
-                            }
-                            Employment.objects.create(**employment_data3)
-                            #print(employment_data3)
-                        if not (pd.isna(row.get('title4')) or pd.isna(row.get('status4f')) or not isinstance(row.get('status4f'), str) or len(row.get('status4f')) > 2):
-                            employment_data4 = {
-                                'alumn': alumni,
-                                'title': row.get('title4', ''),
-                                'status': row.get('status4f', ''),
-                                'career': row.get('career4f', ''),
-                                'company': row.get('company4', ''),
-                                'on_going': False,
-                                'start_date': '',
-                                'end_date': ''
-                            }
-                            Employment.objects.create(**employment_data4)
-                            #print(employment_data4)
-                        if not (pd.isna(row.get('title5')) or pd.isna(row.get('status5f')) or not isinstance(row.get('status5f'), str) or len(row.get('status5f')) > 2):
-                            employment_data5 = {
-                                'alumn': alumni,
-                                'title': row.get('title5', ''),
-                                'status': row.get('status5f', ''),
-                                'career': row.get('career5f', ''),
-                                'company': row.get('company5', ''),
-                                'on_going': False,
-                                'start_date': '',
-                                'end_date': ''
-                            }
-                            Employment.objects.create(**employment_data5)
-                            #print(employment_data5)
-                            
-                    
+                        Studie.objects.create(**study_data)
+                        #print(study_data)
+                    if not pd.isna(row.get('level2')):
+                        study_data2 = {
+                        'alumn': alumni,
+                        'level': row.get('level2'),
+                        'degree': row.get('degree2', ''),
+                        'university': row.get('university2', ''),
+                        'country': row.get('country2', ''),
+                        'city': row.get('city2', ''),
+                        'scholarship': row.get('scholarship2'),
+                        'scholarship_details': row.get('scholarship_details2', ''),
+                        'status': row.get('status2')
+                        }
+                        Studie.objects.create(**study_data2)
+                        #print(study_data2)
+                    if not pd.isna(row.get('level3')):
+                        study_data3 = {
+                        'alumn': alumni,
+                        'level': row.get('level3'),
+                        'degree': row.get('degree3', ''),
+                        'university': row.get('university3', ''),
+                        'country': row.get('country3', ''),
+                        'city': row.get('city3', ''),
+                        'scholarship': row.get('scholarship3'),
+                        'scholarship_details': row.get('scholarship_details3', ''),
+                        'status': row.get('status3')
+                        }
+                        Studie.objects.create(**study_data3)
+                        #print(study_data3)
+                        
                     """ alumni.reg_number = row.get('reg_number', alumni.reg_number)
                     alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
                     alumni.place_of_birth_district_or_country = row.get('place_of_birth_district_or_country', alumni.place_of_birth_district_or_country)
@@ -4772,12 +4749,13 @@ class UpdateAlumnUploadExcelView(APIView):
                 
                 except User.DoesNotExist:
                     return Response({f"User with email {row.get('email')} does not exist."})
-                    continue
+                    #continue
                 except Alumni.DoesNotExist:
                     return Response({f"Alumni record for user with email {row.get('email')} does not exist."})
-                    continue
+                    #continue
                 except Exception as e:
                     return Response({f"An error occurred while processing row {index} email {row.get('email')}: {e}"})
+                    #continue
                     
                 
             
