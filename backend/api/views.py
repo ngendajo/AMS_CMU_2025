@@ -4670,6 +4670,7 @@ class UpdateAlumnUploadExcelView(APIView):
             #sheet_name = 'employement'  # Hard-code the sheet name here
             # Read the specified sheet from the Excel file
             sheet_name = 'studies'  # Hard-code the sheet name here
+            sheet_name = 'date_of_birth'  # Hard-code the sheet name here
             try:
                 df = pd.read_excel(excel_file, sheet_name=sheet_name)
             except ValueError:
@@ -4684,9 +4685,9 @@ class UpdateAlumnUploadExcelView(APIView):
             
             for index, row in df.iterrows():
                 try:
-                    user = User.objects.get(email=row.get('email'))
-                    alumni = Alumni.objects.get(user=user)
-                    if not pd.isna(row.get('level')):
+                    #user = User.objects.get(email=row.get('email'))
+                    alumni = Alumni.objects.get(reg_number=row.get('reg_number'))
+                    """ if not pd.isna(row.get('level')):
                         # Create new Study record for the alumni
                         study_data = {
                             'alumn': alumni,
@@ -4728,24 +4729,23 @@ class UpdateAlumnUploadExcelView(APIView):
                         'status': row.get('status3')
                         }
                         Studie.objects.create(**study_data3)
-                        #print(study_data3)
+                        #print(study_data3) """
                         
-                    """ alumni.reg_number = row.get('reg_number', alumni.reg_number)
-                    alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
+                    alumni.date_of_birth = row.get('date_of_birth', alumni.date_of_birth)
+                    """ alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
                     alumni.place_of_birth_district_or_country = row.get('place_of_birth_district_or_country', alumni.place_of_birth_district_or_country)
                     alumni.place_of_birth_sector_or_city = row.get('place_of_birth_sector_or_city', alumni.place_of_birth_sector_or_city)
                     alumni.currresidence_in_rwanda = row.get('currresidence_in_rwanda', alumni.currresidence_in_rwanda)
                     alumni.currresidence_district_or_country = row.get('currresidence_district_or_country', alumni.currresidence_district_or_country)
                     alumni.currresidence_sector_or_city = row.get('currresidence_sector_or_city', alumni.currresidence_sector_or_city)
-                    """ 
-                    """ if(row.get('other_email')!=''):
+                    if(row.get('other_email')!=''):
                         alumni.other_emails =row.get('other_email', alumni.other_emails)
                     if(row.get('other_phones')!=''):
                         alumni.other_phones = row.get('other_phones', alumni.other_phones)
                     alumni.marital_status = row.get('marital_status', alumni.marital_status)
-                    alumni.kids = row.get('kids', alumni.kids)
+                    alumni.kids = row.get('kids', alumni.kids) """
                     
-                    alumni.save() """
+                    alumni.save()
                 
                 except User.DoesNotExist:
                     return Response({f"User with email {row.get('email')} does not exist."})
@@ -4754,7 +4754,8 @@ class UpdateAlumnUploadExcelView(APIView):
                     return Response({f"Alumni record for user with email {row.get('email')} does not exist."})
                     #continue
                 except Exception as e:
-                    return Response({f"An error occurred while processing row {index} email,{row.get('email')} :1. {row.get('level')},{row.get('degree')},{row.get('university')},{row.get('country')},{row.get('city')},{row.get('scholarship')},{row.get('scholarship_details')}, {row.get('status')}:2. {row.get('email')} {row.get('level2')},{row.get('degree2')},{row.get('university2')},{row.get('country2')},{row.get('city2')},{row.get('scholarship2')},{row.get('scholarship_details2')}, {row.get('status2')},3.{row.get('email')} {row.get('level3')},{row.get('degree3')},{row.get('university3')},{row.get('country3')},{row.get('city3')},{row.get('scholarship3')},{row.get('scholarship_details3')}, {row.get('status3')}: {e}"})
+                    #,{row.get('email')} :1. {row.get('level')},{row.get('degree')},{row.get('university')},{row.get('country')},{row.get('city')},{row.get('scholarship')},{row.get('scholarship_details')}, {row.get('status')}:2. {row.get('email')} {row.get('level2')},{row.get('degree2')},{row.get('university2')},{row.get('country2')},{row.get('city2')},{row.get('scholarship2')},{row.get('scholarship_details2')}, {row.get('status2')},3.{row.get('email')} {row.get('level3')},{row.get('degree3')},{row.get('university3')},{row.get('country3')},{row.get('city3')},{row.get('scholarship3')},{row.get('scholarship_details3')}, {row.get('status3')}
+                    return Response({f"An error occurred while processing row {index} email: {e}"})
                     #continue
                     
                 

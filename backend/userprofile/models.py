@@ -65,7 +65,7 @@ class Alumni(models.Model):
     other_phones = models.CharField(max_length=500,default="")
     date_of_birth = models.CharField(max_length=200,default="")
     gender = models.CharField(max_length=500)
-    reg_number = models.CharField(max_length=50,default="")
+    reg_number = models.CharField(max_length=50, blank=True, unique=True)
     father = models.CharField(max_length=500,default="")
     mother = models.CharField(max_length=500,default="")
     place_of_birth = models.CharField(max_length=500,default="")
