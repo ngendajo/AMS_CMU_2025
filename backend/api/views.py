@@ -1730,10 +1730,100 @@ class StudieStatusByGradeAPIView(APIView):
 class StudieEmployStatusByGradeAPIView(APIView):
     permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
-        
-            
             #count alumni by grade
-        sql_query1 = "SELECT grade,ac, SUM(CASE WHEN (empmale=1 AND stumale=1) THEN 1 else 0 END) AS empstumale, SUM(CASE WHEN (empmale=1 AND stumale=0) THEN 1 else 0 END) AS empnstumale,SUM(CASE WHEN (empmale=0 AND stumale=1) THEN 1 else 0 END) AS unempstumale, SUM(CASE WHEN (empmale=0 AND stumale=0) THEN 1 else 0 END) AS unempnstumale, SUM(CASE WHEN (empfemale=1 AND stufemale=1) THEN 1 else 0 END) AS empstufemale, SUM(CASE WHEN (empfemale=1 AND stufemale=0) THEN 1 else 0 END) AS empnstufemale,SUM(CASE WHEN (empfemale=0 AND stufemale=1) THEN 1 else 0 END) AS unempstufemale, SUM(CASE WHEN (empfemale=0 AND stufemale=0) THEN 1 else 0 END) AS unempnstufemale FROM (SELECT DISTINCT ON (userprofile_alumni.id) (userprofile_alumni.id) AS empid,userprofile_grade.grade_name AS grade,userprofile_grade.end_academic_year AS ac,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status IN ('F','S','P','I') THEN 1 else 0 END) AS empmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status IN ('F','S','P','I') THEN 1 ELSE 0 END) AS empfemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_employment.status='U' THEN 1 ELSE 0 END) AS unempmale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_employment.status='U' THEN 1 ELSE 0 END) AS unempfemale FROM userprofile_alumni INNER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id INNER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_employment ON userprofile_alumni.id=userprofile_employment.alumn_id ORDER BY userprofile_alumni.id, CASE WHEN userprofile_employment.status = 'D' THEN 1 WHEN userprofile_employment.status = 'S' THEN 2 WHEN userprofile_employment.status = 'F' THEN 3 WHEN userprofile_employment.status = 'P' THEN 4 WHEN userprofile_employment.status = 'I' THEN 5 ELSE 6 END) AS employ INNER JOIN (SELECT DISTINCT ON (userprofile_alumni.id) (userprofile_alumni.id) AS stuid,userprofile_grade.grade_name,userprofile_grade.end_academic_year,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_studie.level IN ('C','A1','A0','M','PHD') THEN 1 END) AS stumale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_studie.level IN ('C','A1','A0','M','PHD') THEN 1 ELSE 0 END) AS stufemale,(CASE WHEN userprofile_alumni.gender='Male' AND userprofile_studie.level='NMS' THEN 1 ELSE 0 END) AS nstumale,(CASE WHEN userprofile_alumni.gender='Female' AND userprofile_studie.level='NMS' THEN 1 ELSE 0 END) AS nstufemale FROM userprofile_alumni INNER JOIN userprofile_family ON userprofile_alumni.family_id=userprofile_family.id INNER JOIN userprofile_grade ON userprofile_family.grade_id=userprofile_grade.id LEFT JOIN userprofile_studie ON userprofile_alumni.id=userprofile_studie.alumn_id ORDER BY userprofile_alumni.id, CASE WHEN userprofile_studie.level = 'D' THEN 1 WHEN userprofile_studie.level = 'PHD' THEN 2 WHEN userprofile_studie.level= 'M' THEN 3 WHEN userprofile_studie.level= 'A0' THEN 4 WHEN userprofile_studie.level= 'A1' THEN 5 WHEN userprofile_studie.level= 'C' THEN 6 WHEN userprofile_studie.level= 'NMS' THEN 7 ELSE 8 END) study ON empid=stuid GROUP BY grade, ac ORDER BY ac;"
+        sql_query1 = """
+            SELECT 
+                ug.grade_name AS grade, 
+                ug.end_academic_year AS ac, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Male' 
+                        AND ue.status IN ('F', 'S', 'P', 'I') 
+                        AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS empstumale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Male' 
+                        AND ue.status IN ('F', 'S', 'P', 'I') 
+                        AND us.level IS NULL 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS empnstumale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Female' 
+                        AND ue.status IN ('F', 'S', 'P', 'I') 
+                        AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS empstufemale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Female' 
+                        AND ue.status IN ('F', 'S', 'P', 'I') 
+                        AND us.level IS NULL 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS empnstufemale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Male' 
+                        AND ue.status IS NULL 
+                        AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS unempstumale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Male' 
+                        AND ue.status IS NULL 
+                        AND us.level IS NULL 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS unempnstumale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Female' 
+                        AND ue.status IS NULL 
+                        AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS unempstufemale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Female' 
+                        AND ue.status IS NULL 
+                        AND us.level IS NULL 
+                        AND ua.life_status = 'A'  -- Only count if alive
+                    THEN 1 
+                    ELSE 0 
+                END) AS unempnstufemale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Male'
+                        AND ua.life_status = 'D' 
+                    THEN 1 
+                    ELSE 0 
+                END) AS diedumale, 
+                SUM(CASE 
+                    WHEN ua.gender = 'Female' 
+                        AND ua.life_status = 'D' 
+                    THEN 1 
+                    ELSE 0 
+                END) AS diedfemale 
+            FROM 
+                userprofile_alumni ua 
+                INNER JOIN userprofile_family uf ON ua.family_id = uf.id 
+                INNER JOIN userprofile_grade ug ON uf.grade_id = ug.id 
+                LEFT JOIN userprofile_employment ue ON ua.id = ue.alumn_id 
+                LEFT JOIN userprofile_studie us ON ua.id = us.alumn_id 
+            GROUP BY 
+                ug.grade_name, 
+                ug.end_academic_year 
+            ORDER BY 
+                ac;
+
+        """
 
         # Execute the SQL query
         with connection.cursor() as cursor1:
@@ -1745,14 +1835,17 @@ class StudieEmployStatusByGradeAPIView(APIView):
             for i in data1:
                 data.append({
                         'grade_name': i[0],
+                        'ac': i[1],
                         'empstumale': i[2],
                         'empnstumale': i[3],
-                        'unempstumale': i[4],
-                        'unempnstumale': i[5],
-                        'empstufemale': i[6],
-                        'empnstufemale': i[7],
+                        'empstufemale': i[4],
+                        'empnstufemale': i[5],
+                        'unempstumale': i[6],
+                        'unempnstumale': i[7],
                         'unempstufemale': i[8],
-                        'unempnstufemale': i[9]
+                        'unempnstufemale': i[9],
+                        'diedumale': i[10],
+                        'diedfemale': i[11]
                 })
 
         serializer = StudieEmployStatusByGradeSerializer(data, many=True)

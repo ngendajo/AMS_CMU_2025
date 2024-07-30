@@ -182,6 +182,7 @@ class StudieStatusByGradeSerializer(serializers.Serializer):
 #Studies and employment status by grades
 class StudieEmployStatusByGradeSerializer(serializers.Serializer):
     grade_name = serializers.CharField()
+    ac = serializers.CharField()
     empstumale = serializers.IntegerField()
     empstufemale = serializers.IntegerField()
     empnstumale = serializers.IntegerField()
@@ -190,6 +191,8 @@ class StudieEmployStatusByGradeSerializer(serializers.Serializer):
     unempstufemale = serializers.IntegerField()
     unempnstumale = serializers.IntegerField()
     unempstufemale = serializers.IntegerField()
+    diedumale = serializers.IntegerField()
+    diedfemale = serializers.IntegerField()
 
 
 #Employment serializers

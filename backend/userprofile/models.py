@@ -175,7 +175,7 @@ class Studie(models.Model):
     Scholarships = (
         ('F', 'Full'),
         ('P', 'Partial'),
-        ('NS', 'No Scholarship'),
+        ('S', 'Self-Sponsor'),
         ('D', 'Deceased'),
         ('N', 'NoInfo'),
         ('NMS', 'No More Study'),
