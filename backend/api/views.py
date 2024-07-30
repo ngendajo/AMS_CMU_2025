@@ -4754,7 +4754,7 @@ class UpdateAlumnUploadExcelView(APIView):
                     return Response({f"Alumni record for user with email {row.get('email')} does not exist."})
                     #continue
                 except Exception as e:
-                    return Response({f"An error occurred while processing row {index} email {row.get('email')}: {e}"})
+                    return Response({f"An error occurred while processing row {index} email,{row.get('email')} :1. {row.get('level')},{row.get('degree')},{row.get('university')},{row.get('country')},{row.get('city')},{row.get('scholarship')},{row.get('scholarship_details')}, {row.get('status')}:2. {row.get('email')} {row.get('level2')},{row.get('degree2')},{row.get('university2')},{row.get('country2')},{row.get('city2')},{row.get('scholarship2')},{row.get('scholarship_details2')}, {row.get('status2')},3.{row.get('email')} {row.get('level3')},{row.get('degree3')},{row.get('university3')},{row.get('country3')},{row.get('city3')},{row.get('scholarship3')},{row.get('scholarship_details3')}, {row.get('status3')}: {e}"})
                     #continue
                     
                 

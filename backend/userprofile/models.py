@@ -108,9 +108,6 @@ class Employment(models.Model):
         ('P', 'Part-time'),
         ('S', 'Self-employed'),
         ('I', 'Intern'),
-        ('U', 'Unemployed'),
-        ('D', 'Deceased'),
-        ('N', 'NoInfo'),
     ) 
     status = models.CharField(max_length=2, choices=emps)
     career = models.CharField(max_length=2000, default="")
@@ -163,9 +160,6 @@ class Studie(models.Model):
         ('A0', 'Bachelors'),
         ('M', 'Masters'),
         ('PHD', 'PHD'),
-        ('NMS', 'No More Study'),
-        ('D', 'Deceased'),
-        ('N', 'NoInfo'),
     )
     level = models.CharField(max_length=3, choices=levels, default='NMS')
     degree = models.CharField(max_length=2500)
@@ -176,9 +170,6 @@ class Studie(models.Model):
         ('F', 'Full'),
         ('P', 'Partial'),
         ('S', 'Self-Sponsor'),
-        ('D', 'Deceased'),
-        ('N', 'NoInfo'),
-        ('NMS', 'No More Study'),
     )
     scholarship = models.CharField(max_length=3, choices=Scholarships)
     scholarship_details = models.CharField(max_length=2000,default="")
@@ -187,9 +178,6 @@ class Studie(models.Model):
         ('S', 'Susepended'),
         ('O', 'On_going'),
         ('C', 'Completed'),
-        ('De', 'Deceased'),
-        ('N', 'NoInfo'),
-        ('NMS', 'NoFurtherStudy'),
     )
     status = models.CharField(max_length=3, choices=Statuss)
 
