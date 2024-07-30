@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.utils import timezone
 from django.db import models
 from api.models import User
 from datetime import date
@@ -145,7 +145,7 @@ class Opportunity(models.Model):
 class Event(models.Model):
     title = models.CharField(max_length=5000)
     description = models.CharField(max_length=20000)
-    e_datetime = models.DateTimeField(default=datetime.now())
+    e_datetime = models.DateTimeField(default=timezone.now)
     location = models.CharField(max_length=5000 , default='NMS')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="events")
     image_url = models.ImageField(upload_to='events', default='events/default.jpg')
