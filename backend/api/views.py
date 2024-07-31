@@ -4695,7 +4695,9 @@ class UpdateAlumnUploadExcelView(APIView):
                 try:
                     alumni = Alumni.objects.get(reg_number=row.get('reg_number'))
                     
-                        
+                    alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
+                    alumni.place_of_birth_district_or_country = row.get('place_of_birth_district_or_country', alumni.place_of_birth_district_or_country)
+                    alumni.place_of_birth_sector_or_city = row.get('place_of_birth_sector_or_city', alumni.place_of_birth_sector_or_city)
                     alumni.date_of_birth = row.get('date_of_birth', alumni.date_of_birth)
                     alumni.save()
                 
@@ -4787,7 +4789,7 @@ class UpdateAlumnUploadExcelView(APIView):
 #                         #print(study_data3) """
                         
 #                     alumni.date_of_birth = row.get('date_of_birth', alumni.date_of_birth)
-#                     """ alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
+#                     alumni.did_you_born_in_rwanda = row.get('did_you_born_in_rwanda', alumni.did_you_born_in_rwanda)
 #                     alumni.place_of_birth_district_or_country = row.get('place_of_birth_district_or_country', alumni.place_of_birth_district_or_country)
 #                     alumni.place_of_birth_sector_or_city = row.get('place_of_birth_sector_or_city', alumni.place_of_birth_sector_or_city)
 #                     alumni.currresidence_in_rwanda = row.get('currresidence_in_rwanda', alumni.currresidence_in_rwanda)
