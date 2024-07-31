@@ -183,6 +183,74 @@ class Studie(models.Model):
 
     def __str__(self):
         return str(self.alumn.user.first_name + self.university)
+    
+class Alumnidraft(models.Model):
+    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='alumnidrafts')
+    kids = models.CharField(max_length=500, default="")
+    currresidence_in_rwanda = models.CharField(max_length=500, default="")
+    currresidence_district_or_country = models.CharField(max_length=500, default="")
+    currresidence_sector_or_city = models.CharField(max_length=500, default="")
+
+    def __str__(self):
+        return str(self.alumn.user.first_name)
+
+class Employmentdraft(models.Model):
+    title = models.CharField(max_length=5000)
+    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='employments')
+    emp = models.ForeignKey('Employment', on_delete=models.PROTECT, related_name='employment')
+    
+    EMPLOYMENT_CHOICES = (
+        ('F', 'Full-time'),
+        ('P', 'Part-time'),
+        ('S', 'Self-employed'),
+        ('I', 'Intern'),
+    ) 
+    status = models.CharField(max_length=2, choices=EMPLOYMENT_CHOICES)
+    career = models.CharField(max_length=2000, default="")
+    description = models.CharField(max_length=2000, default="")
+    company = models.CharField(max_length=5000)
+    on_going = models.BooleanField(default=False)
+    start_date = models.CharField(max_length=100, default="")
+    end_date = models.CharField(max_length=100, default="")
+
+    def __str__(self):
+        return self.title
+
+class Studiedraft(models.Model):
+    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='studies')
+    stud = models.ForeignKey('Studie', on_delete=models.PROTECT, related_name='studies')
+    
+    LEVEL_CHOICES = (
+        ('C', 'Certificate'),
+        ('A1', 'Advanced diploma'),
+        ('A0', 'Bachelors'),
+        ('M', 'Masters'),
+        ('PHD', 'PHD'),
+    )
+    level = models.CharField(max_length=3, choices=LEVEL_CHOICES, default='NMS')
+    degree = models.CharField(max_length=2500)
+    university = models.CharField(max_length=2500)
+    country = models.CharField(max_length=200)
+    city = models.CharField(max_length=200, default="")
+    
+    SCHOLARSHIP_CHOICES = (
+        ('F', 'Full'),
+        ('P', 'Partial'),
+        ('S', 'Self-Sponsor'),
+    )
+    scholarship = models.CharField(max_length=3, choices=SCHOLARSHIP_CHOICES)
+    scholarship_details = models.CharField(max_length=2000, default="")
+    
+    STATUS_CHOICES = (
+        ('D', 'Dropped_Out'),
+        ('S', 'Suspended'),
+        ('O', 'On_going'),
+        ('C', 'Completed'),
+    )
+    status = models.CharField(max_length=3, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return str(self.alumn.user.first_name + ' - ' + self.university)
 
 
 # Story model

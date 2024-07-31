@@ -1048,3 +1048,19 @@ class GroupSerializer(serializers.ModelSerializer):
 # Data updating process
 class AlumniUpdatingExcelUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
+    
+    
+class AlumnidraftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alumnidraft
+        fields = '__all__'
+
+class EmploymentdraftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employmentdraft
+        fields = '__all__'
+
+class StudiedraftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Studiedraft
+        fields = '__all__'
