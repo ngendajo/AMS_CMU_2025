@@ -217,8 +217,8 @@ class Employmentdraft(models.Model):
         return self.title
 
 class Studiedraft(models.Model):
-    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='studies')
-    stud = models.ForeignKey('Studie', on_delete=models.PROTECT, related_name='studies')
+    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='studiedrafts')
+    stud = models.ForeignKey('Studie', on_delete=models.PROTECT, related_name='studiedrafts')
     
     LEVEL_CHOICES = (
         ('C', 'Certificate'),
