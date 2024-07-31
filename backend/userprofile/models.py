@@ -197,7 +197,7 @@ class Alumnidraft(models.Model):
 class Employmentdraft(models.Model):
     title = models.CharField(max_length=5000)
     alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='employments')
-    emp = models.ForeignKey('Employment', on_delete=models.PROTECT, related_name='employment')
+    emp = models.ForeignKey('Employment', on_delete=models.PROTECT, related_name='employment', null=True, blank=True)
     
     EMPLOYMENT_CHOICES = (
         ('F', 'Full-time'),
@@ -218,7 +218,7 @@ class Employmentdraft(models.Model):
 
 class Studiedraft(models.Model):
     alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='studiedrafts')
-    stud = models.ForeignKey('Studie', on_delete=models.PROTECT, related_name='studiedrafts')
+    stud = models.ForeignKey('Studie', on_delete=models.PROTECT, related_name='studiedrafts', null=True, blank=True)
     
     LEVEL_CHOICES = (
         ('C', 'Certificate'),
