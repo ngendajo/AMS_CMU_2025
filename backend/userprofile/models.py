@@ -186,6 +186,7 @@ class Studie(models.Model):
     
 class Alumnidraft(models.Model):
     alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='alumnidrafts')
+    marital_status = models.CharField(max_length=500,default="") 
     kids = models.CharField(max_length=500, default="")
     currresidence_in_rwanda = models.CharField(max_length=500, default="")
     currresidence_district_or_country = models.CharField(max_length=500, default="")
