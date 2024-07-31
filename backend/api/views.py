@@ -1739,7 +1739,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Male' 
                         AND ue.status IN ('F', 'S', 'P', 'I') 
                         AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS empstumale, 
@@ -1747,7 +1747,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Male' 
                         AND ue.status IN ('F', 'S', 'P', 'I') 
                         AND us.level IS NULL 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS empnstumale, 
@@ -1755,7 +1755,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Female' 
                         AND ue.status IN ('F', 'S', 'P', 'I') 
                         AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS empstufemale, 
@@ -1763,7 +1763,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Female' 
                         AND ue.status IN ('F', 'S', 'P', 'I') 
                         AND us.level IS NULL 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS empnstufemale, 
@@ -1771,7 +1771,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Male' 
                         AND ue.status IS NULL 
                         AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS unempstumale, 
@@ -1779,7 +1779,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Male' 
                         AND ue.status IS NULL 
                         AND us.level IS NULL 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS unempnstumale, 
@@ -1787,7 +1787,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Female' 
                         AND ue.status IS NULL 
                         AND us.level IN ('C', 'A1', 'A0', 'M', 'PHD') 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS unempstufemale, 
@@ -1795,7 +1795,7 @@ class StudieEmployStatusByGradeAPIView(APIView):
                     WHEN ua.gender = 'Female' 
                         AND ue.status IS NULL 
                         AND us.level IS NULL 
-                        AND ua.life_status = 'A'  -- Only count if alive
+                        AND ua.life_status = 'A'  
                     THEN 1 
                     ELSE 0 
                 END) AS unempnstufemale, 
@@ -1815,8 +1815,16 @@ class StudieEmployStatusByGradeAPIView(APIView):
                 userprofile_alumni ua 
                 INNER JOIN userprofile_family uf ON ua.family_id = uf.id 
                 INNER JOIN userprofile_grade ug ON uf.grade_id = ug.id 
-                LEFT JOIN userprofile_employment ue ON ua.id = ue.alumn_id 
-                LEFT JOIN userprofile_studie us ON ua.id = us.alumn_id 
+                LEFT JOIN (
+                    SELECT DISTINCT ON (alumn_id) * 
+                    FROM userprofile_employment 
+                    ORDER BY alumn_id, status DESC
+                ) ue ON ua.id = ue.alumn_id 
+                LEFT JOIN (
+                    SELECT DISTINCT ON (alumn_id) * 
+                    FROM userprofile_studie 
+                    ORDER BY alumn_id, level DESC
+                ) us ON ua.id = us.alumn_id 
             GROUP BY 
                 ug.grade_name, 
                 ug.end_academic_year 
@@ -4705,6 +4713,8 @@ class UpdateAlumnUploadExcelView(APIView):
         # Print serializer errors for debugging
         #print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 # class UpdateAlumnUploadExcelView(APIView):
 #     def post(self, request, *args, **kwargs):
 #         serializer = AlumniUpdatingExcelUploadSerializer(data=request.data)
