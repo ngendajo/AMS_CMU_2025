@@ -168,7 +168,27 @@ class EmploymentStatusByGradeSerializer(serializers.Serializer):
     unempmale = serializers.IntegerField()
     unempfemale = serializers.IntegerField()
     
+#Employment status by families
+class EmploymentStatusByFamilySerializer(serializers.Serializer):
+    family_name = serializers.CharField()
+    diedmale = serializers.IntegerField()
+    diedfemale = serializers.IntegerField()
+    empmale = serializers.IntegerField()
+    empfemale = serializers.IntegerField()
+    unempmale = serializers.IntegerField()
+    unempfemale = serializers.IntegerField()
     
+#Employment status by combinations
+class EmploymentStatusByCombinationSerializer(serializers.Serializer):
+    combination_name = serializers.CharField()
+    diedmale = serializers.IntegerField()
+    diedfemale = serializers.IntegerField()
+    empmale = serializers.IntegerField()
+    empfemale = serializers.IntegerField()
+    unempmale = serializers.IntegerField()
+    unempfemale = serializers.IntegerField()
+    
+     
 #Studies status by grades
 class StudieStatusByGradeSerializer(serializers.Serializer):
     grade_name = serializers.CharField()
@@ -1048,12 +1068,6 @@ class GroupSerializer(serializers.ModelSerializer):
 # Data updating process
 class AlumniUpdatingExcelUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
-    
-    
-class AlumnidraftSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Alumnidraft
-        fields = '__all__'
 
 class EmploymentdraftSerializer(serializers.ModelSerializer):
     class Meta:

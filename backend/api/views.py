@@ -1641,6 +1641,140 @@ class EmploymentStatusByGradeAPIView(APIView):
         serializer = EmploymentStatusByGradeSerializer(data, many=True)
         return Response(serializer.data)
     
+#Employment by families
+class EmploymentStatusByFamilyAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get(self, request, *args, **kwargs):
+        
+            
+            #count alumni by grade
+        sql_query1 = """
+            WITH alumni_employment AS (
+                SELECT DISTINCT ON (a.id)
+                    a.id,
+                    f.family_name,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'D'  THEN 1 ELSE 0 END AS diedmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'D' THEN 1 ELSE 0 END AS diedfemale,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status='A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempfemale
+                FROM userprofile_alumni a
+                INNER JOIN userprofile_family f ON a.family_id = f.id
+                LEFT JOIN userprofile_employment e ON a.id = e.alumn_id
+                ORDER BY a.id,
+                    CASE
+                        WHEN e.status = 'D' THEN 1
+                        WHEN e.status = 'S' THEN 2
+                        WHEN e.status = 'F' THEN 3
+                        WHEN e.status = 'P' THEN 4
+                        WHEN e.status = 'I' THEN 5
+                        WHEN e.status = 'U' THEN 6
+                        ELSE 7
+                    END
+            )
+            SELECT
+                family_name,
+                SUM(diedmale) AS diedmale,
+                SUM(diedfemale) AS diedfemale,
+                SUM(empmale) AS empmale,
+                SUM(empfemale) AS empfemale,
+                SUM(unempmale) AS unempmale,
+                SUM(unempfemale) AS unempfemale
+            FROM alumni_employment
+            GROUP BY family_name
+            ORDER BY family_name;
+
+        """
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            data1 = cursor1.fetchall()
+            
+        data=[]   
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                        'family_name': i[0],
+                        'diedmale': i[2],
+                        'diedfemale': i[3],
+                        'empmale': i[4],
+                        'empfemale': i[5],
+                        'unempmale': i[6],
+                        'unempfemale': i[7]
+                })
+
+        serializer = EmploymentStatusByFamilySerializer(data, many=True)
+        return Response(serializer.data)
+    
+#Employment by combinations
+class EmploymentStatusByCombinationAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get(self, request, *args, **kwargs):
+        
+            
+            #count alumni by grade
+        sql_query1 = """
+            WITH alumni_employment AS (
+                SELECT DISTINCT ON (a.id)
+                    a.id,
+                    c.combination_name,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'D'  THEN 1 ELSE 0 END AS diedmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'D' THEN 1 ELSE 0 END AS diedfemale,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status='A'  AND e.status IN ('F', 'S', 'P', 'I') THEN 1 ELSE 0 END AS empfemale,
+                    CASE WHEN a.gender = 'Male' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempmale,
+                    CASE WHEN a.gender = 'Female' AND a.life_status= 'A'  AND (e.status IS NULL OR e.status NOT IN ('F', 'S', 'P', 'I')) THEN 1 ELSE 0 END AS unempfemale
+                FROM userprofile_alumni a
+                INNER JOIN userprofile_combination c ON a.combination_id = c.id
+                LEFT JOIN userprofile_employment e ON a.id = e.alumn_id
+                ORDER BY a.id,
+                    CASE
+                        WHEN e.status = 'D' THEN 1
+                        WHEN e.status = 'S' THEN 2
+                        WHEN e.status = 'F' THEN 3
+                        WHEN e.status = 'P' THEN 4
+                        WHEN e.status = 'I' THEN 5
+                        WHEN e.status = 'U' THEN 6
+                        ELSE 7
+                    END
+            )
+            SELECT
+                combination_name,
+                SUM(diedmale) AS diedmale,
+                SUM(diedfemale) AS diedfemale,
+                SUM(empmale) AS empmale,
+                SUM(empfemale) AS empfemale,
+                SUM(unempmale) AS unempmale,
+                SUM(unempfemale) AS unempfemale
+            FROM alumni_employment
+            GROUP BY combination_name
+            ORDER BY combination_name;
+
+        """
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            data1 = cursor1.fetchall()
+            
+        data=[]   
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                        'family_name': i[0],
+                        'diedmale': i[2],
+                        'diedfemale': i[3],
+                        'empmale': i[4],
+                        'empfemale': i[5],
+                        'unempmale': i[6],
+                        'unempfemale': i[7]
+                })
+
+        serializer = EmploymentStatusByFamilySerializer(data, many=True)
+        return Response(serializer.data)
+    
 class StudieStatusByGradeAPIView(APIView):
     permission_classes = [IsAuthenticated, ]
     def get(self, request, *args, **kwargs):
@@ -4822,47 +4956,6 @@ class UpdateAlumnUploadExcelView(APIView):
 #         # Print serializer errors for debugging
 #         #print(serializer.errors)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class AlumnidraftViewSet(viewsets.ModelViewSet):
-    queryset = Alumnidraft.objects.all()
-    serializer_class = AlumnidraftSerializer
-
-    def list(self, request, *args, **kwargs):
-        try:
-            return super().list(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except Alumnidraft.DoesNotExist:
-            raise NotFound(detail="Alumnidraft not found", code=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, *args, **kwargs):
-        try:
-            return super().update(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, *args, **kwargs):
-        try:
-            return super().destroy(request, *args, **kwargs)
-        except Alumnidraft.DoesNotExist:
-            raise NotFound(detail="Alumnidraft not found", code=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EmploymentdraftViewSet(viewsets.ModelViewSet):

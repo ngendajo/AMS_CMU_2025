@@ -20,7 +20,6 @@ router.register(r'mentorship_cards', views.MentorshipCardViewSet)
 router.register(r'sample_applications', views.SampleApplicationsDataViewSet)
 router.register(r'sampleMoMoCodes', views.SampleMoMoCodeViewSet)
 router.register(r'sampleDonations', views.SampleDonationViewSet)
-router.register(r'alumnidrafts', views.AlumnidraftViewSet)
 router.register(r'employmentdrafts', views.EmploymentdraftViewSet)
 router.register(r'studiedrafts', views.StudiedraftViewSet)
 
@@ -44,6 +43,8 @@ urlpatterns = [
     path('alumnitotalbygrade/', views.UserCountByGradeAPIView.as_view(), name='alumni_by_grade'),
     path('alumnitotalbycombination/', views.UserCountByCombinationAPIView.as_view(), name='alumni_by_combination'),
     path('emplbygrade/', views.EmploymentStatusByGradeAPIView.as_view(), name='empl_by_grade'),
+    path('emplbyfamily/', views.EmploymentStatusByFamilyAPIView.as_view(), name='empl_by_family'),
+    path('emplbycombination/', views.EmploymentStatusByCombinationAPIView.as_view(), name='empl_by_combination'),
     path('stubygrade/', views.StudieStatusByGradeAPIView.as_view(), name='stu_by_grade'),
     path('empstubygrade/', views.StudieEmployStatusByGradeAPIView.as_view(), name='empstu_by_grade'),
     

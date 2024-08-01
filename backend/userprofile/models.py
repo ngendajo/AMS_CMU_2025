@@ -183,21 +183,9 @@ class Studie(models.Model):
 
     def __str__(self):
         return str(self.alumn.user.first_name + self.university)
-    
-class Alumnidraft(models.Model):
-    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='alumnidrafts')
-    marital_status = models.CharField(max_length=500,default="") 
-    kids = models.CharField(max_length=500, default="")
-    currresidence_in_rwanda = models.CharField(max_length=500, default="")
-    currresidence_district_or_country = models.CharField(max_length=500, default="")
-    currresidence_sector_or_city = models.CharField(max_length=500, default="")
-
-    def __str__(self):
-        return str(self.alumn.user.first_name)
 
 class Employmentdraft(models.Model):
     title = models.CharField(max_length=5000)
-    alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='employments')
     emp = models.ForeignKey('Employment', on_delete=models.PROTECT, related_name='employment', null=True, blank=True)
     
     EMPLOYMENT_CHOICES = (
@@ -219,7 +207,6 @@ class Employmentdraft(models.Model):
 
 class Studiedraft(models.Model):
     alumn = models.ForeignKey('Alumni', on_delete=models.PROTECT, related_name='studiedrafts')
-    stud = models.ForeignKey('Studie', on_delete=models.PROTECT, related_name='studiedrafts', null=True, blank=True)
     
     LEVEL_CHOICES = (
         ('C', 'Certificate'),
