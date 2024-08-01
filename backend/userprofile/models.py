@@ -187,7 +187,6 @@ class Studie(models.Model):
 class Employmentdraft(models.Model):
     title = models.CharField(max_length=5000)
     alumn = models.ForeignKey(Alumni, on_delete=models.PROTECT, related_name='employ')
-    emp = models.ForeignKey('Employment', on_delete=models.PROTECT, related_name='employment', null=True, blank=True)
     
     EMPLOYMENT_CHOICES = (
         ('F', 'Full-time'),
