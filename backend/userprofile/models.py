@@ -273,7 +273,7 @@ class Story(models.Model):
 class Gallery(models.Model):
     event_name = models.CharField(max_length=1000, default="Event name")
     link = models.CharField(max_length=1000, default="asyv.ac.rw")
-    createdat = models.DateTimeField(default=date.today)
+    createdat = models.DateField(default=date.today)
     image_url = models.ImageField(upload_to='galleries', default='galleries/default.jpg')
     displayed = models.BooleanField(default=True)
 
