@@ -1697,12 +1697,12 @@ class EmploymentStatusByFamilyAPIView(APIView):
             for i in data1:
                 data.append({
                         'family_name': i[0],
-                        'diedmale': i[2],
-                        'diedfemale': i[3],
-                        'empmale': i[4],
-                        'empfemale': i[5],
-                        'unempmale': i[6],
-                        'unempfemale': i[7]
+                        'diedmale': i[1],
+                        'diedfemale': i[2],
+                        'empmale': i[3],
+                        'empfemale': i[4],
+                        'unempmale': i[5],
+                        'unempfemale': i[6]
                 })
 
         serializer = EmploymentStatusByFamilySerializer(data, many=True)
@@ -1764,12 +1764,12 @@ class EmploymentStatusByCombinationAPIView(APIView):
             for i in data1:
                 data.append({
                         'family_name': i[0],
-                        'diedmale': i[2],
-                        'diedfemale': i[3],
-                        'empmale': i[4],
-                        'empfemale': i[5],
-                        'unempmale': i[6],
-                        'unempfemale': i[7]
+                        'diedmale': i[1],
+                        'diedfemale': i[2],
+                        'empmale': i[3],
+                        'empfemale': i[4],
+                        'unempmale': i[5],
+                        'unempfemale': i[6]
                 })
 
         serializer = EmploymentStatusByFamilySerializer(data, many=True)
