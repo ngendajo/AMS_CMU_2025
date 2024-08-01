@@ -199,6 +199,26 @@ class StudieStatusByGradeSerializer(serializers.Serializer):
     nstumale = serializers.IntegerField()
     nstufemale = serializers.IntegerField()
     
+#Studies status by families
+class StudieStatusByFamilySerializer(serializers.Serializer):
+    family_name = serializers.CharField()
+    diedmale = serializers.IntegerField()
+    diedfemale = serializers.IntegerField()
+    stumale = serializers.IntegerField()
+    stufemale = serializers.IntegerField()
+    nstumale = serializers.IntegerField()
+    nstufemale = serializers.IntegerField()
+    
+#Studies status by combinations
+class StudieStatusByCombinationSerializer(serializers.Serializer):
+    family_name = serializers.CharField()
+    diedmale = serializers.IntegerField()
+    diedfemale = serializers.IntegerField()
+    stumale = serializers.IntegerField()
+    stufemale = serializers.IntegerField()
+    nstumale = serializers.IntegerField()
+    nstufemale = serializers.IntegerField()
+    
 #Studies and employment status by grades
 class StudieEmployStatusByGradeSerializer(serializers.Serializer):
     grade_name = serializers.CharField()

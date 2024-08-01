@@ -1859,6 +1859,170 @@ class StudieStatusByGradeAPIView(APIView):
 
         serializer = StudieStatusByGradeSerializer(data, many=True)
         return Response(serializer.data)
+    
+#Studies by families
+class StudieStatusByFamilyAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get(self, request, *args, **kwargs):
+        
+        # count alumni by family
+        sql_query1 = """
+            SELECT 
+                family_name,
+                SUM(diedmale) AS diedmale,
+                SUM(diedfemale) AS diedfemale, 
+                SUM(stumale) AS stumale,
+                SUM(stufemale) AS stufemale,
+                SUM(nstumale) AS nstumale, 
+                SUM(nstufemale) AS nstufemale
+            FROM (
+                SELECT DISTINCT ON (u.id) 
+                    f.family_name,
+                    CASE 
+                        WHEN u.gender='Male' AND u.life_status='D' THEN 1 
+                        ELSE 0 
+                    END AS diedmale,
+                    CASE 
+                        WHEN u.gender='Female' AND u.life_status='D' THEN 1 
+                        ELSE 0 
+                    END AS diedfemale,
+                    CASE 
+                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS stumale,
+                    CASE 
+                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS stufemale,
+                    CASE 
+                        WHEN u.gender='Male' AND (s.level NOT IN ('C','A1','A0','M','PHD') OR s.level IS NULL) AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS nstumale,
+                    CASE 
+                        WHEN u.gender='Female' AND (s.level NOT IN ('C','A1','A0','M','PHD') OR s.level IS NULL) AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS nstufemale
+                FROM userprofile_alumni u
+                INNER JOIN userprofile_family f ON u.family_id = f.id
+                LEFT JOIN userprofile_studie s ON u.id = s.alumn_id
+                ORDER BY u.id, 
+                    CASE 
+                        WHEN s.level = 'D' THEN 1 
+                        WHEN s.level = 'PHD' THEN 2 
+                        WHEN s.level= 'M' THEN 3 
+                        WHEN s.level= 'A0' THEN 4 
+                        WHEN s.level= 'A1' THEN 5 
+                        WHEN s.level= 'C' THEN 6 
+                        WHEN s.level= 'NMS' THEN 7 
+                        ELSE 8 
+                    END
+            ) AS studie
+            GROUP BY family_name
+            ORDER BY family_name;
+        """
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            data1 = cursor1.fetchall()
+            
+        data = []
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                    'family_name': i[0],
+                    'diedmale': i[1],
+                    'diedfemale': i[2],
+                    'stumale': i[3],
+                    'stufemale': i[4],
+                    'nstumale': i[5],
+                    'nstufemale': i[6]
+                })
+
+        serializer = StudieStatusByFamilySerializer(data, many=True)
+        return Response(serializer.data)
+    
+#Studies by combinations
+class StudieStatusByCombinationsAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    def get(self, request, *args, **kwargs):
+        
+        # count alumni by combination
+        sql_query1 = """
+            SELECT 
+                combination_name,
+                SUM(diedmale) AS diedmale,
+                SUM(diedfemale) AS diedfemale, 
+                SUM(stumale) AS stumale,
+                SUM(stufemale) AS stufemale,
+                SUM(nstumale) AS nstumale, 
+                SUM(nstufemale) AS nstufemale
+            FROM (
+                SELECT DISTINCT ON (u.id) 
+                    c.combination_name,
+                    CASE 
+                        WHEN u.gender='Male' AND u.life_status='D' THEN 1 
+                        ELSE 0 
+                    END AS diedmale,
+                    CASE 
+                        WHEN u.gender='Female' AND u.life_status='D' THEN 1 
+                        ELSE 0 
+                    END AS diedfemale,
+                    CASE 
+                        WHEN u.gender='Male' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS stumale,
+                    CASE 
+                        WHEN u.gender='Female' AND s.level IN ('C','A1','A0','M','PHD') AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS stufemale,
+                    CASE 
+                        WHEN u.gender='Male' AND (s.level NOT IN ('C','A1','A0','M','PHD') OR s.level IS NULL) AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS nstumale,
+                    CASE 
+                        WHEN u.gender='Female' AND (s.level NOT IN ('C','A1','A0','M','PHD') OR s.level IS NULL) AND u.life_status='A' THEN 1 
+                        ELSE 0 
+                    END AS nstufemale
+                FROM userprofile_alumni u
+                INNER JOIN userprofile_combination c ON u.combination_id = c.id
+                LEFT JOIN userprofile_studie s ON u.id = s.alumn_id
+                ORDER BY u.id, 
+                    CASE 
+                        WHEN s.level = 'D' THEN 1 
+                        WHEN s.level = 'PHD' THEN 2 
+                        WHEN s.level= 'M' THEN 3 
+                        WHEN s.level= 'A0' THEN 4 
+                        WHEN s.level= 'A1' THEN 5 
+                        WHEN s.level= 'C' THEN 6 
+                        WHEN s.level= 'NMS' THEN 7 
+                        ELSE 8 
+                    END
+            ) AS studie
+            GROUP BY combination_name
+            ORDER BY combination_name;
+        """
+
+        # Execute the SQL query
+        with connection.cursor() as cursor1:
+            cursor1.execute(sql_query1)
+            data1 = cursor1.fetchall()
+            
+        data = []
+        if data1 is not None:
+            for i in data1:
+                data.append({
+                    'combination_name': i[0],
+                    'diedmale': i[1],
+                    'diedfemale': i[2],
+                    'stumale': i[3],
+                    'stufemale': i[4],
+                    'nstumale': i[5],
+                    'nstufemale': i[6]
+                })
+
+        serializer = StudieStatusByCombinationSerializer(data, many=True)
+        return Response(serializer.data)
 
 
 class StudieEmployStatusByGradeAPIView(APIView):
