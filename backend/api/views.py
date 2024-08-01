@@ -1,5 +1,6 @@
 
 from rest_framework.pagination import PageNumberPagination
+from django_filters import rest_framework as filters
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -5122,9 +5123,18 @@ class UpdateAlumnUploadExcelView(APIView):
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class EmploymentdraftFilter(filters.FilterSet):
+    alumn = filters.NumberFilter(field_name='alumn', lookup_expr='exact')
+
+    class Meta:
+        model = Employmentdraft
+        fields = ['alumn']
+
 class EmploymentdraftViewSet(viewsets.ModelViewSet):
     queryset = Employmentdraft.objects.all()
     serializer_class = EmploymentdraftSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = EmploymentdraftFilter
 
     def list(self, request, *args, **kwargs):
         try:
@@ -5141,7 +5151,6 @@ class EmploymentdraftViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            # Use Employmentdraft1Serializer for the retrieve action
             serializer = Employmentdraft1Serializer(instance)
             return Response(serializer.data)
         except Employmentdraft.DoesNotExist:
