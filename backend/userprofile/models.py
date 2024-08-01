@@ -142,7 +142,7 @@ class Opportunity(models.Model):
 class Event(models.Model):
     title = models.CharField(max_length=5000)
     description = models.CharField(max_length=20000)
-    e_datetime = models.DateTimeField(default=timezone.now)
+    e_datetime = models.DateField(default=timezone.now)
     location = models.CharField(max_length=5000 , default='NMS')
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="events")
     image_url = models.ImageField(upload_to='events', default='events/default.jpg')
