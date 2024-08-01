@@ -910,7 +910,7 @@ def delete_employment(request, pk):
 class EmploymentBulkCreateUpdateView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            serializer = EmploymentdraftSerializer(data=request.data, many=True)
+            serializer = EmploymentSerializer(data=request.data, many=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -923,7 +923,7 @@ class EmploymentBulkCreateUpdateView(APIView):
             employment_list = request.data
             for employment_data in employment_list:
                 employment_instance = Employment.objects.get(id=employment_data['id'])
-                serializer = EmploymentdraftSerializer(employment_instance, data=employment_data)
+                serializer = EmploymentSerializer(employment_instance, data=employment_data)
                 if serializer.is_valid():
                     serializer.save()
                 else:
@@ -1092,7 +1092,7 @@ def delete_studie(request, pk):
 @api_view(['POST'])
 def bulk_create_studies(request):
     if isinstance(request.data, list):
-        serializer = StudiedraftSerializer(data=request.data, many=True)
+        serializer = StudieSerializer(data=request.data, many=True)
     else:
         return Response({"error": "Expected a list of items."}, status=status.HTTP_400_BAD_REQUEST)
     
