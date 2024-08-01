@@ -4977,7 +4977,8 @@ class EmploymentdraftViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            serializer = self.get_serializer(instance)
+            # Use Employmentdraft1Serializer for the retrieve action
+            serializer = Employmentdraft1Serializer(instance)
             return Response(serializer.data)
         except Employmentdraft.DoesNotExist:
             raise NotFound(detail="Employmentdraft not found", code=status.HTTP_404_NOT_FOUND)
@@ -5001,7 +5002,11 @@ class EmploymentdraftViewSet(viewsets.ModelViewSet):
 
 class StudiedraftViewSet(viewsets.ModelViewSet):
     queryset = Studiedraft.objects.all()
-    serializer_class = StudiedraftSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return Studiedraft1Serializer
+        return StudiedraftSerializer
 
     def list(self, request, *args, **kwargs):
         try:

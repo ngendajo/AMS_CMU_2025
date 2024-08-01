@@ -1073,8 +1073,19 @@ class EmploymentdraftSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employmentdraft
         fields = '__all__'
+        
+class Employmentdraft1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employmentdraft
+        fields = '__all__'
+        depth = 2
 
 class StudiedraftSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studiedraft
         fields = '__all__'
+class Studiedraft1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Studiedraft
+        fields = '__all__'
+        depth = 2
