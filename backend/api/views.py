@@ -5173,8 +5173,17 @@ class EmploymentdraftViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class StudiedraftFilter(filters.FilterSet):
+    alumn_id = filters.NumberFilter(field_name='alumn_id')
+
+    class Meta:
+        model = Studiedraft
+        fields = ['alumn_id']
+
 class StudiedraftViewSet(viewsets.ModelViewSet):
     queryset = Studiedraft.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = StudiedraftFilter
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
