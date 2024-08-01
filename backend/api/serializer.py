@@ -211,7 +211,7 @@ class StudieStatusByFamilySerializer(serializers.Serializer):
     
 #Studies status by combinations
 class StudieStatusByCombinationSerializer(serializers.Serializer):
-    family_name = serializers.CharField()
+    combination_name = serializers.CharField()
     diedmale = serializers.IntegerField()
     diedfemale = serializers.IntegerField()
     stumale = serializers.IntegerField()
@@ -610,7 +610,7 @@ class StudieSerializer(serializers.ModelSerializer):
         fields = '__all__'
 class UpdateStudieSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Studie
+        model = Studiedraft
         fields = ('level','degree','university','country','city','scholarship','status','scholarship_details')
 
 
