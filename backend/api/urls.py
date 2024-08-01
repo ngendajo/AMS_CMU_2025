@@ -47,7 +47,7 @@ urlpatterns = [
     path('emplbycombination/', views.EmploymentStatusByCombinationAPIView.as_view(), name='empl_by_combination'),
     path('stubygrade/', views.StudieStatusByGradeAPIView.as_view(), name='stu_by_grade'),
     path('stubyfamily/', views.StudieStatusByFamilyAPIView.as_view(), name='stu_by_family'),
-    path('stubycombination/', views.StudieStatusByCombinationAPIView.as_view(), name='stu_by_combination'),
+    path('stubycombination/', views.StudieStatusByCombinationsAPIView.as_view(), name='stu_by_combination'),
     path('empstubygrade/', views.StudieEmployStatusByGradeAPIView.as_view(), name='empstu_by_grade'),
     
     path('alumni/info/', views.create_alumni_info, name='auth_registeraluminiinfo'),
