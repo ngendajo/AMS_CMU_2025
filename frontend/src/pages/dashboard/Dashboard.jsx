@@ -1,5 +1,5 @@
 import React from 'react';
-import './Dashboard.css'
+import './dashboard.css'
 import { DashboardCard } from '../../components/dashboard/dashboard-card';
 import icon1 from '../../static/images/profile_icon.png'
 import icon2 from '../../static/images/directory_icon.png'
