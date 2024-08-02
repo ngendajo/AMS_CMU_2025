@@ -1,8 +1,11 @@
 :root{
   --green: #498160;
+  --greenopa: #49816030;
   --brown: #6d5736;
   --orange: #f49c46;
+  --orangeli: #f4d2b0;
   --coffee: #957967;
+  --coffeeli: #d6c7bd;
   --yellow: #d8b040;
   --black: #363636;
   --blackopa: #36363650;
@@ -66,4 +69,8 @@
 body, html{
   margin: 0;
   padding: 0;
+}
+
+button:focus{
+  outline: none;
 }

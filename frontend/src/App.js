@@ -9,17 +9,45 @@ import useAuth from './hooks/useAuth';
 import Error from './pages/Error';
 //import AuthCheck from './context/AuthCheck';
 import Unauthorized from './pages/Unauthorized';
-import Dashboard from './pages/dashboard/Dashboard';
 
 import Home from './pages/home/Home';
 import NewsEvents from './pages/home/NewsEvents';
 import AlumniStories from './pages/home/AlumniStories';
-import Profile from './pages/profile/Profile';
-import Events from './pages/events/Events';
-import EventsCalendar  from './pages/events/Events-calendar'
+import StoryDetail from './pages/home/AlumniStoriesDetail.jsx';
 import Container from './pages/Container';
 
+import Dashboard from './pages/dashboard/Dashboard';
+import PersonalProfile from './pages/profile/PersonalProfile';
 
+import AlumniDirectory from './pages/directory/AlumniDirectory';
+import CareerOpportunity from './pages/career/CareerOpportunity';
+import FurtherEducation from './pages/education/FurtherEducation';
+// support and giving
+import DonationOptions from './pages/support/DonationOptions.jsx';
+import MentoringPrograms from './pages/support/MentoringPrograms.jsx';
+// social and networking
+import Events from './pages/social/Events';
+import EventsDetail from './pages/social/EventsDetail';
+import EventsCalendar from './pages/social/EventsCalendar';
+import EventsGallery from './pages/social/EventsGallery';
+import DiscussionForums from './pages/social/DiscussionForums';
+// contact CRC staff
+import Inquiry from './pages/contact/Inquiry.jsx';
+import AlumniStoryPosts from './pages/contact/AlumniStoryPosts.jsx';
+import AlumniJobPosts from './pages/contact/AlumniJobPosts.jsx';
+
+import PersonalProfileStaff from './pages/profile/PersonalProfileStaff';
+// import AddEventForm from './pages/social/AddEventForm.jsx';
+
+import AddEventForm from './pages/social/AddEventForm.jsx';
+
+import NewsForm from './pages/contact/AddNewsForm.jsx';
+import ResumeBuilderPage from './pages/profile/ResumeBuilderPage';
+import AddGrade from './pages/contact/AddGradeForm.jsx';
+import Addcombination from './pages/contact/AddCombination.jsx';
+import AddEp from './pages/contact/AddEps.jsx';
+import AddAlumni from './pages/contact/AddAlumni.jsx';
+import AddASYVInfoForAlumni from './pages/contact/AddASYVInfoForAlumni.jsx';
 
 function App() {
   const refresh = useRefreshToken();
@@ -41,23 +69,57 @@ function App() {
           <Routes>
             <Route path='/' element={<Layout />}>
               {/* public routes*/}
-                <Route path='home' element={<Home />}/>
+                <Route path='/home' element={<Home />}/>
                 <Route path='/news_and_events' element={<NewsEvents />}/>
                 <Route path='/alumni_stories' element={<AlumniStories />}/>
                 <Route path='error' element={<Error />}/>
                 <Route path='unauthorized' element={<Unauthorized />}/>
-             
+                <Route path='/stories-detail' element={<StoryDetail />}/>
 
                 {/* we want to protect these routes*/}
                 <Route element={<RequireAuth />}>
-                  <Route path='/' element={<Container/>}>
-                    <Route path="/" element={<Dashboard/>} />
-                    <Route path="/profile" element={<Profile />} />
+                  <Route path='/' element={<Container />}>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/personal_profile" element={<PersonalProfile />} />
+                    <Route path="/alumni_directory" element={<AlumniDirectory />} />
+                    <Route path="/career_opportunity" element={<CareerOpportunity />} />
+                    <Route path="/further_education" element={<FurtherEducation />} />
+                    <Route path="/donation_options" element={<DonationOptions />} />
+                    <Route path="/mentoring_programs" element={<MentoringPrograms />} />
                     <Route path="/events" element={<Events />} />
-                    <Route path="/calendar" element={<EventsCalendar />} />
+                    <Route path="/events-detail" element={<EventsDetail />} />
+                    <Route path="/events-calendar" element={<EventsCalendar />} />
+                    <Route path="/events-gallery" element={<EventsGallery />} />
+                    <Route path="/discussion_forums" element={<DiscussionForums />} />
+                    <Route path="/frequent_inquiries" element={<Inquiry />} />
+                    <Route path="/alumni_story_posts" element={<AlumniStoryPosts />} />
+                    <Route path="/alumni_job_posts" element={<AlumniJobPosts />} />
+                    <Route path="/personal_profile_staff" element={<PersonalProfileStaff />} />
+                   <Route path="/add-event" element={<AddEventForm />} /> 
+          
+                    <Route path="news_posts" element={<NewsForm />} />
+                    <Route path="/personal_profile-resume" element={<ResumeBuilderPage />} />
+                    <Route path="/add_grade" element={<AddGrade />} />
+                    <Route path="/add_combination" element={<Addcombination />} />
+                    <Route path="/add_eps" element={<AddEp />} />
+                    <Route path="/add_alumni" element={<AddAlumni />} />
+                    <Route path="/add-event" element={<AddEventForm />} />
+
+
+                    
+                    <Route path='add-alumni/info/:id' element={<AddASYVInfoForAlumni />}>
+                        
+                        {/* <Route path='addemployment' element={<AddEmployment />}/>
+                        <Route path='study' element={<AddStudie />}/>
+                        <Route path='story' element={<AddStory />}/>
+                      </Route>
+                      <Route path='add-alumni/:id' element={<EditAlumini />}/>
+
+                    <Route element={<AuthCheck allowedRoles={["superuser","crc"]} />}>
+                      <Route path='delete-alumni/:id' element={<DeleteAlumni />}/>
+                      <Route path='delete-comb/:id' element={<Deletecombination/>}/> */}
+                    </Route> 
                   </Route>
-                  
-               
                 </Route>
 
                 {/* catch all */}

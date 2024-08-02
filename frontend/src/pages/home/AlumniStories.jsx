@@ -5,15 +5,21 @@ import HomeBannerAlumni from '../../components/home/home_banner_alumni'
 import { Alumni } from "../../components/home/home_alumni";
 import HomeFooter from '../../components/home/home_footer'
 import LoginPopUp from '../../components/home/login_pop_up'
-
+import axios from "axios";
 import placeholder1 from '../../static/images/gallery1.jpg'
 import placeholder2 from '../../static/images/gallery2.jpg'
 import placeholder3 from '../../static/images/gallery3.jpg'
+import baseUrl from '../../api/baseUrl'
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from 'react-router-dom';
 
 const AlumniStories = () => {
 
   const [showLogin, setShowLogin] = useState(false);
-
+  const { auth } = useAuth();
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  const placeholders = [placeholder1, placeholder2, placeholder3];
   const toggleLoginPopup = () => {
     setShowLogin(!showLogin);
   };
@@ -28,6 +34,33 @@ const AlumniStories = () => {
     }
 }, []);
 
+useEffect(() =>{
+    
+  const getData = async () =>{
+      try{
+          const response = await axios.get(baseUrl+'/storyhomeview/',{
+              headers: {
+                  "Content-Type": 'multipart/form-data'
+              },
+              withCredentials:true
+          });
+          
+          setData(response.data);
+      }catch(err) {
+          console.log(err);
+      }
+  }
+
+  getData();
+
+},[auth])
+console.log("data", data)
+
+const handleDetail = (data) => {
+  navigate('/stories-detail', { state: { data } });
+  console.log("stories: ", data);
+};
+const getPlaceholder = (index) => placeholders[index % placeholders.length];
   return (
     <div id="top3">
       {/* 1. header: */}
@@ -39,30 +72,22 @@ const AlumniStories = () => {
       {/* 3. alumni: */}
       <div className="cards">
         <div className="cards-wrapper">
-            <Alumni
-                imgSrc={placeholder1}
-                imgAlt="image1"
-                title="A Story of Transformation"
-                description="Salem Isezerano '23"
-                buttonText="READ MORE"
-                link="card1"
-            />
-            <Alumni
-                imgSrc={placeholder2}
-                imgAlt="image2"
-                title="Anne's Vision for Me, and All of Rwanda"
-                description="Emmanuel Nkundunkundiye '12"
-                buttonText="READ MORE"
-                link="card2"
-            />
-            <Alumni
-                imgSrc={placeholder3}
-                imgAlt="image3"
-                title="What ASYV Means to Me"
-                description="Pacifique Rutamu '13"
-                buttonText="READ MORE"
-                link="card3"
-            />
+
+        {data.map((story, index) => (
+            story.displayed?
+              <Alumni
+              imgSrc={story.image || getPlaceholder(index)}
+                  imgAlt="image1"
+                  title={story.title}
+                  description={story.first_name}
+                  buttonText={story.buttonText}
+                  link={() => handleDetail(story)}
+              />
+              : null
+          ))
+        }
+            
+            
         </div>
       </div>
 

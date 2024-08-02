@@ -1,20 +1,153 @@
+body {
+    background-color: var(--palegreen);
+}
 
-@media screen and (min-width: 680px) {
-    .linksonmobile{
-        display: none;
-    }
-    .linksoncomputer{
-        display: flex;
-    }
-  }
-  @media screen and (max-width: 680px) {
-    
-    .linksoncomputer{
-        display: none;
-    }
-  }
-  .mainbody{
-    background: var(--palegreen);
-    width:100%;
-  }
-  
+/* 1. Dashboard Header - Annie */
+.DashboardHeader{
+    /* display */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    /* color block */
+    background-color: var(--white);
+    position: fixed;
+    top: 0;
+    box-shadow: 0 6px 6px var(--blackopa);
+    /* box */
+    width: 100%;
+    height: 80px;
+    padding: 5px 0;
+    box-sizing: border-box;
+    z-index: 5;
+}
+.DashboardHeaderLeft{
+    /* display */
+    display: inline-flex;
+    align-items: center;
+    /* box */
+    width: 25%;
+    margin-left: 340px;
+}
+.DashboardHeaderLeft img{
+    /* box */
+    width: 70px;
+    margin-left: -10px;
+}
+.DashboardHeaderLeft p{
+    /* font */
+    color: var(--green);
+    font-family: Regular;
+    font-size: 16px;
+    line-height: 1.2;
+}
+.DashboardHeaderRight{
+    /* display */
+    display: flex;
+    align-items: center;
+}
+.DashboardHeaderLogout{
+    /* box */
+    margin-right: calc(60px + (100vw - 400px) * 0.05);
+}
+.DashboardHeaderLogout button{
+    /* font */
+    background-color: var(--white);
+    color: var(--orange);
+    font-family: Medium;
+    font-size: 18px;
+    text-decoration: none;
+    cursor: pointer;
+    /* box */
+    width: 100%;
+    padding: 8px 20px;
+    border: 2px var(--orange) solid;
+    border-radius: 30px;
+}
+.DashboardHeaderLogout button:hover{
+    /* font */
+    background-color: var(--orange);
+    color: var(--white);
+}
+
+/* 2. Dashboard Sidebar - Annie */
+.Sidebar{
+    /* display */
+    display: flex;
+    justify-content: center;
+    /* color block */
+    background: var(--black);
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* box */
+    width: 280px;
+    height: 100vh;
+    z-index: 10;
+    overflow-y: auto;
+}
+.SidebarWrap{
+    /* box */
+    width: 100%;
+}
+.Profile{
+    /* display */
+    display: flex;
+    align-items: center;
+    /* box */
+    width: 85%;
+    padding: 30px 20px;
+}
+.Profile img{
+    /* box */
+    width: 60px;
+    margin-left: 10px;
+    border-radius: 50%;
+}
+.ProfileText{
+    /* display */
+    display: inline-flex;
+    flex-direction: column;
+    /* box */
+    width: 80%;
+    margin-left: 10px;
+}
+.Content{
+    /* box */
+    flex: 1;
+    scrollbar-width: none;
+    padding-bottom: 40px;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+}
+.Content::-webkit-scrollbar{
+    /* display */
+    display: none;
+}
+
+/* 3. Global Container - Annie */
+.MarginContainer{
+    /* display */
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    /* box */
+    position: absolute;
+    top: 140px;
+    bottom: 60px;
+    left: 340px;
+    right: 60px;
+}
+
+/* 4. Dashboard Cards - Annie */
+.DashboardCards{
+    /* display */
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(4, 1fr);
+    /* box */
+    width: 95%;
+    padding-top: 15px;
+    padding-bottom: 75px;
+    gap: 80px 50px;
+}

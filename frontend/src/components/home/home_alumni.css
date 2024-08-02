@@ -2,10 +2,10 @@
   /* display */
   display: flex;
   flex-direction: column;
-  position: relative;
   /* color block */
   background-color: var(--white);
   /* box */
+  position: relative;
   width: 350px;
   height: 330px;
   margin: 10px;
@@ -14,10 +14,6 @@
   box-shadow: 0px 6px 6px var(--blackopa);
   transition: transform 0.3s ease-in-out;
 }
-.Alumni-card-container:hover{
-  /* color block */
-  transform: scale(1.02);
-} 
 .Alumni-card-img{
   /* box */
   width: 100%;
@@ -49,6 +45,8 @@
   color: var(--green);
   font-family: Regular;
   font-size: 14px;
+  border: none;
+  background: none;
   text-decoration: none;
   cursor: pointer;
   /* box */

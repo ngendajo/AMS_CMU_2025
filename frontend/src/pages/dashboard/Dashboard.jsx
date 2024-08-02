@@ -1,81 +1,152 @@
 import React from 'react';
-import styled from 'styled-components';
-import { DashboardCard } from './Dashboard-card';
-
-const DashboardContainer = styled.div`
-  display: flex;
-   padding: 40px;
-   margin-top: 20px;
-`;
-
-const ContentContainer = styled.div`
-  margin-left: 264px; /* Width of Sidebar */
-  padding: 40px;
-  width: calc(100% - 264px); /* Calculate remaining width */
-`;
-
-
-
-const CardsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-`;
+import './Dashboard.css'
+import { DashboardCard } from '../../components/dashboard/dashboard-card';
+import icon1 from '../../static/images/profile_icon.png'
+import icon2 from '../../static/images/directory_icon.png'
+import icon3 from '../../static/images/career_icon.png'
+import icon4 from '../../static/images/education_icon.png'
+import icon5 from '../../static/images/donation_icon.png'
+import icon6 from '../../static/images/mentoring_icon.png'
+import icon7 from '../../static/images/events_icon.png'
+import icon8 from '../../static/images/forums_icon.png'
+import icon9 from '../../static/images/inquiries_icon.png'
+import icon10 from '../../static/images/story_posts_icon.png'
+import icon11 from '../../static/images/job_posts_icon.png'
+import useAuth from '../../hooks/useAuth';
 
 const Dashboard = () => {
+
+  const { auth } = useAuth();
   
   return (
-    <>
-    <DashboardContainer>
-   
-      <ContentContainer>
-        <CardsContainer>
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 1"
-            buttonText="Personal Profile"
-            path="/profile"
-          />
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 2"
-            buttonText="Alumni Directory"
-            path="/directory"
-          />
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 3"
-            buttonText="Career Opportunity"
-            path="/career"
-          />
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 4"
-            buttonText="Further Education"
-            path="/education"
-          />
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 5"
-            buttonText="Ways to Give Back"
-            path="/give-back"
-          />
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 6"
-            buttonText="Social & Networking"
-            path="/networking"
-          />
-          <DashboardCard
-            imgSrc="https://www.colorhexa.com/957967.png"
-            imgAlt="Card Image 7"
-            buttonText="Contact CRC Staff"
-            path="/contact"
-          />
-        </CardsContainer>
-      </ContentContainer>
-    </DashboardContainer>
-    </>
+    <div class="DashboardCards">
+    {(auth.user.is_alumni) && (
+      <>
+        <DashboardCard
+          imgSrc={icon1}
+          imgAlt="Personal profile icon"
+          buttonText="Personal Profile"
+          path="/personal_profile"
+        />
+        <DashboardCard
+          imgSrc={icon2}
+          imgAlt="Alumni directory icon"
+          buttonText="Alumni Directory"
+          path="/alumni_directory"
+        />
+        <DashboardCard
+          imgSrc={icon3}
+          imgAlt="Career opportunity icon"
+          buttonText="Career Opportunity"
+          path="/career_opportunity"
+        />
+        <DashboardCard
+          imgSrc={icon4}
+          imgAlt="Further education icon"
+          buttonText="Further Education"
+          path="/further_education"
+        />
+        <DashboardCard
+          imgSrc={icon5}
+          imgAlt="Donation options icon"
+          buttonText="Donation Options"
+          path="/donation_options"
+        />
+        <DashboardCard
+          imgSrc={icon6}
+          imgAlt="Mentoring programs icon"
+          buttonText="Mentoring Programs"
+          path="/mentoring_programs"
+        />
+        <DashboardCard
+          imgSrc={icon7}
+          imgAlt="Reunion events icon"
+          buttonText="Reunion Events"
+          path="/events"
+        />
+        <DashboardCard
+          imgSrc={icon8}
+          imgAlt="Discussion forums icon"
+          buttonText="Discussion Forums"
+          path="/discussion_forums"
+        />
+        <DashboardCard
+          imgSrc={icon9}
+          imgAlt="Frequent inquiries icon"
+          buttonText="Frequent Inquiries"
+          path="/frequent_inquiries"
+        />
+        <DashboardCard
+          imgSrc={icon10}
+          imgAlt="Alumni story posts icon"
+          buttonText="Alumni Story Posts"
+          path="/alumni_story_posts"
+        />
+        <DashboardCard
+          imgSrc={icon11}
+          imgAlt="Alumni job posts icon"
+          buttonText="Alumni Job Posts"
+          path="/alumni_job_posts"
+        />
+      </>)}
+    {(auth.user.is_crc || auth.user.is_superuser) && (
+      <>
+        <DashboardCard
+          imgSrc={icon2}
+          imgAlt="Alumni directory icon"
+          buttonText="Alumni Directory"
+          path="/alumni_directory"
+        />
+        <DashboardCard
+          imgSrc={icon3}
+          imgAlt="Career opportunity icon"
+          buttonText="Career Opportunity"
+          path="/career_opportunity"
+        />
+        <DashboardCard
+          imgSrc={icon4}
+          imgAlt="Further education icon"
+          buttonText="Further Education"
+          path="/further_education"
+        />
+        <DashboardCard
+          imgSrc={icon5}
+          imgAlt="Donation options icon"
+          buttonText="Donation Options"
+          path="/donation_options"
+        />
+        <DashboardCard
+          imgSrc={icon6}
+          imgAlt="Mentoring programs icon"
+          buttonText="Mentoring Programs"
+          path="/mentoring_programs"
+        />
+        <DashboardCard
+          imgSrc={icon7}
+          imgAlt="Reunion events icon"
+          buttonText="Reunion Events"
+          path="/events"
+        />
+        <DashboardCard
+          imgSrc={icon8}
+          imgAlt="Discussion forums icon"
+          buttonText="Discussion Forums"
+          path="/discussion_forums"
+        />
+        <DashboardCard
+          imgSrc={icon9}
+          imgAlt="Frequent inquiries icon"
+          buttonText="Frequent Inquiries"
+          path="/frequent_inquiries"
+        />
+        <DashboardCard
+          imgSrc={icon10}
+          imgAlt="Alumni story posts icon"
+          buttonText="Alumni Story Posts"
+          path="/alumni_story_posts"
+        />
+      </>)}
+    </div>
   );
 };
 

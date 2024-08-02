@@ -177,12 +177,12 @@ body {
 }
 .GalleryBold{
     /* font */
-    color: var(--yellow);
+    color: var(--orange);
     font-family: Medium
 }
 .GalleryText button{
     /* font */
-    background-color: var(--yellow);
+    background-color: var(--orange);
     color: var(--white);
     font-family: Medium;
     font-size: 18px;
@@ -191,7 +191,7 @@ body {
     /* box */
     padding: 10px 40px;
     box-shadow: 0 1px 5px var(--blackopa);
-    border: 2px var(--yellow) solid;
+    border: 2px var(--orange) solid;
     border-radius: 30px;
     margin-left: 25px;
     white-space: nowrap;
@@ -221,11 +221,10 @@ body {
 }
 .Mission{
     /* font */
-    color: var(--yellow);
+    color: var(--orange);
     font-family: Bold;
     font-size: 24px;
     text-align: center;
-    text-transform: uppercase;
     letter-spacing: 0.9px;
     /* box */
     width: 100%;
@@ -235,48 +234,6 @@ body {
     box-sizing: border-box;
 }
 
-<<<<<<< HEAD
-=======
-/* 5. Home Gallery - Anushka */
-.gallery{
-    background-color: var(--green);
-    font-family: Regular;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.GalleryText{
-        /* font */
-        color: var(--white);
-        font-family: Regular;
-        font-size: 18px;
-        text-align: center;
-        /* box */
-        width: 100%;
-        margin-bottom: 10px;
-        padding-left: 25px;
-        padding-right: 25px;
-
-}
-
-.learn-more-button {
-    background-color: var(--yellow);
-    color: var(--white);
-    font-family: Medium;
-    font-size: 16x;
-  border: 0px;
-   
-    padding: 10px 10px;
-   
-    border-radius: 30px;
-  }
-  
-  .learn-more-button:hover {
-    background-color: var(--orange);
-  }
->>>>>>> d82cbe35f1a2fb35432879ab9b2a2b3cf3f6d133
 /* 6. Home News - Anushka (Aligned) */
 /* 7. Home Alumni - Anushka (Aligned) */
 .cards{
@@ -295,7 +252,6 @@ body {
     color: var(--brown);
     font-family: Bold;
     font-size: 24px;
-    text-transform: uppercase;
     letter-spacing: 0.9px;
     /* box */
     margin-bottom: -5px;
@@ -336,7 +292,7 @@ body {
 }
 .ViewMore{
     /* font */
-    background-color: var(--yellow);
+    background-color: var(--orange);
     color: var(--white);
     font-family: Medium;
     font-size: 18px;
@@ -346,7 +302,7 @@ body {
     padding: 10px 40px;
     margin-top: 10px;
     box-shadow: 0 1px 5px var(--blackopa);
-    border: 2px var(--yellow) solid;
+    border: 2px var(--orange) solid;
     border-radius: 30px;
 }
 .ViewMore:hover{

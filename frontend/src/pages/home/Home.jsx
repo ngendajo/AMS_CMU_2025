@@ -15,17 +15,46 @@ import placeholder1 from '../../static/images/gallery1.jpg'
 import placeholder2 from '../../static/images/gallery2.jpg'
 import placeholder3 from '../../static/images/gallery3.jpg'
 
+import baseUrl from '../../api/baseUrl'
+
 export default function Home() {
 
-    const females = 853;
-    const males = 511;
+    const [combination, setCombination] = useState([]);
+
+    useEffect(() => {
+        const fetchCombinationData = async () => {
+          try {
+            const response = await fetch(baseUrl+'/alumnitotalbycombination/');
+            const data = await response.json();
+            setCombination(data);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
     
-    const hgl = 123;
-    const mce = 456;
-    const meg = 789;
-    const mpc = 234;
-    const pcb = 567;
+        fetchCombinationData();
+      }, []);
+      console.log(combination);
     
+    // total for gender
+    const totalG = combination.reduce(
+        (acc, item) => {
+            acc.male += item.male;
+            acc.female += item.female;
+            return acc;
+        },
+        { male: 0, female: 0 }
+    );
+    
+    // total for combination
+    const totalC = combination.reduce(
+        (acc, item) => {
+            acc[item.combination_name] = item.total;
+            return acc;
+        },
+        {}
+    );
+
     const [showLogin, setShowLogin] = useState(false);
 
     const toggleLoginPopup = () => {
@@ -64,8 +93,8 @@ export default function Home() {
         {/* 4. gender: */}
         {/* 5. combination: */}
         <div className="charts">
-            <GenderChart females={females} males={males} />
-            <CombinationChart hgl={hgl} mce={mce} meg={meg} mpc={mpc} pcb={pcb} />
+            <GenderChart females={totalG.female} males={totalG.male} />
+            <CombinationChart data={totalC} />
             <div className="Mission">
                 <p>Through healing, education, and love, the Agahozo-Shalom Youth Village empowers orphaned and vulnerable Rwandan youth to build lives of dignity and contribute to a better world.</p>
             </div>
@@ -74,7 +103,7 @@ export default function Home() {
         {/* 6. news: */}
         <div className="cards">
             <section className="cards-title">
-                <h1>NEWS & EVENTS</h1>
+                <h1>News & Events</h1>
                 <p>Stay Updated with the Latest News and Upcoming Events</p>
             </section>
             <div className="cards-wrapper">
@@ -100,7 +129,7 @@ export default function Home() {
                     link="card3"
                 />
             </div>
-            <div class="view-button-news">
+            <div className="view-button-news">
                 <Link to="/news_and_events#top2" className="ViewMore">View More</Link>
             </div>
         </div>
@@ -108,7 +137,7 @@ export default function Home() {
         {/* 7. alumni: */}
         <div className="cards">
             <section className="cards-title">
-                <h1>ALUMNI STORIES</h1>
+                <h1>Alumni Stories</h1>
                 <p>Discover the Inspiring Journeys of Our Alumni</p>
             </section>
             <div className="cards-wrapper">
@@ -137,7 +166,7 @@ export default function Home() {
                     link="card3"
                 />
             </div>
-            <div class="view-button-alumni">
+            <div className="view-button-alumni">
                 <Link to="/alumni_stories#top3" className="ViewMore">View More</Link>
             </div>
         </div>

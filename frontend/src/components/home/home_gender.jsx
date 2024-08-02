@@ -17,7 +17,6 @@ const BarTitle = styled.div`
     color: var(--brown);
     font-family: Bold;
     font-size: 24px;
-    text-transform: uppercase;
     letter-spacing: 0.9px;
     // box
     margin-bottom: -50px;
@@ -29,8 +28,9 @@ const Chart = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     // box
-    width: 900px;
+    width: 800px;
     height: 300px;
+    padding: 0 50px;
     border-bottom: 2px solid var(--brown);
     transition: height 0.5s ease;
 `;
@@ -40,9 +40,9 @@ const Bar = styled.div`
     background-color: ${props => props.color || 'var(--black)'};
     position: relative;
     // box
-    width: 350px;
+    width: 500px;
     height: 100%;
-    margin: 0 50px;
+    margin: 0 20px;
     transition: height 1s ease;
 `;
 
