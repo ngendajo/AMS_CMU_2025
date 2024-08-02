@@ -356,7 +356,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_librarian'] = user.is_librarian
         token['is_teacher'] = user.is_teacher
         token['is_student'] = user.is_student
-        token['image_url'] = user.image_url
         token['id'] = user.id
         # ...
 
