@@ -2,7 +2,7 @@ import React from 'react';
 
 const ResumeBuilderPage = () => {
   return (
-    <div style={{ height: '100%', width: '100%', borderRadius:"8px" ,  border: "5px var(--green) solid", boxShadow: "0 1px 5px var(--blackopa)"}}>
+    <div style={{ height: '100%', width: '100%', borderRadius:"8px" , boxShadow: "0 1px 5px var(--blackopa)"}}>
       <iframe
         src="https://www.open-resume.com/" 
         title="Reactive Resume Builder"
