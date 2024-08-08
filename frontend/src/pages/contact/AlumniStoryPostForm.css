@@ -11,10 +11,10 @@
   }
   
   .story-form-container {
-    width: 90%;
+    width: 50%;
     font-family: Regular;
-  margin-top: 20px;
-  margin-left: 20px;
+    margin-top: 0px;
+    margin-left: 50px;
   }
 
   .tab-content{
