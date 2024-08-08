@@ -70,7 +70,6 @@ function App() {
             <Route path='/' element={<Layout />}>
               {/* public routes*/}
                 <Route path='/home' element={<Home />}/>
-                <Route path='/resume' element={<ResumeBuilderPage />}/>
                 <Route path='/news_and_events' element={<NewsEvents />}/>
                 <Route path='/alumni_stories' element={<AlumniStories />}/>
                 <Route path='error' element={<Error />}/>
