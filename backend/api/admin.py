@@ -162,11 +162,3 @@ class BookAdmin(ImportExportModelAdmin):
 class Issue_BookAdmin(ImportExportModelAdmin):
     list_display =('id','book','borrower','library_number','issuedate','returndate')
     
-#atendance System
-@admin.register(Atendance)
-class AtendanceAdmin(ImportExportModelAdmin):
-    list_display =('id','user','atendance_date','period')
-    
-@admin.register(Term)
-class AtendanceAdmin(ImportExportModelAdmin):
-    list_display =('id','term_name','startdate','enddate')
