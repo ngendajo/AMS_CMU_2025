@@ -195,13 +195,5 @@ urlpatterns = [
     path('gborrower/', views.BorrowerByGradeDisplayAPIView.as_view(), name='grade_borrower_report'),
     path('borrowers/', views.AllBorrowersDisplayAPIView.as_view(), name='borrowers_report'),
     
-    #Atendance paths
-    path('atendance/',views.AtendanceRegistrationView.as_view()),
-    path('atendance/<int:pk>/delete/', views.delete_atendance, name='delete-atendance'),
-    path('atendance/<int:pk>/', views.update_atendance, name='update_atendance'),
-    
-    path('term/',views.TermRegistrationView.as_view()),
-    path('term/<int:pk>/delete/', views.delete_term, name='delete-term'),
-    path('term/<int:pk>/', views.update_term, name='update_term'),
     path('', views.getRoutes)
 ]
