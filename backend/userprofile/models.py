@@ -391,22 +391,7 @@ class Issue_Book(models.Model):
 
     def __str__(self):
         return str(self.book.book_name + self.borrower.first_name + "borrow")
-    
-#Attendance System
-class Atendance(models.Model):
-    user = models.ForeignKey(User,on_delete=models.PROTECT, related_name="atend")
-    atendance_date = models.CharField(max_length=70)
-    period = models.CharField(max_length=30)
-    
 
-    def __str__(self):
-        return str(self.user.first_name + "student")
-    
-class Term(models.Model):
-    term_name = models.CharField(max_length=70)
-    startdate = models.CharField(max_length=70)
-    enddate = models.CharField(max_length=70)
-    
 
     def __str__(self):
         return str(self.term_name)
@@ -455,4 +440,28 @@ class Kids_alumni(models.Model):
         ('F', 'Fail'),
     ) 
     decision = models.CharField(max_length=2,choices=dec,default="P")
+    
+    
+#school timetable
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=100)
+
+# TimeSlots model
+class TimeSlots(models.Model):
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+# GradeTimeSlots model
+class GradeTimeSlots(models.Model):
+    day_of_week = models.CharField(max_length=10)
+    activity = models.CharField(max_length=100)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    timeslots = models.ForeignKey(TimeSlots, on_delete=models.CASCADE)
+
+# TeacherCombinationGradeSubject model
+class TeacherCombinationGradeSubject(models.Model):
+    combination = models.ForeignKey(Combination, on_delete=models.CASCADE)
+    gradetimeslots = models.ForeignKey(GradeTimeSlots, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(User, limit_choices_to={'is_teacher': True}, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 

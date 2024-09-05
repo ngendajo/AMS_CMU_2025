@@ -1031,29 +1031,6 @@ class AllBorrowersDisplaySerializer(serializers.Serializer):
     is_alumni=serializers.BooleanField()
     is_staff=serializers.BooleanField()
     
-
-#atandance
-class AtendanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Atendance
-        fields = '__all__'
-        
-class DisplayAtendanceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Atendance
-        fields = '__all__'
-        depth=2
-        
-class TermSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Term
-        fields = '__all__'
-        
-class DisplayTermSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Term
-        fields = '__all__'
-        depth=2
    
    
    #Alumni update her/his profile     
@@ -1109,3 +1086,24 @@ class Studiedraft1Serializer(serializers.ModelSerializer):
         model = Studiedraft
         fields = '__all__'
         depth = 2
+        
+#school timetable
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'
+
+class TimeSlotsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeSlots
+        fields = '__all__'
+
+class GradeTimeSlotsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GradeTimeSlots
+        fields = '__all__'
+
+class TeacherCombinationGradeSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeacherCombinationGradeSubject
+        fields = '__all__'

@@ -22,6 +22,10 @@ router.register(r'sampleMoMoCodes', views.SampleMoMoCodeViewSet)
 router.register(r'sampleDonations', views.SampleDonationViewSet)
 router.register(r'employmentdrafts', views.EmploymentdraftViewSet)
 router.register(r'studiedrafts', views.StudiedraftViewSet)
+router.register(r'subjects', views.SubjectViewSet)
+router.register(r'timeslots', views.TimeSlotsViewSet)
+router.register(r'gradetimeslots', views.GradeTimeSlotsViewSet)
+router.register(r'teachercombinationgradesubjects', views.TeacherCombinationGradeSubjectViewSet)
 
 urlpatterns = [
     # user paths
