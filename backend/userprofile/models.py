@@ -450,6 +450,16 @@ class Subject(models.Model):
 class TimeSlots(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
+    
+    def __str__(self):
+        return str(self.start_time)+":"+str(self.end_time)
+    
+class Academic(models.Model):
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        return f"Academic Year: {self.start_date} - {self.end_date}"
 
 # GradeTimeSlots model
 class GradeTimeSlots(models.Model):

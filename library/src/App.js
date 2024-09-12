@@ -48,6 +48,11 @@ import UpStudents from './components/pages/UpStudents';
 import UpIssue from './components/pages/UpIssue';
 import OverdueBooks from './components/pages/OverdueBooks';
 
+import TeacherSubjectForm from './components/schoolTimeTable/TeacherSubjectForm';
+import TeacherSubjectList from './components/schoolTimeTable/TeacherSubjectList';
+import TimeSlots from './components/schoolTimeTable/TimeSlots';
+import GradeTimeSlots from './components/schoolTimeTable/GradeTimeSlots';
+
 
 
 function App() {
@@ -79,7 +84,11 @@ function App() {
                 <Route element={<RequireAuth />}>
                   <Route path='/' element={<MainDashboard />}>
                     <Route path='/' element={<Dashboard />}/>
+                    <Route path="/schooltimetable" element={<TeacherSubjectList />} />
                     <Route element={<AuthCheck allowedRoles={["superuser","librarian","crc"]} />}>
+                      <Route path="/timeslots" element={<TimeSlots />} />
+                      <Route path="/grade-timeslots" element={<GradeTimeSlots />} />
+                      <Route path="/add-teacher-subject" element={<TeacherSubjectForm />} />
                       <Route path='author' element={<Author />}/>
                       <Route path='authors' element={<Authors />}/>
                       <Route path='author/:id' element={<Editauthor/>}/>

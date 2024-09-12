@@ -1107,3 +1107,8 @@ class TeacherCombinationGradeSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherCombinationGradeSubject
         fields = '__all__'
+        
+class AcademicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Academic
+        fields = '__all__'

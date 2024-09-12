@@ -134,6 +134,13 @@ export default function Menus() {
                                 
                                 </>}
                     
+                    <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> TimeTable <FiChevronDown /> </Link>
+                        <ul className={boxClassSubMenu.join(' ')} > 
+                            <li> <Link onClick={toggleClass} className='is-active'  to={`/timeslots`}> TimeSlots </Link> </li>
+                            <li> <Link onClick={toggleClass} className='is-active'  to={`/grade-timeslots`}> Link Grade & TimeSlots </Link> </li>
+                            <li><Link onClick={toggleClass} className='is-active' to={`/schooltimetable`}> School TimeTable </Link> </li>
+                        </ul>
+                    </li>
                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/pass`}> Password </Link> </li>
 
                     </ul>

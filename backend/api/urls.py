@@ -37,6 +37,8 @@ urlpatterns = [
          name="reset-password",
     ), 
     path('password-reset/', views.PasswordReset.as_view(), name="password-reset"),
+    path('academics/', views.AcademicListCreateView.as_view(), name='academic-list-create'),
+    path('academics/<int:pk>/', views.AcademicRetrieveUpdateDestroyView.as_view(), name='academic-detail'),
     path('users/', views.get_users, name="users"),
     path('staff/', views.StaffUserView.as_view(), name='auth_registercrc'),
     path('alumni/', views.AluminiRegistrationView.as_view(), name='auth_registeralumini'),
