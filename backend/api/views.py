@@ -5208,61 +5208,30 @@ class TeacherCombinationGradeSubjectViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
         
-class AcademicViewSet(viewsets.ViewSet):
+class AcademicViewSet(viewsets.ModelViewSet):
+    queryset = Academic.objects.all()
+    serializer_class = AcademicSerializer
 
-    def list(self, request):
+    def create(self, request, *args, **kwargs):
         try:
-            academics = Academic.objects.all()
-            serializer = AcademicSerializer(academics, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return super().create(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def create(self, request):
+    def update(self, request, *args, **kwargs):
         try:
-            serializer = AcademicSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                raise ValidationError(serializer.errors)
-        except ValidationError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return super().update(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk=None):
+    def destroy(self, request, *args, **kwargs):
         try:
-            academic = Academic.objects.get(pk=pk)
-            serializer = AcademicSerializer(academic)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Academic.DoesNotExist:
-            return Response({'error': 'Academic record not found'}, status=status.HTTP_404_NOT_FOUND)
+            return super().destroy(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, pk=None):
+    def retrieve(self, request, *args, **kwargs):
         try:
-            academic = Academic.objects.get(pk=pk)
-            serializer = AcademicSerializer(academic, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                raise ValidationError(serializer.errors)
-        except Academic.DoesNotExist:
-            return Response({'error': 'Academic record not found'}, status=status.HTTP_404_NOT_FOUND)
-        except ValidationError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return super().retrieve(request, *args, **kwargs)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def destroy(self, request, pk=None):
-        try:
-            academic = Academic.objects.get(pk=pk)
-            academic.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Academic.DoesNotExist:
-            return Response({'error': 'Academic record not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

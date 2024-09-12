@@ -455,8 +455,8 @@ class TimeSlots(models.Model):
         return str(self.start_time)+":"+str(self.end_time)
     
 class Academic(models.Model):
-    start_date = models.CharField(max_length=50,default="")
-    end_date = models.CharField(max_length=50,default="")
+    start_date = models.CharField(max_length=10)
+    end_date = models.CharField(max_length=10)
 
     def __str__(self):
         return f"Academic Year: {self.start_date} - {self.end_date}"

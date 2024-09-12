@@ -26,7 +26,7 @@ router.register(r'subjects', views.SubjectViewSet)
 router.register(r'timeslots', views.TimeSlotsViewSet)
 router.register(r'gradetimeslots', views.GradeTimeSlotsViewSet)
 router.register(r'teachercombinationgradesubjects', views.TeacherCombinationGradeSubjectViewSet)
-router.register(r'academics', views.AcademicViewSet, basename='academic')
+router.register(r'academic', views.AcademicViewSet)
 
 urlpatterns = [
     # user paths
