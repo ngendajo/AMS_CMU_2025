@@ -5208,62 +5208,61 @@ class TeacherCombinationGradeSubjectViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
         
-class AcademicListCreateView(APIView):
-    def get(self, request):
+class AcademicViewSet(viewsets.ViewSet):
+
+    def list(self, request):
         try:
             academics = Academic.objects.all()
             serializer = AcademicSerializer(academics, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def post(self, request):
+    def create(self, request):
         try:
             serializer = AcademicSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                raise ValidationError(serializer.errors)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class AcademicRetrieveUpdateDestroyView(APIView):
-    def get_object(self, pk):
+    def retrieve(self, request, pk=None):
         try:
-            return Academic.objects.get(pk=pk)
-        except Academic.DoesNotExist:
-            return None
-
-    def get(self, request, pk):
-        academic = self.get_object(pk)
-        if academic is None:
-            return Response({"error": "Academic record not found."}, status=status.HTTP_404_NOT_FOUND)
-        try:
+            academic = Academic.objects.get(pk=pk)
             serializer = AcademicSerializer(academic)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        except Academic.DoesNotExist:
+            return Response({'error': 'Academic record not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def put(self, request, pk):
-        academic = self.get_object(pk)
-        if academic is None:
-            return Response({"error": "Academic record not found."}, status=status.HTTP_404_NOT_FOUND)
+    def update(self, request, pk=None):
         try:
+            academic = Academic.objects.get(pk=pk)
             serializer = AcademicSerializer(academic, data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                raise ValidationError(serializer.errors)
+        except Academic.DoesNotExist:
+            return Response({'error': 'Academic record not found'}, status=status.HTTP_404_NOT_FOUND)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def delete(self, request, pk):
-        academic = self.get_object(pk)
-        if academic is None:
-            return Response({"error": "Academic record not found."}, status=status.HTTP_404_NOT_FOUND)
+    def destroy(self, request, pk=None):
         try:
+            academic = Academic.objects.get(pk=pk)
             academic.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+        except Academic.DoesNotExist:
+            return Response({'error': 'Academic record not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
