@@ -1112,3 +1112,27 @@ class AcademicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Academic
         fields = '__all__'
+        
+#Attendance management System
+class AttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = ['student_id', 'staff_id', 'period', 'date']
+
+class AttendanceDetailSerializer(serializers.ModelSerializer):
+    student_first_name = serializers.CharField(source='student_id.user.first_name', read_only=True)
+    student_last_name = serializers.CharField(source='student_id.user.last_name', read_only=True)
+    studentid = serializers.CharField(source='student_id.studentid', read_only=True)
+    family_name = serializers.CharField(source='student_id.family.family_name', read_only=True)
+    grade_name = serializers.CharField(source='student_id.family.grade.grade_name', read_only=True)
+    combination_name = serializers.CharField(source='student_id.combination.combination_name', read_only=True)
+    staff_first_name = serializers.CharField(source='staff_id.first_name', read_only=True)
+    staff_last_name = serializers.CharField(source='staff_id.last_name', read_only=True)
+
+    class Meta:
+        model = Attendance
+        fields = [
+            'studentid', 'student_first_name', 'student_last_name',
+            'family_name', 'grade_name', 'combination_name',
+            'staff_first_name', 'staff_last_name', 'period', 'date'
+        ]

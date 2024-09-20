@@ -52,6 +52,8 @@ import TeacherSubjectForm from './components/schoolTimeTable/TeacherSubjectForm'
 import TeacherSubjectList from './components/schoolTimeTable/TeacherSubjectList';
 import TimeSlots from './components/schoolTimeTable/TimeSlots';
 import GradeTimeSlots from './components/schoolTimeTable/GradeTimeSlots';
+import Subjects from './components/schoolTimeTable/Subjects';
+import Academics from './components/schoolTimeTable/Academics';
 
 
 
@@ -88,6 +90,8 @@ function App() {
                     <Route element={<AuthCheck allowedRoles={["superuser","librarian","crc"]} />}>
                       <Route path="/timeslots" element={<TimeSlots />} />
                       <Route path="/grade-timeslots" element={<GradeTimeSlots />} />
+                      <Route path="/subjects" element={<Subjects />} />
+                      <Route path="/academics" element={<Academics />} />
                       <Route path="/add-teacher-subject" element={<TeacherSubjectForm />} />
                       <Route path='author' element={<Author />}/>
                       <Route path='authors' element={<Authors />}/>

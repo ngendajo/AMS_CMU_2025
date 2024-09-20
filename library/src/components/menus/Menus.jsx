@@ -138,6 +138,8 @@ export default function Menus() {
                         <ul className={boxClassSubMenu.join(' ')} > 
                             <li> <Link onClick={toggleClass} className='is-active'  to={`/timeslots`}> TimeSlots </Link> </li>
                             <li> <Link onClick={toggleClass} className='is-active'  to={`/grade-timeslots`}> Link Grade & TimeSlots </Link> </li>
+                            <li> <Link onClick={toggleClass} className='is-active'  to={`/subjects`}> Subjects </Link> </li>
+                            <li> <Link onClick={toggleClass} className='is-active'  to={`/academics`}> Academics </Link> </li>
                             <li><Link onClick={toggleClass} className='is-active' to={`/schooltimetable`}> School TimeTable </Link> </li>
                         </ul>
                     </li>

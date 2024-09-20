@@ -474,4 +474,12 @@ class TeacherCombinationGradeSubject(models.Model):
     gradetimeslots = models.ForeignKey(GradeTimeSlots, on_delete=models.CASCADE)
     teacher = models.ForeignKey(User, limit_choices_to={'is_teacher': True}, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    
+    
+#Attendance management System
+class Attendance(models.Model):
+    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
+    staff_id = models.ForeignKey(User, related_name='staff', on_delete=models.CASCADE)
+    period = models.IntegerField()  # Change to IntegerField
+    date = models.DateField()
 

@@ -5235,3 +5235,65 @@ class AcademicViewSet(viewsets.ModelViewSet):
             return super().retrieve(request, *args, **kwargs)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+#Attendance management System   
+class AttendanceViewSet(viewsets.ModelViewSet):
+    queryset = Attendance.objects.all()
+
+    def get_serializer_class(self):
+        # Use AttendanceDetailSerializer for listing and retrieving
+        if self.action in ['list', 'retrieve']:
+            return AttendanceDetailSerializer
+        # Use AttendanceSerializer for creating and updating
+        return AttendanceSerializer
+
+    def list(self, request):
+        try:
+            attendances = self.get_queryset()
+            serializer = self.get_serializer(attendances, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def retrieve(self, request, pk=None):
+        try:
+            attendance = self.get_object()
+            serializer = self.get_serializer(attendance)
+            return Response(serializer.data)
+        except Attendance.DoesNotExist:
+            return Response({'error': 'Attendance not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def create(self, request):
+        try:
+            serializer = AttendanceSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        try:
+            attendance = self.get_object()
+            serializer = AttendanceSerializer(attendance, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Attendance.DoesNotExist:
+            return Response({'error': 'Attendance not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, pk=None):
+        try:
+            attendance = self.get_object()
+            attendance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Attendance.DoesNotExist:
+            return Response({'error': 'Attendance not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
