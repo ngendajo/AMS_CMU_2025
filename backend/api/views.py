@@ -5249,7 +5249,8 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         try:
-            attendances = self.get_queryset()
+            # Order queryset by 'date' (ascending order)
+            attendances = self.get_queryset().order_by('date')  # Use '-date' for descending order
             serializer = self.get_serializer(attendances, many=True)
             return Response(serializer.data)
         except Exception as e:
