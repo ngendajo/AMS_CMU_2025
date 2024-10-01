@@ -54,6 +54,8 @@ import TimeSlots from './components/schoolTimeTable/TimeSlots';
 import GradeTimeSlots from './components/schoolTimeTable/GradeTimeSlots';
 import Subjects from './components/schoolTimeTable/Subjects';
 import Academics from './components/schoolTimeTable/Academics';
+import Absenteeism from './components/pages/Absenteeism';
+import Newattendace from './components/pages/Newattendace';
 
 
 
@@ -126,6 +128,10 @@ function App() {
                       <Route path='upbook' element={<UploadBooks/>}/>
                       <Route path='upstudent' element={<UpStudents/>}/>
                       <Route path='upissue' element={<UpIssue/>}/>
+                    </Route>
+                    <Route element={<AuthCheck allowedRoles={["superuser","teacher","librarian","crc"]} />}>
+                      <Route path='absenteeism' element={<Absenteeism/>}/>
+                      <Route path='newattendace' element={<Newattendace/>}/>
                     </Route>
                     <Route element={<AuthCheck allowedRoles={["teacher","student"]} />}>
                       <Route path='borrowed' element={<Borrowed />}/>

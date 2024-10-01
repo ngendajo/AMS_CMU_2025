@@ -979,6 +979,8 @@ class StudentListDisplaySerializer(serializers.Serializer):
     last_name = serializers.CharField()
     email = serializers.CharField()
     id = serializers.IntegerField()
+    grade_id = serializers.CharField()
+    combination_id = serializers.IntegerField()
     
     
 class BookListDisplaySerializer(serializers.Serializer):

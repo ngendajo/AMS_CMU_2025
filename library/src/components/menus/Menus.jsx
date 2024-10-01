@@ -53,22 +53,25 @@ export default function Menus() {
                     <li  className="menu-item" >
                         <Link className='is-active' onClick={toggleClass} to={`/`}> Dashboard </Link> 
                     </li>
+                    {user.is_superuser || user.is_librarian || user.is_crc || user.is_teacher ?
+                        <>
+                            <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Attendance <FiChevronDown /> </Link>
+                                <ul className={boxClassSubMenu.join(' ')} >
+                                    <li><Link onClick={toggleClass} className='is-active' to={`/absenteeism`}>Absenteeism</Link> </li>
+                                    <li> <Link onClick={toggleClass} className='is-active'  to={`/newattendace`}>Take Attendance </Link> </li>
+                                </ul>
+                            </li>
+                        </>:
+                        <></>
+                    }
                     {user.is_superuser || user.is_librarian || user.is_crc ?
                     <>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Categories <FiChevronDown /> </Link>
+                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Books <FiChevronDown /> </Link>
                             <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/category`}> New Category </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/categories`}> Manage Categories </Link> </li>
-                            </ul>
-                        </li>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Authors <FiChevronDown /> </Link>
-                            <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/author`}> New Author </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/authors`}> Manage Authors </Link> </li>
-                            </ul>
-                        </li>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Books <FiChevronDown /> </Link>
-                            <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/book`}> New Book </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/books`}> Manage Books </Link> </li>
                             </ul>
@@ -79,26 +82,18 @@ export default function Menus() {
                                 <li><Link onClick={toggleClass} className='is-active' to={`/issued`}> Manage Issued Books </Link> </li>
                             </ul>
                         </li>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Grades <FiChevronDown /> </Link>
+                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> School Info <FiChevronDown /> </Link>
                             <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/grade`}> New Grade </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/grades`}> Manage Grades </Link> </li>
-                            </ul>
-                        </li>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Combinations <FiChevronDown /> </Link>
-                            <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/comb`}> New Combination </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/combs`}> Manage Combinations </Link> </li>
                             </ul>
                         </li>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Students <FiChevronDown /> </Link>
+                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Users <FiChevronDown /> </Link>
                             <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/student`}> New Student </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/students`}> Manage Students </Link> </li>
-                            </ul>
-                        </li>
-                        <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Staff <FiChevronDown /> </Link>
-                            <ul className={boxClassSubMenu.join(' ')} > 
                                 <li> <Link onClick={toggleClass} className='is-active'  to={`/staff`}> New Staff </Link> </li>
                                 <li><Link onClick={toggleClass} className='is-active' to={`/staffs`}> Manage Staff </Link> </li>
                             </ul>
@@ -123,26 +118,29 @@ export default function Menus() {
                         
                     }
                     { user.is_superuser ?
-                            <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Uploads <FiChevronDown /> </Link>
-                                <ul className={boxClassSubMenu.join(' ')} > 
-                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
-                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upstudent`}> Upload Students </Link> </li>
-                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upissue`}> Upload Issued Books </Link> </li>
-                                </ul>
-                            </li>:
+                            <>
+                                <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> Uploads <FiChevronDown /> </Link>
+                                    <ul className={boxClassSubMenu.join(' ')} > 
+                                        <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upbook`}> Upload Books </Link> </li>
+                                        <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upstudent`}> Upload Students </Link> </li>
+                                        <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/upissue`}> Upload Issued Books </Link> </li>
+                                    </ul>
+                                </li>
+                                <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> TimeTable <FiChevronDown /> </Link>
+                                    <ul className={boxClassSubMenu.join(' ')} > 
+                                        <li> <Link onClick={toggleClass} className='is-active'  to={`/timeslots`}> TimeSlots </Link> </li>
+                                        <li> <Link onClick={toggleClass} className='is-active'  to={`/grade-timeslots`}> Link Grade & TimeSlots </Link> </li>
+                                        <li> <Link onClick={toggleClass} className='is-active'  to={`/subjects`}> Subjects </Link> </li>
+                                        <li> <Link onClick={toggleClass} className='is-active'  to={`/academics`}> Academics </Link> </li>
+                                        <li><Link onClick={toggleClass} className='is-active' to={`/schooltimetable`}> School TimeTable </Link> </li>
+                                    </ul>
+                                </li>
+                            </>:
                                 <>
                                 
                                 </>}
                     
-                    <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> TimeTable <FiChevronDown /> </Link>
-                        <ul className={boxClassSubMenu.join(' ')} > 
-                            <li> <Link onClick={toggleClass} className='is-active'  to={`/timeslots`}> TimeSlots </Link> </li>
-                            <li> <Link onClick={toggleClass} className='is-active'  to={`/grade-timeslots`}> Link Grade & TimeSlots </Link> </li>
-                            <li> <Link onClick={toggleClass} className='is-active'  to={`/subjects`}> Subjects </Link> </li>
-                            <li> <Link onClick={toggleClass} className='is-active'  to={`/academics`}> Academics </Link> </li>
-                            <li><Link onClick={toggleClass} className='is-active' to={`/schooltimetable`}> School TimeTable </Link> </li>
-                        </ul>
-                    </li>
+                    
                     <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/pass`}> Password </Link> </li>
 
                     </ul>
