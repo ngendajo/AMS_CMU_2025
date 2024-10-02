@@ -3681,7 +3681,7 @@ class StudentListDisplayAPIView(APIView):
             # Get data
             sql_query1 = """
                 select grade_name,studentid,family_name,combination_name,
-                first_name,last_name,email,userprofile_student.id as id,userprofile_grade.id as grade_id,userprofile_combination.id as combination_id from 
+                first_name,last_name,email,userprofile_student.id as id,userprofile_grade.id as grade_id,userprofile_combination.id as combination_id,,userprofile_grade.end_academic_year as eay from 
                 api_user  inner join userprofile_student on 
                 api_user.id=userprofile_student.user_id inner join 
                 userprofile_family on userprofile_student.family_id=userprofile_family.id inner join 
@@ -3707,7 +3707,8 @@ class StudentListDisplayAPIView(APIView):
                         'email': i[6],
                         'id': i[7],
                         'grade_id': i[8],
-                        'combination_id': i[9]
+                        'combination_id': i[9],
+                        'eay': i[10]
                     })
 
             serializer = StudentListDisplaySerializer(data=data, many=True)

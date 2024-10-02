@@ -66,7 +66,7 @@ export default function Newattendace() {
                     withCredentials:true
                 });
                 setStudents(response.data);
-                //console.log(response.data)
+                console.log(getUniqueGradeCombinations(response.data))
             }catch(err) {
                 console.log(err);
                 //navigate('/error');
@@ -127,8 +127,10 @@ export default function Newattendace() {
 
     const updateStudents = () => {
         const filteredStudents = students.filter(student => 
-            student.grade_name === selectedGrade && student.combination_name === selectedCombination
+            parseInt(student.grade_id) === parseInt(selectedGrade) && parseInt(student.combination_id) === parseInt(selectedCombination)
         );
+        console.log(selectedGrade+" "+selectedCombination)
+        console.log(students)
         // Sort students by last name and first name
         const sortedStudents = filteredStudents.sort((a, b) => {
             if (a.last_name.toLowerCase() < b.last_name.toLowerCase()) return -1;
@@ -138,7 +140,29 @@ export default function Newattendace() {
 
         setFilteredStudents(sortedStudents);
     };
-    console.log(students)
+    // Function to extract unique grade-combination pairs with ids
+const getUniqueGradeCombinations = (data) => {
+    const uniquePairs = [];
+  
+    data.forEach((student) => {
+      const exists = uniquePairs.some(
+        (pair) =>
+          pair.grade_id === student.grade_id &&
+          pair.combination_id === student.combination_id
+      );
+  
+      if (!exists) {
+        uniquePairs.push({
+          grade_name: student.grade_name,
+          grade_id: student.grade_id,
+          combination_name: student.combination_name,
+          combination_id: student.combination_id
+        });
+      }
+    });
+  
+    return uniquePairs;
+  };
     return (
         <div>
             <label htmlFor="grade-select">Select Grade:</label>
