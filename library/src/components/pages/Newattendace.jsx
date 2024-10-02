@@ -66,6 +66,7 @@ export default function Newattendace() {
                     withCredentials:true
                 });
                 setStudents(response.data);
+                console.log(response.data)
                 console.log(getUniqueGradeCombinations(response.data))
             }catch(err) {
                 console.log(err);
