@@ -108,6 +108,11 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+	GENDER_CHOICES = [
+		('M', 'Male'),
+		('F', 'Female'),
+		('O', 'Other'),  # You can add more options if needed
+	]
 	email = models.EmailField(
 		verbose_name='email address',
 		max_length=255,
@@ -116,6 +121,8 @@ class User(AbstractBaseUser):
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
+	current = models.BooleanField(default=True)  # New attribute with default value True
+	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='F')  # New gender attribute
 	is_crc = models.BooleanField(default=False)
 	is_alumni = models.BooleanField(default=False)
 	is_student = models.BooleanField(default=False)

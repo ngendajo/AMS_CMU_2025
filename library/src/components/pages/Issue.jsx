@@ -116,7 +116,7 @@ export default function Issue() {
     }
 }
   let handleSubmit = (e )=> {
-    e.preventDefault()
+    e.preventDefault() 
     if(bookid==="" || e.target.borrower.value==="" || library_number==="" || issuedate===""){
       alert("There is a problem")
     }else{
