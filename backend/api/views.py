@@ -3686,7 +3686,7 @@ class StudentListDisplayAPIView(APIView):
                 api_user.id=userprofile_student.user_id inner join 
                 userprofile_family on userprofile_student.family_id=userprofile_family.id inner join 
                 userprofile_grade on userprofile_family.grade_id=userprofile_grade.id inner join 
-                userprofile_combination on userprofile_student.combination_id=userprofile_combination.id where and api_user.current;
+                userprofile_combination on userprofile_student.combination_id=userprofile_combination.id where api_user.current;
             """
 
             # Execute the SQL query
