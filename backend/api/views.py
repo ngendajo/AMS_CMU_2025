@@ -3492,8 +3492,10 @@ class AutoStudentDataExcelUploadAPIView(APIView):
             df_students = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
 
             if not df_students.empty:
-                if set(df_students.columns) != set(["email", 'first_name', 'last_name', 'phone1', 'password','gender', 'studentid', 'family', 'combination']):
+                if set(df_students.columns) != set(["email", "first_name", "last_name", "phone1", "password","gender", "studentid", "family", "combination"]):
                     data["error"] = "Students sheets have different headers."
+                    data["come"] = df_students.columns
+                    data["going"] = set(["email", "first_name", "last_name", "phone1", "password","gender", "studentid", "family", "combination"])
                     return Response(data)
 
                 families = df_students['family'].unique()
