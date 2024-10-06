@@ -41,7 +41,7 @@ export default function UpStudents() {
           console.log(response.data['msg'])
           if(response.data["error"]){
             console.log(response.data)
-            setMsg("There problem in your data")
+            setMsg("There are problem in your data")
           }
           /* .catch((error) => {
             console.error('Error uploading file:', error);
