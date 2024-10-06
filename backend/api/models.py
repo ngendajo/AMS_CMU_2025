@@ -90,11 +90,12 @@ class UserManager(BaseUserManager):
 		user.save()
 		return user
 	
-	def create_studentuserwithoutimage(self, email, first_name, last_name, phone1, password):
+	def create_studentuserwithoutimage(self, email, first_name, last_name, phone1, password,gender):
 		if password is None:
 			raise TypeError('Student must have a password')
 		user = self.create_user1(email, first_name, last_name, phone1, password)
 		user.is_student = True
+		user.gender = gender
 		user.save()
 		return user
 

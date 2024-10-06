@@ -13,7 +13,7 @@ export default function Newattendace() {
     const [selectedDate, setSelectedDate] = useState('');
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
-    const currentYear = new Date().getFullYear();
+    //const currentYear = new Date().getFullYear();
     let {auth} = useAuth();
 
     const [showPopup, setShowPopup] = useState(false);
@@ -201,7 +201,7 @@ const getStudents = useCallback(async () => {
             withCredentials: true,
         });
         
-        const currentStudents = response.data.filter(student => student.eay > currentYear);
+        const currentStudents = response.data; //.filter(student => student.eay > currentYear);
         setStudents(currentStudents);
         setUniqueGrades(getUniqueGrades(currentStudents));
         
@@ -209,7 +209,7 @@ const getStudents = useCallback(async () => {
         console.error(err);
         // navigate('/error');
     }
-}, [auth, currentYear]); // Add auth and currentYear as dependencies since they're used inside the function
+}, [auth]); // Add auth and currentYear as dependencies since they're used inside the function
 
 const getAttendances = useCallback(async () => {
     if (!auth?.accessToken) return; // Ensure accessToken exists

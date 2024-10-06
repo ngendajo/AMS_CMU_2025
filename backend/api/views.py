@@ -3492,7 +3492,7 @@ class AutoStudentDataExcelUploadAPIView(APIView):
             df_students = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
 
             if not df_students.empty:
-                if set(df_students.columns) != set(["email", 'first_name', 'last_name', 'phone1', 'password', 'studentid', 'family', 'combination']):
+                if set(df_students.columns) != set(["email", 'first_name', 'last_name', 'phone1', 'password','gender', 'studentid', 'family', 'combination']):
                     data["error"] = "Students sheets have different headers."
                     return Response(data)
 
@@ -3520,7 +3520,7 @@ class AutoStudentDataExcelUploadAPIView(APIView):
                 for index, row in df_students.iterrows():
                     family = Family.objects.get(family_name=row['family'])
                     combination = Combination.objects.get(combination_name=row['combination'])
-                    user = User.objects.create_studentuserwithoutimage(row['email'],row['first_name'], row['last_name'], row['phone1'], row['password'])
+                    user = User.objects.create_studentuserwithoutimage(row['email'],row['first_name'], row['last_name'], row['phone1'], row['password'], row['gender'])
                     Student.objects.create(user=user, family=family, combination=combination, studentid=row['studentid'])
 
             else:
