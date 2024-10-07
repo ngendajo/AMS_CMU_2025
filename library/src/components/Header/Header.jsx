@@ -20,7 +20,7 @@ function Header() {
             <img className='logo' src={Logo} alt="AsyvLogo" />
        </div>
        <div className="headertitle">
-            <h1>Library Management System</h1>
+            <h1>Library And Absence Tracking System</h1>
        </div>
        {auth?.accessToken
         ?

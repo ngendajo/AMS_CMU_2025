@@ -481,5 +481,15 @@ class Attendance(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     staff_id = models.ForeignKey(User, related_name='staff', on_delete=models.CASCADE)
     period = models.IntegerField()  # Change to IntegerField
-    date = models.DateField()
+    date = models.DateField() 
+    STATUS_CHOICES = [
+        ('absent', 'Absent'),
+        ('late', 'Late'),
+    ]
+    
+    status = models.CharField(
+        max_length=6, 
+        choices=STATUS_CHOICES, 
+        default='absent'
+    )
 

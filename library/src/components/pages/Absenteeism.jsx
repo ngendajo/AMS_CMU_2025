@@ -61,7 +61,7 @@ export default function Absenteeism() {
                 
                     // Map the staff details to the corresponding period key (period_1, period_2, etc.)
                     let period_key = `period_${record['period']}`; // Create the period key (e.g., 'period_1')
-                    processed[key][period_key] = "Absent Taken By (" + record['staff_last_name'] + " " + record['staff_first_name'] + ")";
+                    processed[key][period_key] = record['status']+" Taken By (" + record['staff_last_name'] + " " + record['staff_first_name'] + ")";
                 });
                 
                 setData(organized_data);
