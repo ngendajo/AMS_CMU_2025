@@ -167,7 +167,8 @@ const getUniqueGrades = (data) => {
           if (matchingAttendance) {
             return {
               ...student,
-              att_id: matchingAttendance.id
+              att_id: matchingAttendance.id,
+              att_status: matchingAttendance.status
             };
           }
           // Return the student object without changes if no match is found
@@ -244,7 +245,8 @@ const save_attendance = async (student_id) => {
             'student_id': student_id,
             'staff_id': auth.user.id,
             'period': parseInt(selectedPeriod.match(/\d+/)[0], 10),
-            'date': selectedDate
+            'date': selectedDate,
+            'status':'absent'
         }, {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -261,7 +263,38 @@ const save_attendance = async (student_id) => {
         );
 
         setFilteredStudents(updatedStudents);
-        alert("Record saved successfully");
+    } catch (error) {
+        console.log(error.response.data);
+    }
+};
+
+const save_lateness = async (att_id,student_id) => {
+    try {
+        // Make the UPDATE request
+        await axios.put(baseUrl + '/attendances/'+att_id+"/", {
+            'student_id': student_id,
+            'staff_id': auth.user.id,
+            'period': parseInt(selectedPeriod.match(/\d+/)[0], 10),
+            'date': selectedDate,
+            'status':'late'
+        }, {
+            headers: {
+                "Authorization": 'Bearer ' + String(auth.accessToken),
+                "Content-Type": 'application/json'
+            }
+        });
+
+        // Fetch the updated list of students after deletion
+        const updatedStudents = await getStudentsForGradeAndCombination(
+            selectedGrade,
+            selectedCombination,
+            selectedDate,
+            selectedPeriod
+        );
+
+        // Update the state with the filtered students
+        setFilteredStudents(updatedStudents);
+        closePopup(); // Close popup after confirming
     } catch (error) {
         console.log(error.response.data);
     }
@@ -421,15 +454,22 @@ const handleDateSelect = async (e) => {
                                             textAlign: 'center',
                                             borderRadius: '5px',
                                             marginBottom: '10px',
-                                            backgroundColor: student.att_id !== undefined ? '#f49c46' : '#498160',  // #f49c46 background if att_id exists, else green
-                                            color: '#fff',  // Text color to ensure visibility against the background
-                                            fontSize: '20px',  // Font size set to 16 pixels
-                                            cursor: 'pointer',  // Pointer cursor to indicate it's clickable
+                                            backgroundColor: student.att_id !== undefined ? student.att_status === 'absent' ? '#f49c46' : '#957967' : '#498160',  // Conditional background colors
+                                            color: '#fff',  // Text color for visibility
+                                            fontSize: '20px',  // Base font size
+                                            cursor: 'pointer',  // Pointer cursor for clickable items
                                         }}
-                                        onClick={() => student.att_id !== undefined ? handleDeleteClick(student.last_name,student.first_name,student.att_id) : save_attendance(student.id)}
-                                        >
+                                        onClick={() => student.att_id !== undefined ? student.att_status === 'absent' ? save_lateness(student.att_id, student.id) : handleDeleteClick(student.last_name, student.first_name, student.att_id) : save_attendance(student.id)}
+                                    >
                                         {index + 1}. {student.last_name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')} {student.first_name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')}
+                                        <br/>
+                                        {student.att_id !== undefined ? (
+                                            <span style={{ fontSize: '14px' }}>  {/* Smaller font size for status */}
+                                                {student.att_status === 'absent' ? "Absent" : "Late"}
+                                            </span>
+                                        ) : ""}
                                     </li>
+
                                 ))
                             ) : (
                                 <p>No students found for this combination.</p>

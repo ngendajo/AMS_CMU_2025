@@ -40,7 +40,7 @@ export default function Absenteeism() {
                         let row = {
                             "date": record['date'],
                             "studentid": record['studentid'],
-                            "name": record['student_last_name']+" "+record['student_first_name'],
+                            "name": (record['student_last_name']+" "+record['student_first_name']).split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' '),
                             "family_name": record['family_name'],
                             "grade_name": record['grade_name'],
                             "combination_name": record['combination_name'],
@@ -61,7 +61,7 @@ export default function Absenteeism() {
                 
                     // Map the staff details to the corresponding period key (period_1, period_2, etc.)
                     let period_key = `period_${record['period']}`; // Create the period key (e.g., 'period_1')
-                    processed[key][period_key] = record['status']+" Taken By (" + record['staff_last_name'] + " " + record['staff_first_name'] + ")";
+                    processed[key][period_key] = (record['status']).split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')+" Taken By (" + record['staff_last_name'] + " " + record['staff_first_name'] + ")";
                 });
                 
                 setData(organized_data);
