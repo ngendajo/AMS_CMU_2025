@@ -4245,6 +4245,7 @@ class StudentsReportExportAPIView(APIView):
         sql_query = """
            SELECT 
                 ROW_NUMBER() OVER (ORDER BY userprofile_grade.grade_name, userprofile_combination.combination_name) AS number,
+                api_user.email,
                 api_user.last_name,
                 api_user.first_name,
                 userprofile_student.studentid,
