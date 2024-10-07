@@ -492,5 +492,5 @@ class Attendance(models.Model):
         choices=STATUS_CHOICES, 
         default='absent'
     )
-    created_at = models.DateTimeField(auto_now_add=True)  # Add created_at field
+    created_at = models.DateTimeField(default=timezone.now)  # Add created_at field
 
