@@ -477,9 +477,6 @@ class TeacherCombinationGradeSubject(models.Model):
     
     
 #Attendance management System
-from django.db import models
-from django.contrib.auth.models import User
-
 class Attendance(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     staff_id = models.ForeignKey(User, related_name='staff', on_delete=models.CASCADE)
@@ -495,7 +492,5 @@ class Attendance(models.Model):
         choices=STATUS_CHOICES, 
         default='absent'
     )
-    
     created_at = models.DateTimeField(auto_now_add=True)  # Add created_at field
-
 
