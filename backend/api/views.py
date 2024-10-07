@@ -4281,7 +4281,7 @@ class StudentsReportExportAPIView(APIView):
 
         # Get the active worksheet
         ws = wb.active
-        ws.append(["No", "Last Name", "First Name", "Reg.No", "Grade", "Family", "Class"])
+        ws.append(["No","Email", "Last Name", "First Name", "Reg.No", "Grade", "Family", "Class"])
         # Add rows
         students_data_name = 'students_data'
         ws.title = students_data_name
