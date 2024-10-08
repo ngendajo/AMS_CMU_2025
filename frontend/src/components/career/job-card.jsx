@@ -114,7 +114,7 @@ const JobCard = ({ alumni, title, type, description, date, link, approved, onApp
           <p className="job-des">{description}</p >
           <p className="job-apply-by">Apply by: {date}</p >
           <Link to={link} target="_blank" rel="noopener noreferrer"
-            className="job-view-apply-button">View and Apply
+            className="job-view-apply-button">{type==="Professional"? "Start Course":"View and Apply"}
           </Link>
           {onApprove && (
             <div className="job-admin-actions">
