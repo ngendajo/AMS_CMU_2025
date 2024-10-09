@@ -8,7 +8,7 @@ import baseUrlforImg from '../../api/baseUrlforImg';
 import useAuth from '../../hooks/useAuth';
 import ReactPaginate from 'react-paginate';
 
-const AlumniStoryPostForm = () => {
+export default function AlumniBusness() {
     const [selectedAlumni, setSelectedAlumni] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [alumniData, setAlumniData] = useState([]);
@@ -20,14 +20,14 @@ const AlumniStoryPostForm = () => {
         title: '',
         description: '',
         media: null,
-        draft: false,// not a business
+        draft: true,
         displayed: false
     });
 
    
     const [submittedPosts, setSubmittedPosts] = useState([]);
     const [displayedPosts, setDisplayedPosts] = useState([]);
-    const [activeTab, setActiveTab] = useState('New Story');
+    const [activeTab, setActiveTab] = useState('New Business');
 
     useEffect(() => {
         const getAlumniUsers = async () => {
@@ -69,12 +69,12 @@ const AlumniStoryPostForm = () => {
                     },
                     withCredentials: true
                 });
-                const storiesandbusiness = response.data;
-
-                const stories = storiesandbusiness.filter(story => !story.draft);
-                const displayed = stories.filter(story => story.displayed);
+                const storiesbusiness = response.data;
+      
+                const busineses = storiesbusiness.filter(story => story.draft);
+                const displayed = busineses.filter(story => story.displayed);
               
-                setSubmittedPosts(stories);
+                setSubmittedPosts(busineses);
                 setDisplayedPosts(displayed);
             } catch (err) {
                 console.error(err);
@@ -112,7 +112,7 @@ const AlumniStoryPostForm = () => {
         });
     };
 
-    const handleSubmit = async (e, draftStatus) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData();
         data.append('alumn', formData.alumn);
@@ -123,7 +123,7 @@ const AlumniStoryPostForm = () => {
             data.append(mediaType, formData.media);
             console.log("mediaType", mediaType);
         }
-        data.append('draft', draftStatus);
+        data.append('draft', true);
         data.append('displayed', formData.displayed);
 
         for (let pair of data.entries()) {
@@ -131,7 +131,6 @@ const AlumniStoryPostForm = () => {
         }
         try {
             let response;
-            console.log("form:", formData);
             if (formData.id) {
                 response = await axios.put(`${baseUrl}/stories/${formData.id}/`, data, {
                     headers: {
@@ -157,10 +156,10 @@ const AlumniStoryPostForm = () => {
                 const newStory = response.data;
                 if (formData.displayed) {
                     setDisplayedPosts([...displayedPosts, newStory]);
-                    setActiveTab('Submitted Posts');
+                    setActiveTab('Submitted Business');
                 } else {
                     setSubmittedPosts([...submittedPosts, newStory]);
-                    setActiveTab('Submitted Posts');
+                    setActiveTab('Submitted Business');
                 }
             }
             alert("submitted successfully"); } catch (err) {
@@ -169,8 +168,8 @@ const AlumniStoryPostForm = () => {
     };
 
     const handleEditStory = (story) => {
-        //selectedAlumni.firstName = story.firstName;
-        console.log("story", story);
+        setSelectedAlumni(alumniData.find(alumni => parseInt(alumni.id) === parseInt(story.alumn)));
+
         setFormData({
             id: story.id,
             alumn: story.alumn,
@@ -180,8 +179,8 @@ const AlumniStoryPostForm = () => {
             draft: story.draft,
             displayed: story.displayed
         });
-        setSelectedAlumni(alumniData.find(alumni => parseInt(alumni.id) === parseInt(story.alumn)));
-        setActiveTab('New Story');
+        
+        setActiveTab('New Business');
     };
 
     const handleReset = () => {
@@ -190,7 +189,7 @@ const AlumniStoryPostForm = () => {
             title: '',
             description: '',
             media: null,
-            draft: false,// not a business
+            draft: true,
             displayed: false
         });
         setSelectedAlumni(null);
@@ -214,9 +213,9 @@ const AlumniStoryPostForm = () => {
 
     const renderTabContent = () => {
         switch (activeTab) {
-            case 'New Story':
+            case 'New Business':
                 return (
-                    <form onSubmit={(e) => handleSubmit(e, false)}>
+                    <form onSubmit={(e) => handleSubmit(e)}>
                         <div className="story-form-group">
                             <input
                                 type="text"
@@ -253,7 +252,7 @@ const AlumniStoryPostForm = () => {
                             {auth.user.is_crc || auth.user.is_superuser ? (
                                 <>
                                      <>
-                                <button type="submit" onClick={(e) => handleSubmit(e, false)}>Submit</button>
+                                <button type="submit" onClick={(e) => handleSubmit(e)}>Submit</button>
                                 <button type="button" onClick={handleReset}>Reset</button>
                             </>
                                     <div className="story-form-group">
@@ -270,7 +269,7 @@ const AlumniStoryPostForm = () => {
                                 </>
                             ) : (
                                 <>
-                                <button type="submit" onClick={(e) => handleSubmit(e, false)}>Submit</button>
+                                <button type="submit" onClick={(e) => handleSubmit(e)}>Submit</button>
                                 <button type="button" onClick={handleReset}>Reset</button>
                             </>
                                 
@@ -278,7 +277,7 @@ const AlumniStoryPostForm = () => {
                         </div>
                     </form>
                 );
-            case 'Displayed Posts':
+            case 'Displayed Business':
                 return (
                     <div className="submitted-posts-list">
                         {displayedPosts.map((post) => (
@@ -294,7 +293,7 @@ const AlumniStoryPostForm = () => {
                     </div>
                 );
 
-                case 'Submitted Posts':
+                case 'Submitted Business':
                     return (
                         <div className="submitted-posts-list">
                             {submittedPosts.map((post) => (
@@ -353,14 +352,14 @@ const AlumniStoryPostForm = () => {
             </div>
             <div className="story-form-container">
             <div className="page-title">
-                    {selectedAlumni ? `Write Alumni Story for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Story'}
+                    {selectedAlumni ? `Write Alumni Business for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Business'}
                 </div>
                 <div className="story-tabs">
-                    <button onClick={() => setActiveTab('New Story')} className={activeTab === 'New Story' ? 'active' : ''}>New Story</button>
+                    <button onClick={() => setActiveTab('New Business')} className={activeTab === 'New Business' ? 'active' : ''}>New Business</button>
                     {(auth.user.is_crc || auth.user.is_superuser) && (
                         <>
-                    <button onClick={() => setActiveTab('Submitted Posts')} className={activeTab === 'Submitted Posts' ? 'active' : ''}>Submitted Posts</button>
-                    <button onClick={() => setActiveTab('Displayed Posts')} className={activeTab === 'Displayed Posts' ? 'active' : ''}>Displayed Posts</button>
+                    <button onClick={() => setActiveTab('Submitted Business')} className={activeTab === 'Submitted Business' ? 'active' : ''}>Submitted Business</button>
+                    <button onClick={() => setActiveTab('Displayed Business')} className={activeTab === 'Displayed Business' ? 'active' : ''}>Displayed Business</button>
 
                     </>
                     )}
@@ -374,5 +373,3 @@ const AlumniStoryPostForm = () => {
         </div>
     );
 };
-
-export default AlumniStoryPostForm;

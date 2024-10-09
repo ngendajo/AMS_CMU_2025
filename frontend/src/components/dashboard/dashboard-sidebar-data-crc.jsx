@@ -70,6 +70,11 @@ export const SidebarDataCrc = [
         cName: 'nav-sub-text'
       },
       {
+        title: 'Alumni Business Posts',
+        path: '/alumni_business_posts',
+        cName: 'nav-sub-text'
+      },
+      {
         title: 'News Posts',
         path: '/news_posts',
         cName: 'nav-sub-text'

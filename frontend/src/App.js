@@ -48,6 +48,7 @@ import Addcombination from './pages/contact/AddCombination.jsx';
 import AddEp from './pages/contact/AddEps.jsx';
 import AddAlumni from './pages/contact/AddAlumni.jsx';
 import AddASYVInfoForAlumni from './pages/contact/AddASYVInfoForAlumni.jsx';
+import AlumniBusness from './pages/contact/AlumniBusness.jsx';
 
 function App() {
   const refresh = useRefreshToken();
@@ -93,6 +94,7 @@ function App() {
                     <Route path="/discussion_forums" element={<DiscussionForums />} />
                     <Route path="/frequent_inquiries" element={<Inquiry />} />
                     <Route path="/alumni_story_posts" element={<AlumniStoryPosts />} />
+                    <Route path='/alumni_business_posts' element={<AlumniBusness/>} />
                     <Route path="/alumni_job_posts" element={<AlumniJobPosts />} />
                     <Route path="/personal_profile_staff" element={<PersonalProfileStaff />} />
                    <Route path="/add-event" element={<AddEventForm />} /> 
