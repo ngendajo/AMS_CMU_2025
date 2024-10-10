@@ -3,16 +3,7 @@ from pathlib import Path
 # Add this import
 from datetime import timedelta
 import os
-from django.core.management.base import BaseCommand
-from django.apps import apps
-from django.db.models import Q
-from django.conf import settings
-from django.db.models import FileField
-from django.core.management.base import BaseCommand
-from django.apps import apps
-from django.db.models import Q
-from django.conf import settings
-from django.db.models import FileField
+from celery.schedules import crontab
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -65,6 +56,7 @@ INSTALLED_APPS = [
     'api',
     'userprofile',
     'import_export',
+    'django_celery_beat',
     'django_filters',
 ]
 
@@ -246,3 +238,52 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 AUTH_USER_MODEL = 'api.User'
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BEAT_SCHEDULE = {
+    'send-email-8am': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=8, minute=0, day_of_week='1-5'),  # Mon-Fri at 8:00 AM
+        'args': (1,),  # Period 1
+    },
+    'send-email-910am': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=9, minute=10, day_of_week='1-5'),  # Mon-Fri at 9:10 AM
+        'args': (2,),  # Period 2
+    },
+    'send-email-1010am': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=10, minute=10, day_of_week='1-5'),  # Mon-Fri at 10:10 AM
+        'args': (3,),  # Period 3
+    },
+    'send-email-1110am': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=11, minute=10, day_of_week='1-5'),  # Mon-Fri at 11:10 AM
+        'args': (4,),  # Period 4
+    },
+    'send-email-110pm': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=13, minute=10, day_of_week='1-5'),  # Mon-Fri at 1:10 PM
+        'args': (5,),  # Period 5
+    },
+    'send-email-210pm': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=14, minute=10, day_of_week='1-5'),  # Mon-Fri at 2:10 PM
+        'args': (6,),  # Period 6
+    },
+    'send-email-310pm': {
+        'task': 'myapp.tasks.send_data_email',
+        'schedule': crontab(hour=15, minute=10, day_of_week='1-5'),  # Mon-Fri at 3:10 PM
+        'args': (7,),  # Period 7
+    },
+}
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ngendajo@gmail.com'
+EMAIL_HOST_PASSWORD = 'diane.uwimana@asyv.org'
