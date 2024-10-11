@@ -1139,5 +1139,5 @@ class AttendanceDetailSerializer(serializers.ModelSerializer):
         fields = [
             'studentid', 'student_first_name', 'student_last_name',
             'family_name', 'grade_name', 'combination_name',
-            'staff_first_name', 'staff_last_name', 'period', 'date', 'id','status'
+            'staff_first_name', 'staff_last_name', 'period', 'date', 'id','gender','status'
         ]

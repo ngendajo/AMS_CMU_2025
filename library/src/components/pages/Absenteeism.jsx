@@ -26,6 +26,7 @@ export default function Absenteeism() {
                     },
                     withCredentials:true 
                 });
+                console.log(response.data)
                 var data = response.data;
                 var organized_data = [];
                 var processed = {};
