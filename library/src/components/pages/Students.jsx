@@ -48,7 +48,7 @@ export default function Students() {
                     },
                     withCredentials: true
                 });
-    
+                console.log(response.data)
                 var studentlist = [];
                 var i = 1;
                 setLoading(false);

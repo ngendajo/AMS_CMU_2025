@@ -982,6 +982,7 @@ class StudentListDisplaySerializer(serializers.Serializer):
     grade_id = serializers.IntegerField()
     combination_id = serializers.IntegerField()
     eay = serializers.IntegerField()
+    gender = serializers.CharField()
     
     
 class BookListDisplaySerializer(serializers.Serializer):
