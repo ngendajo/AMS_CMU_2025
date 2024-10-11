@@ -26,7 +26,6 @@ export default function Absenteeism() {
                     },
                     withCredentials:true 
                 });
-                console.log(response.data)
                 var data = response.data;
                 var organized_data = [];
                 var processed = {};
@@ -42,6 +41,7 @@ export default function Absenteeism() {
                             "date": record['date'],
                             "studentid": record['studentid'],
                             "name": (record['student_last_name']+" "+record['student_first_name']).split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' '),
+                            "gender": record['gender'],
                             "family_name": record['family_name'],
                             "grade_name": record['grade_name'],
                             "combination_name": record['combination_name'],
@@ -140,6 +140,7 @@ export default function Absenteeism() {
                 "#": id++, // Assigning a sequential ID
                 "studentid": studentid,
                 "name": record['name'],
+                "gender": record['gender'],
                 "grade_name": record['grade_name'],
                 "combination_name": record['combination_name'],
                 "family_name": record['family_name'],

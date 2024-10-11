@@ -1130,6 +1130,7 @@ class AttendanceDetailSerializer(serializers.ModelSerializer):
     studentid = serializers.CharField(source='student_id.studentid', read_only=True)
     family_name = serializers.CharField(source='student_id.family.family_name', read_only=True)
     grade_name = serializers.CharField(source='student_id.family.grade.grade_name', read_only=True)
+    end_academic_year = serializers.CharField(source='student_id.family.grade.end_academic_year', read_only=True)
     combination_name = serializers.CharField(source='student_id.combination.combination_name', read_only=True)
     staff_first_name = serializers.CharField(source='staff_id.first_name', read_only=True)
     staff_last_name = serializers.CharField(source='staff_id.last_name', read_only=True)
@@ -1139,5 +1140,5 @@ class AttendanceDetailSerializer(serializers.ModelSerializer):
         fields = [
             'studentid', 'student_first_name', 'student_last_name',
             'family_name', 'grade_name', 'combination_name',
-            'staff_first_name', 'staff_last_name', 'period', 'date', 'id','gender','status'
+            'staff_first_name', 'staff_last_name', 'period', 'date', 'id','gender','status','end_academic_year'
         ]

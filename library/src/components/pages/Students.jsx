@@ -88,6 +88,7 @@ export default function Students() {
                                 </Popup>,
                         Names: student.last_name + " " + student.first_name,
                         Reg_No: student.studentid,
+                        Gender: student.gender,
                         Email: student.email,
                         Grade: student.grade_name,
                         Family: student.family_name,
