@@ -1126,7 +1126,7 @@ class AttendanceSerializer(serializers.ModelSerializer):
 class AttendanceDetailSerializer(serializers.ModelSerializer):
     student_first_name = serializers.CharField(source='student_id.user.first_name', read_only=True)
     student_last_name = serializers.CharField(source='student_id.user.last_name', read_only=True)
-    student_gender = serializers.CharField(source='student_id.user.gender', read_only=True)
+    gender = serializers.CharField(source='student_id.user.gender', read_only=True)
     studentid = serializers.CharField(source='student_id.studentid', read_only=True)
     family_name = serializers.CharField(source='student_id.family.family_name', read_only=True)
     grade_name = serializers.CharField(source='student_id.family.grade.grade_name', read_only=True)
