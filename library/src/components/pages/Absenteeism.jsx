@@ -7,15 +7,107 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 
 export default function Absenteeism() {
     const [data, setData] = useState([]);
+    const [grade_students, setGrade_students] = useState([]);
     const [filtered_data, setFiltered_data] = useState([]);
     const [general_data, setGeneral_data] = useState([]);
+    const [general_report, setGeneral_report] = useState([]);
+    const [grandTotalGirls, setGrandTotalGirls] = useState("");
+    const [grandTotalBoys, setGrandTotalBoys] = useState("");
+    const [grandTotal, setGrandTotal] = useState("");
+    const [cgrandTotalGirls, setCgrandTotalGirls] = useState("");
+    const [cgrandTotalBoys, setCgrandTotalBoys] = useState("");
+    const [cgrandTotal, setCgrandTotal] = useState("");
     let {auth} = useAuth();
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const calculateCounts = (filtered) => {
+    const counts = {};
+  
+    filtered.forEach((student) => {
+      const { grade_name, gender, end_academic_year } = student;
+      if (!counts[grade_name]) {
+        counts[grade_name] = { boys: 0, girls: 0, end_academic_year };
+      }
+      if (gender === 'M') {
+        counts[grade_name].boys += 1;
+      } else if (gender === 'F') {
+        counts[grade_name].girls += 1;
+      }
+    });
+    let student_data = Object.entries(counts)
+    .map(([grade_name, { boys, girls, end_academic_year }]) => ({
+      grade_name,
+      boys,
+      girls,
+      total: boys + girls,
+      end_academic_year,
+    }))
+    .sort((a, b) => a.end_academic_year - b.end_academic_year);
+    setGrandTotalGirls(student_data.reduce((sum, row) => sum + row.girls, 0))
+    setGrandTotalBoys(student_data.reduce((sum, row) => sum + row.boys, 0))
+    setGrandTotal((student_data.reduce((sum, row) => sum + row.girls, 0))+(student_data.reduce((sum, row) => sum + row.boys, 0)))
+    
+    const mergedArray = student_data.map(item1 => {
+        const item2 = grade_students.find(item => item.grade_name === item1.grade_name);
+        return { ...item1, ...(item2 || {}) };
+    });
+    setCgrandTotalGirls(grade_students.reduce((sum, row) => sum + row.cgirls, 0))
+    setCgrandTotalBoys(grade_students.reduce((sum, row) => sum + row.cboys, 0))
+    setCgrandTotal((grade_students.reduce((sum, row) => sum + row.cgirls, 0))+(grade_students.reduce((sum, row) => sum + row.cboys, 0)))
+    setGeneral_report(mergedArray)
+};
+
+
 
     useEffect(() =>{
+      const getGradeData = async () => {
+        try {
+            const response = await axios.get(baseUrl + '/students/', {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'application/json'  // Use JSON as content type
+                },
+                withCredentials: true
+            });
+    
+            // Access the 'data' field in the response, which contains the array of students
+            const gradeCountsArray = Object.entries(
+                response.data.reduce((acc, student) => {
+                    const grade = student.grade_name;
+                    const gender = student.gender; // Assuming 'gender' field is available
+    
+                    // Initialize the grade entry if not already present
+                    if (!acc[grade]) {
+                        acc[grade] = { ctotal: 0, cboys: 0, cgirls: 0 };
+                    }
+    
+                    // Update the total count and gender-specific counts
+                    acc[grade].ctotal += 1;
+                    if (gender === 'M') {
+                        acc[grade].cboys += 1;
+                    } else if (gender === 'F') {
+                        acc[grade].cgirls += 1;
+                    }
+    
+                    return acc;
+                }, {})
+            ).map(([grade_name, counts]) => ({
+                grade_name, 
+                ctotal: counts.ctotal, 
+                cboys: counts.cboys, 
+                cgirls: counts.cgirls
+            }));
+            setGrade_students(gradeCountsArray)
+        } catch (err) {
+            console.log(err);
+            // navigate('/error');
+        }
+    };
+    
+
+    getGradeData();
     
         const getData = async () =>{
             try{
@@ -44,6 +136,7 @@ export default function Absenteeism() {
                             "gender": record['gender'],
                             "family_name": record['family_name'],
                             "grade_name": record['grade_name'],
+                            "end_academic_year": record['end_academic_year'],
                             "combination_name": record['combination_name'],
                             // Initialize 7 period keys with empty values
                             "period_1": " ",
@@ -142,6 +235,7 @@ export default function Absenteeism() {
                 "name": record['name'],
                 "gender": record['gender'],
                 "grade_name": record['grade_name'],
+                "end_academic_year": record['end_academic_year'],
                 "combination_name": record['combination_name'],
                 "family_name": record['family_name'],
                 "count": 1 // Start count at 1
@@ -154,6 +248,7 @@ export default function Absenteeism() {
 
     // Set the sorted data
     setGeneral_data(studentCountArray);
+    calculateCounts(studentCountArray);
 };
   const downloadData = () => {
     // Prepare data for export
@@ -301,8 +396,59 @@ export default function Absenteeism() {
         </div>
         {general_data.length > 0 ? (
             <>
-                <h2>General Report</h2>
-                <DynamicTable mockdata={general_data} />
+                
+                <center>
+                  <h2>General Absenteeism Report</h2>
+                  <table className="styled-table">
+                    <thead>
+                      <tr>
+                        <th>Grade</th>
+                        <th>Absent Girls</th>
+                        <th>%</th>
+                        <th>Absent Boys</th>
+                        <th>%</th>
+                        <th>Total Absents</th>
+                        <th>%</th>
+                        <th>No Girls</th>
+                        <th>No Boys</th>
+                        <th>No All Students</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
+                        <tr key={grade_name}>
+                          <td>{grade_name}</td>
+                          <td>{girls}</td>
+                          <td>{((girls * 100) / cgirls).toFixed(1)}%</td>
+                          <td>{boys}</td>
+                          <td>{((boys * 100) / cboys).toFixed(1)}%</td>
+                          <td>{total}</td>
+                          <td>{((total * 100) / ctotal).toFixed(1)}%</td>
+                          <td>{cgirls}</td>
+                          <td>{cboys}</td>
+                          <td>{ctotal}</td>
+                        </tr>
+                      ))}
+                      {/* Add row for grand totals */}
+                      <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>{grandTotalGirls}</strong></td>
+                        <td><strong>{(grandTotalGirls * 100 / cgrandTotalGirls).toFixed(1)}%</strong></td>
+                        <td><strong>{grandTotalBoys}</strong></td>
+                        <td><strong>{(grandTotalBoys * 100 / cgrandTotalBoys).toFixed(1)}%</strong></td>
+                        <td><strong>{grandTotal}</strong></td>
+                        <td><strong>{(grandTotal * 100 / cgrandTotal).toFixed(1)}%</strong></td>
+                        <td><strong>{cgrandTotalGirls}</strong></td>
+                        <td><strong>{cgrandTotalBoys}</strong></td>
+                        <td><strong>{cgrandTotal}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </center>
+                <h2></h2>
+                <DynamicTable 
+                  mockdata={general_data.map(({ end_academic_year, ...rest }) => rest)} 
+                />
             </>
         ) : (
           <p></p>
@@ -317,7 +463,9 @@ export default function Absenteeism() {
                     >
                         Download Data
                 </button>
-                <DynamicTable mockdata={filtered_data} />
+                <DynamicTable 
+                  mockdata={filtered_data.map(({ end_academic_year, ...rest }) => rest)} 
+                />
           </>
         ) : (
           <p>Click on Desired Data.</p>

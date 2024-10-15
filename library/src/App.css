@@ -483,3 +483,56 @@ li {
   background-color: #d8b040;
 
 }
+
+/* Target only tables with the "styled-table" class */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  margin: 20px 0;
+}
+
+/* Table header styling */
+.styled-table thead th {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Table body styling */
+.styled-table tbody td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Alternating row colors */
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Highlight row on hover */
+.styled-table tbody tr:hover {
+  background-color: #ddd;
+}
+
+/* Bold font for the last row (grand totals) */
+.styled-table tbody tr:last-child td {
+  font-weight: bold;
+  background-color: #e0e0e0;
+}
+
+/* Borders for the entire table */
+.styled-table, .styled-table th, .styled-table td {
+  border: 1px solid #ddd;
+}
+
+/* Make table responsive */
+@media screen and (max-width: 768px) {
+  .styled-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
