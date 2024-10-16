@@ -101,7 +101,7 @@ const CareerOpportunity = () => {
           <button onClick={() => setActiveTab('Part Time')} className={activeTab === 'Part Time' ? 'active' : ''}>Part Time</button>
           <button onClick={() => setActiveTab('Internship')} className={activeTab === 'Internship' ? 'active' : ''}>Internship</button>
           <button onClick={() => setActiveTab('Volunteer')} className={activeTab === 'Volunteer' ? 'active' : ''}>Volunteer</button>
-          <button onClick={() => setActiveTab('Professional')} className={activeTab === 'Professional' ? 'active' : ''}>Professional</button>
+          <button onClick={() => setActiveTab('Professional')} className={activeTab === 'Professional' ? 'active' : ''}>Proffesional Development</button>
         </div>
         {(auth.user.is_crc || auth.user.is_superuser) && (
           <button onClick={() => setCreatingNew(true)} className="create-new-button">Create Draft</button>

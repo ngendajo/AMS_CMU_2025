@@ -34,7 +34,7 @@ const JobCard = ({ alumni, title, type, description, date, link, approved, onApp
       user: auth.user.id,
       description: editedDescription,
       post_time: currentDate,
-      diedline: editedDate,
+      diedline: type==="Professional"?currentDate:editedDate,
       link: editedLink
     };
     if (isNew) {
@@ -88,11 +88,16 @@ const JobCard = ({ alumni, title, type, description, date, link, approved, onApp
           <div className="job-char-count">
             Character Count: {editedDescription.length}/200
           </div>
-          <input
-            type="date"
-            value={editedDate}
-            onChange={(e) => setEditedDate(e.target.value)}
-          />
+          {type==="Professional"? 
+            null
+            :
+            <input
+              type="date"
+              value={editedDate}
+              onChange={(e) => setEditedDate(e.target.value)}
+            />
+          }
+          
           <input
             type="url"
             placeholder="Link"
@@ -112,7 +117,10 @@ const JobCard = ({ alumni, title, type, description, date, link, approved, onApp
             <p>{title}</p >
           </div>
           <p className="job-des">{description}</p >
-          <p className="job-apply-by">Apply by: {date}</p >
+          {type==="Professional"? 
+            null:
+              <p className="job-apply-by">Apply by: {date}</p >
+            }
           <Link to={link} target="_blank" rel="noopener noreferrer"
             className="job-view-apply-button">{type==="Professional"? "Start Course":"View and Apply"}
           </Link>
