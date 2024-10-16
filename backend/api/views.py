@@ -1401,6 +1401,51 @@ def delete_news(request, pk):
     news.delete()
     return Response(status=204)
 
+#news in pdf
+class PDFNewsViewSet(viewsets.ModelViewSet):
+    queryset = PDFNews.objects.all()
+    serializer_class = PDFNewsSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            # Check if the file is provided in the request
+            pdf_file = request.FILES.get('pdf_file', None)
+            if not pdf_file:
+                raise ValidationError("No file was uploaded.")
+            
+            # Validate the file type
+            if pdf_file.content_type != 'application/pdf':
+                raise ValidationError("Only PDF files are allowed.")
+            
+            # Proceed with the usual creation process if validation passes
+            return super().create(request, *args, **kwargs)
+        
+        except ValidationError as e:
+            # Return a response with a 400 Bad Request status
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            # Catch any other unexpected errors
+            return Response({'error': 'An unexpected error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            # Check if the file is provided in the request for an update
+            pdf_file = request.FILES.get('pdf_file', None)
+            if pdf_file and pdf_file.content_type != 'application/pdf':
+                raise ValidationError("Only PDF files are allowed.")
+            
+            # Proceed with the usual update process if validation passes
+            return super().update(request, *args, **kwargs)
+        
+        except ValidationError as e:
+            # Return a response with a 400 Bad Request status
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            # Catch any other unexpected errors
+            return Response({'error': 'An unexpected error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # Count alumni to show in front page
 def alumni_count(request):

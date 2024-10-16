@@ -97,7 +97,7 @@ const NewsForm = () => {
     }
 
     const formData = new FormData();
-    console.log("id inside formData", title);
+    //console.log("id inside formData", title);
     formData.append('title', title);
     formData.append('description', description);
     formData.append('date', new Date().toISOString());
@@ -128,7 +128,7 @@ const NewsForm = () => {
         );
        
         } else {
-            console.log("Creating a new one");
+            //console.log("Creating a new one");
             response = await axios.post(baseUrl + '/news/create/', formData, {
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),

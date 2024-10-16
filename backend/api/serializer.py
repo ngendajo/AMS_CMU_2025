@@ -734,6 +734,17 @@ class UpdateNewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ('title', 'description', 'date', 'pinned')
+        
+class PDFNewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PDFNews
+        fields = '__all__'
+
+    def validate_pdf_file(self, value):
+        # Check if the uploaded file is a PDF
+        if value.content_type != 'application/pdf':
+            raise serializers.ValidationError("Only PDF files are allowed.")
+        return value
 
 #Library management System
 

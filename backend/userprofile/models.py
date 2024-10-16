@@ -276,6 +276,15 @@ class News(models.Model):
     def __str__(self):
         return self.title
     
+class PDFNews(models.Model):
+    title = models.CharField(max_length=255)
+    pdf_file = models.FileField(upload_to='pdf_news/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+    
 #new models (Announcement, Inquiries, frequentlyaskedquestions, Groups )
 class Announcement(models.Model):
     text = models.TextField()

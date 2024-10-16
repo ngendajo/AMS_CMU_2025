@@ -48,6 +48,9 @@ const AlumniStoryPostForm = () => {
                         email: element.email,
                         firstName: element.first_name,
                         lastName: element.last_name,
+                        gradeName:element.grade_name,
+                        familyName:element.family_name,
+                        combinationName:element.combination_name
 
                     });
                 });
@@ -170,7 +173,7 @@ const AlumniStoryPostForm = () => {
 
     const handleEditStory = (story) => {
         //selectedAlumni.firstName = story.firstName;
-        console.log("story", story);
+        //console.log("story", story);
         setFormData({
             id: story.id,
             alumn: story.alumn,

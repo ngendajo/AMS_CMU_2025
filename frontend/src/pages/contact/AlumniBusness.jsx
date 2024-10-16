@@ -39,7 +39,7 @@ export default function AlumniBusness() {
                     },
                     withCredentials: true
                 });
-                console.log("response", response.data);
+                //console.log("response", response.data);
                 var alumniList = [];
                 response.data.forEach(element => {
                     alumniList.push({
@@ -48,6 +48,9 @@ export default function AlumniBusness() {
                         email: element.email,
                         firstName: element.first_name,
                         lastName: element.last_name,
+                        gradeName:element.grade_name,
+                        familyName:element.family_name,
+                        combinationName:element.combination_name
 
                     });
                 });

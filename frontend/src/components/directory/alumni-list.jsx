@@ -9,7 +9,7 @@ const AlumniList = ({ alumni, onSelect }) => {
                 return (
                     <div key={alum.id} className="alumni-item" onClick={() => onSelect(alum)}>
                         <img src={profilePic} alt="Profile" className="alumni-pic" />
-                        <div className="alumni-name">{alum.firstName} {alum.lastName}</div>
+                        <div className="alumni-name">{alum.firstName} {alum.lastName}<br/>({alum.gradeName} - {alum.familyName} -{alum.combinationName})</div>
                     </div>
                 );
             })}
