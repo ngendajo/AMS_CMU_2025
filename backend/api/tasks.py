@@ -27,7 +27,7 @@ def send_data_email(period):
             f'Absenteeism Report for Period {period} on {today}',  # Email subject
             email_body,  # Email body with today's attendance data for the given period
             'ngendajo@gmail.com',  # Sender email (replace with your email)
-            ['diane.uwimana@asyv.org','joseph@asyv.org','stella@asyv.org'],  # Recipient email (replace with actual recipient)
+            ['diane.uwimana@asyv.org','joseph@asyv.org','stella@asyv.org',,'julius@asyv.org'],  # Recipient email (replace with actual recipient)
         )
     else:
         # Optionally send an email if no records are found for the period
