@@ -35,5 +35,5 @@ def send_data_email(period):
             f'No Absenteeism Records for Period {period} on {today}',  # Email subject
             f'There are no absenteeism records for period {period} on {today}.',  # Email body
             'ngendajo@gmail.com',  # Sender email (replace with your email)
-            ['diane.uwimana@asyv.org','joseph@asyv.org','stella@asyv.org'],  # Recipient email (replace with actual recipient)
+            ['diane.uwimana@asyv.org','joseph@asyv.org','stella@asyv.org','julius@asyv.org'],  # Recipient email (replace with actual recipient)
         )
