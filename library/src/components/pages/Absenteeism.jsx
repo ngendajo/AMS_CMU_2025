@@ -138,7 +138,7 @@ export default function Absenteeism() {
                             "grade_name": record['grade_name'],
                             "end_academic_year": record['end_academic_year'],
                             "combination_name": record['combination_name'],
-                            "comment": record['comment'],
+                            "comment":auth.user.is_librarian || auth.user.is_superuser?<span onClick={alert("Add comment")}>{record['comment']}</span>: record['comment'],
                             // Initialize 7 period keys with empty values
                             "period_1": " ",
                             "period_2": " ",
