@@ -492,6 +492,7 @@ class Attendance(models.Model):
     period = models.IntegerField()  # Change to IntegerField
     date = models.DateField() 
     STATUS_CHOICES = [
+        ('present', 'Present'),
         ('absent', 'Absent'),
         ('late', 'Late'),
     ]
@@ -501,5 +502,6 @@ class Attendance(models.Model):
         choices=STATUS_CHOICES, 
         default='absent'
     )
+    comment = models.CharField(max_length=500,default="")
     created_at = models.DateTimeField(default=timezone.now)  # Add created_at field
 

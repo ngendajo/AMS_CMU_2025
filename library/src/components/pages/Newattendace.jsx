@@ -246,7 +246,8 @@ const save_attendance = async (student_id) => {
             'staff_id': auth.user.id,
             'period': parseInt(selectedPeriod.match(/\d+/)[0], 10),
             'date': selectedDate,
-            'status':'absent'
+            'status':'absent',
+            'comment':''
         }, {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -276,7 +277,8 @@ const save_lateness = async (att_id,student_id) => {
             'staff_id': auth.user.id,
             'period': parseInt(selectedPeriod.match(/\d+/)[0], 10),
             'date': selectedDate,
-            'status':'late'
+            'status':'late',
+            'comment':''
         }, {
             headers: {
                 "Authorization": 'Bearer ' + String(auth.accessToken),

@@ -138,6 +138,7 @@ export default function Absenteeism() {
                             "grade_name": record['grade_name'],
                             "end_academic_year": record['end_academic_year'],
                             "combination_name": record['combination_name'],
+                            "comment": record['comment'],
                             // Initialize 7 period keys with empty values
                             "period_1": " ",
                             "period_2": " ",
@@ -260,6 +261,7 @@ export default function Absenteeism() {
       item.grade_name,                           // Grade
       item.family_name,                          // Family Name
       item.combination_name,                     // Combination
+      item.comment, 
       item.period_1,
       item.period_2,
       item.period_3,
@@ -271,7 +273,7 @@ export default function Absenteeism() {
 
     // Add headers for the columns
     const headers = [
-      "No", "Date", "Student ID", "Name", "Grade", "Family Name", "Combination",
+      "No", "Date", "Student ID", "Name", "Grade", "Family Name", "Combination","Comment",
       "Period 1", "Period 2", "Period 3", "Period 4", "Period 5", "Period 6", "Period 7"
     ];
 
