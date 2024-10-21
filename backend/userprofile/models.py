@@ -498,7 +498,7 @@ class Attendance(models.Model):
     ]
     
     status = models.CharField(
-        max_length=6, 
+        max_length=7, 
         choices=STATUS_CHOICES, 
         default='absent'
     )
