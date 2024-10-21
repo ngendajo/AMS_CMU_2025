@@ -500,7 +500,7 @@ class Attendance(models.Model):
     status = models.CharField(
         max_length=7, 
         choices=STATUS_CHOICES, 
-        default='absent'
+        default='present'
     )
     comment = models.CharField(max_length=500,default="")
     created_at = models.DateTimeField(default=timezone.now)  # Add created_at field
