@@ -130,25 +130,35 @@ export default function Absenteeism() {
                     if (!(key in processed)) {
                         // Initialize a new record for this student and date
                         let row = {
-                            "date": record['date'],
-                            "studentid": record['studentid'],
-                            "name": (record['student_last_name']+" "+record['student_first_name']).split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' '),
-                            "gender": record['gender'],
-                            "family_name": record['family_name'],
-                            "grade_name": record['grade_name'],
-                            "end_academic_year": record['end_academic_year'],
-                            "combination_name": record['combination_name'],
-                            "comment":auth.user.is_librarian || auth.user.is_superuser?<span onClick={alert("Add comment")}>{record['comment']}</span>: record['comment'],
-                            // Initialize 7 period keys with empty values
-                            "period_1": " ",
-                            "period_2": " ",
-                            "period_3": " ",
-                            "period_4": " ",
-                            "period_5": " ",
-                            "period_6": " ",
-                            "period_7": " "
-                        };
-                        
+                          "date": record['date'],
+                          "studentid": record['studentid'],
+                          "name": (record['student_last_name'] + " " + record['student_first_name'])
+                              .split(' ')
+                              .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+                              .join(' '),
+                          "gender": record['gender'],
+                          "family_name": record['family_name'],
+                          "grade_name": record['grade_name'],
+                          "end_academic_year": record['end_academic_year'],
+                          "combination_name": record['combination_name'],
+                          "comment": auth.user.is_librarian || auth.user.is_superuser
+                              ? (
+                                  <span onClick={() => addComment(record['id'])}>
+                                      {record['comment'] === "absent" ? "" : record['comment']}
+                                  </span>
+                              )
+                              : record['comment'] === "absent"
+                              ? ""
+                              : record['comment'],
+                          // Initialize 7 period keys with empty values
+                          "period_1": " ",
+                          "period_2": " ",
+                          "period_3": " ",
+                          "period_4": " ",
+                          "period_5": " ",
+                          "period_6": " ",
+                          "period_7": " "
+                      };
                         // Add the record to organized_data and mark it as processed
                         organized_data.push(row);
                         processed[key] = row;
@@ -175,6 +185,10 @@ export default function Absenteeism() {
     const filtered = data.filter(item => item.date === today);
     setFiltered_data(filtered);
     generalData(filtered);
+  };
+
+  const addComment =(params)=> {
+    console.log("Add comment to: "+params)
   };
 
   const filterWeek = () => {
