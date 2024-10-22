@@ -9,7 +9,7 @@ def send_data_email(period):
     today = timezone.now().date()
 
     # Fetch attendance data for today's date and the specified period
-    data = Attendance.objects.filter(date=today, period=period)
+    data = Attendance.objects.filter(date=today, period=period,status="absent")
 
     # Check if there are any records for the given period today
     if data.exists():
