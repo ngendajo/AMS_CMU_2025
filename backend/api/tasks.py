@@ -19,9 +19,9 @@ def send_data_email(period):
         # Create a list of strings with student info, including numbering
         email_body = "\n".join([
             f"{index + 1}. {attendance.student_id.user.first_name} {attendance.student_id.user.last_name}, "
-            f"Grade: {attendance.student_id.family.grade.grade_name}, "
-            f"Family: {attendance.student_id.family.family_name}, "
-            f"Combination: {attendance.student_id.combination.combination_name}"
+            f"-: {attendance.student_id.family.grade.grade_name}, "
+            f"-: {attendance.student_id.family.family_name}, "
+            f"-: {attendance.student_id.combination.combination_name}"
             for index, attendance in enumerate(data)
             if (name := f"{attendance.student_id.user.first_name} {attendance.student_id.user.last_name}") not in seen_names and not seen_names.add(name)
     ])
