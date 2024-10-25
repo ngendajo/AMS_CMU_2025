@@ -7,8 +7,10 @@ import DynamicTable from "./dinamicTable/DynamicTable";
 
 export default function Absenteeism() {
     const [data, setData] = useState([]);
+    const [late, setLate] = useState([]);
     const [grade_students, setGrade_students] = useState([]);
     const [filtered_data, setFiltered_data] = useState([]);
+    const [latefiltered_data, setLatefiltered_data] = useState([]);
     const [general_data, setGeneral_data] = useState([]);
     const [general_report, setGeneral_report] = useState([]);
     const [grandTotalGirls, setGrandTotalGirls] = useState("");
@@ -121,55 +123,71 @@ export default function Absenteeism() {
                 var data = response.data;
                 var organized_data = [];
                 var processed = {};
-                
+
                 data.forEach(record => {
                     // Define the key as a combination of studentid and date
                     let key = `${record['studentid']}_${record['date']}`;
-                
+
                     // Check if the key is already processed
                     if (!(key in processed)) {
                         // Initialize a new record for this student and date
                         let row = {
-                          "date": record['date'],
-                          "studentid": record['studentid'],
-                          "name": (record['student_last_name'] + " " + record['student_first_name'])
-                              .split(' ')
-                              .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-                              .join(' '),
-                          "gender": record['gender'],
-                          "family_name": record['family_name'],
-                          "grade_name": record['grade_name'],
-                          "end_academic_year": record['end_academic_year'],
-                          "combination_name": record['combination_name'],
-                          "comment": auth.user.is_librarian || auth.user.is_superuser
-                              ? (
-                                  <span onClick={() => addComment(record['id'])}>
-                                      {record['comment'] === "absent" ? "" : record['comment']}
-                                  </span>
-                              )
-                              : record['comment'] === "absent"
-                              ? ""
-                              : record['comment'],
-                          // Initialize 7 period keys with empty values
-                          "period_1": " ",
-                          "period_2": " ",
-                          "period_3": " ",
-                          "period_4": " ",
-                          "period_5": " ",
-                          "period_6": " ",
-                          "period_7": " "
-                      };
+                            "date": record['date'],
+                            "studentid": record['studentid'],
+                            "name": (record['student_last_name'] + " " + record['student_first_name'])
+                                .split(' ')
+                                .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+                                .join(' '),
+                            "gender": record['gender'],
+                            "family_name": record['family_name'],
+                            "grade_name": record['grade_name'],
+                            "end_academic_year": record['end_academic_year'],
+                            "combination_name": record['combination_name'],
+                            "comment": auth.user.is_librarian || auth.user.is_superuser
+                                ? (
+                                    <span onClick={() => addComment(record['id'])}>
+                                        {record['comment'] === "absent" ? "" : record['comment']}
+                                    </span>
+                                )
+                                : record['comment'] === "absent"
+                                ? ""
+                                : record['comment'],
+                            // Initialize 7 period keys with empty values
+                            "period_1": " ",
+                            "period_2": " ",
+                            "period_3": " ",
+                            "period_4": " ",
+                            "period_5": " ",
+                            "period_6": " ",
+                            "period_7": " ",
+                            // Initialize hasAbsent to false
+                            "hasAbsent": false
+                        };
                         // Add the record to organized_data and mark it as processed
                         organized_data.push(row);
                         processed[key] = row;
                     }
-                
+
                     // Map the staff details to the corresponding period key (period_1, period_2, etc.)
                     let period_key = `period_${record['period']}`; // Create the period key (e.g., 'period_1')
-                    processed[key][period_key] = (record['status']).split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')+" Taken By (" + record['staff_last_name'] + " " + record['staff_first_name'] + ")";
+                    let periodValue = (record['status']).split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ') + " Taken By (" + record['staff_last_name'] + " " + record['staff_first_name'] + ")";
+                    processed[key][period_key] = periodValue;
+
+                    // Check if the period value contains the word "absent" and update hasAbsent
+                    if (periodValue.toLowerCase().includes("absent")) {
+                        processed[key]["hasAbsent"] = true;
+                    }
                 });
-                
-                setData(organized_data);
+
+                // Set the final data
+                // Split organized_data based on hasAbsent value
+                var dataWithAbsent = organized_data.filter(record => record.hasAbsent);
+                var dataWithoutAbsent = organized_data.filter(record => !record.hasAbsent);
+
+                // Set data with hasAbsent: true in setData and others in setLate
+                setData(dataWithAbsent);
+                setLate(dataWithoutAbsent);
+
             }catch(err) {
                 console.log(err);
                 //navigate('/error');
@@ -178,12 +196,13 @@ export default function Absenteeism() {
         getData();
     
     },[auth])
-    
     // Function to filter today's data
   const filterToday = () => {
     const today = new Date().toISOString().split('T')[0]; // Format 'YYYY-MM-DD'
     const filtered = data.filter(item => item.date === today);
+    const latefiltered = late.filter(item => item.date === today);
     setFiltered_data(filtered);
+    setLatefiltered_data(latefiltered)
     generalData(filtered);
   };
 
@@ -202,8 +221,12 @@ export default function Absenteeism() {
     const filtered = data.filter(
       item => item.date >= startOfWeekString && item.date <= todayString
     );
+    const latefiltered = late.filter(
+      item => item.date >= startOfWeekString && item.date <= todayString
+    );
 
     setFiltered_data(filtered);
+    setLatefiltered_data(latefiltered)
     generalData(filtered);
   };
 
@@ -214,8 +237,11 @@ export default function Absenteeism() {
     const filtered = data.filter(
       item => item.date.slice(0, 7) === currentMonth
     );
-
+    const latefiltered = late.filter(
+      item => item.date.slice(0, 7) === currentMonth
+    );
     setFiltered_data(filtered);
+    setLatefiltered_data(latefiltered)
     generalData(filtered);
   };
 
@@ -225,7 +251,11 @@ export default function Absenteeism() {
       const filtered = data.filter(
         item => item.date >= startDate && item.date <= endDate
       );
+      const latefiltered = late.filter(
+        item => item.date >= startDate && item.date <= endDate
+      );
       setFiltered_data(filtered);
+      setLatefiltered_data(latefiltered)
       generalData(filtered);
     }
   };
@@ -418,19 +448,23 @@ export default function Absenteeism() {
                   <table className="styled-table">
                     <thead>
                       <tr>
+                        <th>Type</th>
                         <th>Grade</th>
-                        <th>Absent Girls</th>
+                        <th>Girls</th>
                         <th>%</th>
-                        <th>Absent Boys</th>
+                        <th>Boys</th>
                         <th>%</th>
-                        <th>Total Absents</th>
+                        <th>Total</th>
                         <th>%</th>
-                        <th>No Girls</th>
-                        <th>No Boys</th>
-                        <th>No All Students</th>
+                        <th>Total Girls</th>
+                        <th>Total Boys</th>
+                        <th>Total All Students</th>
                       </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                          <td rowspan="6">Absenteeism</td>
+                        </tr>
                       {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
                         <tr key={grade_name}>
                           <td>{grade_name}</td>
@@ -458,6 +492,32 @@ export default function Absenteeism() {
                         <td><strong>{cgrandTotalBoys}</strong></td>
                         <td><strong>{cgrandTotal}</strong></td>
                       </tr>
+                      {/* Attendance */}
+                        <tr>
+                          <td rowspan="6">Attendance</td>
+                        </tr>
+                      {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
+                        <tr key={grade_name}>
+                          <td>{grade_name}</td>
+                          <td>{cgirls-girls}</td>
+                          <td>{(((cgirls-girls) * 100) / cgirls).toFixed(1)}%</td>
+                          <td>{cboys-boys}</td>
+                          <td>{(((cboys-boys) * 100) / cboys).toFixed(1)}%</td>
+                          <td>{ctotal-total}</td>
+                          <td>{(((ctotal-total) * 100) / ctotal).toFixed(1)}%</td>
+                        </tr>
+                      ))}
+                      {/* Add row for grand totals */}
+                      <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>{cgrandTotalGirls-grandTotalGirls}</strong></td>
+                        <td><strong>{((cgrandTotalGirls-grandTotalGirls) * 100 / cgrandTotalGirls).toFixed(1)}%</strong></td>
+                        <td><strong>{cgrandTotalBoys-grandTotalBoys}</strong></td>
+                        <td><strong>{((cgrandTotalBoys-grandTotalBoys) * 100 / cgrandTotalBoys).toFixed(1)}%</strong></td>
+                        <td><strong>{cgrandTotal-grandTotal}</strong></td>
+                        <td><strong>{((cgrandTotal-grandTotal) * 100 / cgrandTotal).toFixed(1)}%</strong></td>
+                       
+                      </tr>
                     </tbody>
                   </table>
                 </center>
@@ -482,6 +542,17 @@ export default function Absenteeism() {
                 <DynamicTable 
                   mockdata={filtered_data.map(({ end_academic_year, ...rest }) => rest)} 
                 />
+                <h2>Late Students</h2>
+                {latefiltered_data.length>0?
+                  (
+                    <DynamicTable 
+                      mockdata={latefiltered_data.map(({ end_academic_year, ...rest }) => rest)} 
+                    />
+                
+                  ):(<p>Not late students</p>)
+              
+                }
+                
           </>
         ) : (
           <p>Click on Desired Data.</p>

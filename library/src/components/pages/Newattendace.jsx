@@ -381,6 +381,7 @@ const handleDateSelect = async (e) => {
             width: '200px',
           }
         }
+        console.log(filteredStudents)
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ textAlign: 'center' }}>
@@ -456,12 +457,12 @@ const handleDateSelect = async (e) => {
                                             textAlign: 'center',
                                             borderRadius: '5px',
                                             marginBottom: '10px',
-                                            backgroundColor: student.att_id !== undefined ? student.att_status === 'absent' ? '#f49c46' : '#957967' : '#498160',  // Conditional background colors
+                                            backgroundColor: student.att_id !== undefined ? student.att_status === 'absent' ? '#f49c46' : student.att_status === 'late' ?'#957967' : '#498160': '#498160',  // Conditional background colors
                                             color: '#fff',  // Text color for visibility
                                             fontSize: '20px',  // Base font size
                                             cursor: 'pointer',  // Pointer cursor for clickable items
                                         }}
-                                        onClick={() => student.att_id !== undefined ? student.att_status === 'absent' ? save_lateness(student.att_id, student.id) : handleDeleteClick(student.last_name, student.first_name, student.att_id) : save_attendance(student.id)}
+                                        onClick={() => student.att_id !== undefined ? student.att_status === 'absent' ? save_lateness(student.att_id, student.id) :student.att_status === 'late' ? handleDeleteClick(student.last_name, student.first_name, student.att_id) :student.att_status === 'present' ? save_attendance(student.id):save_attendance(student.id):save_attendance(student.id)}
                                     >
                                         {index + 1}. {student.last_name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')} {student.first_name.split(' ').map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()).join(' ')}
                                         <br/>
