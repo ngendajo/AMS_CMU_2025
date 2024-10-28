@@ -174,7 +174,7 @@ export default function Absenteeism() {
                     processed[key][period_key] = periodValue;
 
                     // Check if the period value contains the word "absent" and update hasAbsent
-                    if (periodValue.toLowerCase().includes("absent")) {
+                    if (record['status']=="absent") {
                         processed[key]["hasAbsent"] = true;
                     }
                 });
