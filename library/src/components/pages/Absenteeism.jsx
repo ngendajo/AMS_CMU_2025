@@ -294,7 +294,7 @@ export default function Absenteeism() {
       `${index + 1}.`,                           // No.
       item.date,                                 // Date
       item.studentid,                            // Student ID
-      `${item.student_last_name} ${item.student_first_name}`,  // Name
+      item.name,  // Name
       item.grade_name,                           // Grade
       item.family_name,                          // Family Name
       item.combination_name,                     // Combination
@@ -622,7 +622,7 @@ export default function Absenteeism() {
                                     ? (
                                         <span onClick={() => addComment(id)}>
                                             {comment === "absent" ? "" :comment}
-                                            <p>Add comment</p>
+                                            <p>Add</p>
                                         </span>
                                     )
                                     : comment === "absent"
