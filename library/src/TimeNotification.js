@@ -54,13 +54,13 @@ const TimeNotification = () => {
   };
 
   useEffect(() => {
-    const notificationTimes = ['08:10', '09:00', '09:10','09:47', '09:30', '10:10', '11:10', '13:10', '14:10', '15:10'];
+    const notificationTimes = ['08:10', '09:00', '09:10','09:47', '09:30', '10:10','10:30', '11:10', '13:10', '14:10', '15:10'];
     const beepSound = new Audio(beepSoundFile);
 
     const getPeriodFromTime = (currentTime) => {
       const timeToPeriod = {
         '08:10': 1, '09:00': 2, '09:10': 2, '09:47': 2, '09:30': 2,
-        '10:10': 3, '11:10': 4, '13:10': 5, '14:10': 6, '15:10': 7
+        '10:10': 3,'10:30': 3, '11:10': 4, '13:10': 5, '14:10': 6, '15:10': 7
       };
       return timeToPeriod[currentTime] || null;
     };
