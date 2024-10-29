@@ -456,7 +456,7 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=100)
     
 class Room(models.Model):
-    Room_name = models.CharField(max_length=100)
+    room_name = models.CharField(max_length=100)
     
     def __str__(self):
         return self.room_name
