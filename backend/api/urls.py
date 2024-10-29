@@ -29,6 +29,7 @@ router.register(r'teachercombinationgradesubjects', views.TeacherCombinationGrad
 router.register(r'academic', views.AcademicViewSet)
 router.register(r'attendances', views.AttendanceViewSet)
 router.register(r'pdfnews', views.PDFNewsViewSet)
+router.register(r'rooms', views.RoomViewSet)
 
 urlpatterns = [
     # user paths

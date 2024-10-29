@@ -454,6 +454,12 @@ class Kids_alumni(models.Model):
 #school timetable
 class Subject(models.Model):
     subject_name = models.CharField(max_length=100)
+    
+class Room(models.Model):
+    Room_name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.room_name
 
 # TimeSlots model
 class TimeSlots(models.Model):
@@ -479,10 +485,12 @@ class GradeTimeSlots(models.Model):
 
 # TeacherCombinationGradeSubject model
 class TeacherCombinationGradeSubject(models.Model):
-    combination = models.ForeignKey(Combination, on_delete=models.CASCADE)
-    gradetimeslots = models.ForeignKey(GradeTimeSlots, on_delete=models.CASCADE)
-    teacher = models.ForeignKey(User, limit_choices_to={'is_teacher': True}, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    combination = models.ForeignKey(Combination, on_delete=models.PROTECT)
+    gradetimeslots = models.ForeignKey(GradeTimeSlots, on_delete=models.PROTECT)
+    teacher = models.ForeignKey(User, limit_choices_to={'is_teacher': True}, on_delete=models.PROTECT)
+    subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
+    academic = models.ForeignKey(Academic, on_delete=models.PROTECT)
+    room = models.ForeignKey(Room, on_delete=models.PROTECT)
     
     
 #Attendance management System

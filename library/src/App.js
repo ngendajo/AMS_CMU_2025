@@ -56,6 +56,7 @@ import Subjects from './components/schoolTimeTable/Subjects';
 import Academics from './components/schoolTimeTable/Academics';
 import Absenteeism from './components/pages/Absenteeism';
 import Newattendace from './components/pages/Newattendace';
+import Rooms from './components/schoolTimeTable/Rooms';
 
 
 
@@ -93,6 +94,7 @@ function App() {
                       <Route path="/timeslots" element={<TimeSlots />} />
                       <Route path="/grade-timeslots" element={<GradeTimeSlots />} />
                       <Route path="/subjects" element={<Subjects />} />
+                      <Route path="/rooms" element={<Rooms />} />
                       <Route path="/academics" element={<Academics />} />
                       <Route path="/add-teacher-subject" element={<TeacherSubjectForm />} />
                       <Route path='author' element={<Author />}/>

@@ -5287,6 +5287,64 @@ class AcademicViewSet(viewsets.ModelViewSet):
             return super().retrieve(request, *args, **kwargs)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+class RoomViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+
+    # Retrieve all rooms (GET /rooms/)
+    def list(self, request, *args, **kwargs):
+        try:
+            rooms = Room.objects.all()
+            serializer = RoomSerializer(rooms, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # Retrieve a single room (GET /rooms/<id>/)
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        try:
+            room = Room.objects.get(pk=pk)
+            serializer = RoomSerializer(room)
+            return Response(serializer.data)
+        except Room.DoesNotExist:
+            raise NotFound("Room not found")
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # Create a new room (POST /rooms/)
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = RoomSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Update an existing room (PUT /rooms/<id>/)
+    def update(self, request, pk=None, *args, **kwargs):
+        try:
+            room = Room.objects.get(pk=pk)
+            serializer = RoomSerializer(room, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        except Room.DoesNotExist:
+            raise NotFound("Room not found")
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Delete a room (DELETE /rooms/<id>/)
+    def destroy(self, request, pk=None, *args, **kwargs):
+        try:
+            room = Room.objects.get(pk=pk)
+            room.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Room.DoesNotExist:
+            raise NotFound("Room not found")
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 #Attendance management System   
 class AttendanceViewSet(viewsets.ModelViewSet):

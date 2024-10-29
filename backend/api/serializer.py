@@ -1128,6 +1128,11 @@ class AcademicSerializer(serializers.ModelSerializer):
         model = Academic
         fields = '__all__'
         
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
+        
 #Attendance management System
 class AttendanceSerializer(serializers.ModelSerializer):
     class Meta:
