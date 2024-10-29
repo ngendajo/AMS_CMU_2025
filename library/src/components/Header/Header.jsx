@@ -5,6 +5,7 @@ import './hearder.css'
 import useAuth from '../../hooks/useAuth';
 import {useNavigate} from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
+import TimeNotification from '../../TimeNotification';
 
 function Header() {
      const navigate = useNavigate();
@@ -26,6 +27,7 @@ function Header() {
         ?
        <div className="logoutbutton">
             <span onClick={signOut}>LOG ME OUT</span>
+            <TimeNotification />
        </div>:
        <span>
 

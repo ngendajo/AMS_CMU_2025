@@ -143,15 +143,8 @@ export default function Absenteeism() {
                             "grade_name": record['grade_name'],
                             "end_academic_year": record['end_academic_year'],
                             "combination_name": record['combination_name'],
-                            "comment": auth.user.is_librarian || auth.user.is_superuser
-                                ? (
-                                    <span onClick={() => addComment(record['id'])}>
-                                        {record['comment'] === "absent" ? "" : record['comment']}
-                                    </span>
-                                )
-                                : record['comment'] === "absent"
-                                ? ""
-                                : record['comment'],
+                            "comment": record['comment'],
+                            "id": record['id'],
                             // Initialize 7 period keys with empty values
                             "period_1": " ",
                             "period_2": " ",
@@ -174,7 +167,7 @@ export default function Absenteeism() {
                     processed[key][period_key] = periodValue;
 
                     // Check if the period value contains the word "absent" and update hasAbsent
-                    if (record['status']=="absent") {
+                    if (record['status']==="absent") {
                         processed[key]["hasAbsent"] = true;
                     }
                 });
@@ -378,6 +371,74 @@ export default function Absenteeism() {
           backgroundColor: '#002F6C', // You can change this color if you prefer
         },
       };
+      const exportToExcel = () => {
+        // Prepare data for Absenteeism section
+        const absenteeismData = general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => ({
+          Type: 'Absenteeism',
+          Grade: grade_name ==="Intwali"?"S6":grade_name==="Ishami"?"S5":grade_name==="Ijabo"?"S4":"EY",
+          Girls: girls,
+          GirlsPercent: ((girls * 100) / cgirls).toFixed(1) + '%',
+          Boys: boys,
+          BoysPercent: ((boys * 100) / cboys).toFixed(1) + '%',
+          Total: total,
+          TotalPercent: ((total * 100) / ctotal).toFixed(1) + '%',
+          TotalGirls: cgirls,
+          TotalBoys: cboys,
+          TotalAllStudents: ctotal,
+        }));
+    
+        // Prepare data for the grand total in the Absenteeism section
+        absenteeismData.push({
+          Type: 'Absenteeism',
+          Grade: 'Total',
+          Girls: grandTotalGirls,
+          GirlsPercent: (grandTotalGirls * 100 / cgrandTotalGirls).toFixed(1) + '%',
+          Boys: grandTotalBoys,
+          BoysPercent: (grandTotalBoys * 100 / cgrandTotalBoys).toFixed(1) + '%',
+          Total: grandTotal,
+          TotalPercent: (grandTotal * 100 / cgrandTotal).toFixed(1) + '%',
+          TotalGirls: cgrandTotalGirls,
+          TotalBoys: cgrandTotalBoys,
+          TotalAllStudents: cgrandTotal,
+        });
+    
+        // Prepare data for Attendance section
+        const attendanceData = general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => ({
+          Type: 'Attendance',
+          Grade: grade_name ==="Intwali"?"S6":grade_name==="Ishami"?"S5":grade_name==="Ijabo"?"S4":"EY",
+          Girls: cgirls - girls,
+          GirlsPercent: (((cgirls - girls) * 100) / cgirls).toFixed(1) + '%',
+          Boys: cboys - boys,
+          BoysPercent: (((cboys - boys) * 100) / cboys).toFixed(1) + '%',
+          Total: ctotal - total,
+          TotalPercent: (((ctotal - total) * 100) / ctotal).toFixed(1) + '%',
+        }));
+    
+        // Prepare data for the grand total in the Attendance section
+        attendanceData.push({
+          Type: 'Attendance',
+          Grade: 'Total',
+          Girls: cgrandTotalGirls - grandTotalGirls,
+          GirlsPercent: ((cgrandTotalGirls - grandTotalGirls) * 100 / cgrandTotalGirls).toFixed(1) + '%',
+          Boys: cgrandTotalBoys - grandTotalBoys,
+          BoysPercent: ((cgrandTotalBoys - grandTotalBoys) * 100 / cgrandTotalBoys).toFixed(1) + '%',
+          Total: cgrandTotal - grandTotal,
+          TotalPercent: ((cgrandTotal - grandTotal) * 100 / cgrandTotal).toFixed(1) + '%',
+        });
+    
+        // Combine Absenteeism and Attendance data
+        const combinedData = [...absenteeismData, ...attendanceData];
+    
+        // Create a new worksheet
+        const ws = utils.json_to_sheet(combinedData);
+    
+        // Create a new workbook and append the worksheet
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, 'General Absenteeism Report');
+    
+        // Write the workbook to a file
+        writeFile(wb, 'General_Absenteeism_Report.xlsx');
+      };
   return (
     <div> 
         <center><h1>Absenteeism</h1></center>
@@ -441,13 +502,16 @@ export default function Absenteeism() {
 
         </div>
         {general_data.length > 0 ? (
-            <>
-                
-                <center>
-                  <h2>General Absenteeism Report</h2>
-                  <table className="styled-table">
-                    <thead>
-                      <tr>
+    <>
+        <center>
+            <h2>General Absenteeism Report</h2>
+            <button 
+              style={{ ...buttonStyles.common, ...buttonStyles.today }} 
+              onClick={exportToExcel}>Download Excel
+            </button>
+            <table className="styled-table">
+                <thead>
+                    <tr>
                         <th>Type</th>
                         <th>Grade</th>
                         <th>Girls</th>
@@ -459,76 +523,83 @@ export default function Absenteeism() {
                         <th>Total Girls</th>
                         <th>Total Boys</th>
                         <th>Total All Students</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                          <td rowspan="6">Absenteeism</td>
-                        </tr>
-                      {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* Absenteeism Header Row */}
+                    <tr>
+                        <td rowSpan="6">Absenteeism</td>
+                    </tr>
+                    {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
                         <tr key={grade_name}>
-                          <td>{grade_name}</td>
-                          <td>{girls}</td>
-                          <td>{((girls * 100) / cgirls).toFixed(1)}%</td>
-                          <td>{boys}</td>
-                          <td>{((boys * 100) / cboys).toFixed(1)}%</td>
-                          <td>{total}</td>
-                          <td>{((total * 100) / ctotal).toFixed(1)}%</td>
-                          <td>{cgirls}</td>
-                          <td>{cboys}</td>
-                          <td>{ctotal}</td>
+                            <td>{grade_name === "Intwali" ? "S6" : grade_name === "Ishami" ? "S5" : grade_name === "Ijabo" ? "S4" : "EY"}</td>
+                            <td>{girls}</td>
+                            <td>{cgirls ? ((girls * 100) / cgirls).toFixed(1) : "0"}%</td>
+                            <td>{boys}</td>
+                            <td>{cboys ? ((boys * 100) / cboys).toFixed(1) : "0"}%</td>
+                            <td>{total}</td>
+                            <td>{ctotal ? ((total * 100) / ctotal).toFixed(1) : "0"}%</td>
+                            <td>{cgirls}</td>
+                            <td>{cboys}</td>
+                            <td>{ctotal}</td>
                         </tr>
-                      ))}
-                      {/* Add row for grand totals */}
-                      <tr>
+                    ))}
+                    {/* Grand Total Row for Absenteeism */}
+                    <tr>
                         <td><strong>Total</strong></td>
                         <td><strong>{grandTotalGirls}</strong></td>
-                        <td><strong>{(grandTotalGirls * 100 / cgrandTotalGirls).toFixed(1)}%</strong></td>
+                        <td><strong>{cgrandTotalGirls ? ((grandTotalGirls * 100) / cgrandTotalGirls).toFixed(1) : "0"}%</strong></td>
                         <td><strong>{grandTotalBoys}</strong></td>
-                        <td><strong>{(grandTotalBoys * 100 / cgrandTotalBoys).toFixed(1)}%</strong></td>
+                        <td><strong>{cgrandTotalBoys ? ((grandTotalBoys * 100) / cgrandTotalBoys).toFixed(1) : "0"}%</strong></td>
                         <td><strong>{grandTotal}</strong></td>
-                        <td><strong>{(grandTotal * 100 / cgrandTotal).toFixed(1)}%</strong></td>
+                        <td><strong>{cgrandTotal ? ((grandTotal * 100) / cgrandTotal).toFixed(1) : "0"}%</strong></td>
                         <td><strong>{cgrandTotalGirls}</strong></td>
                         <td><strong>{cgrandTotalBoys}</strong></td>
                         <td><strong>{cgrandTotal}</strong></td>
-                      </tr>
-                      {/* Attendance */}
-                        <tr>
-                          <td rowspan="6">Attendance</td>
+                    </tr>
+                    {/* Attendance Header Row */}
+                    <tr>
+                        <td rowSpan="6">Attendance</td>
+                    </tr>
+                    {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
+                        <tr key={`attendance-${grade_name}`}>
+                            <td>{grade_name === "Intwali" ? "S6" : grade_name === "Ishami" ? "S5" : grade_name === "Ijabo" ? "S4" : "EY"}</td>
+                            <td>{cgirls - girls}</td>
+                            <td>{cgirls ? (((cgirls - girls) * 100) / cgirls).toFixed(1) : "0"}%</td>
+                            <td>{cboys - boys}</td>
+                            <td>{cboys ? (((cboys - boys) * 100) / cboys).toFixed(1) : "0"}%</td>
+                            <td>{ctotal - total}</td>
+                            <td>{ctotal ? (((ctotal - total) * 100) / ctotal).toFixed(1) : "0"}%</td>
                         </tr>
-                      {general_report.map(({ grade_name, girls, cgirls, boys, cboys, total, ctotal }) => (
-                        <tr key={grade_name}>
-                          <td>{grade_name}</td>
-                          <td>{cgirls-girls}</td>
-                          <td>{(((cgirls-girls) * 100) / cgirls).toFixed(1)}%</td>
-                          <td>{cboys-boys}</td>
-                          <td>{(((cboys-boys) * 100) / cboys).toFixed(1)}%</td>
-                          <td>{ctotal-total}</td>
-                          <td>{(((ctotal-total) * 100) / ctotal).toFixed(1)}%</td>
-                        </tr>
-                      ))}
-                      {/* Add row for grand totals */}
-                      <tr>
+                    ))}
+                    {/* Grand Total Row for Attendance */}
+                    <tr>
                         <td><strong>Total</strong></td>
-                        <td><strong>{cgrandTotalGirls-grandTotalGirls}</strong></td>
-                        <td><strong>{((cgrandTotalGirls-grandTotalGirls) * 100 / cgrandTotalGirls).toFixed(1)}%</strong></td>
-                        <td><strong>{cgrandTotalBoys-grandTotalBoys}</strong></td>
-                        <td><strong>{((cgrandTotalBoys-grandTotalBoys) * 100 / cgrandTotalBoys).toFixed(1)}%</strong></td>
-                        <td><strong>{cgrandTotal-grandTotal}</strong></td>
-                        <td><strong>{((cgrandTotal-grandTotal) * 100 / cgrandTotal).toFixed(1)}%</strong></td>
-                       
-                      </tr>
-                    </tbody>
-                  </table>
-                </center>
-                <h2></h2>
-                <DynamicTable 
-                  mockdata={general_data.map(({ end_academic_year, ...rest }) => rest)} 
-                />
-            </>
-        ) : (
-          <p></p>
-        )}
+                        <td><strong>{cgrandTotalGirls - grandTotalGirls}</strong></td>
+                        <td><strong>{cgrandTotalGirls ? (((cgrandTotalGirls - grandTotalGirls) * 100) / cgrandTotalGirls).toFixed(1) : "0"}%</strong></td>
+                        <td><strong>{cgrandTotalBoys - grandTotalBoys}</strong></td>
+                        <td><strong>{cgrandTotalBoys ? (((cgrandTotalBoys - grandTotalBoys) * 100) / cgrandTotalBoys).toFixed(1) : "0"}%</strong></td>
+                        <td><strong>{cgrandTotal - grandTotal}</strong></td>
+                        <td><strong>{cgrandTotal ? (((cgrandTotal - grandTotal) * 100) / cgrandTotal).toFixed(1) : "0"}%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+        <DynamicTable 
+            mockdata={general_data.map(({ count, grade_name, combination_name, end_academic_year, ...rest }) => ({
+                ...rest,
+                Class: grade_name === "Intwali" ? `S6_${(combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name}` : 
+                       grade_name === "Ishami" ? `S5_${(combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name}` : 
+                       grade_name === "Ijabo" ? `S4_${(combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name}` : 
+                       combination_name,
+                count
+            }))} 
+        />
+    </>
+) : (
+    <p>No data available</p>
+)}
+
         
         {filtered_data.length > 0 ? (
             <>
@@ -539,8 +610,26 @@ export default function Absenteeism() {
                     >
                         Download Data
                 </button>
+                
                 <DynamicTable 
-                  mockdata={filtered_data.map(({ end_academic_year, ...rest }) => rest)} 
+                  mockdata={filtered_data.map(({ id,hasAbsent,comment,period_1,period_2,period_3,period_4,period_5,period_6,period_7 ,grade_name, combination_name, end_academic_year, ...rest }) => ({
+                    ...rest,
+                    Class: grade_name === "Intwali" ? `S6_${(combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name}`: 
+                          grade_name === "Ishami" ? `S5_${(combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name}` : 
+                          grade_name === "Ijabo" ? `S4_${(combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name}` : 
+                          combination_name,
+                    comment:auth.user.is_librarian || auth.user.is_superuser
+                                    ? (
+                                        <span onClick={() => addComment(id)}>
+                                            {comment === "absent" ? "" :comment}
+                                            <p>Add comment</p>
+                                        </span>
+                                    )
+                                    : comment === "absent"
+                                    ? ""
+                                    : comment,
+                    period_1,period_2,period_3,period_4,period_5,period_6,period_7 // Ensure this property is included
+                  }))} 
                 />
                 <h2>Late Students</h2>
                 {latefiltered_data.length>0?
