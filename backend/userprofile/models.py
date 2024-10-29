@@ -489,8 +489,8 @@ class TeacherCombinationGradeSubject(models.Model):
     gradetimeslots = models.ForeignKey(GradeTimeSlots, on_delete=models.PROTECT)
     teacher = models.ForeignKey(User, limit_choices_to={'is_teacher': True}, on_delete=models.PROTECT)
     subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
-    academic = models.ForeignKey(Academic, on_delete=models.PROTECT)
-    room = models.ForeignKey(Room, on_delete=models.PROTECT)
+    academic = models.ForeignKey(Academic, on_delete=models.PROTECT, null=True)
+    room = models.ForeignKey(Room, on_delete=models.PROTECT, null=True)
     
     
 #Attendance management System
