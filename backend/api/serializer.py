@@ -1119,18 +1119,18 @@ class GradeTimeSlotsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TeacherCombinationGradeSubjectSerializer(serializers.ModelSerializer):
-    room_id = serializers.IntegerField(source="room.id", read_only=True)
+    room = serializers.IntegerField(source="room.id", read_only=True)
     room_name = serializers.CharField(source="room.room_name", read_only=True)
-    subject_id = serializers.IntegerField(source="subject.id", read_only=True)
+    subject = serializers.IntegerField(source="subject.id", read_only=True)
     subject_name = serializers.CharField(source="subject.subject_name", read_only=True)
-    teacher_id = serializers.IntegerField(source="teacher.id", read_only=True)
+    teacher = serializers.IntegerField(source="teacher.id", read_only=True)
     teacher_last_name = serializers.CharField(source="teacher.last_name", read_only=True)
     teacher_first_name = serializers.CharField(source="teacher.first_name", read_only=True)
 
     class Meta:
         model = TeacherCombinationGradeSubject
         fields = [
-            'id', 'room_id', 'room_name', 'subject_id', 'subject_name', 'teacher_id',
+            'id', 'room', 'room_name', 'subject', 'subject_name', 'teacher',
             'teacher_last_name', 'teacher_first_name', 'academic', 'combination', 'gradetimeslots'
         ]
         

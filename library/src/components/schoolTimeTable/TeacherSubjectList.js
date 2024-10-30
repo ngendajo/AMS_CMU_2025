@@ -31,7 +31,7 @@ const TeacherSubjectList = () => {
         academic: ''
     });
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: parseInt(e.target.value, 10) });
     };
     const changeFormData = (comb,gts,ac) => {
         setFormData({ ...formData,combination:comb, gradetimeslots: gts,academic:ac });
@@ -39,9 +39,11 @@ const TeacherSubjectList = () => {
     };
     
     const handleSubmit = () => {
+        
         createTeacherCombinationGradeSubject(auth,formData)
             .then(response => {
                 setEdit([])
+                fetchTeacherCombinationGradeSubjects(auth).then(response => setTeacherSubjects(response.data));
                 console.log('Created successfully', response.data);
                 // handle success (e.g., redirect, show message)
             })
@@ -251,7 +253,7 @@ const TeacherSubjectList = () => {
           cursor: 'pointer',
         },
       };
-console.log(teacherSubjects)
+      console.log(formData)
     return (
         <div style={centeredContainerStyle}>
             <h1>
@@ -305,8 +307,18 @@ console.log(teacherSubjects)
                                         {grade.combinations.map(comb =>(
                                             <td 
                                                 key={comb.combination_id} 
+                                                style={{
+                                                    backgroundColor: ["BREAKFAST", "CLEANING CLASSES", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
+                                                        .includes(sl.activity)
+                                                        ? "black"
+                                                        : "transparent"
+                                                }}
                                             >
-                                                {edit[0]===comb.combination_id && edit[1]===sl.id && edit[2]===selectedAcademicId ?
+                                                {["BREAKFAST", "CLEANING CLASSES", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
+                                                .includes(sl.activity)
+                                                ? null
+                                                :
+                                                edit[0]===comb.combination_id && edit[1]===sl.id && edit[2]===selectedAcademicId ?
                                                     <form style={styles.form}>
                                                         <select name="subject" onChange={handleChange} style={styles.select}>
                                                         <option value="">Select Subject</option>
@@ -346,6 +358,22 @@ console.log(teacherSubjects)
                                                     </form>
                                                     :
                                                     <>
+                                                        {teacherSubjects
+                                                            .filter(
+                                                                (teacherSubject) =>
+                                                                    teacherSubject.combination === comb.combination_id &&
+                                                                    teacherSubject.gradetimeslots === sl.id &&
+                                                                    teacherSubject.academic === selectedAcademicId
+                                                            )
+                                                            .map((teacherSubject, index) => (
+                                                                <p key={index}>
+                                                                    {teacherSubject.subject_name}
+                                                                    <br />
+                                                                    {teacherSubject.teacher_last_name}
+                                                                    <br />
+                                                                    {teacherSubject.room_name}
+                                                                </p>
+                                                            ))}
                                                         <span 
                                                             style={styles.submitButton}
                                                             onClick={() => changeFormData(comb.combination_id, sl.id, selectedAcademicId)} 
