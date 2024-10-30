@@ -71,6 +71,7 @@ const TimeNotification = () => {
 
       try {
         const data = await getData(period);
+        console.log(period,data)
         if (data && data.length > 0) {
           const today = new Date().toISOString().split('T')[0];
           const studentList = data.map(student => `${student.name} (${student.studentid})`).join(', ');
