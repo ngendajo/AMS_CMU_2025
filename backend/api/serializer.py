@@ -1119,11 +1119,8 @@ class GradeTimeSlotsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TeacherCombinationGradeSubjectSerializer(serializers.ModelSerializer):
-    room = serializers.IntegerField(source="room.id", read_only=True)
     room_name = serializers.CharField(source="room.room_name", read_only=True)
-    subject = serializers.IntegerField(source="subject.id", read_only=True)
     subject_name = serializers.CharField(source="subject.subject_name", read_only=True)
-    teacher = serializers.IntegerField(source="teacher.id", read_only=True)
     teacher_last_name = serializers.CharField(source="teacher.last_name", read_only=True)
     teacher_first_name = serializers.CharField(source="teacher.first_name", read_only=True)
 
