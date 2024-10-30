@@ -1120,15 +1120,12 @@ class GradeTimeSlotsSerializer(serializers.ModelSerializer):
 
 class TeacherCombinationGradeSubjectSerializer(serializers.ModelSerializer):
     room_id = serializers.IntegerField(source="room.id", read_only=True)
-    room_name = serializers.CharField(source="room.name", read_only=True)
+    room_name = serializers.CharField(source="room.room_name", read_only=True)
     subject_id = serializers.IntegerField(source="subject.id", read_only=True)
-    subject_name = serializers.CharField(source="subject.name", read_only=True)
+    subject_name = serializers.CharField(source="subject.subject_name", read_only=True)
     teacher_id = serializers.IntegerField(source="teacher.id", read_only=True)
     teacher_last_name = serializers.CharField(source="teacher.last_name", read_only=True)
     teacher_first_name = serializers.CharField(source="teacher.first_name", read_only=True)
-    academic = serializers.CharField(source="academic.name", read_only=True)  # Assuming academic has a 'name' field
-    combination = serializers.CharField(source="combination.name", read_only=True)  # Assuming combination has a 'name' field
-    gradetimeslots = serializers.CharField(source="gradetimeslots.name", read_only=True)  # Assuming gradetimeslots has a 'name' field
 
     class Meta:
         model = TeacherCombinationGradeSubject
