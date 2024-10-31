@@ -282,8 +282,13 @@ CELERY_BEAT_SCHEDULE = {
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ngendajo@gmail.com'
-EMAIL_HOST_PASSWORD = 'sabs epzq qepw vmke'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER = 'ngendajo@gmail.com'
+#EMAIL_HOST_PASSWORD = 'sabs epzq qepw vmke'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = 'no-reply@backend.asyv.ac.rw'
