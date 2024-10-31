@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db import models
 from api.models import User
 from datetime import date
+from django.db.models import Q
 
 # Staff model
 class CrcProfile(models.Model):
@@ -487,7 +488,7 @@ class GradeTimeSlots(models.Model):
 class TeacherCombinationGradeSubject(models.Model):
     combination = models.ForeignKey(Combination, on_delete=models.PROTECT)
     gradetimeslots = models.ForeignKey(GradeTimeSlots, on_delete=models.PROTECT)
-    teacher = models.ForeignKey(User, limit_choices_to={'is_teacher': True}, on_delete=models.PROTECT)
+    teacher = models.ForeignKey(User, limit_choices_to=Q(is_teacher=True) | Q(is_librarian=True), on_delete=models.PROTECT)
     subject = models.ForeignKey(Subject, on_delete=models.PROTECT)
     academic = models.ForeignKey(Academic, on_delete=models.PROTECT, null=True)
     room = models.ForeignKey(Room, on_delete=models.PROTECT, null=True)

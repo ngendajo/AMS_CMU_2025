@@ -313,13 +313,13 @@ const TeacherSubjectList = () => {
                                             <td 
                                                 key={comb.combination_id} 
                                                 style={{
-                                                    backgroundColor: ["BREAKFAST","EP SPORTS", "CLEANING CLASSES","PROJECT 1","PROJECT 2", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
+                                                    backgroundColor: ["BREAKFAST","ACADEMIC ADVISORY","LIFE SKILLS","FAMILY TIME","EP SPORTS", "CLEANING CLASSES","PROJECT 1","PROJECT 2", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
                                                         .includes(sl.activity)
                                                         ? "black"
                                                         : "transparent"
                                                 }}
                                             >
-                                                {["BREAKFAST", "CLEANING CLASSES","EP SPORTS","PROJECT 1","PROJECT 2", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
+                                                {["BREAKFAST", "CLEANING CLASSES","ACADEMIC ADVISORY","LIFE SKILLS","FAMILY TIME","EP SPORTS","PROJECT 1","PROJECT 2", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
                                                 .includes(sl.activity)
                                                 ? null
                                                 :
