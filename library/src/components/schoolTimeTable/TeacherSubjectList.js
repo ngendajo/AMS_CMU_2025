@@ -395,13 +395,13 @@ const TeacherSubjectList = () => {
                                                                                 <br />
                                                                                 {teacherSubject.room_name}
                                                                                 <br/>
-                                                                                {auth.user.is_superuser && auth.user.is_librarian?<span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>:null}
+                                                                                {auth.user.is_superuser || auth.user.is_librarian?<span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>:null}
                                                                                 
                                                                             </p>
                                                                         ))
                                                                 ) : (<>
                                                                         <p>Individual/Group work</p>
-                                                                        {auth.user.is_superuser && auth.user.is_librarian?
+                                                                        {auth.user.is_superuser || auth.user.is_librarian?
                                                                         <span 
                                                                         style={styles.submitButton}
                                                                         onClick={() => changeFormData(comb.combination_id, sl.id, selectedAcademicId)} 
