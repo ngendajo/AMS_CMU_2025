@@ -79,7 +79,7 @@ const TeacherSubjectList = () => {
     useEffect(() => {
         fetchAcademics(auth).then(response => setAcademics(response.data));
         fetchSubjects(auth).then(response => setSubjects(response.data));
-        fetchUsers(auth).then(response => setTeachers(response.data.filter(user => user.is_teacher)));
+        fetchUsers(auth).then(response => setTeachers(response.data.filter(user => user.is_teacher || user.is_librarian)));
         fetchRooms(auth).then(response => setRooms(response.data));
     }, [auth]);
     useEffect(() =>{
@@ -253,7 +253,12 @@ const TeacherSubjectList = () => {
           cursor: 'pointer',
         },
       };
-      console.log(formData)
+      const formatTime = (time) => {
+            // Extract hours and minutes from the time string
+            const [hours, minutes] = time.split(':').slice(0, 2); // Get first two parts (HH and mm)
+            return `${hours}:${minutes}`;
+        };
+      //console.log(formData)
     return (
         <div style={centeredContainerStyle}>
             <h1>
@@ -303,18 +308,18 @@ const TeacherSubjectList = () => {
                                   <tbody key={sl.id}>
                                     <tr>
                                         <td>{sl.activity}</td>
-                                        <td>{sl.timeslotDetails.start_time}-{sl.timeslotDetails.end_time}</td>
+                                        <td>{`${formatTime(sl.timeslotDetails.start_time)}-${formatTime(sl.timeslotDetails.end_time)}`}</td>
                                         {grade.combinations.map(comb =>(
                                             <td 
                                                 key={comb.combination_id} 
                                                 style={{
-                                                    backgroundColor: ["BREAKFAST", "CLEANING CLASSES", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
+                                                    backgroundColor: ["BREAKFAST","EP SPORTS", "CLEANING CLASSES","PROJECT 1","PROJECT 2", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
                                                         .includes(sl.activity)
                                                         ? "black"
                                                         : "transparent"
                                                 }}
                                             >
-                                                {["BREAKFAST", "CLEANING CLASSES", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
+                                                {["BREAKFAST", "CLEANING CLASSES","EP SPORTS","PROJECT 1","PROJECT 2", "ILEAD", "ASSEMBLY", "BREAK", "LUNCH", "CLUBS", "PERSONAL TIME", "DINNER", "EVENING STAR", "WELLNESS SESSION", "CRC WORKSHOP", "EP- ART CENTER", "COMPUTER HOUR", "LEAP PRACTICE", "HOMEROOM MEETING", "EP- SCIENCE CENTER/ART CENTER", "MUCAKA MUCAKA"]
                                                 .includes(sl.activity)
                                                 ? null
                                                 :
@@ -358,28 +363,57 @@ const TeacherSubjectList = () => {
                                                     </form>
                                                     :
                                                     <>
-                                                        {teacherSubjects
-                                                            .filter(
-                                                                (teacherSubject) =>
-                                                                    teacherSubject.combination === comb.combination_id &&
-                                                                    teacherSubject.gradetimeslots === sl.id &&
-                                                                    teacherSubject.academic === selectedAcademicId
-                                                            )
-                                                            .map((teacherSubject, index) => (
-                                                                <p key={index}>
-                                                                    {teacherSubject.subject_name}
-                                                                    <br />
-                                                                    {teacherSubject.teacher_last_name}
-                                                                    <br />
-                                                                    {teacherSubject.room_name}
-                                                                </p>
-                                                            ))}
-                                                        <span 
-                                                            style={styles.submitButton}
-                                                            onClick={() => changeFormData(comb.combination_id, sl.id, selectedAcademicId)} 
-                                                        >
-                                                            Edit
-                                                        </span>
+                                                        {teacherSubjects.length > 0 &&
+                                                            teacherSubjects
+                                                                .filter(
+                                                                    (teacherSubject) =>
+                                                                        teacherSubject.combination === comb.combination_id &&
+                                                                        teacherSubject.gradetimeslots === sl.id &&
+                                                                        teacherSubject.academic === selectedAcademicId
+                                                                )
+                                                                .map((teacherSubject, index) => (
+                                                                    <p key={index}>
+                                                                        {teacherSubject.subject_name}
+                                                                        <br />
+                                                                        {teacherSubject.teacher_last_name}
+                                                                        <br />
+                                                                        {teacherSubject.room_name}
+                                                                    </p>
+                                                                )).length > 0 ? (
+                                                                    teacherSubjects
+                                                                        .filter(
+                                                                            (teacherSubject) =>
+                                                                                teacherSubject.combination === comb.combination_id &&
+                                                                                teacherSubject.gradetimeslots === sl.id &&
+                                                                                teacherSubject.academic === selectedAcademicId
+                                                                        )
+                                                                        .map((teacherSubject, index) => (
+                                                                            <p key={index}>
+                                                                                {teacherSubject.subject_name}
+                                                                                <br />
+                                                                                {teacherSubject.teacher_last_name}
+                                                                                <br />
+                                                                                {teacherSubject.room_name}
+                                                                                <br/>
+                                                                                {auth.user.is_superuser?<span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>:null}
+                                                                                
+                                                                            </p>
+                                                                        ))
+                                                                ) : (<>
+                                                                        <p>Individual/Group work</p>
+                                                                        {auth.user.is_superuser?
+                                                                        <span 
+                                                                        style={styles.submitButton}
+                                                                        onClick={() => changeFormData(comb.combination_id, sl.id, selectedAcademicId)} 
+                                                                    >
+                                                                        Add
+                                                                    </span>:null
+                                                                        }
+                                                                        
+                                                                    </>
+                                                                    
+                                                                )
+                                                        }
                                                     </>
                                                 }
                                             </td>

@@ -8,7 +8,9 @@ const TimeNotification = () => {
   const { auth } = useAuth();
   let i = 0;
 
-  const getData = async (period) => {
+  const getData = async () => {
+    //console.log("Access Token:", auth.accessToken);
+
     try {
       const response = await axios.get(baseUrl + '/attendances/', {
         headers: {
@@ -21,7 +23,7 @@ const TimeNotification = () => {
       const processed = {};
       const today = new Date().toISOString().split('T')[0];
       data.forEach(record => {
-        if (record['date'] === today && record['period'] === period) {
+        if (record['date'] === today) {
           const key = `${record['studentid']}_${record['date']}`;
           if (!(key in processed)) {
             const row = {
@@ -54,7 +56,7 @@ const TimeNotification = () => {
   };
 
   useEffect(() => {
-    const notificationTimes = ['08:10', '09:00', '09:10','09:47', '09:30', '10:10','10:30', '11:10', '13:10', '14:10', '15:10'];
+    const notificationTimes = ['08:10','08:40', '09:00', '09:10','09:47', '09:30', '10:10','10:30', '11:10', '13:10', '14:10', '15:10'];
     const beepSound = new Audio(beepSoundFile);
 
     const getPeriodFromTime = (currentTime) => {
@@ -66,18 +68,25 @@ const TimeNotification = () => {
     };
 
     const showNotification = async (currentTime) => {
-      const period = getPeriodFromTime(currentTime);
-      if (!period) return;
+      //const period = getPeriodFromTime(currentTime);
+      //if (!period) return;
 
       try {
-        const data = await getData(period);
-        console.log(period,data)
+        const data = await getData();
+        console.log(data)
         if (data && data.length > 0) {
           const today = new Date().toISOString().split('T')[0];
           const studentList = data.map(student => `${student.name} (${student.studentid})`).join(', ');
 
           if (Notification.permission === 'granted') {
-            new Notification(`Report of Period ${period} on ${today}`, { body: studentList });
+            new Notification(`Report  on ${today}`, { body: studentList });
+          }
+        }else{
+          const today = new Date().toISOString().split('T')[0];
+          const studentList = "Check attendance report";
+
+          if (Notification.permission === 'granted') {
+            new Notification(`Report  on ${today}`, { body: studentList });
           }
         }
       } catch (err) {
