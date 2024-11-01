@@ -513,4 +513,20 @@ class Attendance(models.Model):
     )
     comment = models.CharField(max_length=500,default="")
     created_at = models.DateTimeField(default=timezone.now)  # Add created_at field
+    
+
+#English Access Program
+class Eap(models.Model):
+    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    school = models.CharField(max_length=100)
+    eap_class = models.CharField(max_length=100)
+
+class EapAttendance(models.Model):
+    eap_student = models.ForeignKey(Eap, on_delete=models.CASCADE)
+    period = models.CharField(max_length=100)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=[('present', 'Present'), ('absent', 'Absent'), ('late', 'Late')])
+    created_at = models.DateTimeField(auto_now_add=True)
+    staff = models.ForeignKey(User, on_delete=models.CASCADE)
 

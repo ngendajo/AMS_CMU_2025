@@ -5408,3 +5408,25 @@ class AttendanceViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Attendance not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+       
+
+#English Access Program 
+class EapViewSet(viewsets.ModelViewSet):
+    queryset = Eap.objects.all()
+    serializer_class = EapSerializer
+
+class EapAttendanceViewSet(viewsets.ModelViewSet):
+    queryset = EapAttendance.objects.all()
+    serializer_class = EapAttendanceSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -30,6 +30,9 @@ router.register(r'academic', views.AcademicViewSet)
 router.register(r'attendances', views.AttendanceViewSet)
 router.register(r'pdfnews', views.PDFNewsViewSet)
 router.register(r'rooms', views.RoomViewSet)
+#English Access Program
+router.register(r'eap', views.EapViewSet)
+router.register(r'eap-attendance', views.EapAttendanceViewSet)
 
 urlpatterns = [
     # user paths

@@ -1166,3 +1166,18 @@ class AttendanceDetailSerializer(serializers.ModelSerializer):
             'family_name', 'grade_name', 'combination_name',
             'staff_first_name', 'staff_last_name', 'period','comment','created_at', 'date', 'id','gender','status','end_academic_year'
         ]
+        
+#English Access Program
+class EapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Eap
+        fields = '__all__'
+
+class EapAttendanceSerializer(serializers.ModelSerializer):
+    staff_first_name = serializers.CharField(source='staff.first_name', read_only=True)
+    staff_last_name = serializers.CharField(source='staff.last_name', read_only=True)
+    eap_student_details = EapSerializer(source='eap_student', read_only=True)
+
+    class Meta:
+        model = EapAttendance
+        fields = '__all__'
