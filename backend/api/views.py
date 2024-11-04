@@ -1,6 +1,7 @@
 
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
+from django.db.models import OuterRef, Subquery
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -5433,53 +5434,73 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
         
         
 #new way of taking attendance
-class TimetableFilter(filters.FilterSet):
-    academic = filters.NumberFilter(field_name='academic__id', required=True)
-    day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
-    teacher = filters.NumberFilter(field_name='teacher__id', required=True)
-
-    class Meta:
-        model = TeacherCombinationGradeSubject
-        fields = ['academic', 'day_of_week', 'teacher']  # Only these three parameters are allowed
-
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
-    #permission_classes = [IsAuthenticated]
-    filterset_class = TimetableFilter
-    
-    def get_queryset(self):
-        try:
-            # Check if all required parameters are present
-            academic_id = self.request.query_params.get('academic')
-            day_of_week = self.request.query_params.get('day_of_week')
-            teacher_id = self.request.query_params.get('teacher')
+    permission_classes = [IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
 
-            if not all([academic_id, day_of_week, teacher_id]):
-                return TeacherCombinationGradeSubject.objects.none()
+    class TimetableFilter(filters.FilterSet):
+        academic = filters.NumberFilter(field_name='academic__id', required=True)
+        day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
+        teacher = filters.NumberFilter(field_name='teacher__id', required=True)
+        date = filters.DateFilter(method='filter_by_date', required=False)  # Date is optional
 
-            queryset = TeacherCombinationGradeSubject.objects.select_related(
-                'gradetimeslots__grade',
-                'gradetimeslots__timeslots',
-                'combination',
-                'subject',
-                'room'
-            ).filter(
-                academic_id=academic_id,
-                gradetimeslots__day_of_week=day_of_week,
-                teacher_id=teacher_id
-            ).order_by('gradetimeslots__timeslots__start_time')  # Added ordering by start_time
-            
+        class Meta:
+            model = TeacherCombinationGradeSubject
+            fields = ['academic', 'day_of_week', 'teacher', 'date']
+
+        def filter_by_date(self, queryset, name, value):
+            if value:
+                attendance_taken = AttendanceTaken.objects.filter(date=value)
+                return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
             return queryset
-            
-        except Exception as e:
+
+    filterset_class = TimetableFilter
+
+    def get_queryset(self):
+        # Retrieve parameters from the request
+        academic_id = self.request.query_params.get('academic')
+        day_of_week = self.request.query_params.get('day_of_week')
+        teacher_id = self.request.query_params.get('teacher')
+        date = self.request.query_params.get('date')
+
+        # Ensure required parameters are provided
+        if not all([academic_id, day_of_week, teacher_id]):
             return TeacherCombinationGradeSubject.objects.none()
 
+        # Base queryset with select_related for optimized data fetching
+        queryset = TeacherCombinationGradeSubject.objects.select_related(
+            'gradetimeslots__grade',
+            'gradetimeslots__timeslots',
+            'combination',
+            'subject',
+            'room'
+        ).filter(
+            academic_id=academic_id,
+            gradetimeslots__day_of_week=day_of_week,
+            teacher_id=teacher_id
+        ).order_by('gradetimeslots__timeslots__start_time')
+
+        # Annotate attendancetaken_id based on the provided date (left join effect)
+        if date:
+            attendance_subquery = AttendanceTaken.objects.filter(
+                teachercombinationgradesubject=OuterRef('pk'),
+                date=date
+            ).values('id')[:1]  # Use only the first matching id
+            queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
+
+            # Pass the date to serializer context
+            self.serializer_class.context['date'] = date
+
+        return queryset
+
     def list(self, request, *args, **kwargs):
-        # Check if all required parameters are present
+        # Ensure required query parameters are provided
         required_params = ['academic', 'day_of_week', 'teacher']
-        if not all(param in request.query_params for param in required_params):
+        missing_params = [param for param in required_params if param not in request.query_params]
+        if missing_params:
             return Response(
-                {'error': 'Missing required parameters. Please provide academic, day_of_week, and teacher.'},
+                {'error': f'Missing required parameters: {", ".join(missing_params)}. Please provide academic, day_of_week, and teacher.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -5492,9 +5513,8 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                 {'error': 'An error occurred while fetching the data.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-    # Remove retrieve method as we only want to support list with required parameters
-    retrieve = None
+    
+    retrieve = None  # Disable retrieve endpoint if not needed
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
     queryset = AttendanceTaken.objects.all()
