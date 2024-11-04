@@ -5508,6 +5508,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         required_params = ['academic', 'day_of_week', 'teacher']
         missing_params = [param for param in required_params if param not in request.query_params]
+        
         if missing_params:
             return Response(
                 {'error': f'Missing required parameters: {", ".join(missing_params)}. Please provide academic, day_of_week, and teacher.'},
@@ -5516,13 +5517,17 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
         try:
             queryset = self.filter_queryset(self.get_queryset())
-            # Pass the date to serializer context here when initializing the serializer
-            date = request.query_params.get('date')  # Get the date from the query params
-            serializer = self.get_serializer(queryset, many=True, context={'date': date})  # Pass context here
+            
+            # Get the date from the query params
+            date = request.query_params.get('date')  
+            
+            # Pass the date as context to the serializer
+            serializer = self.get_serializer(queryset, many=True, context={'date': date})
+            
             return Response(serializer.data)
         except Exception as e:
             return Response(
-                {'error': 'An error occurred while fetching the data.', 'details': str(e)},
+                {'error': 'An error occurred while fetching the data.', 'details': str(e),"date":date},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
