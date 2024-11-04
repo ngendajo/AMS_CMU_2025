@@ -5447,9 +5447,8 @@ class TimetableFilter(filters.FilterSet):
     def filter_by_date(self, queryset, name, value):
         if value:
             try:
-                # Ensure value is a string
+                # Convert the value to string and then parse it
                 date_value = str(value)
-                # Convert the string to a date object
                 parsed_date = datetime.strptime(date_value, '%Y-%m-%d').date()
                 attendance_taken = AttendanceTaken.objects.filter(date=parsed_date)
                 return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
@@ -5489,8 +5488,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         # Annotate attendancetaken_id based on the provided date (left join effect)
         if date:
             try:
-                # Ensure date is a string for parsing
-                date_value = str(date)
+                date_value = str(date)  # Ensure it's a string
                 parsed_date = datetime.strptime(date_value, '%Y-%m-%d').date()  # Validate the date format
                 attendance_subquery = AttendanceTaken.objects.filter(
                     teachercombinationgradesubject=OuterRef('pk'),
@@ -5506,7 +5504,6 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
     def list(self, request, *args, **kwargs):
-        # Ensure required query parameters are provided
         required_params = ['academic', 'day_of_week', 'teacher']
         missing_params = [param for param in required_params if param not in request.query_params]
         if missing_params:
