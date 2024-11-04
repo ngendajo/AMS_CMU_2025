@@ -5446,9 +5446,7 @@ class TimetableFilter(filters.FilterSet):
 
     def filter_by_date(self, queryset, name, value):
         if value:
-            # Fetch attendance records for the given date
             attendance_taken = AttendanceTaken.objects.filter(date=value)
-            # If there are no attendance records, return the original queryset
             if not attendance_taken.exists():
                 return queryset  # No filtering applied, return all relevant records
             return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
@@ -5460,7 +5458,6 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = TimetableFilter
 
     def get_queryset(self):
-        # Retrieve parameters from the request
         academic_id = self.request.query_params.get('academic')
         day_of_week = self.request.query_params.get('day_of_week')
         teacher_id = self.request.query_params.get('teacher')
@@ -5470,7 +5467,6 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         if not all([academic_id, day_of_week, teacher_id]):
             return TeacherCombinationGradeSubject.objects.none()
 
-        # Base queryset with select_related for optimized data fetching
         queryset = TeacherCombinationGradeSubject.objects.select_related(
             'gradetimeslots__grade',
             'gradetimeslots__timeslots',
@@ -5483,7 +5479,6 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             teacher_id=teacher_id
         ).order_by('gradetimeslots__timeslots__start_time')
 
-        # Handle attendance relation based on the provided date
         if date:
             try:
                 parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
@@ -5493,15 +5488,10 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                 ).values('id')[:1]  # Use only the first matching id
                 queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
 
-                # Check if no attendance records were found for the date
                 if not AttendanceTaken.objects.filter(date=parsed_date).exists():
-                    # Still return queryset even if there is no attendance
                     self.serializer_class.context['date'] = parsed_date
             except ValueError:
-                return Response(
-                    {'error': 'Invalid date format.', 'details': f'Expected format: YYYY-MM-DD. Received: {date}'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                raise ValueError('Invalid date format. Expected format: YYYY-MM-DD.')
 
         return queryset
 
@@ -5516,16 +5506,19 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
         try:
             queryset = self.filter_queryset(self.get_queryset())
-            # Pass the date to serializer context here when initializing the serializer
             date = request.query_params.get('date')  # Get the date from the query params
-            serializer = self.get_serializer(queryset, many=True, context={'date': date})  # Pass context here
+            serializer = self.get_serializer(queryset, many=True, context={'date': date})
             return Response(serializer.data)
+        except ValueError as ve:
+            return Response(
+                {'error': str(ve)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             return Response(
                 {'error': 'An error occurred while fetching the data.', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
     retrieve = None  # Disable retrieve endpoint if not needed
     
