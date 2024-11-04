@@ -5430,3 +5430,27 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             return super().update(request, *args, **kwargs)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+#new way of taking attendance
+class TimetableFilter(filters.FilterSet):
+    academic = filters.NumberFilter(field_name='academic__id')
+    day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week')
+    teacher = filters.NumberFilter(field_name='teacher__id')
+
+    class Meta:
+        model = TeacherCombinationGradeSubject
+        fields = ['academic', 'day_of_week', 'teacher']
+
+class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = TimetableSerializer
+    permission_classes = [IsAuthenticated]
+    filterset_class = TimetableFilter
+    
+    def get_queryset(self):
+        return TeacherCombinationGradeSubject.objects.select_related(
+            'gradetimeslots__grade',
+            'combination',
+            'subject',
+            'room'
+        ).all()

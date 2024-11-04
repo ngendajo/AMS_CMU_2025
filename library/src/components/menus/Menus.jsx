@@ -62,6 +62,13 @@ export default function Menus() {
                                     <li><Link onClick={toggleClass} className='is-active' to={`/schooltimetable`}> School TimeTable </Link> </li>
                                 </ul>
                             </li>
+                            <li onClick={toggleSubmenu} className="menu-item sub__menus__arrows" > <Link to="#"> EAP <FiChevronDown /> </Link>
+                                <ul className={boxClassSubMenu.join(' ')} > 
+                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/eap`}> EAP Student </Link> </li>
+                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/eap-att`}> EAP Attendance </Link> </li>
+                                    <li className="menu-item " ><Link onClick={toggleClass} className='is-active' to={`/eap-reports`}> EAP Report </Link> </li>
+                                </ul>
+                            </li>
                         </>:
                         <></>
                     }

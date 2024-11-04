@@ -57,6 +57,9 @@ import Academics from './components/schoolTimeTable/Academics';
 import Absenteeism from './components/pages/Absenteeism';
 import Newattendace from './components/pages/Newattendace';
 import Rooms from './components/schoolTimeTable/Rooms';
+import Eaps from './components/eaps/Eaps';
+import EapsAtt from './components/eaps/EapsAtt';
+import EapsReports from './components/eaps/EapsReports';
 
 
 
@@ -134,6 +137,9 @@ function App() {
                     <Route element={<AuthCheck allowedRoles={["superuser","teacher","librarian","crc"]} />}>
                       <Route path='absenteeism' element={<Absenteeism/>}/>
                       <Route path='newattendace' element={<Newattendace/>}/>
+                      <Route path="/eap" element={<Eaps />} />
+                      <Route path="/eap-att" element={<EapsAtt />} />
+                      <Route path="/eap-reports" element={<EapsReports />} />
                     </Route>
                     <Route element={<AuthCheck allowedRoles={["teacher","student"]} />}>
                       <Route path='borrowed' element={<Borrowed />}/>

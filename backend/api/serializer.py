@@ -1181,3 +1181,25 @@ class EapAttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = EapAttendance
         fields = '__all__'
+        
+        
+#new way of taking attendance
+
+class TimetableSerializer(serializers.ModelSerializer):
+    grade_id = serializers.IntegerField(source='gradetimeslots.grade.id')
+    grade_name = serializers.CharField(source='gradetimeslots.grade.name')
+    combination_id = serializers.IntegerField(source='combination.id')
+    combination_name = serializers.CharField(source='combination.name')
+    subject_id = serializers.IntegerField(source='subject.id')
+    subject_name = serializers.CharField(source='subject.name')
+    room_id = serializers.IntegerField(source='room.id')
+    room_name = serializers.CharField(source='room.name')
+
+    class Meta:
+        model = TeacherCombinationGradeSubject
+        fields = [
+            'grade_id', 'grade_name',
+            'combination_id', 'combination_name',
+            'subject_id', 'subject_name',
+            'room_id', 'room_name'
+        ]
