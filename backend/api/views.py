@@ -5434,13 +5434,13 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
         
 #new way of taking attendance
 class TimetableFilter(filters.FilterSet):
-    academic = filters.NumberFilter(field_name='academic__id')
-    day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week')
-    teacher = filters.NumberFilter(field_name='teacher__id')
+    academic = filters.NumberFilter(field_name='academic__id', required=True)
+    day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
+    teacher = filters.NumberFilter(field_name='teacher__id', required=True)
 
     class Meta:
         model = TeacherCombinationGradeSubject
-        fields = ['academic', 'day_of_week', 'teacher']
+        fields = ['academic', 'day_of_week', 'teacher']  # Only these three parameters are allowed
 
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
@@ -5449,31 +5449,40 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     
     def get_queryset(self):
         try:
-            queryset = TeacherCombinationGradeSubject.objects.select_related(
-                'gradetimeslots__grade',
-                'combination',
-                'subject',
-                'room'
-            )
-            
-            # Apply filters
+            # Check if all required parameters are present
             academic_id = self.request.query_params.get('academic')
             day_of_week = self.request.query_params.get('day_of_week')
             teacher_id = self.request.query_params.get('teacher')
+
+            if not all([academic_id, day_of_week, teacher_id]):
+                return TeacherCombinationGradeSubject.objects.none()
+
+            queryset = TeacherCombinationGradeSubject.objects.select_related(
+                'gradetimeslots__grade',
+                'gradetimeslots__timeslots',
+                'combination',
+                'subject',
+                'room'
+            ).filter(
+                academic_id=academic_id,
+                gradetimeslots__day_of_week=day_of_week,
+                teacher_id=teacher_id
+            )
             
-            if academic_id:
-                queryset = queryset.filter(academic_id=academic_id)
-            if day_of_week:
-                queryset = queryset.filter(gradetimeslots__day_of_week=day_of_week)
-            if teacher_id:
-                queryset = queryset.filter(teacher_id=teacher_id)
-                
             return queryset
             
         except Exception as e:
             return TeacherCombinationGradeSubject.objects.none()
 
     def list(self, request, *args, **kwargs):
+        # Check if all required parameters are present
+        required_params = ['academic', 'day_of_week', 'teacher']
+        if not all(param in request.query_params for param in required_params):
+            return Response(
+                {'error': 'Missing required parameters. Please provide academic, day_of_week, and teacher.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         try:
             queryset = self.filter_queryset(self.get_queryset())
             serializer = self.get_serializer(queryset, many=True)
@@ -5484,18 +5493,5 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except ObjectDoesNotExist:
-            return Response(
-                {'error': 'The requested resource was not found.'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        except Exception as e:
-            return Response(
-                {'error': 'An error occurred while fetching the data.'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    # Remove retrieve method as we only want to support list with required parameters
+    retrieve = None
