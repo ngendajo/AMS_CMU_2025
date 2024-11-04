@@ -1288,5 +1288,26 @@ class TimetableSerializer(serializers.ModelSerializer):
             return obj.gradetimeslots.timeslots.end_time.strftime('%H:%M') if obj.gradetimeslots and obj.gradetimeslots.timeslots else None
         except:
             return None
+        
+class AttendanceCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceComment
+        fields = '__all__'
+
+class AbsenteeismSerializer(serializers.ModelSerializer):
+    school_comments = AttendanceCommentSerializer(many=True, required=False)
+    clinic_comments = AttendanceCommentSerializer(many=True, required=False)
+    parental_comments = AttendanceCommentSerializer(many=True, required=False)
+
+    class Meta:
+        model = Absenteeism
+        fields = '__all__'
+
+class AttendanceTakenSerializer(serializers.ModelSerializer):
+    absentees = AbsenteeismSerializer(many=True, required=False)
+
+    class Meta:
+        model = AttendanceTaken
+        fields = '__all__'
 
 

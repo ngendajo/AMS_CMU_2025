@@ -5495,3 +5495,15 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
     # Remove retrieve method as we only want to support list with required parameters
     retrieve = None
+    
+class AttendanceCommentViewSet(viewsets.ModelViewSet):
+    queryset = AttendanceComment.objects.all()
+    serializer_class = AttendanceCommentSerializer
+
+class AbsenteeismViewSet(viewsets.ModelViewSet):
+    queryset = Absenteeism.objects.all()
+    serializer_class = AbsenteeismSerializer
+
+class AttendanceTakenViewSet(viewsets.ModelViewSet):
+    queryset = AttendanceTaken.objects.all()
+    serializer_class = AttendanceTakenSerializer

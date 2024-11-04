@@ -514,6 +514,33 @@ class Attendance(models.Model):
     comment = models.CharField(max_length=500,default="")
     created_at = models.DateTimeField(default=timezone.now)  # Add created_at field
     
+#New way of doing attendance
+class AttendanceComment(models.Model):
+    comment = models.TextField(default="Absent in class")  # Default value for comments
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+class Absenteeism(models.Model):
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    STATUS_CHOICES = [
+        ('absent', 'Absent'),
+        ('late', 'Late'),
+    ]
+    status = models.CharField(
+        max_length=7,
+        choices=STATUS_CHOICES,
+        default='present'
+    )
+    school_comments = models.ManyToManyField(AttendanceComment, related_name='school_absentees', blank=True)
+    clinic_comments = models.ManyToManyField(AttendanceComment, related_name='clinic_absentees', blank=True)
+    parental_comments = models.ManyToManyField(AttendanceComment, related_name='parental_absentees', blank=True)
+    
+class AttendanceTaken(models.Model):
+    teachercombinationgradesubject = models.ForeignKey('TeacherCombinationGradeSubject', on_delete=models.CASCADE)
+    absentees = models.ManyToManyField('Absenteeism', blank=True)  # Allowing null values
+    staff = models.ForeignKey(User, on_delete=models.CASCADE)  # Foreign key to User model
+    date = models.DateField()
+    created_at = models.DateTimeField(default=timezone.now)
+    
 
 #English Access Program
 class Eap(models.Model):
