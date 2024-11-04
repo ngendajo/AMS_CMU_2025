@@ -5527,7 +5527,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(serializer.data)
         except Exception as e:
             return Response(
-                {'error': 'An error occurred while fetching the data.', 'details': str(e),"date":date},
+                {'error': 'An error occurred while fetching the data.', 'details': str(e),"date":str(date)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
