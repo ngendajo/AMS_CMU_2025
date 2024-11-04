@@ -5516,13 +5516,16 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
         try:
             queryset = self.filter_queryset(self.get_queryset())
-            serializer = self.get_serializer(queryset, many=True)
+            # Pass the date to serializer context here when initializing the serializer
+            date = request.query_params.get('date')  # Get the date from the query params
+            serializer = self.get_serializer(queryset, many=True, context={'date': date})  # Pass context here
             return Response(serializer.data)
         except Exception as e:
             return Response(
                 {'error': 'An error occurred while fetching the data.', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
     retrieve = None  # Disable retrieve endpoint if not needed
     
