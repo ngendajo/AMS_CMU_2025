@@ -1289,25 +1289,17 @@ class TimetableSerializer(serializers.ModelSerializer):
         except:
             return None
         
+class AttendanceTakenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceTaken
+        fields = ['id', 'teachercombinationgradesubject', 'date', 'absentees']
+
+class AbsenteeismSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Absenteeism
+        fields = ['id', 'student', 'status', 'school_comments']
+
 class AttendanceCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceComment
-        fields = '__all__'
-
-class AbsenteeismSerializer(serializers.ModelSerializer):
-    school_comments = AttendanceCommentSerializer(many=True, required=False)
-    clinic_comments = AttendanceCommentSerializer(many=True, required=False)
-    parental_comments = AttendanceCommentSerializer(many=True, required=False)
-
-    class Meta:
-        model = Absenteeism
-        fields = '__all__'
-
-class AttendanceTakenSerializer(serializers.ModelSerializer):
-    absentees = AbsenteeismSerializer(many=True, required=False)
-
-    class Meta:
-        model = AttendanceTaken
-        fields = '__all__'
-
-
+        fields = ['id', 'comment', 'start_time', 'end_time']  # Include start_time and end_time

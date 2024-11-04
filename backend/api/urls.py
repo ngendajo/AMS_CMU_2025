@@ -31,9 +31,9 @@ router.register(r'attendances', views.AttendanceViewSet)
 router.register(r'pdfnews', views.PDFNewsViewSet)
 router.register(r'rooms', views.RoomViewSet)
 router.register(r'timetable', views.TimetableViewSet, basename='timetable')
-router.register(r'attendance', views.AttendanceTakenViewSet)
-router.register(r'absentees', views.AbsenteeismViewSet)
-router.register(r'comments', views.AttendanceCommentViewSet)
+router.register(r'attendance', views.AttendanceTakenViewSet, basename='attendance')
+router.register(r'absenteeism', views.AbsenteeismViewSet, basename='absenteeism')
+router.register(r'attendance-comment', views.AttendanceCommentViewSet, basename='attendance-comment')
 #English Access Program
 router.register(r'eap', views.EapViewSet)
 router.register(r'eap-attendance', views.EapAttendanceViewSet)
@@ -43,6 +43,8 @@ urlpatterns = [
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('changepassword/',views.ChangePasswordView.as_view(),name="change_password"),
+    path('absenteeism-comment/', views.AbsenteeismCommentViewSet.as_view({'post': 'create'}), name='absenteeism-comment'),
+    path('absenteeism/<int:absenteeism_id>/add-comment/', views.AbsenteeismCommentViewSet.as_view({'post': 'add_comment'}), name='add-comment'),
     path('password-reset/<str:encoded_pk>/<str:token>',
         views.ResetPassword.as_view(),
          name="reset-password",

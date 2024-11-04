@@ -5496,14 +5496,108 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     # Remove retrieve method as we only want to support list with required parameters
     retrieve = None
     
-class AttendanceCommentViewSet(viewsets.ModelViewSet):
-    queryset = AttendanceComment.objects.all()
-    serializer_class = AttendanceCommentSerializer
+class AttendanceTakenViewSet(viewsets.ModelViewSet):
+    queryset = AttendanceTaken.objects.all()
+    serializer_class = AttendanceTakenSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        attendance_taken = serializer.save()
+
+        # Start with no absentees
+        attendance_taken.absentees.clear()
+        attendance_taken.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def update_absenteeism(self, request, pk=None):
+        attendance_taken = self.get_object()
+        absenteeism_data = request.data.get('absenteeism', None)
+
+        if absenteeism_data:
+            # Create Absenteeism record
+            absenteeism_serializer = AbsenteeismSerializer(data=absenteeism_data)
+            absenteeism_serializer.is_valid(raise_exception=True)
+            absenteeism = absenteeism_serializer.save()
+
+            # Update AttendanceTaken with the new absenteeism
+            attendance_taken.absentees.add(absenteeism)
+            attendance_taken.save()
+
+            return Response({"message": "AttendanceTaken updated with Absenteeism."}, status=status.HTTP_200_OK)
 
 class AbsenteeismViewSet(viewsets.ModelViewSet):
     queryset = Absenteeism.objects.all()
     serializer_class = AbsenteeismSerializer
 
-class AttendanceTakenViewSet(viewsets.ModelViewSet):
-    queryset = AttendanceTaken.objects.all()
-    serializer_class = AttendanceTakenSerializer
+class AbsenteeismCommentViewSet(viewsets.ViewSet):
+    def create(self, request):
+        # Create Absenteeism
+        absenteeism_data = {
+            "student": request.data.get("student"),
+            "status": request.data.get("status"),
+        }
+        absenteeism_serializer = AbsenteeismSerializer(data=absenteeism_data)
+        absenteeism_serializer.is_valid(raise_exception=True)
+        absenteeism = absenteeism_serializer.save()
+
+        # Create AttendanceComment if provided
+        comment_text = request.data.get('comment')
+        if comment_text:
+            start_time = request.data.get('start_time')
+            end_time = request.data.get('end_time')  # This can be null
+            comment_data = {
+                "comment": comment_text,
+                "start_time": start_time,
+                "end_time": end_time,
+            }
+            comment_serializer = AttendanceCommentSerializer(data=comment_data)
+            comment_serializer.is_valid(raise_exception=True)
+            comment = comment_serializer.save()
+
+            # Link the comment to the absenteeism record
+            absenteeism.school_comments.add(comment)
+            absenteeism.save()
+
+        return Response({
+            "absenteeism": absenteeism_serializer.data,
+            "comment": comment_serializer.data if comment_text else None
+        }, status=status.HTTP_201_CREATED)
+
+    def add_comment(self, request, absenteeism_id):
+        try:
+            absenteeism = Absenteeism.objects.get(id=absenteeism_id)
+            comment_text = request.data.get('comment')
+            start_time = request.data.get('start_time')
+            end_time = request.data.get('end_time')  # This can be null
+
+            comment_data = {
+                "comment": comment_text,
+                "start_time": start_time,
+                "end_time": end_time,
+            }
+            comment_serializer = AttendanceCommentSerializer(data=comment_data)
+            comment_serializer.is_valid(raise_exception=True)
+            comment = comment_serializer.save()
+
+            # Link the comment to the absenteeism record
+            absenteeism.school_comments.add(comment)
+            absenteeism.save()
+
+            return Response({"message": "Comment added successfully.", "comment": comment_serializer.data}, status=status.HTTP_201_CREATED)
+        except Absenteeism.DoesNotExist:
+            return Response({"error": "Absenteeism record not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class AttendanceCommentViewSet(viewsets.ModelViewSet):
+    queryset = AttendanceComment.objects.all()
+    serializer_class = AttendanceCommentSerializer
+
+    def update(self, request, pk=None):
+        try:
+            comment = self.get_object()
+            comment_serializer = AttendanceCommentSerializer(comment, data=request.data, partial=True)
+            comment_serializer.is_valid(raise_exception=True)
+            comment = comment_serializer.save()
+            return Response({"message": "Comment updated successfully.", "comment": comment_serializer.data}, status=status.HTTP_200_OK)
+        except AttendanceComment.DoesNotExist:
+            return Response({"error": "Comment not found."}, status=status.HTTP_404_NOT_FOUND)
