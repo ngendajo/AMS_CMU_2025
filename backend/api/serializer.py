@@ -1184,9 +1184,8 @@ class EapAttendanceSerializer(serializers.ModelSerializer):
         
         
 #new way of taking attendance
-
 class TimetableSerializer(serializers.ModelSerializer):
-    # Handle potential null values with SerializerMethodField
+    id = serializers.SerializerMethodField()
     grade_id = serializers.SerializerMethodField()
     grade_name = serializers.SerializerMethodField()
     combination_id = serializers.SerializerMethodField()
@@ -1195,15 +1194,28 @@ class TimetableSerializer(serializers.ModelSerializer):
     subject_name = serializers.SerializerMethodField()
     room_id = serializers.SerializerMethodField()
     room_name = serializers.SerializerMethodField()
+    activity = serializers.SerializerMethodField()
+    day_of_week = serializers.SerializerMethodField()
+    start_time = serializers.SerializerMethodField()
+    end_time = serializers.SerializerMethodField()
 
     class Meta:
         model = TeacherCombinationGradeSubject
         fields = [
+            'id',
             'grade_id', 'grade_name',
             'combination_id', 'combination_name',
             'subject_id', 'subject_name',
-            'room_id', 'room_name'
+            'room_id', 'room_name',
+            'activity', 'day_of_week',
+            'start_time', 'end_time'
         ]
+
+    def get_id(self, obj):
+        try:
+            return obj.id
+        except:
+            return None
 
     def get_grade_id(self, obj):
         try:
@@ -1252,3 +1264,29 @@ class TimetableSerializer(serializers.ModelSerializer):
             return obj.room.room_name if obj.room else None
         except:
             return None
+
+    def get_activity(self, obj):
+        try:
+            return obj.gradetimeslots.activity if obj.gradetimeslots else None
+        except:
+            return None
+
+    def get_day_of_week(self, obj):
+        try:
+            return obj.gradetimeslots.day_of_week if obj.gradetimeslots else None
+        except:
+            return None
+
+    def get_start_time(self, obj):
+        try:
+            return obj.gradetimeslots.timeslots.start_time.strftime('%H:%M') if obj.gradetimeslots and obj.gradetimeslots.timeslots else None
+        except:
+            return None
+
+    def get_end_time(self, obj):
+        try:
+            return obj.gradetimeslots.timeslots.end_time.strftime('%H:%M') if obj.gradetimeslots and obj.gradetimeslots.timeslots else None
+        except:
+            return None
+
+
