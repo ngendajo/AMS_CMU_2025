@@ -9,6 +9,7 @@ export default function TeacherDashBoard() {
   const [data, setData] = useState([]);
   const workingdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const [selectedday, setSelectedday] = useState("");
+  const [selecteddate, setSelecteddate] = useState("");
   const [academics, setAcademics] = useState([]);
   const [students, setStudents] = useState([]);
   const [selectedAcademicId, setSelectedAcademicId] = useState(null);
@@ -28,14 +29,28 @@ export default function TeacherDashBoard() {
   };
 
   const handleDayChange = (event) => {
-    setSelectedday(event.target.value);
-    getStudents();
+    const dayName = event.target.value;
+    setSelectedday(dayName);
+
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const currentDate = new Date();
+    const currentDayOfWeek = currentDate.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    const selectedDayIndex = daysOfWeek.indexOf(dayName);
+
+    // Calculate the date of the selected day
+    const selectedDayDate = new Date(currentDate);
+    selectedDayDate.setDate(currentDate.getDate() - currentDayOfWeek + selectedDayIndex);
+    // Format the date as YYYY-MM-DD
+    const formattedDate = selectedDayDate.toISOString().slice(0, 10);
+
+    setSelecteddate(formattedDate);
+    //console.log(formattedDate)
   };
 
   const getStudents = useCallback(async () => {
     if (!auth?.accessToken) return;
     try {
-      const response = await axios.get(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}`, {
+      const response = await axios.get(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}&date=${selecteddate}`, {
         headers: {
           "Authorization": `Bearer ${String(auth.accessToken)}`,
         },
@@ -54,6 +69,11 @@ export default function TeacherDashBoard() {
     const today = daysOfWeek[new Date().getDay()];
     if (workingdays.includes(today)) {
       setSelectedday(today);
+      // Format the date as YYYY-MM-DD
+    const formattedDate = (new Date()).toISOString().slice(0, 10);
+
+    setSelecteddate(formattedDate);
+    //console.log(formattedDate)
     }
   
     // Fetch academic years and set the default academic year based on today's date
@@ -87,7 +107,7 @@ export default function TeacherDashBoard() {
     console.log("Grade ID:", grade_id, "Combination ID:", combination_id);
 
   };
-
+  console.log(data)
   return (
     <div
       style={{
