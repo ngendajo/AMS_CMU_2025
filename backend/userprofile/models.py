@@ -533,7 +533,7 @@ class Absenteeism(models.Model):
 
 class AttendanceComment(models.Model):
     comment = models.TextField()
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(null=True, blank=True)  # End time can be null
 
     def __str__(self):
