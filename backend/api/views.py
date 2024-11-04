@@ -5448,9 +5448,54 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = TimetableFilter
     
     def get_queryset(self):
-        return TeacherCombinationGradeSubject.objects.select_related(
-            'gradetimeslots__grade',
-            'combination',
-            'subject',
-            'room'
-        ).all()
+        try:
+            queryset = TeacherCombinationGradeSubject.objects.select_related(
+                'gradetimeslots__grade',
+                'combination',
+                'subject',
+                'room'
+            )
+            
+            # Apply filters
+            academic_id = self.request.query_params.get('academic')
+            day_of_week = self.request.query_params.get('day_of_week')
+            teacher_id = self.request.query_params.get('teacher')
+            
+            if academic_id:
+                queryset = queryset.filter(academic_id=academic_id)
+            if day_of_week:
+                queryset = queryset.filter(gradetimeslots__day_of_week=day_of_week)
+            if teacher_id:
+                queryset = queryset.filter(teacher_id=teacher_id)
+                
+            return queryset
+            
+        except Exception as e:
+            return TeacherCombinationGradeSubject.objects.none()
+
+    def list(self, request, *args, **kwargs):
+        try:
+            queryset = self.filter_queryset(self.get_queryset())
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': 'An error occurred while fetching the data.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except ObjectDoesNotExist:
+            return Response(
+                {'error': 'The requested resource was not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': 'An error occurred while fetching the data.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

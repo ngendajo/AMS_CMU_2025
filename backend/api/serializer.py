@@ -1186,14 +1186,15 @@ class EapAttendanceSerializer(serializers.ModelSerializer):
 #new way of taking attendance
 
 class TimetableSerializer(serializers.ModelSerializer):
-    grade_id = serializers.IntegerField(source='gradetimeslots.grade.id')
-    grade_name = serializers.CharField(source='gradetimeslots.grade.name')
-    combination_id = serializers.IntegerField(source='combination.id')
-    combination_name = serializers.CharField(source='combination.name')
-    subject_id = serializers.IntegerField(source='subject.id')
-    subject_name = serializers.CharField(source='subject.name')
-    room_id = serializers.IntegerField(source='room.id')
-    room_name = serializers.CharField(source='room.name')
+    # Handle potential null values with SerializerMethodField
+    grade_id = serializers.SerializerMethodField()
+    grade_name = serializers.SerializerMethodField()
+    combination_id = serializers.SerializerMethodField()
+    combination_name = serializers.SerializerMethodField()
+    subject_id = serializers.SerializerMethodField()
+    subject_name = serializers.SerializerMethodField()
+    room_id = serializers.SerializerMethodField()
+    room_name = serializers.SerializerMethodField()
 
     class Meta:
         model = TeacherCombinationGradeSubject
@@ -1203,3 +1204,51 @@ class TimetableSerializer(serializers.ModelSerializer):
             'subject_id', 'subject_name',
             'room_id', 'room_name'
         ]
+
+    def get_grade_id(self, obj):
+        try:
+            return obj.gradetimeslots.grade.id if obj.gradetimeslots and obj.gradetimeslots.grade else None
+        except:
+            return None
+
+    def get_grade_name(self, obj):
+        try:
+            return obj.gradetimeslots.grade.name if obj.gradetimeslots and obj.gradetimeslots.grade else None
+        except:
+            return None
+
+    def get_combination_id(self, obj):
+        try:
+            return obj.combination.id if obj.combination else None
+        except:
+            return None
+
+    def get_combination_name(self, obj):
+        try:
+            return obj.combination.name if obj.combination else None
+        except:
+            return None
+
+    def get_subject_id(self, obj):
+        try:
+            return obj.subject.id if obj.subject else None
+        except:
+            return None
+
+    def get_subject_name(self, obj):
+        try:
+            return obj.subject.name if obj.subject else None
+        except:
+            return None
+
+    def get_room_id(self, obj):
+        try:
+            return obj.room.id if obj.room else None
+        except:
+            return None
+
+    def get_room_name(self, obj):
+        try:
+            return obj.room.name if obj.room else None
+        except:
+            return None
