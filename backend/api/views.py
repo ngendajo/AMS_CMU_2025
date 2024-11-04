@@ -5436,7 +5436,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
 #new way of taking attendance
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     filter_backends = (filters.DjangoFilterBackend,)
 
     class TimetableFilter(filters.FilterSet):
