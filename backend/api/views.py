@@ -5467,7 +5467,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                 academic_id=academic_id,
                 gradetimeslots__day_of_week=day_of_week,
                 teacher_id=teacher_id
-            )
+            ).order_by('gradetimeslots__timeslots__start_time')  # Added ordering by start_time
             
             return queryset
             
