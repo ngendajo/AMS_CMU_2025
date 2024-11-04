@@ -5453,7 +5453,7 @@ class TimetableFilter(filters.FilterSet):
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = TimetableFilter  # Now correctly referencing the external TimetableFilter
+    filterset_class = TimetableFilter  # Reference the filter
 
     def get_queryset(self):
         # Retrieve parameters from the request
@@ -5487,9 +5487,6 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             ).values('id')[:1]  # Use only the first matching id
             queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
 
-            # Pass the date to serializer context
-            self.serializer_class.context['date'] = date
-
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -5504,7 +5501,9 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
         try:
             queryset = self.filter_queryset(self.get_queryset())
-            serializer = self.get_serializer(queryset, many=True)
+            # Pass date as context here when initializing the serializer
+            date = request.query_params.get('date')
+            serializer = self.get_serializer(queryset, many=True, context={'date': date})
             return Response(serializer.data)
         except Exception as e:
             return Response(
