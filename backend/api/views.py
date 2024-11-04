@@ -5447,9 +5447,11 @@ class TimetableFilter(filters.FilterSet):
     def filter_by_date(self, queryset, name, value):
         if value:
             try:
-                # Ensure value is a valid date
-                date_value = datetime.strptime(value, '%Y-%m-%d').date()
-                attendance_taken = AttendanceTaken.objects.filter(date=date_value)
+                # Ensure value is a string
+                date_value = str(value)
+                # Convert the string to a date object
+                parsed_date = datetime.strptime(date_value, '%Y-%m-%d').date()
+                attendance_taken = AttendanceTaken.objects.filter(date=parsed_date)
                 return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
             except ValueError:
                 raise filters.ValidationError(f"Invalid date format: {value}. Expected format: YYYY-MM-DD.")
@@ -5487,14 +5489,19 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         # Annotate attendancetaken_id based on the provided date (left join effect)
         if date:
             try:
-                date_value = datetime.strptime(date, '%Y-%m-%d').date()  # Validate the date format
+                # Ensure date is a string for parsing
+                date_value = str(date)
+                parsed_date = datetime.strptime(date_value, '%Y-%m-%d').date()  # Validate the date format
                 attendance_subquery = AttendanceTaken.objects.filter(
                     teachercombinationgradesubject=OuterRef('pk'),
-                    date=date_value
+                    date=parsed_date
                 ).values('id')[:1]  # Use only the first matching id
                 queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
             except ValueError:
-                raise filters.ValidationError(f"Invalid date format: {date}. Expected format: YYYY-MM-DD.")
+                return Response(
+                    {'error': 'Invalid date format.', 'details': f'Expected format: YYYY-MM-DD. Received: {date}'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
         return queryset
 
