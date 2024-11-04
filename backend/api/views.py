@@ -5438,7 +5438,7 @@ class TimetableFilter(filters.FilterSet):
     academic = filters.NumberFilter(field_name='academic__id', required=True)
     day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
     teacher = filters.NumberFilter(field_name='teacher__id', required=True)
-    date = filters.DateFilter(method='filter_by_date', required=False)  # Date is optional
+    date = filters.DateFilter(method='filter_by_date', required=False)
 
     class Meta:
         model = TeacherCombinationGradeSubject
@@ -5446,14 +5446,19 @@ class TimetableFilter(filters.FilterSet):
 
     def filter_by_date(self, queryset, name, value):
         if value:
-            attendance_taken = AttendanceTaken.objects.filter(date=value)
-            return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
+            try:
+                # Ensure value is a valid date
+                date_value = datetime.strptime(value, '%Y-%m-%d').date()
+                attendance_taken = AttendanceTaken.objects.filter(date=date_value)
+                return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
+            except ValueError:
+                raise filters.ValidationError(f"Invalid date format: {value}. Expected format: YYYY-MM-DD.")
         return queryset
 
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = TimetableFilter  # Reference the filter
+    filterset_class = TimetableFilter
 
     def get_queryset(self):
         # Retrieve parameters from the request
@@ -5481,11 +5486,15 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
         # Annotate attendancetaken_id based on the provided date (left join effect)
         if date:
-            attendance_subquery = AttendanceTaken.objects.filter(
-                teachercombinationgradesubject=OuterRef('pk'),
-                date=date
-            ).values('id')[:1]  # Use only the first matching id
-            queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
+            try:
+                date_value = datetime.strptime(date, '%Y-%m-%d').date()  # Validate the date format
+                attendance_subquery = AttendanceTaken.objects.filter(
+                    teachercombinationgradesubject=OuterRef('pk'),
+                    date=date_value
+                ).values('id')[:1]  # Use only the first matching id
+                queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
+            except ValueError:
+                raise filters.ValidationError(f"Invalid date format: {date}. Expected format: YYYY-MM-DD.")
 
         return queryset
 
@@ -5501,7 +5510,6 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
         try:
             queryset = self.filter_queryset(self.get_queryset())
-            # Pass date as context here when initializing the serializer
             date = request.query_params.get('date')
             serializer = self.get_serializer(queryset, many=True, context={'date': date})
             return Response(serializer.data)
