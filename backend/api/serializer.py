@@ -1213,7 +1213,7 @@ class TimetableSerializer(serializers.ModelSerializer):
 
     def get_grade_name(self, obj):
         try:
-            return obj.gradetimeslots.grade.name if obj.gradetimeslots and obj.gradetimeslots.grade else None
+            return obj.gradetimeslots.grade.grade_name if obj.gradetimeslots and obj.gradetimeslots.grade else None
         except:
             return None
 
@@ -1225,7 +1225,7 @@ class TimetableSerializer(serializers.ModelSerializer):
 
     def get_combination_name(self, obj):
         try:
-            return obj.combination.name if obj.combination else None
+            return obj.combination.combination_name if obj.combination else None
         except:
             return None
 
@@ -1237,7 +1237,7 @@ class TimetableSerializer(serializers.ModelSerializer):
 
     def get_subject_name(self, obj):
         try:
-            return obj.subject.name if obj.subject else None
+            return obj.subject.subject_name if obj.subject else None
         except:
             return None
 
@@ -1249,6 +1249,6 @@ class TimetableSerializer(serializers.ModelSerializer):
 
     def get_room_name(self, obj):
         try:
-            return obj.room.name if obj.room else None
+            return obj.room.room_name if obj.room else None
         except:
             return None
