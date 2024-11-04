@@ -5444,7 +5444,7 @@ class TimetableFilter(filters.FilterSet):
 
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     filterset_class = TimetableFilter
     
     def get_queryset(self):
