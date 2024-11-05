@@ -1297,7 +1297,7 @@ class StudentListSerializer(serializers.ModelSerializer):
             'student_user_first_name',
             'student_user_last_name',
             'student_studentid',
-            'student_studentid',
+            'student_id',
             'student_combination_id',
             'student_family_grade_id',
             'tcgs_id',
