@@ -5537,7 +5537,12 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         combined = data1 + data2
         # Remove duplicates based on a unique identifier, e.g., 'id'
         unique_data = {item['id']: item for item in combined}.values()
-        return list(unique_data)
+        # Convert unique data to a list
+        unique_data_list = list(unique_data)
+
+        # Sort the unique data by 'start_time' if it exists
+        sorted_data = sorted(unique_data_list, key=lambda x: x.get('start_time'))
+        return sorted_data
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
     queryset = AttendanceTaken.objects.all()
