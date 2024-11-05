@@ -1200,6 +1200,7 @@ class TimetableSerializer(serializers.ModelSerializer):
     end_time = serializers.SerializerMethodField()
     attendancetaken_id = serializers.SerializerMethodField()  # Optional attendance field
     date = serializers.SerializerMethodField()  # Optional date field
+    absentees = serializers.SerializerMethodField()  # Include absentee details
 
     class Meta:
         model = TeacherCombinationGradeSubject
@@ -1212,7 +1213,8 @@ class TimetableSerializer(serializers.ModelSerializer):
             'activity', 'day_of_week',
             'start_time', 'end_time',
             'attendancetaken_id',  # Added attendancetaken_id
-            'date'  # Added date
+            'date',  # Added date
+            'absentees'  # Added absentee details
         ]
 
     def get_grade_id(self, obj):
@@ -1252,12 +1254,15 @@ class TimetableSerializer(serializers.ModelSerializer):
         return obj.gradetimeslots.timeslots.end_time.strftime('%H:%M') if obj.gradetimeslots and obj.gradetimeslots.timeslots else None
 
     def get_attendancetaken_id(self, obj):
-        # Use the annotated field attendancetaken_id (if it exists)
         return getattr(obj, 'attendancetaken_id', None)
 
     def get_date(self, obj):
-        # Use the date passed in the context or return None if not provided
         return self.context.get('date', None)
+
+    def get_absentees(self, obj):
+        absentees = getattr(obj, 'absentees', [])
+        return [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
+
         
 class AttendanceTakenSerializer(serializers.ModelSerializer):
     class Meta:

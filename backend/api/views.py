@@ -1,7 +1,7 @@
 
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
-from django.db.models import OuterRef, Subquery
+from django.db.models import Prefetch, OuterRef, Subquery
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -5451,7 +5451,6 @@ class TimetableFilter(filters.FilterSet):
                 return queryset  # No filtering applied, return all relevant records
             return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
         return queryset
-
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -5463,9 +5462,13 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         teacher_id = self.request.query_params.get('teacher')
         date = self.request.query_params.get('date')
 
-        # Ensure required parameters are provided
         if not all([academic_id, day_of_week, teacher_id]):
             return TeacherCombinationGradeSubject.objects.none()
+
+        attendance_qs = AttendanceTaken.objects.filter(
+            teachercombinationgradesubject=OuterRef('pk'),
+            date=date
+        ).values('id')[:1]
 
         queryset = TeacherCombinationGradeSubject.objects.select_related(
             'gradetimeslots__grade',
@@ -5473,54 +5476,23 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             'combination',
             'subject',
             'room'
+        ).annotate(
+            attendancetaken_id=Subquery(attendance_qs)
         ).filter(
             academic_id=academic_id,
             gradetimeslots__day_of_week=day_of_week,
             teacher_id=teacher_id
+        ).prefetch_related(
+            Prefetch(
+                'attendance_set',
+                queryset=AttendanceTaken.objects.prefetch_related(
+                    Prefetch('absentees', queryset=Absenteeism.objects.all())
+                ).filter(date=date),
+                to_attr='attendances'
+            )
         ).order_by('gradetimeslots__timeslots__start_time')
 
-        if date:
-            try:
-                parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
-                attendance_subquery = AttendanceTaken.objects.filter(
-                    teachercombinationgradesubject=OuterRef('pk'),
-                    date=parsed_date
-                ).values('id')[:1]  # Use only the first matching id
-                queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
-
-                if not AttendanceTaken.objects.filter(date=parsed_date).exists():
-                    self.serializer_class.context['date'] = parsed_date
-            except ValueError:
-                raise ValueError('Invalid date format. Expected format: YYYY-MM-DD.')
-
         return queryset
-
-    def list(self, request, *args, **kwargs):
-        required_params = ['academic', 'day_of_week', 'teacher']
-        missing_params = [param for param in required_params if param not in request.query_params]
-        if missing_params:
-            return Response(
-                {'error': f'Missing required parameters: {", ".join(missing_params)}. Please provide academic, day_of_week, and teacher.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            queryset = self.filter_queryset(self.get_queryset())
-            date = request.query_params.get('date')  # Get the date from the query params
-            serializer = self.get_serializer(queryset, many=True, context={'date': date})
-            return Response(serializer.data)
-        except ValueError as ve:
-            return Response(
-                {'error': str(ve)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            return Response(
-                {'error': 'An error occurred while fetching the data.', 'details': str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    retrieve = None  # Disable retrieve endpoint if not needed
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
     queryset = AttendanceTaken.objects.all()
