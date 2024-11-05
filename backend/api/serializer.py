@@ -1285,6 +1285,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     student_user_first_name = serializers.CharField(source='user.first_name')
     student_user_last_name = serializers.CharField(source='user.last_name')
     student_studentid = serializers.CharField(source='studentid')
+    student_id = serializers.CharField(source='id')
     student_combination_id = serializers.IntegerField(source='combination_id')
     student_family_grade_id = serializers.SerializerMethodField()
     tcgs_id = serializers.IntegerField(read_only=True)
@@ -1296,6 +1297,7 @@ class StudentListSerializer(serializers.ModelSerializer):
             'student_user_first_name',
             'student_user_last_name',
             'student_studentid',
+            'student_id',
             'student_combination_id',
             'student_family_grade_id',
             'tcgs_id',
