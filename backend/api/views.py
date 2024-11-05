@@ -5464,30 +5464,37 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = TimetableFilter
 
     def get_queryset(self):
+        # Basic queryset fetching
+        academic_id = self.request.query_params.get('academic')
+        day_of_week = self.request.query_params.get('day_of_week')
+        teacher_id = self.request.query_params.get('teacher')
+        
+        if not all([academic_id, day_of_week, teacher_id]):
+            return TeacherCombinationGradeSubject.objects.none()
+        
+        base_queryset = TeacherCombinationGradeSubject.objects.select_related(
+            'gradetimeslots__grade',
+            'gradetimeslots__timeslots',
+            'combination',
+            'subject',
+            'room'
+        ).filter(
+            academic_id=academic_id,
+            gradetimeslots__day_of_week=day_of_week,
+            teacher_id=teacher_id
+        )
+
+        return base_queryset
+
+    def list(self, request, *args, **kwargs):
         try:
-            academic_id = self.request.query_params.get('academic')
-            day_of_week = self.request.query_params.get('day_of_week')
-            teacher_id = self.request.query_params.get('teacher')
-            date = self.request.query_params.get('date')
+            date = request.query_params.get('date')
 
-            # Ensure required parameters are provided
-            if not all([academic_id, day_of_week, teacher_id]):
-                return TeacherCombinationGradeSubject.objects.none()
+            # First Query: All records without filtering by attendance
+            queryset = self.get_queryset()
+            serialized_data = self.get_serializer(queryset, many=True).data
 
-            # Base queryset without attendance annotation
-            queryset = TeacherCombinationGradeSubject.objects.select_related(
-                'gradetimeslots__grade',
-                'gradetimeslots__timeslots',
-                'combination',
-                'subject',
-                'room'
-            ).filter(
-                academic_id=academic_id,
-                gradetimeslots__day_of_week=day_of_week,
-                teacher_id=teacher_id
-            ).order_by('gradetimeslots__timeslots__start_time')
-
-            # Only annotate with attendance data if a date is provided
+            # Second Query: Filtered by attendance if a date is provided
             if date:
                 try:
                     parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
@@ -5495,24 +5502,23 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                         teachercombinationgradesubject=OuterRef('pk'),
                         date=parsed_date
                     ).values('id')[:1]
-                    queryset = queryset.annotate(
+                    
+                    queryset_with_attendance = queryset.annotate(
                         attendancetaken_id=Coalesce(Subquery(attendance_subquery, output_field=IntegerField()), None)
                     )
+                    attendance_data = self.get_serializer(queryset_with_attendance, many=True).data
                 except ValueError:
                     raise ValueError('Invalid date format. Expected format: YYYY-MM-DD.')
 
-            return queryset
+                # Combine and remove duplicates
+                combined_data = self.combine_and_deduplicate(serialized_data, attendance_data)
+            else:
+                combined_data = serialized_data
 
-        except Exception as e:
-            logger.error(f"Error in get_queryset: {e}")
-            raise e
+            # Log combined data
+            logger.debug(f"Combined data: {combined_data}")
 
-    def list(self, request, *args, **kwargs):
-        try:
-            queryset = self.filter_queryset(self.get_queryset())
-            date = request.query_params.get('date')
-            serializer = self.get_serializer(queryset, many=True, context={'date': date})
-            return Response(serializer.data)
+            return Response(combined_data)
 
         except ValueError as ve:
             return Response(
@@ -5525,6 +5531,13 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                 {'error': 'An internal server error occurred.', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    def combine_and_deduplicate(self, data1, data2):
+        # Combine the two lists
+        combined = data1 + data2
+        # Remove duplicates based on a unique identifier, e.g., 'id'
+        unique_data = {item['id']: item for item in combined}.values()
+        return list(unique_data)
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
     queryset = AttendanceTaken.objects.all()
