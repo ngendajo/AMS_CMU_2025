@@ -5434,6 +5434,9 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
         
         
 #new way of taking attendance
+logger = logging.getLogger(__name__)
+
+# Define the TimetableFilter for filtering in the viewset
 class TimetableFilter(filters.FilterSet):
     academic = filters.NumberFilter(field_name='academic__id', required=True)
     day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
@@ -5448,51 +5451,74 @@ class TimetableFilter(filters.FilterSet):
         if value:
             attendance_taken = AttendanceTaken.objects.filter(date=value)
             if not attendance_taken.exists():
-                return queryset  # No filtering applied, return all relevant records
+                return queryset
             return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
         return queryset
+
+# Define the TimetableViewSet with error handling
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = TimetableFilter
 
     def get_queryset(self):
-        academic_id = self.request.query_params.get('academic')
-        day_of_week = self.request.query_params.get('day_of_week')
-        teacher_id = self.request.query_params.get('teacher')
-        date = self.request.query_params.get('date')
+        try:
+            academic_id = self.request.query_params.get('academic')
+            day_of_week = self.request.query_params.get('day_of_week')
+            teacher_id = self.request.query_params.get('teacher')
+            date = self.request.query_params.get('date')
 
-        if not all([academic_id, day_of_week, teacher_id]):
-            return TeacherCombinationGradeSubject.objects.none()
+            # Ensure required parameters are provided
+            if not all([academic_id, day_of_week, teacher_id]):
+                return TeacherCombinationGradeSubject.objects.none()
 
-        attendance_qs = AttendanceTaken.objects.filter(
-            teachercombinationgradesubject=OuterRef('pk'),
-            date=date
-        ).values('id')[:1]
+            queryset = TeacherCombinationGradeSubject.objects.select_related(
+                'gradetimeslots__grade',
+                'gradetimeslots__timeslots',
+                'combination',
+                'subject',
+                'room'
+            ).filter(
+                academic_id=academic_id,
+                gradetimeslots__day_of_week=day_of_week,
+                teacher_id=teacher_id
+            ).order_by('gradetimeslots__timeslots__start_time')
 
-        queryset = TeacherCombinationGradeSubject.objects.select_related(
-            'gradetimeslots__grade',
-            'gradetimeslots__timeslots',
-            'combination',
-            'subject',
-            'room'
-        ).annotate(
-            attendancetaken_id=Subquery(attendance_qs)
-        ).filter(
-            academic_id=academic_id,
-            gradetimeslots__day_of_week=day_of_week,
-            teacher_id=teacher_id
-        ).prefetch_related(
-            Prefetch(
-                'attendance_set',
-                queryset=AttendanceTaken.objects.prefetch_related(
-                    Prefetch('absentees', queryset=Absenteeism.objects.all())
-                ).filter(date=date),
-                to_attr='attendances'
+            if date:
+                try:
+                    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
+                    attendance_subquery = AttendanceTaken.objects.filter(
+                        teachercombinationgradesubject=OuterRef('pk'),
+                        date=parsed_date
+                    ).values('id')[:1]
+                    queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
+                except ValueError:
+                    raise ValueError('Invalid date format. Expected format: YYYY-MM-DD.')
+
+            return queryset
+
+        except Exception as e:
+            logger.error(f"Error in get_queryset: {e}")
+            raise e
+
+    def list(self, request, *args, **kwargs):
+        try:
+            queryset = self.filter_queryset(self.get_queryset())
+            date = request.query_params.get('date')
+            serializer = self.get_serializer(queryset, many=True, context={'date': date})
+            return Response(serializer.data)
+
+        except ValueError as ve:
+            return Response(
+                {'error': f'Value error: {str(ve)}'},
+                status=status.HTTP_400_BAD_REQUEST
             )
-        ).order_by('gradetimeslots__timeslots__start_time')
-
-        return queryset
+        except Exception as e:
+            logger.error(f"Unexpected error in list: {e}")
+            return Response(
+                {'error': 'An internal server error occurred.', 'details': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
     queryset = AttendanceTaken.objects.all()
