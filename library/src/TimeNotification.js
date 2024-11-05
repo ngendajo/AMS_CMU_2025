@@ -9,7 +9,7 @@ const TimeNotification = () => {
   let i = 0;
 
   const getData = async () => {
-    //console.log("Access Token:", auth.accessToken);
+    if (!auth?.accessToken) return;
 
     try {
       const response = await axios.get(baseUrl + '/attendances/', {

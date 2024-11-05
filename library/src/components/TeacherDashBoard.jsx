@@ -100,13 +100,53 @@ export default function TeacherDashBoard() {
       getStudents();
     }
   }, [selectedday, selectedAcademicId, getStudents]);
-  
 
-  const handleSlotClick = (slot_id, action) => {
-    // Your desired functionality here
-    console.log("Slot ID:", slot_id, "action:", action);
+  const getClassStudents = async (tcgs) => {
+    if (!auth?.accessToken) return; // Ensure accessToken exists
+    try {
+        const response = await axios.get(`${baseUrl}/students/by-tcgs/${tcgs}/?date=${selecteddate}`, {
+            headers: {
+                "Authorization": `Bearer ${String(auth.accessToken)}`,
+            },
+            withCredentials: true,
+        });
+        
+        return response.data;
+        
+    } catch (err) {
+        console.error(err);
+        // navigate('/error');
+    }
+};
 
-  };
+const handleSlotClick = async (slot_id, action) => {
+    try {
+        if (action === "take") {
+            await axios.post(baseUrl + '/attendance/', {
+                'teachercombinationgradesubject': slot_id,
+                'date': selecteddate
+            }, {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'application/json'
+                }
+            });
+            
+            // Await the students data
+            const studentsData = await getClassStudents(slot_id);
+            setStudents(studentsData);
+            
+        } else if (action === "update") {
+            // Await the students data
+            const studentsData = await getClassStudents(slot_id);
+            setStudents(studentsData);
+        }
+
+    } catch (error) {
+        console.log(error.response?.data);
+    }
+};
+
   //console.log(data)
   // Function to extract the date in YYYY-MM-DD format
   const extractDate = (date) => {
@@ -116,6 +156,7 @@ export default function TeacherDashBoard() {
       return hours * 60 + minutes;
   }
   console.log(data)
+  console.log(students)
   return (
     <div
       style={{
@@ -231,9 +272,10 @@ export default function TeacherDashBoard() {
             // Extract the date from slot.date for comparison
             const slotDateString = extractDate(slot.date);
 
-            if (slot.attendance_data?.id) {
+            if (slot.attendancetaken_id
+              ) {
               action="update"
-                const absenteesCount = slot.attendance_data.absentees.length;
+                const absenteesCount = slot.absentees.length;
                 attendanceStatus = `Attendance taken${absenteesCount > 0 ? ` (${absenteesCount} absent)` : ''}`;
                 statusColor = '#498160';
             } else if (

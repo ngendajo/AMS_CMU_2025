@@ -520,6 +520,9 @@ class AttendanceTaken(models.Model):
     date = models.DateField()
     absentees = models.ManyToManyField('Absenteeism', blank=True)
 
+    class Meta:
+        unique_together = ('teachercombinationgradesubject', 'date')
+
     def __str__(self):
         return f"Attendance taken on {self.date} by {self.teachercombinationgradesubject}"
 
