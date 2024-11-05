@@ -5473,6 +5473,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             if not all([academic_id, day_of_week, teacher_id]):
                 return TeacherCombinationGradeSubject.objects.none()
 
+            # Base queryset without attendance annotation
             queryset = TeacherCombinationGradeSubject.objects.select_related(
                 'gradetimeslots__grade',
                 'gradetimeslots__timeslots',
@@ -5485,6 +5486,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                 teacher_id=teacher_id
             ).order_by('gradetimeslots__timeslots__start_time')
 
+            # Only annotate with attendance data if a date is provided
             if date:
                 try:
                     parsed_date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
