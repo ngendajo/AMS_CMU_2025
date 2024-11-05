@@ -42,6 +42,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape, letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from datetime import datetime
 import logging
 
 # Configure logging
@@ -5489,7 +5490,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             # Only annotate with attendance data if a date is provided
             if date:
                 try:
-                    parsed_date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+                    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
                     attendance_subquery = AttendanceTaken.objects.filter(
                         teachercombinationgradesubject=OuterRef('pk'),
                         date=parsed_date
