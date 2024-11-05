@@ -1278,3 +1278,52 @@ class AttendanceCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceComment
         fields = ['id', 'comment', 'start_time', 'end_time']  # Include start_time and end_time
+        
+        
+class StudentListSerializer(serializers.ModelSerializer):
+    student_user_first_name = serializers.CharField(source='user.first_name')
+    student_user_last_name = serializers.CharField(source='user.last_name')
+    student_studentid = serializers.CharField(source='studentid')
+    student_combination_id = serializers.IntegerField(source='combination_id')
+    student_family_grade_id = serializers.SerializerMethodField()
+    tcgs_id = serializers.IntegerField(read_only=True)
+    absenteeism = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Student
+        fields = [
+            'student_user_first_name',
+            'student_user_last_name',
+            'student_studentid',
+            'student_combination_id',
+            'student_family_grade_id',
+            'tcgs_id',
+            'absenteeism'
+        ]
+
+    def get_student_family_grade_id(self, obj):
+        return obj.family.grade.id if obj.family and obj.family.grade else None
+
+    def get_absenteeism(self, obj):
+        date = self.context.get('date')
+        tcgs_id = self.context.get('tcgs_id')
+        
+        if not date or not tcgs_id:
+            return None
+
+        # Get attendance record for the specific date and TCGS
+        attendance = AttendanceTaken.objects.filter(
+            teachercombinationgradesubject_id=tcgs_id,
+            date=date
+        ).first()
+
+        if not attendance:
+            return None
+
+        # Get absenteeism record for this student in the attendance
+        absenteeism = attendance.absentees.filter(student=obj).first()
+        
+        if not absenteeism:
+            return None
+
+        return AbsenteeismSerializer(absenteeism).data

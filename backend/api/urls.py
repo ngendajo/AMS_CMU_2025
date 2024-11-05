@@ -45,6 +45,7 @@ urlpatterns = [
     path('changepassword/',views.ChangePasswordView.as_view(),name="change_password"),
     path('absenteeism-comment/', views.AbsenteeismCommentViewSet.as_view({'post': 'create'}), name='absenteeism-comment'),
     path('absenteeism/<int:absenteeism_id>/add-comment/', views.AbsenteeismCommentViewSet.as_view({'post': 'add_comment'}), name='add-comment'),
+    path('students/by-tcgs/<int:tcgs_id>/', views.StudentListView.as_view(), name='student-list-by-tcgs'),
     path('password-reset/<str:encoded_pk>/<str:token>',
         views.ResetPassword.as_view(),
          name="reset-password",

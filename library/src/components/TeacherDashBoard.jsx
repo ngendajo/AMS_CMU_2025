@@ -102,12 +102,19 @@ export default function TeacherDashBoard() {
   }, [selectedday, selectedAcademicId, getStudents]);
   
 
-  const handleSlotClick = (grade_id, combination_id) => {
+  const handleSlotClick = (slot_id, action) => {
     // Your desired functionality here
-    console.log("Grade ID:", grade_id, "Combination ID:", combination_id);
+    console.log("Slot ID:", slot_id, "action:", action);
 
   };
-  console.log(data)
+  //console.log(data)
+  // Function to extract the date in YYYY-MM-DD format
+  const extractDate = (date) => {
+    return new Date(date).toISOString().split('T')[0];
+  };
+  function toMinutes(hours, minutes) {
+      return hours * 60 + minutes;
+  }
   return (
     <div
       style={{
@@ -182,30 +189,126 @@ export default function TeacherDashBoard() {
             padding: '20px',
           }}
         >
-          {data.map((slot, index) => (
-            <div
-              key={slot.id}
-              onClick={() => handleSlotClick(slot.grade_id, slot.combination_id)}
-              style={{
-                backgroundColor: colorPalette[index % colorPalette.length],  // Cycle through colors
-                color: '#fff',                      // Set text color for better contrast
-                padding: '15px',
-                borderRadius: '8px',
-                width: '200px',                    // Fixed width for items
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-                display: 'flex',
-                flexDirection: 'column',           // Stack contents vertically
-                alignItems: 'center',              // Center-align content
-                textAlign: 'center',
-                cursor: 'pointer', 
-              }}
-            >
-              <h2 style={{ margin: '5px 0' }}>{getClass(slot.grade_name, slot.combination_name)}</h2>
-              <p style={{ margin: '3px 0' }}>{slot.subject_name}</p>
-              <p style={{ margin: '3px 0' }}>{slot.room_name}</p>
-              <p style={{ margin: '3px 0' }}>{slot.activity}: {slot.start_time} - {slot.end_time}</p>
-            </div>
-          ))}
+          {data.map((slot, index) => {
+        // Parse times for comparison
+        // Assuming slot.date is in YYYY-MM-DD format and slot.start_time, slot.end_time are in HH:MM format
+            // Get the current date string in YYYY-MM-DD format
+            const currentDate = new Date();
+            const currentDateString = currentDate.toISOString().split('T')[0];
+
+            // Create date objects for slot's start and end times
+            const startTime = slot.start_time 
+              ? (() => {
+                  const [hours, minutes] = slot.start_time.split(':');
+                  return { hours: parseInt(hours), minutes: parseInt(minutes) };
+                })() 
+              : null;
+            const slotStartTime = startTime ? `${startTime.hours}:${startTime.minutes}`:"N/A"
+
+            const endTime = slot.end_time 
+              ? (() => {
+                  const [hours, minutes] = slot.end_time.split(':');
+                  return { hours: parseInt(hours), minutes: parseInt(minutes) };
+                })() 
+              : null;
+            const slotEndTime = endTime ? `${endTime.hours}:${endTime.minutes}` : 'N/A'
+            // Create a current time object based on current hours and minutes
+            const currentHours = currentDate.getHours();
+            const currentMinutes = currentDate.getMinutes();
+
+            // Format the current time as a string
+            const currentTime = `${currentHours}:${currentMinutes}`;
+            const currentTotalMinutes = toMinutes(currentHours, currentMinutes);
+            const slotEndTotalMinutes = toMinutes(endTime.hours, endTime.minutes);
+            const slotStartTotalMinutes = toMinutes(startTime.hours, startTime.minutes);
+
+            // Get attendance status message and color
+            let attendanceStatus = '';
+            let statusColor = '#6d5736';
+            let action=''
+
+            // Extract the date from slot.date for comparison
+            const slotDateString = extractDate(slot.date);
+
+            if (slot.attendance_data?.id) {
+              action="update"
+                const absenteesCount = slot.attendance_data.absentees.length;
+                attendanceStatus = `Attendance taken${absenteesCount > 0 ? ` (${absenteesCount} absent)` : ''}`;
+                statusColor = '#498160';
+            } else if (
+                currentDateString === slotDateString && // Compare only the date portion
+                slotStartTime && slotEndTime &&
+                currentTime >= slotStartTime &&
+                currentTime <= slotEndTime
+            ) {
+                attendanceStatus = 'Take attendance';
+                statusColor = '#957967';
+                action="take"
+            } else if (
+                currentDateString === slotDateString &&
+                currentTotalMinutes > slotEndTotalMinutes
+            ) {
+                attendanceStatus = 'Not taken';
+                statusColor = "#d8b040";
+                action="take"
+            } else if (
+                currentDateString === slotDateString &&
+                currentTotalMinutes < slotStartTotalMinutes
+            ) {
+                attendanceStatus = 'Wait';
+                statusColor = "#f49c46";
+                action="wait"
+            } else if (
+                new Date(slot.date).toISOString().split('T')[0] < currentDateString // Compare slot date to current date
+            ) {
+                attendanceStatus = 'Not taken';
+                statusColor = "#d8b040";
+                action="take"
+            } else {
+                attendanceStatus = 'Wait';
+                statusColor = "#f49c46";
+                action="wait"
+            }
+
+            // Use the attendanceStatus and statusColor variables as needed
+
+
+        return (
+          <div
+          key={slot.id}
+          onClick={() => action !== "wait" && handleSlotClick(slot.id, action)} // Prevent click if action is "wait"
+          style={{
+              backgroundColor: colorPalette[index % colorPalette.length],  // Cycle through colors
+              color: action === "wait" ? '#000' : '#fff', // Change text color to gray when "wait"
+              padding: '15px',
+              borderRadius: '8px',
+              width: '200px',                    // Fixed width for items
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+              display: 'flex',
+              flexDirection: 'column',           // Stack contents vertically
+              alignItems: 'center',              // Center-align content
+              textAlign: 'center',
+              cursor: action === "wait" ? "not-allowed" : "pointer", // Change cursor style based on action
+          }}
+          >
+            <h2 style={{ margin: '5px 0' }}>{getClass(slot.grade_name, slot.combination_name)}</h2>
+            <p style={{ margin: '5px 0' }}>{slot.subject_name}</p>
+            <p style={{ margin: '5px 0' }}>{slot.room_name}</p>
+            <p style={{ margin: '5px 0' }}>{slot.activity}: {slot.start_time} - {slot.end_time}</p>
+            {attendanceStatus && (
+              <p 
+              style={{ // Cycle through colors
+                color: action === "wait" ? '#498160': "#d8b040",
+                backgroundColor:"#000",
+                padding: '5px',
+              borderRadius: '4px',
+              }}>
+                {attendanceStatus}
+              </p>
+            )}
+          </div>
+        );
+      })}
         </div>
     </div>
   );

@@ -5625,3 +5625,90 @@ class AttendanceCommentViewSet(viewsets.ModelViewSet):
             return Response({"message": "Comment updated successfully.", "comment": comment_serializer.data}, status=status.HTTP_200_OK)
         except AttendanceComment.DoesNotExist:
             return Response({"error": "Comment not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+class StudentListView(generics.ListAPIView):
+    serializer_class = StudentListSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['tcgs_id'] = self.kwargs.get('tcgs_id')
+        context['date'] = self.request.query_params.get('date')
+        return context
+
+    def get_queryset(self):
+        tcgs_id = self.kwargs.get('tcgs_id')
+        
+        # Get the TeacherCombinationGradeSubject instance
+        tcgs = get_object_or_404(TeacherCombinationGradeSubject, id=tcgs_id)
+        
+        # Get students who match both combination_id and grade_id
+        students = Student.objects.select_related(
+            'user',
+            'combination',
+            'family__grade'
+        ).prefetch_related(
+            'absenteeism_set',
+            'absenteeism_set__school_comments'
+        ).filter(
+            combination_id=tcgs.combination_id,
+            family__grade_id=tcgs.gradetimeslots.grade_id
+        ).order_by('user__first_name')
+
+        # Annotate each student with the tcgs_id
+        for student in students:
+            student.tcgs_id = tcgs_id
+
+        return students
+
+    def list(self, request, *args, **kwargs):
+        try:
+            tcgs_id = self.kwargs.get('tcgs_id')
+            date = request.query_params.get('date')
+            
+            if date:
+                try:
+                    # Validate date format
+                    datetime.strptime(date, '%Y-%m-%d')
+                except ValueError:
+                    return Response(
+                        {'error': 'Invalid date format. Use YYYY-MM-DD'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+            tcgs = get_object_or_404(TeacherCombinationGradeSubject, id=tcgs_id)
+            
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
+            
+            # Get attendance information
+            attendance_info = None
+            if date:
+                attendance = AttendanceTaken.objects.filter(
+                    teachercombinationgradesubject_id=tcgs_id,
+                    date=date
+                ).first()
+                if attendance:
+                    attendance_info = {
+                        'id': attendance.id,
+                        'date': attendance.date
+                    }
+            
+            response_data = {
+                'combination_id': tcgs.combination_id,
+                'tcgs_id': tcgs_id,
+                'date': date,
+                'attendance': attendance_info,
+                'students': serializer.data
+            }
+            
+            return Response(response_data)
+        except TeacherCombinationGradeSubject.DoesNotExist:
+            return Response(
+                {'error': 'TeacherCombinationGradeSubject not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
