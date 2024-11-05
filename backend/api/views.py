@@ -5652,7 +5652,7 @@ class StudentListView(generics.ListAPIView):
         ).filter(
             combination_id=tcgs.combination_id,
             family__grade_id=tcgs.gradetimeslots.grade_id
-        ).order_by('user__first_name')
+        ).order_by('user__last_name', 'user__first_name')
 
         # Annotate each student with the tcgs_id
         for student in students:

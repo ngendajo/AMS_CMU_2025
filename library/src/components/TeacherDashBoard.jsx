@@ -115,6 +115,7 @@ export default function TeacherDashBoard() {
   function toMinutes(hours, minutes) {
       return hours * 60 + minutes;
   }
+  console.log(data)
   return (
     <div
       style={{
