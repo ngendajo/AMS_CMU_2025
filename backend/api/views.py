@@ -5487,7 +5487,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
             if date:
                 try:
-                    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
+                    parsed_date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
                     attendance_subquery = AttendanceTaken.objects.filter(
                         teachercombinationgradesubject=OuterRef('pk'),
                         date=parsed_date
