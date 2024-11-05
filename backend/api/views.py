@@ -1,7 +1,8 @@
 
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
-from django.db.models import Prefetch, OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, IntegerField
+from django.db.models.functions import Coalesce
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -5491,7 +5492,9 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                         teachercombinationgradesubject=OuterRef('pk'),
                         date=parsed_date
                     ).values('id')[:1]
-                    queryset = queryset.annotate(attendancetaken_id=Subquery(attendance_subquery))
+                    queryset = queryset.annotate(
+                        attendancetaken_id=Coalesce(Subquery(attendance_subquery, output_field=IntegerField()), None)
+                    )
                 except ValueError:
                     raise ValueError('Invalid date format. Expected format: YYYY-MM-DD.')
 
