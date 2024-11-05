@@ -1263,6 +1263,7 @@ class TimetableSerializer(serializers.ModelSerializer):
         absentees = getattr(obj, 'absentees', [])
         return [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
 
+
         
 class AttendanceTakenSerializer(serializers.ModelSerializer):
     class Meta:
