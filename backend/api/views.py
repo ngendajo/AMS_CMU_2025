@@ -5465,14 +5465,13 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = TimetableFilter
 
     def get_queryset(self):
-        # Basic queryset fetching
         academic_id = self.request.query_params.get('academic')
         day_of_week = self.request.query_params.get('day_of_week')
         teacher_id = self.request.query_params.get('teacher')
-        
+
         if not all([academic_id, day_of_week, teacher_id]):
             return TeacherCombinationGradeSubject.objects.none()
-        
+
         base_queryset = TeacherCombinationGradeSubject.objects.select_related(
             'gradetimeslots__grade',
             'gradetimeslots__timeslots',
@@ -5493,7 +5492,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
             # First Query: All records without filtering by attendance
             queryset = self.get_queryset()
-            serialized_data = self.get_serializer(queryset, many=True).dat
+            serialized_data = self.get_serializer(queryset, many=True).data
 
             # Second Query: Filtered by attendance if a date is provided
             if dat:
@@ -5503,7 +5502,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                         teachercombinationgradesubject=OuterRef('pk'),
                         date=parsed_date
                     ).values('id')[:1]
-                    
+
                     queryset_with_attendance = queryset.annotate(
                         attendancetaken_id=Coalesce(Subquery(attendance_subquery, output_field=IntegerField()), None)
                     )
@@ -5534,27 +5533,18 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             )
 
     def combine_and_deduplicate(self, data1, data2):
-        # Combine the two lists
         combined = data1 + data2
-
-        # Use a dictionary to remove duplicates based on 'id'
-        # Prioritize items with `attendancetaken_id` over those without
         unique_data = {}
         for item in combined:
             item_id = item['id']
-            # If we encounter the item for the first time, add it
             if item_id not in unique_data:
                 unique_data[item_id] = item
             else:
-                # If the existing item has no attendance, replace it with the one that does
                 if not unique_data[item_id].get('attendancetaken_id') and item.get('attendancetaken_id'):
                     unique_data[item_id] = item
 
-        # Convert unique data to a list
         unique_data_list = list(unique_data.values())
-
-        # Sort the unique data by 'start_time' if it exists
-        sorted_data = sorted(unique_data_list, key=lambda x: x.get('start_time'))
+        sorted_data = sorted(unique_data_list, key=lambda x: x.get('start_time') or "")
         return sorted_data
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):

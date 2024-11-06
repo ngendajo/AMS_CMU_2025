@@ -1198,9 +1198,9 @@ class TimetableSerializer(serializers.ModelSerializer):
     day_of_week = serializers.SerializerMethodField()
     start_time = serializers.SerializerMethodField()
     end_time = serializers.SerializerMethodField()
-    attendancetaken_id = serializers.SerializerMethodField()  # Optional attendance field
-    dat = serializers.SerializerMethodField()  # Optional date field
-    absentees = serializers.SerializerMethodField()  # Include absentee details
+    attendancetaken_id = serializers.SerializerMethodField()
+    dat = serializers.SerializerMethodField()
+    absentees = serializers.SerializerMethodField()
 
     class Meta:
         model = TeacherCombinationGradeSubject
@@ -1212,9 +1212,9 @@ class TimetableSerializer(serializers.ModelSerializer):
             'room_id', 'room_name',
             'activity', 'day_of_week',
             'start_time', 'end_time',
-            'attendancetaken_id',  # Added attendancetaken_id
-            'dat',  # Added date
-            'absentees'  # Added absentee details
+            'attendancetaken_id',
+            'dat',
+            'absentees'
         ]
 
     def get_grade_id(self, obj):
@@ -1256,7 +1256,7 @@ class TimetableSerializer(serializers.ModelSerializer):
     def get_attendancetaken_id(self, obj):
         return getattr(obj, 'attendancetaken_id', None)
 
-    def get_date(self, obj):
+    def get_dat(self, obj):
         return self.context.get('dat', None)
 
     def get_absentees(self, obj):
@@ -1264,7 +1264,6 @@ class TimetableSerializer(serializers.ModelSerializer):
         return [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
 
 
-        
 class AttendanceTakenSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceTaken
