@@ -1199,7 +1199,7 @@ class TimetableSerializer(serializers.ModelSerializer):
     start_time = serializers.SerializerMethodField()
     end_time = serializers.SerializerMethodField()
     attendancetaken_id = serializers.SerializerMethodField()  # Optional attendance field
-    date = serializers.SerializerMethodField()  # Optional date field
+    dat = serializers.SerializerMethodField()  # Optional date field
     absentees = serializers.SerializerMethodField()  # Include absentee details
 
     class Meta:
@@ -1213,7 +1213,7 @@ class TimetableSerializer(serializers.ModelSerializer):
             'activity', 'day_of_week',
             'start_time', 'end_time',
             'attendancetaken_id',  # Added attendancetaken_id
-            'date',  # Added date
+            'dat',  # Added date
             'absentees'  # Added absentee details
         ]
 
@@ -1257,7 +1257,7 @@ class TimetableSerializer(serializers.ModelSerializer):
         return getattr(obj, 'attendancetaken_id', None)
 
     def get_date(self, obj):
-        return self.context.get('date', None)
+        return self.context.get('dat', None)
 
     def get_absentees(self, obj):
         absentees = getattr(obj, 'absentees', [])
