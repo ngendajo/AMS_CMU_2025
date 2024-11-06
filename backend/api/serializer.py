@@ -1260,10 +1260,29 @@ class TimetableSerializer(serializers.ModelSerializer):
         return self.context.get('dat', None)
 
     def get_absentees(self, obj):
-        absentees = getattr(obj, 'absentees', [])
-        return [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
+    # Get the date from the context, which was passed as 'dat' in the request
+        date_param = self.context.get('dat')
+        
+        if date_param:
+            try:
+                parsed_date = datetime.strptime(date_param, '%Y-%m-%d').date()
+                
+                # Get the AttendanceTaken record for this subject and date
+                attendance_taken = AttendanceTaken.objects.filter(
+                    teachercombinationgradesubject=obj,
+                    date=parsed_date
+                ).first()  # Get the first matching attendance record
+                
+                if attendance_taken:
+                    # Get all absentees associated with this attendance record
+                    absentees = attendance_taken.absentees.all()
+                    return [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
+            
+            except ValueError:
+                # If the date format is invalid, return an empty list
+                return []
 
-
+        return []  # Return an empty list if no date is provided or other issues occur
 class AttendanceTakenSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceTaken

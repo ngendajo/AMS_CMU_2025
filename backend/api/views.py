@@ -5489,13 +5489,11 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             dat = request.query_params.get('dat')
-
-            # First Query: All records without filtering by attendance
             queryset = self.get_queryset()
-            serialized_data = self.get_serializer(queryset, many=True).data
 
-            # Second Query: Filtered by attendance if a date is provided
+            # Serialize queryset with context including `dat`
             if dat:
+                # Process attendance data if `dat` is provided
                 try:
                     parsed_date = datetime.strptime(dat, '%Y-%m-%d').date()
                     attendance_subquery = AttendanceTaken.objects.filter(
@@ -5503,22 +5501,15 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
                         date=parsed_date
                     ).values('id')[:1]
 
-                    queryset_with_attendance = queryset.annotate(
+                    queryset = queryset.annotate(
                         attendancetaken_id=Coalesce(Subquery(attendance_subquery, output_field=IntegerField()), None)
                     )
-                    attendance_data = self.get_serializer(queryset_with_attendance, many=True).data
+
                 except ValueError:
                     raise ValueError('Invalid date format. Expected format: YYYY-MM-DD.')
 
-                # Combine and remove duplicates
-                combined_data = self.combine_and_deduplicate(serialized_data, attendance_data)
-            else:
-                combined_data = serialized_data
-
-            # Log combined data
-            logger.debug(f"Combined data: {combined_data}")
-
-            return Response(combined_data)
+            serializer = self.get_serializer(queryset, many=True, context={'dat': dat})
+            return Response(serializer.data)
 
         except ValueError as ve:
             return Response(
