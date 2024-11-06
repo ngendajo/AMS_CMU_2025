@@ -182,9 +182,11 @@ const handleSlotClick = async (slot_id,action,class_name) => {
     try {
         if (absenteeism_id === null) {
             // Make API call to add absenteeism
-            await axios.post(`${baseUrl}/attendance/${attendanceId}/add-absenteeism/`, {
+            await axios.post(`${baseUrl}/attendance/${attendanceId}/update_absenteeism/`, {
+              "absenteeism": {
                 "student": st_id,
                 "status": status
+            }
             }, {
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
@@ -198,6 +200,10 @@ const handleSlotClick = async (slot_id,action,class_name) => {
             
             // Call getStudents if it's intended to refresh or re-fetch data
             getStudents();
+        }else if(status==="present"){
+          console.log("hello:"+status)
+        }else if(status==="late"){
+          console.log("hello:"+status)
         }
 
     } catch (error) {

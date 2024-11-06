@@ -5573,10 +5573,87 @@ class AttendanceTakenViewSet(viewsets.ModelViewSet):
             attendance_taken.save()
 
             return Response({"message": "AttendanceTaken updated with Absenteeism."}, status=status.HTTP_200_OK)
+        
+    def delete_absenteeism(self, request, pk=None):
+        attendance_taken = self.get_object()
+        absenteeism_id = request.data.get('absenteeism_id')
+        delete_comments = request.data.get('delete_comments', True)  # Optional parameter
+
+        if not absenteeism_id:
+            return Response(
+                {"error": "absenteeism_id is required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            absenteeism = Absenteeism.objects.get(id=absenteeism_id)
+            
+            # Remove from AttendanceTaken
+            attendance_taken.absentees.remove(absenteeism)
+
+            if delete_comments:
+                # Get all associated comments
+                comments = absenteeism.school_comments.all()
+                # Delete all comments
+                for comment in comments:
+                    comment.delete()
+
+            # Delete the Absenteeism record
+            absenteeism.delete()
+
+            return Response({
+                "message": "Absenteeism and associated data deleted successfully"
+            }, status=status.HTTP_200_OK)
+            
+        except Absenteeism.DoesNotExist:
+            return Response(
+                {"error": "Absenteeism not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class AbsenteeismViewSet(viewsets.ModelViewSet):
     queryset = Absenteeism.objects.all()
     serializer_class = AbsenteeismSerializer
+    def update_status(self, request, pk=None):
+        try:
+            absenteeism = self.get_object()
+            new_status = request.data.get('status')
+            comment_data = request.data.get('comment')
+            
+            if not new_status:
+                return Response(
+                    {"error": "status is required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Update status
+            old_status = absenteeism.status
+            absenteeism.status = new_status
+            absenteeism.save()
+
+            # Add comment if provided
+            comment = None
+            if comment_data:
+                comment_serializer = AttendanceCommentSerializer(data={
+                    'comment': f"Status changed from {old_status} to {new_status}: {comment_data.get('text', '')}",
+                    'start_time': comment_data.get('start_time', timezone.now()),
+                    'end_time': comment_data.get('end_time')
+                })
+                comment_serializer.is_valid(raise_exception=True)
+                comment = comment_serializer.save()
+                absenteeism.school_comments.add(comment)
+
+            return Response({
+                "message": "Status updated successfully",
+                "absenteeism": AbsenteeismSerializer(absenteeism).data,
+                "comment": AttendanceCommentSerializer(comment).data if comment else None
+            }, status=status.HTTP_200_OK)
+
+        except Absenteeism.DoesNotExist:
+            return Response(
+                {"error": "Absenteeism not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class AbsenteeismCommentViewSet(viewsets.ViewSet):
     def create(self, request):
