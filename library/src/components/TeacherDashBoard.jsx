@@ -114,7 +114,7 @@ export default function TeacherDashBoard() {
             withCredentials: true,
         });
         const attendanceId = response.data.attendance?.id || null;
-        console.log(`${baseUrl}/students/by-tcgs/${tcgs}/?date=${selecteddate}`)
+        //console.log(`${baseUrl}/students/by-tcgs/${tcgs}/?date=${selecteddate}`)
         return response.data.students.map(student => ({
           "Last Name": student.student_user_last_name.trim(), // Remove any extra spaces
           "First Name": student.student_user_first_name.trim(),
@@ -174,11 +174,11 @@ const handleSlotClick = async (slot_id,action,class_name) => {
     setStudents([])
     setSelectedclass("")
   }
-  console.log(data)
-  console.log(students)
+  //console.log(data)
+  //console.log(students)
   const handleAttendanceChange = async (status, attendanceId, st_id, tcgs, absenteeism_id) => {
     // Perform the necessary logic, e.g., API call, updating state, etc.
-    console.log(`Status: ${status}`, attendanceId, st_id, tcgs, absenteeism_id);
+    //console.log(`Status: ${status}`, attendanceId, st_id, tcgs, absenteeism_id);
     
     try {
         if (absenteeism_id === null) {
@@ -333,7 +333,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                 >
                     Back
                 </button>
-              <h2>Do attendance for {selectedclass} on {selecteddate}</h2>
+              <h2>Do attendance for {selectedclass}</h2>
               <DynamicTable 
     mockdata={students.map(({ attendanceId, absenteeism_id, absenteeism_status,st_id,tcgs, ...rest }, index) => ({
         No: index + 1, // Adding numbering

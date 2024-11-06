@@ -5536,10 +5536,22 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     def combine_and_deduplicate(self, data1, data2):
         # Combine the two lists
         combined = data1 + data2
-        # Remove duplicates based on a unique identifier, e.g., 'id'
-        unique_data = {item['id']: item for item in combined}.values()
+
+        # Use a dictionary to remove duplicates based on 'id'
+        # Prioritize items with `attendancetaken_id` over those without
+        unique_data = {}
+        for item in combined:
+            item_id = item['id']
+            # If we encounter the item for the first time, add it
+            if item_id not in unique_data:
+                unique_data[item_id] = item
+            else:
+                # If the existing item has no attendance, replace it with the one that does
+                if not unique_data[item_id].get('attendancetaken_id') and item.get('attendancetaken_id'):
+                    unique_data[item_id] = item
+
         # Convert unique data to a list
-        unique_data_list = list(unique_data)
+        unique_data_list = list(unique_data.values())
 
         # Sort the unique data by 'start_time' if it exists
         sorted_data = sorted(unique_data_list, key=lambda x: x.get('start_time'))
