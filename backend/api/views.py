@@ -2,6 +2,7 @@
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 from django.db.models import OuterRef, Subquery, IntegerField
+from rest_framework.decorators import action
 from django.db.models.functions import Coalesce
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
@@ -5614,6 +5615,8 @@ class AttendanceTakenViewSet(viewsets.ModelViewSet):
 class AbsenteeismViewSet(viewsets.ModelViewSet):
     queryset = Absenteeism.objects.all()
     serializer_class = AbsenteeismSerializer
+
+    @action(detail=True, methods=['post'])
     def update_status(self, request, pk=None):
         try:
             absenteeism = self.get_object()  # This will fetch the absenteeism object
@@ -5623,7 +5626,10 @@ class AbsenteeismViewSet(viewsets.ModelViewSet):
                 return Response({"error": "status is required"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Update status logic...
-            return Response({"message": "Status updated successfully"})
+            absenteeism.status = new_status
+            absenteeism.save()
+
+            return Response({"message": "Status updated successfully"}, status=status.HTTP_200_OK)
         
         except Absenteeism.DoesNotExist:
             return Response({"error": "Absenteeism not found"}, status=status.HTTP_404_NOT_FOUND)
