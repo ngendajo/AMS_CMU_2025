@@ -52,14 +52,14 @@ export default function TeacherDashBoard() {
   const getStudents = useCallback(async () => {
     if (!auth?.accessToken) return;
     try {
-      const response = await axios.get(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}&date=${selecteddate}`, {
+      const response = await axios.get(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}&dat=${selecteddate}`, {
         headers: {
           "Authorization": `Bearer ${String(auth.accessToken)}`,
         },
         withCredentials: true,
       });
       setData(response.data);
-      console.log(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}&date=${selecteddate}`)
+      console.log(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}&dat=${selecteddate}`)
     } catch (err) {
       console.error(err);
       return null;
@@ -405,12 +405,11 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                   // Extract the date from selecteddate for comparison
                   const slotDateString = extractDate(selecteddate);
       
-                  if (slot.attendancetaken_id
-                    ) {
+                  if (slot.attendancetaken_id) {
                     action="update"
-                      const absenteesCount = slot.absentees.length;
-                      attendanceStatus = `Attendance taken${absenteesCount > 0 ? ` (${absenteesCount} absent)` : ' No absent '}`;
-                     
+                    const absentCount = slot.absentees.filter(item => item.status === "absent").length;
+                    const lateCount = slot.absentees.filter(item => item.status === "late").length;
+                      attendanceStatus = absentCount>0 && lateCount>0 ? `Attendance taken with ${absentCount} absenteeism and ${lateCount} Lateness`:absentCount>0?`Attendance taken with ${absentCount} absenteeism`:lateCount>0?`Attendance taken with ${lateCount} Lateness`:"Attendance taken";
                   } else if (
                       currentDateString === slotDateString && // Compare only the date portion
                       slotStartTime && slotEndTime && currentTime &&

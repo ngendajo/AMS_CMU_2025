@@ -5443,7 +5443,7 @@ logger = logging.getLogger(__name__)
 class TimetableFilter(filters.FilterSet):
     academic = filters.NumberFilter(field_name='academic__id', required=True)
     day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
-    teacher = filters.NumberFilter(field_name='teacher__id', required=True)
+    teacher = filters.NumberFilter(field_name='teacher__id', required=False)
     dat = filters.DateFilter(method='filter_by_date', required=False)
 
     class Meta:
@@ -5458,7 +5458,7 @@ class TimetableFilter(filters.FilterSet):
             return queryset.filter(id__in=attendance_taken.values_list('teachercombinationgradesubject_id', flat=True))
         return queryset
 
-# Define the TimetableViewSet with error handling
+
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TimetableSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -5469,7 +5469,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         day_of_week = self.request.query_params.get('day_of_week')
         teacher_id = self.request.query_params.get('teacher')
 
-        if not all([academic_id, day_of_week, teacher_id]):
+        if not all([academic_id, day_of_week]):
             return TeacherCombinationGradeSubject.objects.none()
 
         base_queryset = TeacherCombinationGradeSubject.objects.select_related(
@@ -5480,9 +5480,11 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             'room'
         ).filter(
             academic_id=academic_id,
-            gradetimeslots__day_of_week=day_of_week,
-            teacher_id=teacher_id
+            gradetimeslots__day_of_week=day_of_week
         )
+
+        if teacher_id:
+            base_queryset = base_queryset.filter(teacher_id=teacher_id)
 
         return base_queryset
 
@@ -5491,9 +5493,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             dat = request.query_params.get('dat')
             queryset = self.get_queryset()
 
-            # Serialize queryset with context including `dat`
             if dat:
-                # Process attendance data if `dat` is provided
                 try:
                     parsed_date = datetime.strptime(dat, '%Y-%m-%d').date()
                     attendance_subquery = AttendanceTaken.objects.filter(
@@ -5537,6 +5537,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         unique_data_list = list(unique_data.values())
         sorted_data = sorted(unique_data_list, key=lambda x: x.get('start_time') or "")
         return sorted_data
+
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
     queryset = AttendanceTaken.objects.all()
