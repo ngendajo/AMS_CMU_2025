@@ -5554,7 +5554,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
         unique_data_list = list(unique_data.values())
 
         # Sort the unique data by 'start_time' if it exists
-        sorted_data = sorted(unique_data_list, key=lambda x: x.get('start_time'))
+        sorted_data = sorted(data2, key=lambda x: x.get('start_time'))
         return sorted_data
     
 class AttendanceTakenViewSet(viewsets.ModelViewSet):
