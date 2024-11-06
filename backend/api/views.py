@@ -5477,6 +5477,7 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
             'gradetimeslots__timeslots',
             'combination',
             'subject',
+            'teacher',
             'room'
         ).filter(
             academic_id=academic_id,

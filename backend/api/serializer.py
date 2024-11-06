@@ -1192,6 +1192,9 @@ class TimetableSerializer(serializers.ModelSerializer):
     combination_name = serializers.SerializerMethodField()
     subject_id = serializers.SerializerMethodField()
     subject_name = serializers.SerializerMethodField()
+    teacher_first_name = serializers.SerializerMethodField()
+    teacher_last_name = serializers.SerializerMethodField()
+    teacher_id = serializers.SerializerMethodField()
     room_id = serializers.SerializerMethodField()
     room_name = serializers.SerializerMethodField()
     activity = serializers.SerializerMethodField()
@@ -1208,7 +1211,8 @@ class TimetableSerializer(serializers.ModelSerializer):
             'id',
             'grade_id', 'grade_name',
             'combination_id', 'combination_name',
-            'subject_id', 'subject_name',
+            'subject_id', 'subject_name','teacher_first_name',
+            'teacher_last_name','teacher_id',
             'room_id', 'room_name',
             'activity', 'day_of_week',
             'start_time', 'end_time',
@@ -1228,6 +1232,14 @@ class TimetableSerializer(serializers.ModelSerializer):
 
     def get_combination_name(self, obj):
         return obj.combination.combination_name if obj.combination else None
+    
+    def get_teacher_first_name(self, obj):
+        return obj.teacher.first_name if obj.teacher else None
+    
+    def get_teacher_last_name(self, obj):
+        return obj.teacher.last_name if obj.teacher else None
+    def get_teacher_id(self, obj):
+        return obj.teacher.id if obj.teacher else None
 
     def get_subject_id(self, obj):
         return obj.subject.id if obj.subject else None
