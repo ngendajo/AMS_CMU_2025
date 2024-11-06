@@ -5444,11 +5444,11 @@ class TimetableFilter(filters.FilterSet):
     academic = filters.NumberFilter(field_name='academic__id', required=True)
     day_of_week = filters.CharFilter(field_name='gradetimeslots__day_of_week', required=True)
     teacher = filters.NumberFilter(field_name='teacher__id', required=True)
-    date = filters.DateFilter(method='filter_by_date', required=False)
+    dat = filters.DateFilter(method='filter_by_date', required=False)
 
     class Meta:
         model = TeacherCombinationGradeSubject
-        fields = ['academic', 'day_of_week', 'teacher', 'date']
+        fields = ['academic', 'day_of_week', 'teacher', 'dat']
 
     def filter_by_date(self, queryset, name, value):
         if value:
@@ -5489,16 +5489,16 @@ class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request, *args, **kwargs):
         try:
-            date = request.query_params.get('date')
+            dat = request.query_params.get('dat')
 
             # First Query: All records without filtering by attendance
             queryset = self.get_queryset()
-            serialized_data = self.get_serializer(queryset, many=True).data
+            serialized_data = self.get_serializer(queryset, many=True).dat
 
             # Second Query: Filtered by attendance if a date is provided
-            if date:
+            if dat:
                 try:
-                    parsed_date = datetime.strptime(date, '%Y-%m-%d').date()
+                    parsed_date = datetime.strptime(dat, '%Y-%m-%d').date()
                     attendance_subquery = AttendanceTaken.objects.filter(
                         teachercombinationgradesubject=OuterRef('pk'),
                         date=parsed_date

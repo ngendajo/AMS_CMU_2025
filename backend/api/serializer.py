@@ -1257,11 +1257,11 @@ class TimetableSerializer(serializers.ModelSerializer):
         return getattr(obj, 'attendancetaken_id', None)
 
     def get_date(self, obj):
-        return getattr(obj, 'date', None)
+        return self.context.get('date', None)
 
     def get_absentees(self, obj):
         absentees = getattr(obj, 'absentees', [])
-        return absentees # [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
+        return [{'student': absentee.student.id, 'status': absentee.status} for absentee in absentees]
 
 
         
