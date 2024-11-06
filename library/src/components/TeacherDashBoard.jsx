@@ -59,6 +59,7 @@ export default function TeacherDashBoard() {
         withCredentials: true,
       });
       setData(response.data);
+      console.log(`${baseUrl}/timetable/?academic=${selectedAcademicId}&day_of_week=${selectedday}&teacher=${auth.user.id}&date=${selecteddate}`)
     } catch (err) {
       console.error(err);
       return null;
@@ -201,9 +202,39 @@ const handleSlotClick = async (slot_id,action,class_name) => {
             // Call getStudents if it's intended to refresh or re-fetch data
             getStudents();
         }else if(status==="present"){
-          console.log("hello:"+status)
-        }else if(status==="late"){
-          console.log("hello:"+status)
+          // Make API call to add absenteeism
+          await axios.post(`${baseUrl}/attendance/${attendanceId}/delete_absenteeism/`, {
+            "absenteeism_id": absenteeism_id
+          }, {
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'application/json'
+              }
+          });
+          
+          // Fetch updated students data
+          const studentsData = await getClassStudents(tcgs);
+          setStudents(studentsData);
+          
+          // Call getStudents if it's intended to refresh or re-fetch data
+          getStudents();
+        }else {
+          // Make API call to add absenteeism
+          await axios.post(`${baseUrl}/absenteeism/${absenteeism_id}/update_status/`, {
+            "status": status
+          }, {
+              headers: {
+                  "Authorization": 'Bearer ' + String(auth.accessToken),
+                  "Content-Type": 'application/json'
+              }
+          });
+          
+          // Fetch updated students data
+          const studentsData = await getClassStudents(tcgs);
+          setStudents(studentsData);
+          
+          // Call getStudents if it's intended to refresh or re-fetch data
+          getStudents();
         }
 
     } catch (error) {
@@ -378,13 +409,13 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                     ) {
                     action="update"
                       const absenteesCount = slot.absentees.length;
-                      attendanceStatus = `Attendance taken${absenteesCount > 0 ? ` (${absenteesCount} absent)` : ' No absent'}`;
+                      attendanceStatus = `Attendance taken${absenteesCount > 0 ? ` (${absenteesCount} absent)` : ' No absent '}`;
                      
                   } else if (
                       currentDateString === slotDateString && // Compare only the date portion
-                      slotStartTime && slotEndTime &&
-                      currentTime >= slotStartTime &&
-                      currentTime <= slotEndTime
+                      slotStartTime && slotEndTime && currentTime &&
+                      currentTotalMinutes >= slotStartTotalMinutes &&
+                      currentTotalMinutes <= slotEndTotalMinutes
                   ) {
                       attendanceStatus = 'Take attendance';
                       
@@ -410,7 +441,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                       
                       action="take"
                   } else {
-                      attendanceStatus = 'Wait';
+                      attendanceStatus = 'Wait'+currentTotalMinutes +":"+ slotStartTotalMinutes+":"+slotEndTotalMinutes;
                       
                       action="wait"
                   }
