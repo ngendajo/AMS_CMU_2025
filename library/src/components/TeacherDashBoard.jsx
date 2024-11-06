@@ -118,6 +118,8 @@ export default function TeacherDashBoard() {
           "Last Name": student.student_user_last_name.trim(), // Remove any extra spaces
           "First Name": student.student_user_first_name.trim(),
           "Reg.No": student.student_studentid,
+          "st_id": student.student_id,
+          "tcgs": tcgs,
           "attendanceId": attendanceId, // Assuming attendance is an object
           "absenteeism_id":student.absenteeism? student.absenteeism.id:null,
           "absenteeism_status":student.absenteeism? student.absenteeism.status:null
@@ -173,13 +175,36 @@ const handleSlotClick = async (slot_id,action,class_name) => {
   }
   console.log(data)
   console.log(students)
-  const handleAttendanceChange = (status, attendanceId,absenteeism_id) => {
-        // Perform the necessary logic, e.g., API call, updating state, etc.
-        console.log(`Status: ${status}`, attendanceId,absenteeism_id);
+  const handleAttendanceChange = async (status, attendanceId, st_id, tcgs, absenteeism_id) => {
+    // Perform the necessary logic, e.g., API call, updating state, etc.
+    console.log(`Status: ${status}`, attendanceId, st_id, tcgs, absenteeism_id);
+    
+    try {
+        if (absenteeism_id === null) {
+            // Make API call to add absenteeism
+            await axios.post(`${baseUrl}/attendance/${attendanceId}/add-absenteeism/`, {
+                "student": st_id,
+                "status": status
+            }, {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'application/json'
+                }
+            });
+            
+            // Fetch updated students data
+            const studentsData = await getClassStudents(tcgs);
+            setStudents(studentsData);
+            
+            // Call getStudents if it's intended to refresh or re-fetch data
+            getStudents();
+        }
 
-        // Example: send data to an API or update the student data in the state
-        // await axios.post('/api/attendance', { status, studentId: student.student_studentid, ...otherParams });
-    };
+    } catch (error) {
+        console.error("Error updating attendance:", error.response?.data || error.message);
+    }
+};
+
   return (
     <div
       style={{
@@ -273,7 +298,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                 </button>
               <h2>Do attendance for {selectedclass} on {selecteddate}</h2>
               <DynamicTable 
-    mockdata={students.map(({ attendanceId, absenteeism_id, absenteeism_status, ...rest }, index) => ({
+    mockdata={students.map(({ attendanceId, absenteeism_id, absenteeism_status,st_id,tcgs, ...rest }, index) => ({
         No: index + 1, // Adding numbering
         ...rest,
         Present: (
@@ -281,7 +306,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                 type="radio" 
                 name={`attendance-${index}`} 
                 checked={absenteeism_status === null}
-                onChange={() => handleAttendanceChange("present", attendanceId, absenteeism_id)} 
+                onChange={() => handleAttendanceChange("present", attendanceId,st_id,tcgs, absenteeism_id)} 
             />
         ),
         Absent: (
@@ -289,7 +314,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                 type="radio" 
                 name={`attendance-${index}`} 
                 checked={absenteeism_status === "absent"}
-                onChange={() => handleAttendanceChange("absent", attendanceId, absenteeism_id)} 
+                onChange={() => handleAttendanceChange("absent", attendanceId,st_id,tcgs, absenteeism_id)} 
             />
         ),
         Late: (
@@ -297,7 +322,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                 type="radio" 
                 name={`attendance-${index}`} 
                 checked={absenteeism_status === "late"}
-                onChange={() => handleAttendanceChange("late", attendanceId, absenteeism_id)} 
+                onChange={() => handleAttendanceChange("late", attendanceId,st_id,tcgs, absenteeism_id)} 
             />
         ),
     }))} 
