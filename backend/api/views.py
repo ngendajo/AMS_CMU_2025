@@ -5790,7 +5790,7 @@ class StudentListView(generics.ListAPIView):
 #Attendance Report
 class AttendanceReportView(generics.ListAPIView):
     serializer_class = AttendanceReportSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         date1 = self.request.query_params.get('date1')
