@@ -1385,26 +1385,28 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
         ]
 
     def get_date(self, obj):
-        attendance_record = obj.attendancetaken_set.first()
+        # Get the first attendance record if available
+        attendance_record = obj.attendance_records.first()
         return attendance_record.date if attendance_record else None
 
     def get_activity(self, obj):
-        attendance_record = obj.attendancetaken_set.first()
+        attendance_record = obj.attendance_records.first()
         return (
             attendance_record.teachercombinationgradesubject.gradetimeslots.activity
             if attendance_record else None
         )
 
     def get_teacher_first_name(self, obj):
-        attendance_record = obj.attendancetaken_set.first()
+        attendance_record = obj.attendance_records.first()
         return (
             attendance_record.teachercombinationgradesubject.teacher.first_name
             if attendance_record else None
         )
 
     def get_teacher_last_name(self, obj):
-        attendance_record = obj.attendancetaken_set.first()
+        attendance_record = obj.attendance_records.first()
         return (
             attendance_record.teachercombinationgradesubject.teacher.last_name
             if attendance_record else None
         )
+
