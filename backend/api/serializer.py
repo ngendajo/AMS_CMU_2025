@@ -1363,7 +1363,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     
 #AttendanceReport
 class AttendanceReportSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(source='attendance_records.date')
+    date = serializers.SerializerMethodField()
     studentid = serializers.CharField(source='student.studentid')
     first_name = serializers.CharField(source='student.user.first_name')
     last_name = serializers.CharField(source='student.user.last_name')
@@ -1371,15 +1371,9 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
     family_name = serializers.CharField(source='student.family.family_name')
     grade_name = serializers.CharField(source='student.family.grade.grade_name')
     combination_name = serializers.CharField(source='student.combination.combination_name')
-    activity = serializers.CharField(
-        source='attendance_records.teachercombinationgradesubject.gradetimeslots.activity'
-    )
-    teacher_first_name = serializers.CharField(
-        source='attendance_records.teachercombinationgradesubject.teacher.first_name'
-    )
-    teacher_last_name = serializers.CharField(
-        source='attendance_records.teachercombinationgradesubject.teacher.last_name'
-    )
+    activity = serializers.SerializerMethodField()
+    teacher_first_name = serializers.SerializerMethodField()
+    teacher_last_name = serializers.SerializerMethodField()
     absenteeism_status = serializers.CharField(source='status')
 
     class Meta:
@@ -1389,3 +1383,28 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
             'family_name', 'grade_name', 'combination_name', 'activity',
             'teacher_first_name', 'teacher_last_name', 'absenteeism_status'
         ]
+
+    def get_date(self, obj):
+        attendance_record = obj.attendancetaken_set.first()
+        return attendance_record.date if attendance_record else None
+
+    def get_activity(self, obj):
+        attendance_record = obj.attendancetaken_set.first()
+        return (
+            attendance_record.teachercombinationgradesubject.gradetimeslots.activity
+            if attendance_record else None
+        )
+
+    def get_teacher_first_name(self, obj):
+        attendance_record = obj.attendancetaken_set.first()
+        return (
+            attendance_record.teachercombinationgradesubject.teacher.first_name
+            if attendance_record else None
+        )
+
+    def get_teacher_last_name(self, obj):
+        attendance_record = obj.attendancetaken_set.first()
+        return (
+            attendance_record.teachercombinationgradesubject.teacher.last_name
+            if attendance_record else None
+        )
