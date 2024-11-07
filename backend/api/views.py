@@ -3542,38 +3542,16 @@ class AutoStudentDataExcelUploadAPIView(APIView):
             df_students = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
 
             if not df_students.empty:
-                if set(df_students.columns) != set(["email", "first_name", "last_name", "phone1", "password","gender", "studentid", "family", "combination"]):
+                if set(df_students.columns) != set(["eap_class", "first_name", "last_name", "school"]):
                     data["error"] = "Students sheets have different headers."
                     data["come"] = df_students.columns
-                    data["going"] = set(["email", "first_name", "last_name", "phone1", "password","gender", "studentid", "family", "combination"])
+                    data["going"] = set(["eap_class", "first_name", "last_name", "school"])
                     return Response(data)
 
-                families = df_students['family'].unique()
-                combinations = df_students['combination'].unique()
-                missing_families = []
-                missing_combinations = []
-
-                for family_name in families:
-                    if not Family.objects.filter(family_name=family_name).exists():
-                        missing_families.append(family_name)
-
-                for combination_name in combinations:
-                    if not Combination.objects.filter(combination_name=combination_name).exists():
-                        missing_combinations.append(combination_name)
-
-                if missing_families or missing_combinations:
-                    data["error"] = {
-                        "missing_families": missing_families,
-                        "missing_combinations": missing_combinations
-                    }
-                    return Response(data)
 
                 # Now create student instances since all families and combinations exist
                 for index, row in df_students.iterrows():
-                    family = Family.objects.get(family_name=row['family'])
-                    combination = Combination.objects.get(combination_name=row['combination'])
-                    user = User.objects.create_studentuserwithoutimage(row['email'],row['first_name'], row['last_name'], row['phone1'], row['password'], row['gender'])
-                    Student.objects.create(user=user, family=family, combination=combination, studentid=row['studentid'])
+                    Eap.objects.create(first_name=row['first_name'], last_name=row['last_name'], school=row['school'], eap_class=row['eap_class'])
 
             else:
                 data["error"] = "Students sheet is empty!"
