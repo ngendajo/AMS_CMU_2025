@@ -5804,10 +5804,10 @@ class AttendanceReportView(generics.GenericAPIView):
             'student__family__grade',
             'student__combination'
         ).prefetch_related(
-            'attendancetaken',
-            'attendancetaken__teachercombinationgradesubject',
-            'attendancetaken__teachercombinationgradesubject__teacher',
-            'attendancetaken__teachercombinationgradesubject__gradetimeslots'
+            'school_comments',
+            'attendance_taken__teachercombinationgradesubject',
+            'attendance_taken__teachercombinationgradesubject__teacher',
+            'attendance_taken__teachercombinationgradesubject__gradetimeslots'
         )
 
     def get(self, request):
