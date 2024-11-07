@@ -5790,7 +5790,7 @@ class StudentListView(generics.ListAPIView):
 #Attendance Report
 class AttendanceReportView(generics.GenericAPIView):
     serializer_class = AttendanceReportSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self, start_date=None, end_date=None):
         return Absenteeism.objects.filter(
@@ -5799,8 +5799,8 @@ class AttendanceReportView(generics.GenericAPIView):
             'student',
             'student__user',
             'student__family',
+            'student__family__grade',
             'student__combination',
-            'student__combination__grade',
             'attendancetaken',
             'attendancetaken__teachercombinationgradesubject',
             'attendancetaken__teachercombinationgradesubject__teacher',
