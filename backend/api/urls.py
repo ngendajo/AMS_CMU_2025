@@ -47,6 +47,7 @@ urlpatterns = [
     path('absenteeism/<int:absenteeism_id>/add-comment/', views.AbsenteeismCommentViewSet.as_view({'post': 'add_comment'}), name='add-comment'),
     path('attendance/<int:pk>/update_absenteeism/', views.AttendanceTakenViewSet.as_view({'post': 'update_absenteeism'}), name='attendance-update-absenteeism'),
     path('attendance/<int:pk>/delete_absenteeism/', views.AttendanceTakenViewSet.as_view({'post': 'delete_absenteeism'}), name='attendance-delete-absenteeism'),
+    path('attendance-report/', views.AttendanceReportView.as_view(), name='attendance-report'),
     path('students/by-tcgs/<int:tcgs_id>/', views.StudentListView.as_view(), name='student-list-by-tcgs'),
     path('password-reset/<str:encoded_pk>/<str:token>',
         views.ResetPassword.as_view(),
