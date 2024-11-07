@@ -5796,7 +5796,7 @@ class AttendanceReportView(generics.GenericAPIView):
 
     def get_queryset(self, start_date=None, end_date=None):
         return Absenteeism.objects.filter(
-            attendancetaken__date__range=[start_date, end_date]
+            attendance_records__date__range=[start_date, end_date]
         ).select_related(
             'student',
             'student__user',
@@ -5805,9 +5805,9 @@ class AttendanceReportView(generics.GenericAPIView):
             'student__combination'
         ).prefetch_related(
             'school_comments',
-            'attendance_taken__teachercombinationgradesubject',
-            'attendance_taken__teachercombinationgradesubject__teacher',
-            'attendance_taken__teachercombinationgradesubject__gradetimeslots'
+            'attendance_records__teachercombinationgradesubject',
+            'attendance_records__teachercombinationgradesubject__teacher',
+            'attendance_records__teachercombinationgradesubject__gradetimeslots'
         )
 
     def get(self, request):

@@ -518,7 +518,7 @@ class Attendance(models.Model):
 class AttendanceTaken(models.Model):
     teachercombinationgradesubject = models.ForeignKey('TeacherCombinationGradeSubject', on_delete=models.CASCADE)
     date = models.DateField()
-    absentees = models.ManyToManyField('Absenteeism', blank=True)
+    absentees = models.ManyToManyField('Absenteeism', blank=True, related_name="attendance_records")
 
     class Meta:
         unique_together = ('teachercombinationgradesubject', 'date')
