@@ -5792,26 +5792,26 @@ class StudentListView(generics.ListAPIView):
 #Attendance Report
 class AttendanceReportView(generics.GenericAPIView):
     serializer_class = AttendanceReportSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self, start_date=None, end_date=None):
         return Absenteeism.objects.filter(
-            attendancetaken__date__range=[start_date, end_date]
+            attendance_records__date__range=[start_date, end_date]
         ).select_related(
             'student',
             'student__user',
             'student__family',
             'student__family__grade',
-            'student__combination',
-            'attendancetaken',
-            'attendancetaken__teachercombinationgradesubject',
-            'attendancetaken__teachercombinationgradesubject__teacher',
-            'attendancetaken__teachercombinationgradesubject__gradetimeslots'
+            'student__combination'
+        ).prefetch_related(
+            'attendance_records',
+            'attendance_records__teachercombinationgradesubject',
+            'attendance_records__teachercombinationgradesubject__teacher',
+            'attendance_records__teachercombinationgradesubject__gradetimeslots'
         )
 
     def get(self, request):
         try:
-            # Get and validate date parameters
             date1 = request.query_params.get('date1')
             date2 = request.query_params.get('date2')
 
@@ -5830,7 +5830,6 @@ class AttendanceReportView(generics.GenericAPIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Get queryset and paginate
             queryset = self.get_queryset(start_date, end_date)
             page = self.paginate_queryset(queryset)
             
@@ -5859,19 +5858,16 @@ class AttendanceReportView(generics.GenericAPIView):
             absenteeism_data = request.data.get('absenteeism')
             comment_data = request.data.get('comment')
 
-            # Get attendance record
             attendance = get_object_or_404(AttendanceTaken, id=attendance_id)
 
-            # Create absenteeism record
             absenteeism = Absenteeism.objects.create(
                 student_id=absenteeism_data['student'],
                 status=absenteeism_data['status']
             )
             attendance.absentees.add(absenteeism)
 
-            # Add comment if provided
             if comment_data:
-                comment = attendance.comment_set.create(
+                comment = AttendanceComment.objects.create(
                     text=comment_data['text'],
                     start_time=comment_data.get('start_time'),
                     end_time=comment_data.get('end_time')

@@ -1363,7 +1363,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     
 #AttendanceReport
 class AttendanceReportSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(source='attendancetaken.date')
+    date = serializers.DateField(source='attendance_records.date')
     studentid = serializers.CharField(source='student.studentid')
     first_name = serializers.CharField(source='student.user.first_name')
     last_name = serializers.CharField(source='student.user.last_name')
@@ -1371,9 +1371,15 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
     family_name = serializers.CharField(source='student.family.family_name')
     grade_name = serializers.CharField(source='student.family.grade.grade_name')
     combination_name = serializers.CharField(source='student.combination.combination_name')
-    activity = serializers.CharField(source='attendancetaken.teachercombinationgradesubject.gradetimeslots.activity')
-    teacher_first_name = serializers.CharField(source='attendancetaken.teachercombinationgradesubject.teacher.first_name')
-    teacher_last_name = serializers.CharField(source='attendancetaken.teachercombinationgradesubject.teacher.last_name')
+    activity = serializers.CharField(
+        source='attendance_records.teachercombinationgradesubject.gradetimeslots.activity'
+    )
+    teacher_first_name = serializers.CharField(
+        source='attendance_records.teachercombinationgradesubject.teacher.first_name'
+    )
+    teacher_last_name = serializers.CharField(
+        source='attendance_records.teachercombinationgradesubject.teacher.last_name'
+    )
     absenteeism_status = serializers.CharField(source='status')
 
     class Meta:
