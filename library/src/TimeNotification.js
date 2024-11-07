@@ -8,64 +8,19 @@ const TimeNotification = () => {
   const { auth } = useAuth();
   let i = 0;
 
-  const getData = async () => {
-    if (!auth?.accessToken) return;
-
-    try {
-      const response = await axios.get(baseUrl + '/attendances/', {
-        headers: {
-          "Authorization": 'Bearer ' + String(auth.accessToken)
-        },
-        withCredentials: true 
-      });
-      const data = response.data;
-      const organized_data = [];
-      const processed = {};
-      const today = new Date().toISOString().split('T')[0];
-      data.forEach(record => {
-        if (record['date'] === today) {
-          const key = `${record['studentid']}_${record['date']}`;
-          if (!(key in processed)) {
-            const row = {
-              "date": record['date'],
-              "studentid": record['studentid'],
-              "name": (record['student_last_name'] + " " + record['student_first_name'])
-                .split(' ')
-                .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-                .join(' '),
-              "gender": record['gender'],
-              "family_name": record['family_name'],
-              "grade_name": record['grade_name'],
-              "end_academic_year": record['end_academic_year'],
-              "combination_name": record['combination_name'],
-              "comment": record['comment'],
-              "hasAbsent": false
-            };
-            organized_data.push(row);
-            processed[key] = row;
-          }
-          if (record['status']==="absent") {
-              processed[key]["hasAbsent"] = true;
-          }
-        }
-      });
-      return organized_data.filter(record => record.hasAbsent);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  };
+  
 
   useEffect(() => {
     const notificationTimes = ['08:10','08:40', '09:00', '09:10','09:47', '09:30', '10:10','10:30', '11:10', '13:10', '14:10', '15:10'];
     const beepSound = new Audio(beepSoundFile);
 
-    const getPeriodFromTime = (currentTime) => {
+   /*  const getPeriodFromTime = (currentTime) => {
       const timeToPeriod = {
         '08:10': 1, '09:00': 2, '09:10': 2, '09:47': 2, '09:30': 2,
         '10:10': 3,'10:30': 3, '11:10': 4, '13:10': 5, '14:10': 6, '15:10': 7
       };
       return timeToPeriod[currentTime] || null;
-    };
+    }; */
 
     const showNotification = async (currentTime) => {
       //const period = getPeriodFromTime(currentTime);
@@ -125,6 +80,52 @@ const TimeNotification = () => {
 
     return () => clearInterval(interval);
   }, []);
+  const getData = async () => {
+    if (!auth?.accessToken) return;
+
+    try {
+      const response = await axios.get(baseUrl + '/attendances/', {
+        headers: {
+          "Authorization": 'Bearer ' + String(auth.accessToken)
+        },
+        withCredentials: true 
+      });
+      const data = response.data;
+      const organized_data = [];
+      const processed = {};
+      const today = new Date().toISOString().split('T')[0];
+      data.forEach(record => {
+        if (record['date'] === today) {
+          const key = `${record['studentid']}_${record['date']}`;
+          if (!(key in processed)) {
+            const row = {
+              "date": record['date'],
+              "studentid": record['studentid'],
+              "name": (record['student_last_name'] + " " + record['student_first_name'])
+                .split(' ')
+                .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+                .join(' '),
+              "gender": record['gender'],
+              "family_name": record['family_name'],
+              "grade_name": record['grade_name'],
+              "end_academic_year": record['end_academic_year'],
+              "combination_name": record['combination_name'],
+              "comment": record['comment'],
+              "hasAbsent": false
+            };
+            organized_data.push(row);
+            processed[key] = row;
+          }
+          if (record['status']==="absent") {
+              processed[key]["hasAbsent"] = true;
+          }
+        }
+      });
+      return organized_data.filter(record => record.hasAbsent);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
 
   return <div>{i === 0 ? null : i}</div>;
 };

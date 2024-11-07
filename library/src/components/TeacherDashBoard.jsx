@@ -9,8 +9,14 @@ export default function TeacherDashBoard() {
   const { auth } = useAuth();
   const [data, setData] = useState([]);
   const workingdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  const [selectedday, setSelectedday] = useState("");
-  const [selecteddate, setSelecteddate] = useState("");
+  const currentDate = new Date();
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const initialDay = dayNames[currentDate.getDay()];
+  const initialDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+  const [selectedday, setSelectedday] = useState(initialDay);
+  const [selecteddate, setSelecteddate] = useState(initialDate);
+
   const [selectedclass, setSelectedclass] = useState("");
   const [academics, setAcademics] = useState([]);
   const [students, setStudents] = useState([]);
@@ -67,18 +73,7 @@ export default function TeacherDashBoard() {
   }, [auth, selectedAcademicId, selectedday]);
 
   useEffect(() => {
-    // Set default selected day to today's day if it's a working day
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const today = daysOfWeek[new Date().getDay()];
-    if (workingdays.includes(today)) {
-      setSelectedday(today);
-      // Format the date as YYYY-MM-DD
-    const formattedDate = (new Date()).toISOString().slice(0, 10);
-
-    setSelecteddate(formattedDate);
-    //console.log(formattedDate)
-    }
-  
+    
     // Fetch academic years and set the default academic year based on today's date
     fetchAcademics(auth).then(response => {
       const academicYears = response.data;
@@ -369,7 +364,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
               // Parse times for comparison
               // Assuming selecteddate is in YYYY-MM-DD format and slot.start_time, slot.end_time are in HH:MM format
                   // Get the current date string in YYYY-MM-DD format
-                  const currentDate = new Date();
+                  //const currentDate = new Date();
                   const currentDateString = currentDate.toISOString().split('T')[0];
       
                   // Create date objects for slot's start and end times
@@ -440,7 +435,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                       
                       action="take"
                   } else {
-                      attendanceStatus = 'Wait'+currentTotalMinutes +":"+ slotStartTotalMinutes+":"+slotEndTotalMinutes;
+                      attendanceStatus = 'Wait';
                       
                       action="wait"
                   }

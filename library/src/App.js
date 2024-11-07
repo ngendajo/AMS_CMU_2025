@@ -60,6 +60,8 @@ import Rooms from './components/schoolTimeTable/Rooms';
 import Eaps from './components/eaps/Eaps';
 import EapsAtt from './components/eaps/EapsAtt';
 import EapsReports from './components/eaps/EapsReports';
+import AttendanceReport from './components/pages/AttendanceReport';
+import GeneralReport from './components/pages/GeneralReport';
 
 
 
@@ -137,6 +139,8 @@ function App() {
                     <Route element={<AuthCheck allowedRoles={["superuser","teacher","librarian","crc"]} />}>
                       <Route path='absenteeism' element={<Absenteeism/>}/>
                       <Route path='newattendace' element={<Newattendace/>}/>
+                      <Route path='report' element={<AttendanceReport/>}/>
+                      <Route path='greport' element={<GeneralReport/>}/>
                       <Route path="/eap" element={<Eaps />} />
                       <Route path="/eap-att" element={<EapsAtt />} />
                       <Route path="/eap-reports" element={<EapsReports />} />

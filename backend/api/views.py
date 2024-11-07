@@ -1,7 +1,7 @@
 
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
-from django.db.models import OuterRef, Subquery, IntegerField
+from django.db.models import OuterRef, Subquery, IntegerField,Count, Case, When, IntegerField,Q,Prefetch, F
 from rest_framework.decorators import action
 from django.db.models.functions import Coalesce
 from django.contrib.auth import logout
@@ -12,7 +12,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.db.models import Count, Case, When, IntegerField,Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -5787,3 +5786,48 @@ class StudentListView(generics.ListAPIView):
                 {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+            
+#Attendance Report
+class AttendanceReportView(generics.ListAPIView):
+    serializer_class = AttendanceReportSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        date1 = self.request.query_params.get('date1')
+        date2 = self.request.query_params.get('date2')
+
+        if not date1 or not date2:
+            return Absenteeism.objects.none()
+
+        try:
+            start_date = datetime.strptime(date1, '%Y-%m-%d').date()
+            end_date = datetime.strptime(date2, '%Y-%m-%d').date()
+        except ValueError:
+            return Absenteeism.objects.none()
+
+        # First, get all AttendanceTaken records within the date range
+        attendance_taken = AttendanceTaken.objects.filter(
+            date__range=[start_date, end_date]
+        ).prefetch_related(
+            'absentees'
+        ).select_related(
+            'teachercombinationgradesubject',
+            'teachercombinationgradesubject__teacher',
+            'teachercombinationgradesubject__gradetimeslots'
+        )
+
+        # Then get all Absenteeism records linked to these AttendanceTaken records
+        queryset = Absenteeism.objects.filter(
+            attendancetaken__in=attendance_taken
+        ).select_related(
+            'student',
+            'student__user',
+            'student__family',
+            'student__combination',
+            'student__combination__grade'
+        ).annotate(
+            date=F('attendancetaken__date'),
+            attendance_taken=F('attendancetaken')
+        ).distinct()
+
+        return queryset
