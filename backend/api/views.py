@@ -5788,46 +5788,109 @@ class StudentListView(generics.ListAPIView):
             )
             
 #Attendance Report
-class AttendanceReportView(generics.ListAPIView):
+class AttendanceReportView(generics.GenericAPIView):
     serializer_class = AttendanceReportSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        date1 = self.request.query_params.get('date1')
-        date2 = self.request.query_params.get('date2')
-
-        if not date1 or not date2:
-            return Absenteeism.objects.none()
-
-        try:
-            start_date = datetime.strptime(date1, '%Y-%m-%d').date()
-            end_date = datetime.strptime(date2, '%Y-%m-%d').date()
-        except ValueError:
-            return Absenteeism.objects.none()
-
-        # First, get all AttendanceTaken records within the date range
-        attendance_taken = AttendanceTaken.objects.filter(
-            date__range=[start_date, end_date]
-        ).prefetch_related(
-            'absentees'
-        ).select_related(
-            'teachercombinationgradesubject',
-            'teachercombinationgradesubject__teacher',
-            'teachercombinationgradesubject__gradetimeslots'
-        )
-
-        # Then get all Absenteeism records linked to these AttendanceTaken records
-        queryset = Absenteeism.objects.filter(
-            attendancetaken__in=attendance_taken
+    def get_queryset(self, start_date=None, end_date=None):
+        return Absenteeism.objects.filter(
+            attendancetaken__date__range=[start_date, end_date]
         ).select_related(
             'student',
             'student__user',
             'student__family',
             'student__combination',
-            'student__combination__grade'
-        ).annotate(
-            date=F('attendancetaken__date'),
-            attendance_taken=F('attendancetaken')
-        ).distinct()
+            'student__combination__grade',
+            'attendancetaken',
+            'attendancetaken__teachercombinationgradesubject',
+            'attendancetaken__teachercombinationgradesubject__teacher',
+            'attendancetaken__teachercombinationgradesubject__gradetimeslots'
+        )
 
-        return queryset
+    def get(self, request):
+        # Get and validate date parameters
+        date1 = request.query_params.get('date1')
+        date2 = request.query_params.get('date2')
+
+        if not date1 or not date2:
+            return Response(
+                {"error": "Both date1 and date2 parameters are required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            start_date = datetime.strptime(date1, '%Y-%m-%d').date()
+            end_date = datetime.strptime(date2, '%Y-%m-%d').date()
+        except ValueError:
+            return Response(
+                {"error": "Invalid date format. Use YYYY-MM-DD"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Get queryset and paginate
+        queryset = self.get_queryset(start_date, end_date)
+        page = self.paginate_queryset(queryset)
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        attendance_id = request.data.get('attendance_id')
+        absenteeism_data = request.data.get('absenteeism')
+        comment_data = request.data.get('comment')
+
+        # Get attendance record
+        attendance = get_object_or_404(AttendanceTaken, id=attendance_id)
+
+        # Create absenteeism record
+        try:
+            absenteeism = Absenteeism.objects.create(
+                student_id=absenteeism_data['student'],
+                status=absenteeism_data['status']
+            )
+            attendance.absentees.add(absenteeism)
+
+            # Add comment if provided
+            if comment_data:
+                comment = attendance.comment_set.create(
+                    text=comment_data['text'],
+                    start_time=comment_data.get('start_time'),
+                    end_time=comment_data.get('end_time')
+                )
+                absenteeism.school_comments.add(comment)
+
+            return Response({
+                "message": "Absenteeism record created successfully",
+                "absenteeism_id": absenteeism.id
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({
+                "error": str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        attendance_id = request.data.get('attendance_id')
+        absenteeism_id = request.data.get('absenteeism_id')
+        delete_comments = request.data.get('delete_comments', False)
+
+        attendance = get_object_or_404(AttendanceTaken, id=attendance_id)
+        absenteeism = get_object_or_404(Absenteeism, id=absenteeism_id)
+
+        try:
+            if delete_comments:
+                absenteeism.school_comments.all().delete()
+            
+            attendance.absentees.remove(absenteeism)
+            return Response({
+                "message": "Absenteeism record removed successfully"
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({
+                "error": str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
