@@ -189,8 +189,8 @@ export default function Absenteeism() {
         getData();
     
     },[auth])
-    console.log(data)
-    console.log(late)
+    //console.log(data)
+    //console.log(late)
     // Function to filter today's data
   const filterToday = () => {
     const today = new Date().toISOString().split('T')[0]; // Format 'YYYY-MM-DD'
