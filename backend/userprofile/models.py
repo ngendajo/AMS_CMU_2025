@@ -576,7 +576,7 @@ class Eap(models.Model):
     eap_class = models.CharField(max_length=100, null=True)
     # New field
     current_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
-    school = models.ForeignKey(School, on_delete=models.PROTECT , null=True)
+    schoolid = models.ForeignKey(School, on_delete=models.PROTECT , null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
