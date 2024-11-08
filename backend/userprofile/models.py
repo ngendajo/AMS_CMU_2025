@@ -560,11 +560,10 @@ class School(models.Model):
 
 class EapClass(models.Model):
     name = models.CharField(max_length=100)
-    school = models.ForeignKey(School, on_delete=models.PROTECT)
     academic_year = models.IntegerField()
     
     class Meta:
-        unique_together = ['name', 'school', 'academic_year']
+        unique_together = ['name', 'academic_year']
 
     def __str__(self):
         return f"{self.name} ({self.school} - {self.academic_year})"
@@ -577,6 +576,7 @@ class Eap(models.Model):
     eap_class = models.CharField(max_length=100, null=True)
     # New field
     current_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
+    school = models.ForeignKey(School, on_delete=models.PROTECT , null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
