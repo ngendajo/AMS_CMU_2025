@@ -571,9 +571,6 @@ class EapClass(models.Model):
 class Eap(models.Model):
     last_name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
-    # Temporary fields for migration
-    school = models.CharField(max_length=100, null=True)
-    eap_class = models.CharField(max_length=100, null=True)
     # New field
     current_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
     student_school = models.ForeignKey(School, on_delete=models.PROTECT , null=True)
