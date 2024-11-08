@@ -549,17 +549,66 @@ class AttendanceComment(models.Model):
     
 
 #English Access Program
+class School(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class EapClass(models.Model):
+    name = models.CharField(max_length=100)
+    school = models.ForeignKey(School, on_delete=models.PROTECT)
+    academic_year = models.IntegerField()
+    
+    class Meta:
+        unique_together = ['name', 'school', 'academic_year']
+
+    def __str__(self):
+        return f"{self.name} ({self.school} - {self.academic_year})"
+
 class Eap(models.Model):
     last_name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
-    school = models.CharField(max_length=100)
-    eap_class = models.CharField(max_length=100)
+    # Temporary fields for migration
+    school = models.CharField(max_length=100, null=True)
+    eap_class = models.CharField(max_length=100, null=True)
+    # New field
+    current_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+class EapAbsenteeism(models.Model):
+    STATUSES = [
+        ('absent', 'Absent'),
+        ('late', 'Late')
+    ]
+    student = models.ForeignKey(Eap, on_delete=models.PROTECT)
+    status = models.CharField(max_length=10, choices=STATUSES)
+    date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.status} on {self.date}"
 
 class EapAttendance(models.Model):
-    eap_student = models.ForeignKey(Eap, on_delete=models.CASCADE)
-    period = models.CharField(max_length=100)
+    # Temporary field for migration
+    eap_student = models.ForeignKey(Eap, on_delete=models.CASCADE, null=True, related_name='old_attendances')
+    eap_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
     date = models.DateField()
-    status = models.CharField(max_length=10, choices=[('present', 'Present'), ('absent', 'Absent'), ('late', 'Late')])
+    # Temporary field for migration
+    status = models.CharField(
+        max_length=10, 
+        choices=[('present', 'Present'), ('absent', 'Absent'), ('late', 'Late')],
+        null=True
+    )
+    absentees = models.ManyToManyField(EapAbsenteeism)
     created_at = models.DateTimeField(auto_now_add=True)
     staff = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.eap_class} attendance on {self.date}"
 

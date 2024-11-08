@@ -5398,23 +5398,7 @@ class EapViewSet(viewsets.ModelViewSet):
     queryset = Eap.objects.all()
     serializer_class = EapSerializer
 
-class EapAttendanceViewSet(viewsets.ModelViewSet):
-    queryset = EapAttendance.objects.all()
-    serializer_class = EapAttendanceSerializer
-
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, *args, **kwargs):
-        try:
-            return super().update(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
+ 
 #new way of taking attendance
 logger = logging.getLogger(__name__)
 

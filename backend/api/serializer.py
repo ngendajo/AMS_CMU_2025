@@ -1173,16 +1173,7 @@ class EapSerializer(serializers.ModelSerializer):
         model = Eap
         fields = '__all__'
 
-class EapAttendanceSerializer(serializers.ModelSerializer):
-    staff_first_name = serializers.CharField(source='staff.first_name', read_only=True)
-    staff_last_name = serializers.CharField(source='staff.last_name', read_only=True)
-    eap_student_details = EapSerializer(source='eap_student', read_only=True)
-
-    class Meta:
-        model = EapAttendance
-        fields = '__all__'
-        
-        
+       
 #new way of taking attendance
 class TimetableSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
