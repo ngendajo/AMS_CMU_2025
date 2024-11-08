@@ -363,7 +363,7 @@ export default function GeneralReport() {
                             <p>{st.gender==="F"?"Female":"Male"}</p>
                             <p>{getClass(st.grade_name,st.combination_name)}</p>
                             <p>{st.date}</p>
-                            </div>
+                        </div>
                         
                         {st.activities.length > 0 && st.activities.map((sbj, i) => (
                             <div

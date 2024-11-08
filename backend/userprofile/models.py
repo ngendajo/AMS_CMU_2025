@@ -4,6 +4,9 @@ from django.db import models
 from api.models import User
 from datetime import date
 from django.db.models import Q
+from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 # Staff model
 class CrcProfile(models.Model):
@@ -533,6 +536,19 @@ class Absenteeism(models.Model):
 
     def __str__(self):
         return f"Absenteeism for {self.student} - Status: {self.status}"
+    
+# Signal to enforce the uniqueness constraint without a foreign key
+@receiver(pre_save, sender=Absenteeism)
+def validate_unique_absentee(sender, instance, **kwargs):
+    # Get all AttendanceTaken records associated with the instance’s student on the same date
+    related_attendance = AttendanceTaken.objects.filter(
+        absentees=instance,
+        date=instance.attendance_records.first().date,  # Assume the first related record for the date check
+        teachercombinationgradesubject=instance.attendance_records.first().teachercombinationgradesubject
+    )
+
+    if related_attendance.exists():
+        raise ValidationError("This student already has an absentee record for the specified attendance.")
 
 class AttendanceComment(models.Model):
     comment = models.TextField()

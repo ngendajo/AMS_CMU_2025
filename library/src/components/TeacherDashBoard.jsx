@@ -330,35 +330,35 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                 </button>
               <h2>Do attendance for {selectedclass}</h2>
               <DynamicTable 
-    mockdata={students.map(({ attendanceId, absenteeism_id, absenteeism_status,st_id,tcgs, ...rest }, index) => ({
-        No: index + 1, // Adding numbering
-        ...rest,
-        Present: (
-            <input 
-                type="radio" 
-                name={`attendance-${index}`} 
-                checked={absenteeism_status === null}
-                onChange={() => handleAttendanceChange("present", attendanceId,st_id,tcgs, absenteeism_id)} 
-            />
-        ),
-        Absent: (
-            <input 
-                type="radio" 
-                name={`attendance-${index}`} 
-                checked={absenteeism_status === "absent"}
-                onChange={() => handleAttendanceChange("absent", attendanceId,st_id,tcgs, absenteeism_id)} 
-            />
-        ),
-        Late: (
-            <input 
-                type="radio" 
-                name={`attendance-${index}`} 
-                checked={absenteeism_status === "late"}
-                onChange={() => handleAttendanceChange("late", attendanceId,st_id,tcgs, absenteeism_id)} 
-            />
-        ),
-    }))} 
-/>
+                  mockdata={students.map(({ attendanceId, absenteeism_id, absenteeism_status,st_id,tcgs, ...rest }, index) => ({
+                      No: index + 1, // Adding numbering
+                      ...rest,
+                      Present: (
+                          <input 
+                              type="radio" 
+                              name={`attendance-${index}`} 
+                              checked={absenteeism_status === null}
+                              onChange={() => handleAttendanceChange("present", attendanceId,st_id,tcgs, absenteeism_id)} 
+                          />
+                      ),
+                      Absent: (
+                          <input 
+                              type="radio" 
+                              name={`attendance-${index}`} 
+                              checked={absenteeism_status === "absent"}
+                              onChange={() => handleAttendanceChange("absent", attendanceId,st_id,tcgs, absenteeism_id)} 
+                          />
+                      ),
+                      Late: (
+                          <input 
+                              type="radio" 
+                              name={`attendance-${index}`} 
+                              checked={absenteeism_status === "late"}
+                              onChange={() => handleAttendanceChange("late", attendanceId,st_id,tcgs, absenteeism_id)} 
+                          />
+                      ),
+                  }))} 
+              />
             </div>:
             data.map((slot, index) => {
               // Parse times for comparison
