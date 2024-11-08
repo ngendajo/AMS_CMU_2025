@@ -1169,9 +1169,39 @@ class AttendanceDetailSerializer(serializers.ModelSerializer):
         
 #English Access Program
 class EapSerializer(serializers.ModelSerializer):
+    student_school_name = serializers.CharField(source='student_school.name')
+    current_class_name = serializers.CharField(source='current_class.name')
+
     class Meta:
         model = Eap
-        fields = '__all__'
+        fields = ['id', 'first_name', 'last_name', 'student_school_name', 'current_class_name']
+
+    def create(self, validated_data):
+        school_name = validated_data.pop('student_school_name')
+        class_name = validated_data.pop('current_class_name')
+
+        # Get or create the School and EapClass instances
+        student_school, _ = School.objects.get_or_create(name=school_name)
+        current_class, _ = EapClass.objects.get_or_create(name=class_name)
+
+        eap = Eap.objects.create(student_school=student_school, current_class=current_class, **validated_data)
+        return eap
+
+    def update(self, instance, validated_data):
+        if 'student_school_name' in validated_data:
+            school_name = validated_data.pop('student_school_name')
+            student_school, _ = School.objects.get_or_create(name=school_name)
+            instance.student_school = student_school
+
+        if 'current_class_name' in validated_data:
+            class_name = validated_data.pop('current_class_name')
+            current_class, _ = EapClass.objects.get_or_create(name=class_name)
+            instance.current_class = current_class
+
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
+        return instance
 
        
 #new way of taking attendance
