@@ -537,22 +537,7 @@ class Absenteeism(models.Model):
     def __str__(self):
         return f"Absenteeism for {self.student} - Status: {self.status}"
     
-# Signal to enforce uniqueness constraint only on new Absenteeism entries
-@receiver(pre_save, sender=Absenteeism)
-def validate_unique_absentee(sender, instance, **kwargs):
-    # Check if the instance already has a primary key (indicating it's an update)
-    if instance.pk:
-        return  # Skip the check if it's an update
 
-    # Check for existing Absenteeism records for the same student in the same AttendanceTaken record
-    related_attendance = AttendanceTaken.objects.filter(
-        absentees__student=instance.student,
-        date=instance.attendance_records.first().date,  # Assume date from first attendance record
-        teachercombinationgradesubject=instance.attendance_records.first().teachercombinationgradesubject
-    )
-
-    if related_attendance.exists():
-        raise ValidationError("This student already has an absentee record for the specified attendance.")
 
 class AttendanceComment(models.Model):
     comment = models.TextField()
