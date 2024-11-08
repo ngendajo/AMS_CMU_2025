@@ -571,6 +571,9 @@ class EapClass(models.Model):
 class Eap(models.Model):
     last_name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
+    # Temporary fields for migration
+    school = models.CharField(max_length=100, null=True)
+    eap_class = models.CharField(max_length=100, null=True)
     # New field
     current_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
     schoolid = models.ForeignKey(School, on_delete=models.PROTECT , null=True)
@@ -585,14 +588,24 @@ class EapAbsenteeism(models.Model):
     ]
     student = models.ForeignKey(Eap, on_delete=models.PROTECT)
     status = models.CharField(max_length=10, choices=STATUSES)
+    date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.student} - {self.status} on {self.date}"
 
 class EapAttendance(models.Model):
-    date = models.DateField(default=timezone.now)
-    absentees = models.ManyToManyField(EapAbsenteeism, blank=True, related_name="eap_attendance_records")
+    # Temporary field for migration
+    eap_student = models.ForeignKey(Eap, on_delete=models.CASCADE, null=True, related_name='old_attendances')
+    eap_class = models.ForeignKey(EapClass, on_delete=models.PROTECT, null=True)
+    date = models.DateField()
+    # Temporary field for migration
+    status = models.CharField(
+        max_length=10, 
+        choices=[('present', 'Present'), ('absent', 'Absent'), ('late', 'Late')],
+        null=True
+    )
+    absentees = models.ManyToManyField(EapAbsenteeism)
     created_at = models.DateTimeField(auto_now_add=True)
     staff = models.ForeignKey(User, on_delete=models.CASCADE)
 
