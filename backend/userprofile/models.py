@@ -566,7 +566,7 @@ class EapClass(models.Model):
         unique_together = ['name', 'academic_year']
 
     def __str__(self):
-        return f"{self.name} ({self.school} - {self.academic_year})"
+        return f"{self.name} - {self.academic_year})"
 
 class Eap(models.Model):
     last_name = models.CharField(max_length=100)
