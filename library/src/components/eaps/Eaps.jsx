@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchEap, createEap, updateEap, deleteEap } from '../../services/eapservice';
+import { fetchSchools, createSchools, updateSchools, deleteSchools } from '../../services/schools';
+import { fetchEapClass, createEapClass, updateEapClass, deleteEapClass } from '../../services/eapclassservices';
 import useAuth from "../../hooks/useAuth";
 import DynamicTable from "../pages/dinamicTable/DynamicTable";
 import { BiEditAlt, BiSave } from "react-icons/bi";
@@ -7,21 +9,40 @@ import { BiEditAlt, BiSave } from "react-icons/bi";
 export default function Eaps() {
     let { auth } = useAuth();
     const [eap, setEap] = useState([]);
+    const [eapSchools, setEapSchools] = useState([]);
+    const [eapClasses, setEapClasses] = useState([]);
     const [creating, setCreating] = useState(false); 
     const [editing, setEditing] = useState(null); // Track which timeslot is being edited
     const [formData, setFormData] = useState({
         last_name: "",
         first_name: "",
-        school: "",
-        eap_class: ""
+        student_school: "",
+        current_class: ""
+    });
+    const [formSchoolData, setFormSchoolData] = useState({
+        name: ""
+    });
+    const [formClassData, setFormClassData] = useState({
+        name: "",
+        academic_year:""
     });
    
     useEffect(() => {
+        fetchSchools(auth).then(response => setEapSchools(response.data));
+        fetchEapClass(auth).then(response => setEapClasses(response.data));
         fetchEap(auth).then(response => setEap(response.data));
     }, [auth]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+    
+
+    const handleSchoolChange = (e) => {
+        setFormSchoolData({ ...formSchoolData, [e.target.name]: e.target.value });
+    };
+    const handleClassChange = (e) => {
+        setFormClassData({ ...formClassData, [e.target.name]: e.target.value });
     };
 
     const handleDelete = (id) => {
@@ -46,8 +67,8 @@ export default function Eaps() {
         updateEap(auth, id, {
             last_name: eapToUpdate.last_name,
             first_name: eapToUpdate.first_name,
-            school: eapToUpdate.school,
-            eap_class: eapToUpdate.eap_class
+            student_school: eapToUpdate.school,
+            current_class: eapToUpdate.eap_class
         })
             .then(() => {
                 setEditing(null); // Exit editing mode after saving
@@ -93,22 +114,35 @@ export default function Eaps() {
                 first_name
             ),
             "School": editing === id ? (
-                <input
-                    type="text"
+                <select
                     name="school"
-                    value={school}
+                    value={school || ""}
                     onChange={(e) => handleInputChange(id, 'school', e.target.value)}
-                />
+                    className="editing-select" // Optional: add styling class
+                >
+                    <option value="">Select a school</option>
+                    {eapSchools.map((eapSchool) => (
+                        <option key={eapSchool.id} value={eapSchool.id}>
+                            {eapSchool.name}
+                        </option>
+                    ))}
+                </select>
             ) : (
                 school
             ),
             "EAP Class": editing === id ? (
-                <input
-                    type="text"
+                <select
                     name="eap_class"
-                    value={eap_class}
+                    value={eap_class || ""}
                     onChange={(e) => handleInputChange(id, 'eap_class', e.target.value)}
-                />
+                >
+                    <option value="">Select a class</option>
+                    {eapClasses.map((eapClass) => (
+                        <option key={eapClass.id} value={eapClass.id}>
+                            {`${eapClass.name} - ${eapClass.academic_year}`}
+                        </option>
+                    ))}
+                </select>
             ) : (
                 eap_class
             ),
@@ -150,6 +184,34 @@ export default function Eaps() {
                     eap_class: ""
                 });
                 fetchEap(auth).then(response => setEap(response.data));
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    };
+    const handleSchoolSubmit = (e) => {
+        e.preventDefault();
+        
+        console.log(formSchoolData)
+        createSchools(auth, formSchoolData)
+            .then(response => {
+                console.log('Created successfully', response.data);
+                
+                fetchSchools(auth).then(response => setEap(response.data));
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    };
+    const handleClassSubmit = (e) => {
+        e.preventDefault();
+        console.log(formClassData)
+        console.log(formData)
+        createEapClass(auth, formClassData)
+            .then(response => {
+                console.log('Created successfully', response.data);
+                
+                fetchEapClass(auth).then(response => setEap(response.data));
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -207,23 +269,35 @@ export default function Eaps() {
                             required
                         />
                         <label htmlFor="school">Enter School Name</label>
-                        <input
+                        <select
                             className='credentials'
-                            type="text"
                             id="school"
-                            name="school"
+                            name="student_school"
                             onChange={handleChange}
                             required
-                        />
+                        >
+                            <option value="">Select a school</option>
+                            {eapSchools.map((school) => (
+                                <option key={school.id} value={school.id}>
+                                    {school.name}
+                                </option>
+                            ))}
+                        </select>
                         <label htmlFor="eap_class">Enter EAP Class Name</label>
-                        <input
+                        <select
                             className='credentials'
-                            type="text"
                             id="eap_class"
-                            name="eap_class"
+                            name="current_class"
                             onChange={handleChange}
                             required
-                        />
+                        >
+                            <option value="">Select a class</option>
+                            {eapClasses.map((eapClass) => (
+                                <option key={eapClass.id} value={eapClass.id}>
+                                    {`${eapClass.name} - ${eapClass.academic_year}`}
+                                </option>
+                            ))}
+                        </select>
                         <label htmlFor="loginbutton">
                             <button className='submitbuton' type="submit">Save</button> 
                         </label>
@@ -251,6 +325,76 @@ export default function Eaps() {
             
             <h2>Available EAP Students</h2>
             <DynamicTable mockdata={transformedEap} />
+            {/* Schoos  */}
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center'
+                }}
+            >
+                <h2>Schools in English Access Program</h2>
+                
+                    <form className='formelement' onSubmit={handleSchoolSubmit}>
+                    
+                        <label htmlFor="schoo">Enter School Name</label>
+                        <input
+                            className='credentials'
+                            type="text"
+                            id="school"
+                            name="name"
+                            onChange={handleSchoolChange}
+                            required
+                        />
+                        <label htmlFor="loginbutton">
+                            <button className='submitbuton' type="submit">Save</button> 
+                        </label>
+                    </form>
+                    
+            </div>
+            <DynamicTable mockdata={eapSchools} />
+            {/* Classes  */}
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center'
+                }}
+            >
+                <h2>Classes in English Access Program</h2>
+                
+                    <form className='formelement' onSubmit={handleClassSubmit}>
+                    
+                        <label htmlFor="eap_class">Enter EAP Class Name</label>
+                        <input
+                            className='credentials'
+                            type="text"
+                            id="eap_class"
+                            name="name"
+                            onChange={handleClassChange}
+                            required
+                        />
+                        
+                        <label htmlFor="academic_year">Enter Academic Year</label>
+                        <input
+                            className='credentials'
+                            type="number"
+                            id="academic_year"
+                            name="academic_year"
+                            onChange={handleClassChange}
+                            required
+                        />
+                        <label htmlFor="loginbutton">
+                            <button className='submitbuton' type="submit">Save</button> 
+                        </label>
+                    </form>
+                    
+            </div>
+            <DynamicTable mockdata={eapClasses} />
         </div>
     );
 }

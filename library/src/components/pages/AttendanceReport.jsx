@@ -164,7 +164,7 @@ export default function AttendanceReport() {
         if (attendancetaken_id) {
             const absentCount = absentees.filter(item => item.status === "absent").length;
             const lateCount = absentees.filter(item => item.status === "late").length;
-                attendanceStatus = absentCount>0 && lateCount>0 ? `Attendance taken with ${absentCount} absenteeism and ${lateCount} Lateness`:absentCount>0?`Attendance taken with ${absentCount} absenteeism`:lateCount>0?`Attendance taken with ${lateCount} Lateness`:"Attendance taken";
+                attendanceStatus = absentCount>0 && lateCount>0 ? `Attendance taken showing ${absentCount} absence(s) and ${lateCount} Lateness`:absentCount>0?`Attendance taken showing ${absentCount} absence(s)`:lateCount>0?`Attendance taken with ${lateCount} Lateness`:"Attendance taken";
                 action="taken"
         } else if (
             initialDate === slotDateString && // Compare only the date portion

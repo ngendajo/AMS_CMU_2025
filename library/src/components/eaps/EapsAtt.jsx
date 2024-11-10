@@ -355,7 +355,7 @@ export default function EapsAtt() {
                     cursor: "pointer", // Change cursor style based on action
                 }}
                 >
-                  <h2 style={{ margin: '5px 0' }}>{comb}</h2>
+                  <h2 style={{ margin: '5px 0' }}>Class {comb}</h2>
                   
                 </div>
               );

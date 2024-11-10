@@ -404,7 +404,7 @@ const handleSlotClick = async (slot_id,action,class_name) => {
                     action="update"
                     const absentCount = slot.absentees.filter(item => item.status === "absent").length;
                     const lateCount = slot.absentees.filter(item => item.status === "late").length;
-                      attendanceStatus = absentCount>0 && lateCount>0 ? `Attendance taken with ${absentCount} absenteeism and ${lateCount} Lateness`:absentCount>0?`Attendance taken with ${absentCount} absenteeism`:lateCount>0?`Attendance taken with ${lateCount} Lateness`:"Attendance taken";
+                      attendanceStatus = absentCount>0 && lateCount>0 ? `Attendance taken showing ${absentCount} absence(s) and ${lateCount} Lateness`:absentCount>0?`Attendance taken showing ${absentCount} absence(s)`:lateCount>0?`Attendance taken with ${lateCount} Lateness`:"Attendance taken";
                   } else if (
                       currentDateString === slotDateString && // Compare only the date portion
                       slotStartTime && slotEndTime && currentTime &&
