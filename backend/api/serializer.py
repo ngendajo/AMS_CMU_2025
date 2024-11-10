@@ -1168,13 +1168,45 @@ class AttendanceDetailSerializer(serializers.ModelSerializer):
         ]
         
 #English Access Program
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ['id', 'name']
+
+    def validate_name(self, value):
+        if len(value.strip()) < 1:
+            raise serializers.ValidationError("School name cannot be empty")
+        return value
+
+class EapClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EapClass
+        fields = ['id', 'name', 'academic_year']
+
+    def validate(self, data):
+        # Validate that academic year is reasonable
+        if data['academic_year'] < 2000 or data['academic_year'] > 2100:
+            raise serializers.ValidationError({"academic_year": "Academic year must be between 2000 and 2100"})
+        return data
+
 class EapSerializer(serializers.ModelSerializer):
     school = serializers.CharField(source='student_school.name', read_only=True)
     eap_class = serializers.CharField(source='current_class.name', read_only=True)
-
+    
     class Meta:
         model = Eap
-        fields = ['id', 'first_name', 'last_name', 'school', 'eap_class']
+        fields = ['id', 'first_name', 'last_name', 'school', 'eap_class', 'student_school', 'current_class']
+        extra_kwargs = {
+            'student_school': {'write_only': True},
+            'current_class': {'write_only': True}
+        }
+
+    def validate(self, data):
+        if 'first_name' in data and len(data['first_name'].strip()) < 1:
+            raise serializers.ValidationError({"first_name": "First name cannot be empty"})
+        if 'last_name' in data and len(data['last_name'].strip()) < 1:
+            raise serializers.ValidationError({"last_name": "Last name cannot be empty"})
+        return data
 
        
 #new way of taking attendance

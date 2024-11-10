@@ -4,6 +4,7 @@ from django_filters import rest_framework as filters
 from django.db.models import OuterRef, Subquery, IntegerField,Count, Case, When, IntegerField,Q,Prefetch, F
 from rest_framework.decorators import action
 from django.db.models.functions import Coalesce
+from django.db import IntegrityError
 from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -5394,35 +5395,134 @@ class AttendanceViewSet(viewsets.ModelViewSet):
        
 
 #English Access Program 
+class SchoolViewSet(viewsets.ModelViewSet):
+    queryset = School.objects.all()
+    serializer_class = SchoolSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            return Response(
+                {'error': 'A school with this name already exists.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
+            return Response(
+                {'error': 'A school with this name already exists.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            # Check if school has any students
+            if instance.eap_set.exists():
+                return Response(
+                    {'error': 'Cannot delete school with existing students.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            return super().destroy(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class EapClassViewSet(viewsets.ModelViewSet):
+    queryset = EapClass.objects.all()
+    serializer_class = EapClassSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            return Response(
+                {'error': 'A class with this name and academic year already exists.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
+            return Response(
+                {'error': 'A class with this name and academic year already exists.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            # Check if class has any students
+            if instance.eap_set.exists():
+                return Response(
+                    {'error': 'Cannot delete class with existing students.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            return super().destroy(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 class EapViewSet(viewsets.ModelViewSet):
     queryset = Eap.objects.all()
     serializer_class = EapSerializer
 
-    def list(self, request, *args, **kwargs):
+    def get_queryset(self):
+        return self.queryset.select_related('student_school', 'current_class')
+
+    def create(self, request, *args, **kwargs):
         try:
-            # Optimize query with select_related to avoid N+1 problems
-            queryset = self.get_queryset().select_related('student_school', 'current_class')
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            return Response(
+                {'error': 'Invalid data provided.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             return Response(
-                {'error': 'An error occurred while fetching the data.', 'details': str(e)},
+                {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    def retrieve(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
         try:
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except ObjectDoesNotExist:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
             return Response(
-                {'error': 'Eap not found'},
-                status=status.HTTP_404_NOT_FOUND
+                {'error': 'Invalid data provided.'},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             return Response(
-                {'error': 'An error occurred while fetching the data.', 'details': str(e)},
+                {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 

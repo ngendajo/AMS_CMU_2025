@@ -35,6 +35,8 @@ router.register(r'attendance', views.AttendanceTakenViewSet, basename='attendanc
 router.register(r'absenteeism', views.AbsenteeismViewSet, basename='absenteeism')
 router.register(r'attendance-comment', views.AttendanceCommentViewSet, basename='attendance-comment')
 #English Access Program
+router.register(r'schools', views.SchoolViewSet)
+router.register(r'eap-classes', views.EapClassViewSet)
 router.register(r'eap', views.EapViewSet)
 
 urlpatterns = [
