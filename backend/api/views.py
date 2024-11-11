@@ -5809,16 +5809,17 @@ class StudentListView(generics.ListAPIView):
         
         # Get students who match both combination_id and grade_id
         students = Student.objects.select_related(
-            'user',
-            'combination',
-            'family__grade'
-        ).prefetch_related(
-            'absenteeism_set',
-            'absenteeism_set__school_comments'
-        ).filter(
-            combination_id=tcgs.combination_id,
-            family__grade_id=tcgs.gradetimeslots.grade_id
-        ).order_by('user__last_name', 'user__first_name')
+                        'user',
+                        'combination',
+                        'family__grade'
+                    ).prefetch_related(
+                        'absenteeism_set',
+                        'absenteeism_set__school_comments'
+                    ).filter(
+                        combination_id=tcgs.combination_id,
+                        family__grade_id=tcgs.gradetimeslots.grade_id,
+                        user__current=False
+                    ).order_by('user__last_name', 'user__first_name')
 
         # Annotate each student with the tcgs_id
         for student in students:
