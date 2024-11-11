@@ -3,6 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import baseUrl from "../../api/baseUrl";
 import DynamicTable from "./dinamicTable/DynamicTable";
+import './AttendanceTable.css';
 
 export default function GeneralReport() {
     const [startDate, setStartDate] = useState('');
@@ -291,6 +292,111 @@ export default function GeneralReport() {
             </div>
         </div>
         <h2>{title}</h2>
+        <div className="attendance-table">
+            <h2>1.1 Students Attendance</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Grade</th>
+                    <th>Number of girls</th>
+                    <th>Number of boys</th>
+                    <th>Total</th>
+                    <th>%</th>
+                    <th>Total girls</th>
+                    <th>Total boys</th>
+                    <th>Total Number</th>
+                </tr>
+                </thead>
+                <tbody>
+                {/* LFHS attendance section */}
+                <tr className="section-header">
+                    <td rowSpan="4">LFH attendance</td>
+                    <td>EY</td>
+                    <td>70</td>
+                    <td>44</td>
+                    <td>114</td>
+                    <td className="percentage">89.1%</td>
+                    <td>80</td>
+                    <td>48</td>
+                    <td>128</td>
+                </tr>
+                <tr>
+                    <td>S4</td>
+                    <td>77</td>
+                    <td>44</td>
+                    <td>121</td>
+                    <td className="percentage">93.8%</td>
+                    <td>81</td>
+                    <td>48</td>
+                    <td>129</td>
+                </tr>
+                <tr>
+                    <td>S5</td>
+                    <td>75</td>
+                    <td>48</td>
+                    <td>123</td>
+                    <td className="percentage">95.3%</td>
+                    <td>81</td>
+                    <td>48</td>
+                    <td>129</td>
+                </tr>
+                <tr>
+                    <td>S6</td>
+                    <td>70</td>
+                    <td>46</td>
+                    <td>116</td>
+                    <td className="percentage">92.8%</td>
+                    <td>77</td>
+                    <td>48</td>
+                    <td>125</td>
+                </tr>
+
+                {/* LFHS Absenteeism section */}
+                <tr className="section-header">
+                    <td rowSpan="4">LFHS Absenteeism</td>
+                    <td>EY</td>
+                    <td>10</td>
+                    <td>4</td>
+                    <td>14</td>
+                    <td className="percentage">10.9%</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>S4</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>8</td>
+                    <td className="percentage">6.2%</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>S5</td>
+                    <td>6</td>
+                    <td>0</td>
+                    <td>6</td>
+                    <td className="percentage">4.7%</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>S6</td>
+                    <td>7</td>
+                    <td>2</td>
+                    <td>9</td>
+                    <td className="percentage">7.2%</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
         <DynamicTable 
             mockdata={generalList} 
         />

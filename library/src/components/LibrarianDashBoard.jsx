@@ -10,6 +10,7 @@ import { PiStudentBold } from "react-icons/pi";
 import { FaBookReader } from "react-icons/fa";
 import { FaBookDead } from "react-icons/fa";
 import MostBorrowerDisplay from "./pages/MostBorrowerDisplay";
+import TeacherDashBoard from "./TeacherDashBoard";
 
 export default function LibrarianDashBoard() {
   const [data, setData] = useState([]);
@@ -57,6 +58,7 @@ if (!data.length) {
   return (
     <center>
       <p>{moment(issuedate).format("Do MMMM YYYY, h:mm:ss a").toLocaleString()}</p>
+      <TeacherDashBoard/>
       <div className='general-report'>
         <div className='general-report-item-container'>
           <Link to={`/books`} className='general-report-item'>
