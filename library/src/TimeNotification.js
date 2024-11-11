@@ -36,7 +36,7 @@ const WORKING_DAYS = {
   min: 1, // Monday
   max: 5  // Friday
 };
-
+const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const GRADE_MAPPING = {
   'Intwali': 'S6',
   'Ishami': 'S5',
@@ -192,7 +192,7 @@ const TimeNotification = () => {
           : "Check attendance report";
 
         new Notification(
-          `Attendance Report on ${day} - ${date} at ${time}`, 
+          `Attendance Report on ${dayNames[day]} - ${date} at ${time}`, 
           { body: message }
         );
         
