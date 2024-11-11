@@ -5941,5 +5941,85 @@ class AttendanceReportView(generics.GenericAPIView):
                 error_details,
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+            
+#Attendance in EAP
+class EapAttendanceAPI(generics.ListCreateAPIView):
+    serializer_class = EapAttendanceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = EapAttendance.objects.annotate(
+            absentees_count=Count('absentees')
+        )
+        
+        # Filter by date range
+        date1 = self.request.query_params.get('date1')
+        date2 = self.request.query_params.get('date2')
+        
+        if date1 and date2:
+            queryset = queryset.filter(date__range=[date1, date2])
+        elif date1:
+            queryset = queryset.filter(date=date1)
+            
+        return queryset.order_by('-date')
+
+    def perform_create(self, serializer):
+        serializer.save(staff=self.request.user)
+
+class EapAttendanceDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = EapAttendance.objects.all()
+    serializer_class = EapAttendanceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer):
+        serializer.save(staff=self.request.user)
+
+class EapAbsenteeismAPI(generics.ListCreateAPIView):
+    serializer_class = EapAbsenteeismSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = EapAbsenteeism.objects.all()
+        
+        # Filter by date
+        date = self.request.query_params.get('date')
+        if date:
+            queryset = queryset.filter(created_at__date=date)
+            
+        # Filter by status
+        status = self.request.query_params.get('status')
+        if status:
+            queryset = queryset.filter(status=status)
+            
+        return queryset.order_by('-created_at')
+
+class EapAbsenteeismDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = EapAbsenteeism.objects.all()
+    serializer_class = EapAbsenteeismSerializer
+    permission_classes = [IsAuthenticated]
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_absentee_to_attendance(request, attendance_id):
+    """Add an absentee to an attendance record"""
+    attendance = get_object_or_404(EapAttendance, id=attendance_id)
+    
+    serializer = EapAbsenteeismSerializer(data=request.data)
+    if serializer.is_valid():
+        absentee = serializer.save()
+        attendance.absentees.add(absentee)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_absentee_from_attendance(request, attendance_id, absentee_id):
+    """Remove an absentee from an attendance record"""
+    attendance = get_object_or_404(EapAttendance, id=attendance_id)
+    absentee = get_object_or_404(EapAbsenteeism, id=absentee_id)
+    
+    attendance.absentees.remove(absentee)
+    absentee.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
     

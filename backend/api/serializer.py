@@ -1207,6 +1207,43 @@ class EapSerializer(serializers.ModelSerializer):
         if 'last_name' in data and len(data['last_name'].strip()) < 1:
             raise serializers.ValidationError({"last_name": "Last name cannot be empty"})
         return data
+    
+class EapAbsenteeismSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EapAbsenteeism
+        fields = ['id', 'student', 'status', 'created_at']
+        read_only_fields = ['created_at']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Add student details
+        data['student_name'] = f"{instance.student.last_name} {instance.student.first_name}"
+        data['student_class'] = instance.student.current_class.name
+        data['student_school'] = instance.student.student_school.name
+        data['student_id'] = instance.student.studentid
+        return data
+
+class EapAttendanceSerializer(serializers.ModelSerializer):
+    absentees_count = serializers.IntegerField(read_only=True)
+    
+    class Meta:
+        model = EapAttendance
+        fields = ['id', 'date', 'absentees', 'staff', 'created_at', 'absentees_count']
+        read_only_fields = ['created_at', 'staff']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Add absentees details
+        data['absentees_details'] = [{
+            'id': absentee.id,
+            'student_name': f"{absentee.student.last_name} {absentee.student.first_name}",
+            'student_id': absentee.student.studentid,
+            'student_class': absentee.student.current_class.name,
+            'student_school': absentee.student.student_school.name,
+            'status': absentee.status,
+            'created_at': absentee.created_at
+        } for absentee in instance.absentees.all()]
+        return data
 
        
 #new way of taking attendance
@@ -1435,4 +1472,6 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
             attendance_record.teachercombinationgradesubject.teacher.last_name
             if attendance_record else None
         )
+        
+    #EAp
 

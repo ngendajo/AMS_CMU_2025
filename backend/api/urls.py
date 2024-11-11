@@ -78,6 +78,17 @@ urlpatterns = [
     #Alumni update her/his profile
     path('alumni/update-profile/<int:alumni_id>/', views.AlumniUpdateProfileView.as_view(), name='alumni-update-profile'),# to be use soon
     
+     # Attendance URLs
+    path('eap-attendances/', views.EapAttendanceAPI.as_view(), name='attendance-list'),
+    path('eap-attendances/<int:pk>/', views.EapAttendanceDetailAPI.as_view(), name='attendance-detail'),
+    path('eap-attendances/<int:attendance_id>/add-absentee/', views.add_absentee_to_attendance, name='add-absentee'),
+    path('eap-attendances/<int:attendance_id>/remove-absentee/<int:absentee_id>/', 
+         views.remove_absentee_from_attendance, name='remove-absentee'),
+    
+    # Absenteeism URLs
+    path('eap-absenteeism/', views.EapAbsenteeismAPI.as_view(), name='absenteeism-list'),
+    path('eap-absenteeism/<int:pk>/', views.EapAbsenteeismDetailAPI.as_view(), name='absenteeism-detail'),
+    
     
     path('deleteuser/<str:pk>/delete/', views.delete_user, name='delete-user'),
     path('updateuser/<str:pk>', views.update_user, name='update-user'),
