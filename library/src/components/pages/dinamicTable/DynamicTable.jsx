@@ -15,7 +15,6 @@ const DynamicTable = ({ mockdata }) => {
   }, [mockdata]);
 
   const handleSort = (key) => {
-    console.log(filteredData)
     const sortedData = [...filteredData].sort((a, b) => (a[key] > b[key] ? 1 : -1));
     setFilteredData(sortedData);
   };
@@ -32,7 +31,9 @@ const DynamicTable = ({ mockdata }) => {
   };
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber > 0 && pageNumber <= Math.ceil(filteredData.length / itemsPerPage)) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   const handleItemsPerPageChange = (event) => {
@@ -51,14 +52,15 @@ const DynamicTable = ({ mockdata }) => {
     } else {
       newSelectedRows = selectedRows.filter((key) => key !== rowKey);
     }
-    console.log(newSelectedRows)
     setSelectedRows(newSelectedRows);
   };
 
   const handleSelectAllRows = () => {
-    const allRowKeys = filteredData.map((item, index) => index.toString());
-    console.log(allRowKeys)
-    setSelectedRows(allRowKeys);
+    if (selectedRows.length === filteredData.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(filteredData.map((item, index) => index.toString()));
+    }
   };
 
   const renderTableHeaders = () => {
@@ -98,7 +100,9 @@ const DynamicTable = ({ mockdata }) => {
           />
         </td>
         {Object.keys(item).map((header) => (
-          <td key={header} className={item[header]==="Not yet Returned" ? 'invalid' : ''}>{item[header]}</td>
+          <td key={header} className={item[header] === "Not yet Returned" ? 'invalid' : ''}>
+            {item[header]}
+          </td>
         ))}
       </tr>
     ));
@@ -122,8 +126,8 @@ const DynamicTable = ({ mockdata }) => {
           onChange={handleItemsPerPageChange}
         >
           <option value="50">50</option>
-          <option value="50">100</option>
-          <option value="100">200</option>
+          <option value="100">100</option>
+          <option value="200">200</option>
         </select>
       </div>
 
