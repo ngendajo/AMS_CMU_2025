@@ -362,6 +362,11 @@ class Student(models.Model):
     family = models.ForeignKey(Family, on_delete=models.PROTECT, related_name="rfamily")
     combination = models.ForeignKey(Combination, related_name="rcombination", on_delete=models.PROTECT)
     studentid = models.CharField(max_length=30)
+    
+    def clean(self):
+        # Check if the user is current
+        if not self.user.current:
+            raise ValidationError("User must have current=True to be assigned as a student.")
 
     def __str__(self):
         return str(self.user.first_name + "student")

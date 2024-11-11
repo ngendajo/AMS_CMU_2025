@@ -6,7 +6,7 @@ import { FaSearch } from 'react-icons/fa';
 const DynamicTable = ({ mockdata }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
   const [selectedItemsPerPage, setSelectedItemsPerPage] = useState(itemsPerPage);
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -121,7 +121,7 @@ const DynamicTable = ({ mockdata }) => {
           value={selectedItemsPerPage}
           onChange={handleItemsPerPageChange}
         >
-          <option value="20">50</option>
+          <option value="50">50</option>
           <option value="50">100</option>
           <option value="100">200</option>
         </select>
