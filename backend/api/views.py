@@ -5945,7 +5945,7 @@ class AttendanceReportView(generics.GenericAPIView):
 #Attendance in EAP
 class EapAttendanceAPI(generics.ListCreateAPIView):
     serializer_class = EapAttendanceSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = EapAttendance.objects.annotate(
@@ -5969,14 +5969,14 @@ class EapAttendanceAPI(generics.ListCreateAPIView):
 class EapAttendanceDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = EapAttendance.objects.all()
     serializer_class = EapAttendanceSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def perform_update(self, serializer):
         serializer.save(staff=self.request.user)
 
 class EapAbsenteeismAPI(generics.ListCreateAPIView):
     serializer_class = EapAbsenteeismSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = EapAbsenteeism.objects.all()
@@ -5996,10 +5996,10 @@ class EapAbsenteeismAPI(generics.ListCreateAPIView):
 class EapAbsenteeismDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = EapAbsenteeism.objects.all()
     serializer_class = EapAbsenteeismSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def add_absentee_to_attendance(request, attendance_id):
     """Add an absentee to an attendance record"""
     attendance = get_object_or_404(EapAttendance, id=attendance_id)
@@ -6012,7 +6012,7 @@ def add_absentee_to_attendance(request, attendance_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def remove_absentee_from_attendance(request, attendance_id, absentee_id):
     """Remove an absentee from an attendance record"""
     attendance = get_object_or_404(EapAttendance, id=attendance_id)
