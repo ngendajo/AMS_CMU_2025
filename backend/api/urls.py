@@ -38,6 +38,8 @@ router.register(r'attendance-comment', views.AttendanceCommentViewSet, basename=
 router.register(r'schools', views.SchoolViewSet)
 router.register(r'eap-classes', views.EapClassViewSet)
 router.register(r'eap', views.EapViewSet)
+#alumni businesses
+router.register(r'alumni-business', views.AlumniBusinessView, basename='alumnibusiness')
 
 urlpatterns = [
     # user paths

@@ -572,6 +572,27 @@ class StorySerializer(serializers.ModelSerializer):
 
 #end of stories
 
+#Alumni Businesses
+class AlumniBusinessSerializer(serializers.ModelSerializer):
+    alumn = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AlumniBusiness
+        fields = ['id', 'alumn', 'title', 'description', 'image', 'video', 'displayed', 'createdat']
+
+    def get_alumn(self, obj):
+        alumni_details = []
+        for alumn in obj.alumn.all():  # Accessing the ManyToMany relationship
+            alumni_details.append({
+                'id': alumn.id,
+                'first_name': alumn.user.first_name,
+                'last_name': alumn.user.last_name,
+                'grade_name': alumn.family.grade.grade_name,
+                'family_name': alumn.family.family_name,
+                'combination_name': alumn.combination.combination_name,
+            })
+        return alumni_details
+
 #Studie serializers
 
 class StudyWithAlumnSerializer(serializers.ModelSerializer):

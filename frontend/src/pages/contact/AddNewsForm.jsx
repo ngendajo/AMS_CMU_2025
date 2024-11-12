@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import './AddNewsForm.css';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import baseUrl from '../../api/baseUrl';
 import MyDropzone from './MyDropzone';
 import { fetchPDFNews, createPDFNews, deletePDFNews } from './pdfNewsService';
+import './AddNewsForm.css';
 
+// Form styles
 const styles = {
     formContainer: {
         backgroundColor: '#f4f4f4',
@@ -46,6 +47,7 @@ const styles = {
     },
 };
 
+// News item styles
 const newsStyles = {
     listItem: {
         backgroundColor: '#f4f4f4',
@@ -80,437 +82,392 @@ const newsStyles = {
     },
 };
 
-
 const NewsForm = () => {
     const { auth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const newsToEdit = location.state?.news;
-    const [errMsg, setErrMsg] = useState('');
-    const [selectedFiles, setSelectedFiles] = useState(undefined);
-    const [title, setTitle] = useState('');
-    const [id, setId] = useState('');
-    const [description, setDescription] = useState('');
-    const [image, setImage] = useState(null);
-    const [displayed, setDisplayed] = useState(false);
-    const [activeTab, setActiveTab] = useState('new');
-    const [newsList, setNewsList] = useState([]);
-    const [file, setFile] = useState(null);
+    const MAX_FILE_SIZE_MB = 200;
 
-    const [formData, setFormData] = useState({
-        id: '',
+    // State management
+    const [newsState, setNewsState] = useState({
         title: '',
         description: '',
-        date: "",
-        pinned: true,
-        user_id: ''
+        id: '',
+        displayed: false,
+        image: null,
+        selectedFiles: undefined,
+        file: null,
+        activeTab: 'new',
+        newsList: [],
+        pdfNews: [],
+        newsTitle: '',
+        message: '',
+        messageType: '',
+        isButtonHovered: false
     });
-    const [pdfNews, setPDFNews] = useState([]);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [newsTitle, setNewsTitle] = useState('');
-    const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState('');
-    const [isButtonHovered, setIsButtonHovered] = React.useState(false);
 
-    const handleItemClick = (pdf_file) => {
-        // Navigate to the news PDF file when the list item is clicked
-        window.open(pdf_file, '_blank', 'noopener noreferrer');
+    // Helper function to update state
+    const updateNewsState = (updates) => {
+        setNewsState(prev => ({ ...prev, ...updates }));
     };
 
-    useEffect(() => {
-        fetchPDFNews(auth).then(response => {
-            setPDFNews(response.data);
-        }).catch(() => {
-            setMessage('Failed to load PDF news.');
-            setMessageType('error');
-        });
-    }, [auth]);
+    // File handling functions
+    const generateFileName = (originalFile) => {
+        const now = new Date();
+        const dateStr = now.toISOString().replace(/[-:.TZ]/g, '').slice(0, 15);
+        const nanoseconds = performance.now().toString().split('.')[1];
+        return `pdf_${dateStr}_${nanoseconds}.${originalFile.name.split('.').pop()}`;
+    };
 
     const handleFileChange = (event) => {
         if (event.target.files.length > 0) {
             const originalFile = event.target.files[0];
-            const now = new Date();
-            const dateStr = now.toISOString().replace(/[-:.TZ]/g, '').slice(0, 15); // YYYYMMDD_HHMMSS format
-            const nanoseconds = performance.now().toString().split('.')[1];
-            const newFileName = "pdf_" + dateStr + "_" + nanoseconds + "." + originalFile.name.split('.').pop();
-    
-            // Create a new File object with the modified name
+            const newFileName = generateFileName(originalFile);
             const modifiedFile = new File([originalFile], newFileName, { type: originalFile.type });
-    
-            // Set the new File object as the selected file
-            setSelectedFile(modifiedFile);
+            updateNewsState({ selectedFiles: [modifiedFile] });
         }
     };
 
-    const handleTitleChange = (event) => {
-        setNewsTitle(event.target.value);
+    const onDrop = (files) => {
+        if (files.length > 0) {
+            const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE_MB * 1024 * 1024);
+            
+            if (oversizedFiles.length > 0) {
+                alert("Error: One or more files exceed the 200 MB size limit. Please reduce the size of the image.");
+                return; // Exit the function if there are oversized files
+            }
+    
+            updateNewsState({
+                selectedFiles: files,
+                file: URL.createObjectURL(files[0])
+            });
+        }
     };
 
-    const handleUpload = () => {
-        if (!selectedFile || !newsTitle) {
-            setMessage('Please provide a title and select a PDF file.');
-            setMessageType('error');
+    // API calls
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            try {
+                const [newsResponse, pdfNewsResponse] = await Promise.all([
+                    axios.get(`${baseUrl}/news`),
+                    fetchPDFNews(auth)
+                ]);
+                
+                updateNewsState({
+                    newsList: newsResponse.data,
+                    pdfNews: pdfNewsResponse.data
+                });
+            } catch (error) {
+                updateNewsState({
+                    message: 'Failed to load data',
+                    messageType: 'error'
+                });
+            }
+        };
+
+        fetchInitialData();
+    }, [auth]);
+
+    useEffect(() => {
+        if (newsToEdit) {
+            updateNewsState({
+                title: newsToEdit.title,
+                description: newsToEdit.description,
+                image: newsToEdit.image,
+                displayed: newsToEdit.displayed,
+                id: newsToEdit.id,
+                activeTab: 'new'
+            });
+        }
+    }, [newsToEdit]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        
+        if (!newsState.selectedFiles) {
+            updateNewsState({
+                message: 'Please select a file',
+                messageType: 'error'
+            });
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('title', newsState.title);
+            formData.append('description', newsState.description);
+            formData.append('date', new Date().toISOString());
+            formData.append('pinned', newsState.displayed);
+            formData.append('user_id', auth.user.id);
+            formData.append('image_url', newsState.selectedFiles[0]);
+
+            const endpoint = newsState.id 
+                ? `${baseUrl}/news/${newsState.id}/update/`
+                : `${baseUrl}/news/create/`;
+            
+            const method = newsState.id ? 'put' : 'post';
+
+            await axios[method](endpoint, formData, {
+                headers: {
+                    "Authorization": `Bearer ${auth.accessToken}`,
+                    "Content-Type": 'multipart/form-data'
+                },
+                withCredentials: true
+            });
+
+            const newsResponse = await axios.get(`${baseUrl}/news`);
+            updateNewsState({
+                newsList: newsResponse.data,
+                message: 'News updated successfully',
+                messageType: 'success',
+                activeTab: 'submitted'
+            });
+        } catch (error) {
+            updateNewsState({
+                message: 'Failed to save news',
+                messageType: 'error'
+            });
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`${baseUrl}/news/${id}/delete`, {
+                headers: {
+                    "Authorization": `Bearer ${auth.accessToken}`,
+                    "Content-Type": 'application/json'
+                }
+            });
+            
+            const newsResponse = await axios.get(`${baseUrl}/news`);
+            updateNewsState({
+                newsList: newsResponse.data,
+                message: 'News deleted successfully',
+                messageType: 'success'
+            });
+        } catch (error) {
+            updateNewsState({
+                message: 'Failed to delete news',
+                messageType: 'error'
+            });
+        }
+    };
+
+    const handlePDFDelete = async (id) => {
+        try {
+            await deletePDFNews(id, auth);
+            const pdfNewsResponse = await fetchPDFNews(auth);
+            updateNewsState({
+                pdfNews: pdfNewsResponse.data,
+                message: 'PDF news deleted successfully',
+                messageType: 'success'
+            });
+        } catch (error) {
+            updateNewsState({
+                message: 'Failed to delete PDF news',
+                messageType: 'error'
+            });
+        }
+    };
+
+    const handlePDFUpload = async () => {
+        if (!newsState.selectedFiles || !newsState.newsTitle) {
+            updateNewsState({
+                message: 'Please provide a title and select a PDF file',
+                messageType: 'error'
+            });
             return;
         }
 
         const formData = new FormData();
-        formData.append('title', newsTitle);
-        formData.append('pdf_file', selectedFile);
+        formData.append('title', newsState.newsTitle);
+        formData.append('pdf_file', newsState.selectedFiles[0]);
 
-        createPDFNews(formData, auth)
-            .then(() => {
-                setMessage('PDF news uploaded successfully.');
-                setMessageType('success');
-                setNewsTitle('');
-                setSelectedFile(null);
-                fetchPDFNews(auth).then(response => {
-                    setPDFNews(response.data);
-                });
-            })
-            .catch(error => {
-                if (error.response && error.response.data && error.response.data.error) {
-                    setMessage(error.response.data.error);
-                } else {
-                    setMessage('Failed to upload PDF news.');
-                }
-                setMessageType('error');
+        try {
+            await createPDFNews(formData, auth);
+            const pdfNewsResponse = await fetchPDFNews(auth);
+            updateNewsState({
+                pdfNews: pdfNewsResponse.data,
+                newsTitle: '',
+                selectedFiles: undefined,
+                message: 'PDF uploaded successfully',
+                messageType: 'success'
             });
-    };
-
-    const newsHandleDelete = (id) => {
-        deletePDFNews(id, auth)
-            .then(() => {
-                setMessage('PDF news deleted successfully.');
-                setMessageType('success');
-                setPDFNews(pdfNews.filter(news => news.id !== id));
-            })
-            .catch(() => {
-                setMessage('Failed to delete PDF news.');
-                setMessageType('error');
+        } catch (error) {
+            updateNewsState({
+                message: 'Failed to upload PDF',
+                messageType: 'error'
             });
+        }
     };
 
     const renderNotification = () => {
-        if (!message) return null;
+        if (!newsState.message) return null;
+        
         const notificationStyle = {
             padding: '10px',
             margin: '10px 0',
-            color: messageType === 'success' ? 'green' : 'red',
-            border: `1px solid ${messageType === 'success' ? 'green' : 'red'}`,
             borderRadius: '5px',
+            color: newsState.messageType === 'success' ? 'green' : 'red',
+            border: `1px solid ${newsState.messageType === 'success' ? 'green' : 'red'}`
         };
-        return <div style={notificationStyle}>{message}</div>;
-    };
-
-    const fetchNewsList = async () => {
-        try {
-            const response = await axios.get(baseUrl + '/news');
-            setNewsList(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-
-    useEffect(() => {
-        fetchNewsList();
-    }, []);
-
-
-    useEffect(() => {
-        if (newsToEdit) {
-            setTitle(newsToEdit.title);
-            setDescription(newsToEdit.description);
-            setImage(newsToEdit.image);
-            setDisplayed(newsToEdit.displayed);
-            setActiveTab('new');
-        }
-    }, [newsToEdit]);
-
-    const onDrop = (files) => {
-        if (files.length > 0) {
-            setSelectedFiles(files);
-            setFile(URL.createObjectURL(files[0]));
-        }
-      };
-
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-    if (selectedFiles && selectedFiles[0].name) {
-        const objectURL = URL.createObjectURL(selectedFiles[0]); 
-
-        if (objectURL) {
-          // Get the current datetime in the format YYYYMMDD_HHMMSS
-        const now = new Date();
-        const dateStr = now.toISOString().replace(/[-:.TZ]/g, '').slice(0, 15); // YYYYMMDD_HHMMSS format
-
-        // Get nanoseconds precision using performance.now()
-        const nanoseconds = performance.now().toString().split('.')[1];
-
-        // Combine all elements to form the final image name
-        var imgname = title + "_" + description + "_" + dateStr + "_" + nanoseconds + "." + selectedFiles[0].name.split('.').pop();
-
-          //console.log(imgname + ": extension:" + selectedFiles[0].name.split('.').pop());
-  
-        const file = new File(selectedFiles, imgname);
-  
-        setImage({
-          image_url: file,
-        });
-      } else {
-        setErrMsg("Select file");
-        return;
-      }
-    } else {
-      setErrMsg("Select file");
-      return;
-    }
-  
-    if (!image) {
-      // Handle the case when `image` is undefined
-      return;
-    }
-
-    const formData = new FormData();
-    //console.log("id inside formData", title);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('date', new Date().toISOString());
-    formData.append('pinned', displayed);
-    formData.append('user_id', auth.user.id);
-    formData.append('id', id);
-    formData.append("image_url", image.image_url)
-    try {
-        let response;
-        console.log("form:", formData);
-        if (id) {
-            console.log("Editing");
-            response = await axios.put(`${baseUrl}/news/${id}/update/`, {"title": title,
-                "description": description,
-                "date": new Date().toISOString(),
-                "pinned": displayed,
-                "user_id": auth.user.id,
-                "image_url": image.image_url
-
-            }, {
-                headers: {
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'multipart/form-data'
-                },
-               
-                withCredentials: true
-            }
-        );
-       
-        } else {
-            //console.log("Creating a new one");
-            response = await axios.post(baseUrl + '/news/create/', formData, {
-                headers: {
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'multipart/form-data'
-                },
-                withCredentials: true
-            });
-      
-        }
-        fetchNewsList();
-        alert("News Added successfully");
-        setActiveTab("submitted");
-    } catch (err) {
-        console.log(err);
-    }
-}; 
-
-const handleReset = () => {
-    setFormData({
-      
-        title: '',
-        description: '',
-        displayed: false,
-        image_url: "",
-        user_id: auth.user.id,
-        date: new Date().toISOString(),
-    });
- 
-};
-
-    const handleDelete = async (id) => {
-        console.log("newsList", newsList);
-        console.log("id", id);
-        try {
-            await axios.delete(baseUrl + '/news/' + id + '/delete', {
-                headers: {
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'application/json'
-                }
-            });
-            fetchNewsList();
-            alert("Deleted successfully");
-        } catch (err) {
-            console.log(err.response);
-        }
-    };
-
-
-    const handleEditNews = (news) => {
-        console.log("inside News:", news);
-        setTitle(news.title);
-        setDescription(news.description);
-        setImage(news.image);
-        setDisplayed(news.displayed);
-        setActiveTab('new');
-        setId(news.id)
         
+        return (
+            <div style={notificationStyle}>
+                {newsState.message}
+            </div>
+        );
     };
 
     return (
         <div className="NewsContainer">
             <div className="news-tabs">
-                <button className={activeTab === 'new' ? 'active' : ''} onClick={() => setActiveTab('new')}>New</button>
-                <button className={activeTab === 'submitted' ? 'active' : ''} onClick={() => setActiveTab('submitted')}>Submitted </button>
-                <button className={activeTab === 'displayed' ? 'active' : ''} onClick={() => setActiveTab('displayed')}>Displayed </button>
-                <button className={activeTab === 'pdfnews' ? 'active' : ''} onClick={() => setActiveTab('pdfnews')}>News Letters </button>
+                {['new', 'submitted', 'displayed', 'pdfnews'].map(tab => (
+                    <button
+                        key={tab}
+                        className={newsState.activeTab === tab ? 'active' : ''}
+                        onClick={() => updateNewsState({ activeTab: tab })}
+                    >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                ))}
             </div>
-            <button onClick={() => navigate(-1)} className="news-back-button">Back &gt;</button>
-            <div className="news-request-form" style={{ display: activeTab === 'new' ? 'block' : 'none' }}>
+            
+            <button onClick={() => navigate(-1)} className="news-back-button">
+                Back &gt;
+            </button>
+
+            {/* {renderNotification()} */}
+
+            {newsState.activeTab === 'new' && (
+                <div className="news-request-form">
                     <form onSubmit={handleSubmit}>
                         <div className="news-request-form-grid">
-                            <input type="text" placeholder="News Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                            <input
+                                type="text"
+                                placeholder="News Title"
+                                value={newsState.title}
+                                onChange={(e) => updateNewsState({ title: e.target.value })}
+                                required
+                            />
                             <MyDropzone onDrop={onDrop} />
                         </div>
-                        <textarea placeholder="News Description" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+                        <textarea
+                            placeholder="News Description"
+                            value={newsState.description}
+                            onChange={(e) => updateNewsState({ description: e.target.value })}
+                            required
+                        />
                         <label>
                             Displayed:
-                            <input type="checkbox" checked={displayed} onChange={(e) => setDisplayed(e.target.checked)} />
+                            <input
+                                type="checkbox"
+                                checked={newsState.displayed}
+                                onChange={(e) => updateNewsState({ displayed: e.target.checked })}
+                            />
                         </label>
                         <button type="submit">Submit</button>
-                </form>
-            </div>
-
-
-            <div className="submitted-news" style={{ display: activeTab === 'submitted' ? 'block' : 'none' }}>
-                <div className='submitted-news-list'>
-                    {newsList.length === 0 ? (
-                        <p>No news submitted yet.</p>
-                    ) : (
-                        newsList.map((post) => (
-                            <div
-                                key={post.id}
-                                className="news-item"
-                                onClick={() => handleEditNews(post)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <p>{post.title}</p>
-                                {(auth.user.is_crc || auth.user.is_superuser) && (
-                                    <button onClick={() => handleDelete(post.id)} className="news-delete-button">
-                         Delete
-                        </button>
-                                    )}
-                            </div>
-                        ))
-                    )}
+                    </form>
                 </div>
-            </div>
+            )}
 
-            <div className="submitted-news" style={{ display: activeTab === 'displayed' ? 'block' : 'none' }}>
-                <div className='submitted-news-list'>
-                    {newsList.length === 0 ? (
-                        <p>No news submitted yet.</p>
-                    ) : (
-                        newsList.filter(post => post.pinned).map((post) => (
-                            <div
-                                key={post.id}
-                                className="news-item"
-                                onClick={() => handleEditNews(post)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <p>{post.title}</p>
-                                {(auth.user.is_crc || auth.user.is_superuser) && (
-                                    <button onClick={() => handleDelete(post.id)} className="news-delete-button">
-                        Delete
-                        </button>
-                                    )}
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-            <div className="submitted-news" style={{ display: activeTab === 'pdfnews' ? 'block' : 'none' }}>
-                <div className='submitted-news-list'>
-                <div>
-                        <h2>News Letters List</h2>
-                        {renderNotification()}
-                        {(auth.user.is_crc || auth.user.is_superuser) && (
-                            <div style={styles.formContainer}>
-                                <h2 style={styles.heading}>Upload News</h2>
-                                <input
-                                    type="text"
-                                    value={newsTitle}
-                                    onChange={handleTitleChange}
-                                    placeholder="News Title"
-                                    style={styles.input}
-                                />
-                                <input
-                                    type="file"
-                                    onChange={handleFileChange}
-                                    style={{ ...styles.input, ...styles.fileInput }}
-                                />
-                                <button
-                                    style={{
-                                        ...styles.button,
-                                        ...(isButtonHovered ? styles.buttonHover : {}),
-                                    }}
-                                    onMouseEnter={() => setIsButtonHovered(true)}
-                                    onMouseLeave={() => setIsButtonHovered(false)}
-                                    onClick={handleUpload}
-                                >
-                                    Upload
-                                </button>
-                            </div>
-                        )}
-                        
-                        <ul>
-                            {pdfNews.length === 0 ? (
-                                <p>No News Letters yet.</p>
-                            ) : pdfNews.map((news) => (
+            {(newsState.activeTab === 'submitted' || newsState.activeTab === 'displayed') && (
+                <div className="submitted-news">
+                    <div className="submitted-news-list">
+                        {newsState.newsList
+                            .filter(post => newsState.activeTab === 'submitted' || post.pinned)
+                            .map((post) => (
                                 <div
+                                    key={post.id}
                                     style={newsStyles.listItem}
-                                    key={news.id}
-                                    onClick={() => handleItemClick(news.pdf_file)}
+                                    onClick={() => updateNewsState({
+                                        title: post.title,
+                                        description: post.description,
+                                        image: post.image,
+                                        displayed: post.displayed,
+                                        id: post.id,
+                                        activeTab: 'new'
+                                    })}
                                 >
-                                    <span style={newsStyles.link}>{news.title}</span>
+                                    <span style={newsStyles.link}>{post.title}</span>
                                     {(auth.user.is_crc || auth.user.is_superuser) && (
                                         <button
-                                            style={{
-                                                ...newsStyles.button,
-                                                ...(isButtonHovered ? newsStyles.buttonHover : {}),
-                                            }}
-                                            onMouseEnter={() => setIsButtonHovered(true)}
-                                            onMouseLeave={() => setIsButtonHovered(false)}
+                                            style={newsStyles.button}
                                             onClick={(e) => {
-                                                e.stopPropagation(); // Prevent the li click from triggering
-                                                newsHandleDelete(news.id);
+                                                e.stopPropagation();
+                                                handleDelete(post.id);
                                             }}
                                         >
                                             Delete
                                         </button>
                                     )}
                                 </div>
-                            ))}    
-                        </ul>
+                            ))}
                     </div>
                 </div>
-            </div>
+            )}
 
-            
+            {newsState.activeTab === 'pdfnews' && (
+                <div className="pdf-news-section">
+                    <h2>News Letters</h2>
+                    {(auth.user.is_crc || auth.user.is_superuser) && (
+                        <div style={styles.formContainer}>
+                            <h2 style={styles.heading}>Upload News Letter</h2>
+                            <input
+                                type="text"
+                                value={newsState.newsTitle}
+                                onChange={(e) => updateNewsState({ newsTitle: e.target.value })}
+                                placeholder="News Title"
+                                style={styles.input}
+                            />
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                accept=".pdf"
+                                style={{ ...styles.input, ...styles.fileInput }}
+                            />
+                            <button
+                                style={{
+                                    ...styles.button,
+                                    ...(newsState.isButtonHovered ? styles.buttonHover : {})
+                                }}
+                                onMouseEnter={() => updateNewsState({ isButtonHovered: true })}
+                                onMouseLeave={() => updateNewsState({ isButtonHovered: false })}
+                                onClick={handlePDFUpload}
+                            >
+                                Upload
+                            </button>
+                        </div>
+                    )}
+                    
+                    <div className="pdf-list">
+                        {newsState.pdfNews.map((news) => (
+                            <div
+                                key={news.id}
+                                style={newsStyles.listItem}
+                                onClick={() => window.open(news.pdf_file, '_blank', 'noopener noreferrer')}
+                            >
+                                <span style={newsStyles.link}>{news.title}</span>
+                                {(auth.user.is_crc || auth.user.is_superuser) && (
+                                    <button
+                                        style={newsStyles.button}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePDFDelete(news.id);
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {renderNotification()}
         </div>
     );
 };
 
-
 export default NewsForm;
-
-
-

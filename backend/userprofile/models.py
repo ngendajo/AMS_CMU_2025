@@ -258,6 +258,16 @@ class Story(models.Model):
 
     def __str__(self):
         return str(self.alumn.user.first_name + "story")
+    
+#alumni businesses
+class AlumniBusiness(models.Model):
+    alumn = models.ManyToManyField(Alumni, related_name='businesses')
+    title = models.CharField(max_length=500, blank=True, null=True)
+    description = models.CharField(max_length=5000)
+    image = models.ImageField(upload_to='businessimages/', blank=True, null=True)
+    video = models.FileField(upload_to='businessvideos/', blank=True, null=True)
+    displayed = models.BooleanField(default=False)
+    createdat = models.DateTimeField(default=datetime.now)
 
 
 # Gallery model
