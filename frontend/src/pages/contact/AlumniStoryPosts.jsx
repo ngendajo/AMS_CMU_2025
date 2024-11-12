@@ -353,11 +353,11 @@ const AlumniStoryPostForm = () => {
                     
                     </div>
                 </div>
-            </div>
-            <div className="story-form-container">
-            <div className="page-title">
-                    {selectedAlumni ? `Write Alumni Story for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Story'}
-                </div>
+            
+                <div className="story-form-container">
+                    <div className="page-title">
+                        {selectedAlumni ? `Write Alumni Story for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Story'}
+                    </div>
                     <div className="story-tabs">
                         <button onClick={() => setActiveTab('New Story')} className={activeTab === 'New Story' ? 'active' : ''}>New Story</button>
                         {(auth.user.is_crc || auth.user.is_superuser) && (
@@ -373,6 +373,7 @@ const AlumniStoryPostForm = () => {
                     <div className="tab-content">
                         {renderTabContent()}
                     </div>
+                </div>
             </div>
         </div>
     );

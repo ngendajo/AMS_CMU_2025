@@ -576,7 +576,7 @@ class StorySerializer(serializers.ModelSerializer):
 class AlumniBusinessSerializer(serializers.ModelSerializer):
     alumn = serializers.SerializerMethodField()
     image = serializers.ImageField(required=False, allow_null=True)  # Image field (optional file upload)
-    video = serializers.FileField(required=False, allow_null=True)  # Video field (optional file upload)
+    video = serializers.URLField(required=False, allow_null=True)  # Video field (URL instead of file upload)
 
     class Meta:
         model = AlumniBusiness

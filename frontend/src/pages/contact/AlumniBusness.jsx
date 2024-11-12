@@ -110,47 +110,77 @@ export default function AlumniBusiness() {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const url = URL.createObjectURL(file);
+            // Create a timestamp in the format YYYYMMDDHHMMSS
+            const timestamp = new Date().toISOString().replace(/[-:.]/g, '');
+            
+            // Generate a new filename with timestamp
+            const newFileName = `${timestamp}_${file.name}`;
+            
+            // Create a new file with the modified name and the same file contents
+            const renamedFile = new File([file], newFileName, {
+                type: file.type,
+                lastModified: file.lastModified,
+            });
+
+            // Determine the appropriate field based on file type
             const fieldName = file.type.startsWith("image") ? "image" : "video";
+
+            // Update formData with the renamed file
             setFormData({
                 ...formData,
-                [fieldName]: url,
+                [fieldName]: renamedFile,
             });
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Make sure to not send empty fields for image/video
-        const dataToSubmit = { ...formData };
-        
-        if (!formData.image) {
-            delete dataToSubmit.image;  // Remove the image key if no file is selected
-        }
-        
-        if (!formData.video) {
-            delete dataToSubmit.video;  // Remove the video key if no file is selected
-        }
         try {
-            const response = await axios.post(baseUrl + '/alumni-business/', formData, {
+            // Create a new FormData object to prepare for file upload
+            const formDataToSend = new FormData();
+            
+            // Append each field in formData to formDataToSend
+            formDataToSend.append("title", formData.title);
+            formDataToSend.append("description", formData.description);
+            formDataToSend.append("displayed", formData.displayed);
+            formDataToSend.append("createdat", formData.createdat);
+    
+            // Append selected alumni IDs as an array
+            formData.alumn.forEach(alumId => formDataToSend.append("alumn", alumId));
+            
+            // Append image and video files only if they exist
+            if (formData.image) {
+                formDataToSend.append("image", formData.image);
+            }
+            if (formData.video) {
+                formDataToSend.append("video", formData.video);
+            }
+    
+            // Send the formDataToSend object in the request
+            const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": 'application/json',
+                    "Content-Type": "multipart/form-data", // Required for file upload
                 },
                 withCredentials: true,
             });
+    
             const newStory = response.data;
+    
+            // Update posts based on the displayed status
             if (formData.displayed) {
                 setDisplayedPosts([...displayedPosts, newStory]);
             } else {
                 setSubmittedPosts([...submittedPosts, newStory]);
             }
+    
             alert("Submitted successfully");
             setActiveTab('Submitted Business');
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
+    
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
@@ -260,26 +290,24 @@ export default function AlumniBusiness() {
             <div className="DirectoryList">
                 <div className="alumni-list-container">
                     <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." />
-                    <div className="directory">
-                        <div className='list' >
-                            <AlumniList alumni={currentAlumni} onSelect={handleSelectAlumni} />
-                        </div>
-                        <div className='alu-paginate'>
-                            <ReactPaginate
-                                previousLabel={'<'}
-                                nextLabel={'>'}
-                                breakLabel={'...'}
-                                pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
-                                marginPagesDisplayed={1}
-                                pageRangeDisplayed={3}
-                                onPageChange={handlePageClick}
-                                containerClassName={'alu-pagination'}
-                                activeClassName={'active'}
-                            />
-                        </div>
+                    <div className='list' >
+                        <AlumniList alumni={currentAlumni} onSelect={handleSelectAlumni} />
                     </div>
                     
-                    
+                    <div className='alu-paginate'>
+                        <ReactPaginate
+                            previousLabel={'<'}
+                            nextLabel={'>'}
+                            breakLabel={'...'}
+                            pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
+                            marginPagesDisplayed={1}
+                            pageRangeDisplayed={3}
+                            onPageChange={handlePageClick}
+                            containerClassName={'alu-pagination'}
+                            activeClassName={'active'}
+                        />
+
+                    </div>
                 </div>
             </div>
             <div className="story-form-container">
@@ -299,29 +327,29 @@ export default function AlumniBusiness() {
                         <span>Select Alumni</span>
                     )}
                 </div>
-                        <div className="story-tabs">
-                            <button
-                                className={activeTab === 'New Business' ? 'active' : ''}
-                                onClick={() => setActiveTab('New Business')}
-                            >
-                                New Business
-                            </button>
-                            <button
-                                className={activeTab === 'Submitted Business' ? 'active' : ''}
-                                onClick={() => setActiveTab('Submitted Business')}
-                            >
-                                Submitted Business
-                            </button>
-                            <button
-                                className={activeTab === 'Displayed Business' ? 'active' : ''}
-                                onClick={() => setActiveTab('Displayed Business')}
-                            >
-                                Displayed Business
-                            </button>
-                        </div>
-                        <div className="tab-content">
-                            {renderTabContent()}
-                        </div>
+                <div className="story-tabs">
+                    <button
+                        className={activeTab === 'New Business' ? 'active' : ''}
+                        onClick={() => setActiveTab('New Business')}
+                    >
+                        New Business
+                    </button>
+                    <button
+                        className={activeTab === 'Submitted Business' ? 'active' : ''}
+                        onClick={() => setActiveTab('Submitted Business')}
+                    >
+                        Submitted Business
+                    </button>
+                    <button
+                        className={activeTab === 'Displayed Business' ? 'active' : ''}
+                        onClick={() => setActiveTab('Displayed Business')}
+                    >
+                        Displayed Business
+                    </button>
+                </div>
+                <div className="tab-content">
+                    {renderTabContent()}
+                </div>
             </div>
         </div>
     );

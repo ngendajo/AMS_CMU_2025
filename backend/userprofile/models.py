@@ -265,7 +265,7 @@ class AlumniBusiness(models.Model):
     title = models.CharField(max_length=500, blank=True, null=True)
     description = models.CharField(max_length=5000)
     image = models.ImageField(upload_to='businessimages/', blank=True, null=True)
-    video = models.FileField(upload_to='businessvideos/', blank=True, null=True)
+    video = models.URLField(blank=True, null=True)  # Change FileField to URLField
     displayed = models.BooleanField(default=False)
     createdat = models.DateTimeField(default=datetime.now)
 
