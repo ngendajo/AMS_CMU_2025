@@ -121,6 +121,16 @@ export default function AlumniBusiness() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Make sure to not send empty fields for image/video
+        const dataToSubmit = { ...formData };
+        
+        if (!formData.image) {
+            delete dataToSubmit.image;  // Remove the image key if no file is selected
+        }
+        
+        if (!formData.video) {
+            delete dataToSubmit.video;  // Remove the video key if no file is selected
+        }
         try {
             const response = await axios.post(baseUrl + '/alumni-business/', formData, {
                 headers: {
@@ -250,15 +260,26 @@ export default function AlumniBusiness() {
             <div className="DirectoryList">
                 <div className="alumni-list-container">
                     <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." />
-                    <AlumniList alumni={currentAlumni} onSelect={handleSelectAlumni} />
-                    <ReactPaginate
-                        previousLabel={'<'}
-                        nextLabel={'>'}
-                        pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
-                        onPageChange={handlePageClick}
-                        containerClassName={'pagination'}
-                        activeClassName={'active'}
-                    />
+                    <div className="directory">
+                        <div className='list' >
+                            <AlumniList alumni={currentAlumni} onSelect={handleSelectAlumni} />
+                        </div>
+                        <div className='alu-paginate'>
+                            <ReactPaginate
+                                previousLabel={'<'}
+                                nextLabel={'>'}
+                                breakLabel={'...'}
+                                pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
+                                marginPagesDisplayed={1}
+                                pageRangeDisplayed={3}
+                                onPageChange={handlePageClick}
+                                containerClassName={'alu-pagination'}
+                                activeClassName={'active'}
+                            />
+                        </div>
+                    </div>
+                    
+                    
                 </div>
             </div>
             <div className="story-form-container">

@@ -325,34 +325,34 @@ const AlumniStoryPostForm = () => {
     return (
         <div className="alumni-story-container">
              <div className="DirectoryList">
-            <div className="alumni-list-container">
-                <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." className="search-bar" />
-                <div className="directory">
-                    <div className='list' >
-                    <AlumniList alumni={currentAlumni} onSelect={(alumni) => {
-                        setSelectedAlumni(alumni);
-                        setFormData({ ...formData, alumn: alumni.id });
-                        console.log("alumn_id", alumni.id);
-                    }} />
+                <div className="alumni-list-container">
+                    <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." className="search-bar" />
+                    <div className="directory">
+                        <div className='list' >
+                            <AlumniList alumni={currentAlumni} onSelect={(alumni) => {
+                                setSelectedAlumni(alumni);
+                                setFormData({ ...formData, alumn: alumni.id });
+                                console.log("alumn_id", alumni.id);
+                            }} />
 
-</div>
-<div className='alu-paginate'>
-<ReactPaginate
-                        previousLabel={'<'}
-                        nextLabel={'>'}
-                        breakLabel={'...'}
-                        pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
-                        marginPagesDisplayed={1}
-                        pageRangeDisplayed={3}
-                        onPageChange={handlePageClick}
-                        containerClassName={'alu-pagination'}
-                        activeClassName={'active'}
-                    />
+                        </div>
+                        <div className='alu-paginate'>
+                            <ReactPaginate
+                                previousLabel={'<'}
+                                nextLabel={'>'}
+                                breakLabel={'...'}
+                                pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
+                                marginPagesDisplayed={1}
+                                pageRangeDisplayed={3}
+                                onPageChange={handlePageClick}
+                                containerClassName={'alu-pagination'}
+                                activeClassName={'active'}
+                            />
 
-</div>
-                  
+                        </div>
+                    
+                    </div>
                 </div>
-            </div>
             </div>
             <div className="story-form-container">
             <div className="page-title">
