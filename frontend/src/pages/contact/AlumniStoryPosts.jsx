@@ -358,21 +358,21 @@ const AlumniStoryPostForm = () => {
             <div className="page-title">
                     {selectedAlumni ? `Write Alumni Story for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Story'}
                 </div>
-                <div className="story-tabs">
-                    <button onClick={() => setActiveTab('New Story')} className={activeTab === 'New Story' ? 'active' : ''}>New Story</button>
-                    {(auth.user.is_crc || auth.user.is_superuser) && (
-                        <>
-                    <button onClick={() => setActiveTab('Submitted Posts')} className={activeTab === 'Submitted Posts' ? 'active' : ''}>Submitted Posts</button>
-                    <button onClick={() => setActiveTab('Displayed Posts')} className={activeTab === 'Displayed Posts' ? 'active' : ''}>Displayed Posts</button>
+                    <div className="story-tabs">
+                        <button onClick={() => setActiveTab('New Story')} className={activeTab === 'New Story' ? 'active' : ''}>New Story</button>
+                        {(auth.user.is_crc || auth.user.is_superuser) && (
+                            <>
+                        <button onClick={() => setActiveTab('Submitted Posts')} className={activeTab === 'Submitted Posts' ? 'active' : ''}>Submitted Posts</button>
+                        <button onClick={() => setActiveTab('Displayed Posts')} className={activeTab === 'Displayed Posts' ? 'active' : ''}>Displayed Posts</button>
 
-                    </>
-                    )}
+                        </>
+                        )}
 
 
-                </div>
-                <div className="tab-content">
-                    {renderTabContent()}
-                </div>
+                    </div>
+                    <div className="tab-content">
+                        {renderTabContent()}
+                    </div>
             </div>
         </div>
     );

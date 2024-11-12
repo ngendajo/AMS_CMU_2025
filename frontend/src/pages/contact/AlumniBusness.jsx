@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SearchBar from "../../components/dashboard/search-bar"
+import SearchBar from "../../components/dashboard/search-bar";
 import './AlumniStoryPostForm.css';
 import AlumniList from '../../components/directory/alumni-list';
 import axios from 'axios';
@@ -8,26 +8,28 @@ import baseUrlforImg from '../../api/baseUrlforImg';
 import useAuth from '../../hooks/useAuth';
 import ReactPaginate from 'react-paginate';
 
-export default function AlumniBusness() {
-    const [selectedAlumni, setSelectedAlumni] = useState(null);
+export default function AlumniBusiness() {
+    const [selectedAlumni, setSelectedAlumni] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [alumniData, setAlumniData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const { auth } = useAuth();
 
     const [formData, setFormData] = useState({
-        alumn: '',
+        alumn: [],
         title: '',
         description: '',
-        media: null,
-        draft: true,
-        displayed: false
+        image: '',
+        video: '',
+        displayed: false,
+        createdat: new Date().toISOString(),
     });
 
-   
     const [submittedPosts, setSubmittedPosts] = useState([]);
     const [displayedPosts, setDisplayedPosts] = useState([]);
     const [activeTab, setActiveTab] = useState('New Business');
+    const [showImageInput, setShowImageInput] = useState(false); // Track image input visibility
+    const [showVideoInput, setShowVideoInput] = useState(false); // Track video input visibility
 
     useEffect(() => {
         const getAlumniUsers = async () => {
@@ -35,25 +37,19 @@ export default function AlumniBusness() {
                 const response = await axios.get(baseUrl + '/alumnilist/', {
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
-                        "Content-Type": 'multipart/form-data'
                     },
-                    withCredentials: true
+                    withCredentials: true,
                 });
-                //console.log("response", response.data);
-                var alumniList = [];
-                response.data.forEach(element => {
-                    alumniList.push({
-                        id: element.alumn_id,
-                        profilePic: baseUrlforImg + "/media/" + element.image_url,
-                        email: element.email,
-                        firstName: element.first_name,
-                        lastName: element.last_name,
-                        gradeName:element.grade_name,
-                        familyName:element.family_name,
-                        combinationName:element.combination_name
-
-                    });
-                });
+                const alumniList = response.data.map((element) => ({
+                    id: element.alumn_id,
+                    profilePic: baseUrlforImg + "/media/" + element.image_url,
+                    email: element.email,
+                    firstName: element.first_name,
+                    lastName: element.last_name,
+                    gradeName: element.grade_name,
+                    familyName: element.family_name,
+                    combinationName: element.combination_name,
+                }));
                 setAlumniData(alumniList);
             } catch (err) {
                 console.log(err);
@@ -62,163 +58,99 @@ export default function AlumniBusness() {
         getAlumniUsers();
     }, [auth]);
 
+    const fetchStories = async () => {
+        try {
+            const response = await axios.get(baseUrl + '/alumni-business/', {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                },
+                withCredentials: true,
+            });
+            const stories = response.data;
+            const displayed = stories.filter((story) => story.displayed);
+            setSubmittedPosts(stories);
+            setDisplayedPosts(displayed);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-    
-        const fetchStories = async () => {
-            try {
-                const response = await axios.get(baseUrl + '/stories/', {
-                    headers: {
-                        "Authorization": 'Bearer ' + String(auth.accessToken),
-                    },
-                    withCredentials: true
-                });
-                const storiesbusiness = response.data;
-      
-                const busineses = storiesbusiness.filter(story => story.draft);
-                const displayed = busineses.filter(story => story.displayed);
-              
-                setSubmittedPosts(busineses);
-                setDisplayedPosts(displayed);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+    useEffect(() => {
         fetchStories();
-
-        useEffect(() => {
-            fetchStories();
-        }, [auth]);
+    }, [auth]);
 
     const filteredAlumni = alumniData
         .filter((alum) => `${alum.firstName} ${alum.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()))
         .sort((a, b) => a.lastName.localeCompare(b.lastName));
 
-        const alumniPerPage = 4;
-        const offset = currentPage * alumniPerPage;
-        const currentAlumni = filteredAlumni.slice(offset, offset + alumniPerPage);
-
- 
+    const alumniPerPage = 4;
+    const offset = currentPage * alumniPerPage;
+    const currentAlumni = filteredAlumni.slice(offset, offset + alumniPerPage);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
+        });
+    };
+
+    const handleSelectAlumni = (alumni) => {
+        setSelectedAlumni((prev) => {
+            const isSelected = prev.find((alum) => alum.id === alumni.id);
+            const updatedSelection = isSelected ? prev.filter((alum) => alum.id !== alumni.id) : [...prev, alumni];
+            setFormData({
+                ...formData,
+                alumn: updatedSelection.map((alum) => alum.id),
+            });
+            return updatedSelection;
         });
     };
 
     const handleFileChange = (e) => {
-        const { files } = e.target;
-        setFormData({
-            ...formData,
-            media: files[0]
-        });
+        const file = e.target.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            const fieldName = file.type.startsWith("image") ? "image" : "video";
+            setFormData({
+                ...formData,
+                [fieldName]: url,
+            });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData();
-        data.append('alumn', formData.alumn);
-        data.append('title', formData.title);
-        data.append('description', formData.description);
-        if (formData.media) {
-            const mediaType = formData.media.type.startsWith('image') ? 'image' : 'video';
-            data.append(mediaType, formData.media);
-            console.log("mediaType", mediaType);
-        }
-        data.append('draft', true);
-        data.append('displayed', formData.displayed);
-
-        for (let pair of data.entries()) {
-            console.log(`${pair[0]}: ${pair[1]}`);
-        }
         try {
-            let response;
-            if (formData.id) {
-                response = await axios.put(`${baseUrl}/stories/${formData.id}/`, data, {
-                    headers: {
-                        "Authorization": 'Bearer ' + String(auth.accessToken),
-                        "Content-Type": 'multipart/form-data'
-                    },
-                    withCredentials: true
-                });
-                const updatedStory = response.data;
-                if (formData.displayed) {
-                    setDisplayedPosts(displayedPosts.map(post => post.id === updatedStory.id ? updatedStory : post));
-                } else {
-                    setSubmittedPosts(submittedPosts.map(post => post.id === updatedStory.id ? updatedStory : post));
-                }
+            const response = await axios.post(baseUrl + '/alumni-business/', formData, {
+                headers: {
+                    "Authorization": 'Bearer ' + String(auth.accessToken),
+                    "Content-Type": 'application/json',
+                },
+                withCredentials: true,
+            });
+            const newStory = response.data;
+            if (formData.displayed) {
+                setDisplayedPosts([...displayedPosts, newStory]);
             } else {
-                response = await axios.post(baseUrl + '/stories/', data, {
-                    headers: {
-                        "Authorization": 'Bearer ' + String(auth.accessToken),
-                        "Content-Type": 'multipart/form-data'
-                    },
-                    withCredentials: true
-                });
-                const newStory = response.data;
-                if (formData.displayed) {
-                    setDisplayedPosts([...displayedPosts, newStory]);
-                    setActiveTab('Submitted Business');
-                } else {
-                    setSubmittedPosts([...submittedPosts, newStory]);
-                    setActiveTab('Submitted Business');
-                }
+                setSubmittedPosts([...submittedPosts, newStory]);
             }
-            alert("submitted successfully"); } catch (err) {
+            alert("Submitted successfully");
+            setActiveTab('Submitted Business');
+        } catch (err) {
             console.log(err);
         }
     };
 
-    const handleEditStory = (story) => {
-        setSelectedAlumni(alumniData.find(alumni => parseInt(alumni.id) === parseInt(story.alumn)));
-
-        setFormData({
-            id: story.id,
-            alumn: story.alumn,
-            title: story.title,
-            description: story.description,
-            media: null,
-            draft: story.draft,
-            displayed: story.displayed
-        });
-        
-        setActiveTab('New Business');
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
     };
-
-    const handleReset = () => {
-        setFormData({
-            alumn: '',
-            title: '',
-            description: '',
-            media: null,
-            draft: true,
-            displayed: false
-        });
-        setSelectedAlumni(null);
-        alert("Select an Alumni")
-    };
-
-    const handleDelete = async (id) => {
-        try {
-          await axios.delete(baseUrl + '/stories/' + id + '/', {
-            headers: {
-              "Authorization": 'Bearer ' + String(auth.accessToken),
-              "Content-Type": 'application/json'
-            }
-          });
-          fetchStories();
-          alert("Deleted successfully");
-        } catch (err) {
-          console.log(err.response);
-        }
-      };
 
     const renderTabContent = () => {
         switch (activeTab) {
             case 'New Business':
                 return (
-                    <form onSubmit={(e) => handleSubmit(e)}>
+                    <form onSubmit={handleSubmit}>
                         <div className="story-form-group">
                             <input
                                 type="text"
@@ -229,36 +161,49 @@ export default function AlumniBusness() {
                                 onChange={handleInputChange}
                             />
                         </div>
-
                         <div className="story-form-group">
-
                             <textarea
                                 id="description"
                                 name="description"
-                                placeholder="Description"
+                                placeholder="Description" 
                                 value={formData.description}
                                 onChange={handleInputChange}
                             ></textarea>
                         </div>
                         <div className="story-form-group media-option">
-
-                            <input
-                                type="file"
-                                id="media"
-                                placeholder="Image or Video"
-                                name="media"
-                                accept="image/*,video/*"
-                                onChange={handleFileChange}
-                            />
+                        <div className="submit-container">
+                            <button type="button" onClick={() => setShowImageInput(!showImageInput)}>
+                                {showImageInput ? 'Hide Image Input' : 'Add Image'}
+                            </button>
+                        </div>
+                            
+                            {showImageInput && (
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+                            )}
+                            <div className="submit-container">
+                                <button type="button" onClick={() => setShowVideoInput(!showVideoInput)}>
+                                    {showVideoInput ? 'Hide Video Input' : 'Add Video'}
+                                </button>
+                            </div>
+                            
+                            {showVideoInput && (
+                                <input
+                                    type="file"
+                                    id="video"
+                                    name="video"
+                                    accept="video/*"
+                                    onChange={handleFileChange}
+                                />
+                            )}
                         </div>
                         <div className="submit-container">
-                            {auth.user.is_crc || auth.user.is_superuser ? (
-                                <>
-                                     <>
-                                <button type="submit" onClick={(e) => handleSubmit(e)}>Submit</button>
-                                <button type="button" onClick={handleReset}>Reset</button>
-                            </>
-                                    <div className="story-form-group">
+                            <button type="submit">Submit</button>
                             <label>
                                 <input
                                     type="checkbox"
@@ -269,110 +214,94 @@ export default function AlumniBusness() {
                                 Make Displayed
                             </label>
                         </div>
-                                </>
-                            ) : (
-                                <>
-                                <button type="submit" onClick={(e) => handleSubmit(e)}>Submit</button>
-                                <button type="button" onClick={handleReset}>Reset</button>
-                            </>
-                                
-                            )}
-                        </div>
                     </form>
+                );
+            case 'Submitted Business':
+                return (
+                    <div className="submitted-posts-list">
+                        {submittedPosts.map((post) => (
+                            <div key={post.id} className="post-item">
+                                <p>{post.title}</p>
+                            </div>
+                        ))}
+                    </div>
                 );
             case 'Displayed Business':
                 return (
                     <div className="submitted-posts-list">
                         {displayedPosts.map((post) => (
                             <div key={post.id} className="post-item">
-                                <p onClick={() => handleEditStory(post)}>{post.title}</p>
-                                {(auth.user.is_crc || auth.user.is_superuser) && (
-                                <button onClick={() => handleDelete(post.id)} className="story-delete-button">
-                     Delete
-                    </button> 
-                                )}
+                                <p>{post.title}</p>
                             </div>
                         ))}
                     </div>
                 );
-
-                case 'Submitted Business':
-                    return (
-                        <div className="submitted-posts-list">
-                            {submittedPosts.map((post) => (
-                                <div key={post.id} className="post-item" onClick={() => handleEditStory(post)}>
-                                    <p>{post.title}</p>
-                                    {(auth.user.is_crc || auth.user.is_superuser) && (
-                                    <button onClick={() => handleDelete(post.id)} className="story-delete-button">
-                          Delete
-                        </button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    );
             default:
                 return null;
         }
     };
 
-    const handlePageClick = ({ selected }) => {
-        setCurrentPage(selected);
+    const removeAlumni = (id) => {
+        setSelectedAlumni(selectedAlumni.filter(alum => alum.id !== id));
     };
-
 
     return (
         <div className="alumni-story-container">
-             <div className="DirectoryList">
-            <div className="alumni-list-container">
-                <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." className="search-bar" />
-                <div className="directory">
-                    <div className='list' >
-                    <AlumniList alumni={currentAlumni} onSelect={(alumni) => {
-                        setSelectedAlumni(alumni);
-                        setFormData({ ...formData, alumn: alumni.id });
-                        console.log("alumn_id", alumni.id);
-                    }} />
-
-</div>
-<div className='alu-paginate'>
-<ReactPaginate
+            <div className="DirectoryList">
+                <div className="alumni-list-container">
+                    <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." />
+                    <AlumniList alumni={currentAlumni} onSelect={handleSelectAlumni} />
+                    <ReactPaginate
                         previousLabel={'<'}
                         nextLabel={'>'}
-                        breakLabel={'...'}
                         pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
-                        marginPagesDisplayed={1}
-                        pageRangeDisplayed={3}
                         onPageChange={handlePageClick}
-                        containerClassName={'alu-pagination'}
+                        containerClassName={'pagination'}
                         activeClassName={'active'}
                     />
-
-</div>
-                  
                 </div>
-            </div>
             </div>
             <div className="story-form-container">
-            <div className="page-title">
-                    {selectedAlumni ? `Write Alumni Business for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Business'}
-                </div>
-                <div className="story-tabs">
-                    <button onClick={() => setActiveTab('New Business')} className={activeTab === 'New Business' ? 'active' : ''}>New Business</button>
-                    {(auth.user.is_crc || auth.user.is_superuser) && (
+                <div className="page-title">
+                    {selectedAlumni.length > 0 ? (
                         <>
-                    <button onClick={() => setActiveTab('Submitted Business')} className={activeTab === 'Submitted Business' ? 'active' : ''}>Submitted Business</button>
-                    <button onClick={() => setActiveTab('Displayed Business')} className={activeTab === 'Displayed Business' ? 'active' : ''}>Displayed Business</button>
-
-                    </>
+                            <span>Write Alumni Business for </span>
+                            {selectedAlumni.map((alum, index) => (
+                                <span key={alum.id}>
+                                    {alum.firstName} {alum.lastName}
+                                    <button onClick={() => removeAlumni(alum.id)} style={{ marginLeft: '5px' }}>X</button>
+                                    {index < selectedAlumni.length - 1 && ', '}
+                                </span>
+                            ))}
+                        </>
+                    ) : (
+                        <span>Select Alumni</span>
                     )}
-
-
                 </div>
-                <div className="tab-content">
-                    {renderTabContent()}
-                </div>
+                        <div className="story-tabs">
+                            <button
+                                className={activeTab === 'New Business' ? 'active' : ''}
+                                onClick={() => setActiveTab('New Business')}
+                            >
+                                New Business
+                            </button>
+                            <button
+                                className={activeTab === 'Submitted Business' ? 'active' : ''}
+                                onClick={() => setActiveTab('Submitted Business')}
+                            >
+                                Submitted Business
+                            </button>
+                            <button
+                                className={activeTab === 'Displayed Business' ? 'active' : ''}
+                                onClick={() => setActiveTab('Displayed Business')}
+                            >
+                                Displayed Business
+                            </button>
+                        </div>
+                        <div className="tab-content">
+                            {renderTabContent()}
+                        </div>
             </div>
         </div>
     );
-};
+}

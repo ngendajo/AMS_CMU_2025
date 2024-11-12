@@ -575,6 +575,8 @@ class StorySerializer(serializers.ModelSerializer):
 #Alumni Businesses
 class AlumniBusinessSerializer(serializers.ModelSerializer):
     alumn = serializers.SerializerMethodField()
+    image = serializers.URLField(required=False, allow_null=True)  # Make image optional
+    video = serializers.URLField(required=False, allow_null=True)  # Make video optional
 
     class Meta:
         model = AlumniBusiness
@@ -592,6 +594,7 @@ class AlumniBusinessSerializer(serializers.ModelSerializer):
                 'combination_name': alumn.combination.combination_name,
             })
         return alumni_details
+
 
 #Studie serializers
 
