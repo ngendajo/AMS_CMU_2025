@@ -826,74 +826,76 @@ def delete_story(request, pk):
     return Response(status=status.HTTP_202_ACCEPTED)
 
 #Alumni business
-class AlumniBusinessView(APIView):
-    def get(self, request, *args, **kwargs):
+class AlumniBusinessViewSet(viewsets.ModelViewSet):
+    queryset = AlumniBusiness.objects.all()
+    serializer_class = AlumniBusinessSerializer
+
+    def list(self, request, *args, **kwargs):
         try:
-            businesses = AlumniBusiness.objects.all()
-            serializer = AlumniBusinessSerializer(businesses, many=True)
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            # Log the exception for debugging (optional)
-            print(f"Error occurred: {str(e)}")  # Replace with proper logging in production
             return Response({
                 'error': 'An unexpected error occurred while retrieving alumni businesses.',
-                'details': str(e)  # Include the error details for debugging
+                'details': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         try:
-            serializer = AlumniBusinessSerializer(data=request.data)
+            serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            print(f"Error occurred: {str(e)}")
             return Response({
                 'error': 'An unexpected error occurred while creating the alumni business.',
                 'details': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def put(self, request, pk, *args, **kwargs):
+    def retrieve(self, request, pk=None, *args, **kwargs):
         try:
-            business = AlumniBusiness.objects.get(pk=pk)
-            serializer = AlumniBusinessSerializer(business, data=request.data)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except AlumniBusiness.DoesNotExist:
+            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'error': 'An unexpected error occurred while retrieving the alumni business.',
+                'details': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except AlumniBusiness.DoesNotExist:
             return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f"Error occurred: {str(e)}")
             return Response({
                 'error': 'An unexpected error occurred while updating the alumni business.',
                 'details': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def delete(self, request, pk, *args, **kwargs):
+    def destroy(self, request, pk=None, *args, **kwargs):
         try:
-            business = AlumniBusiness.objects.get(pk=pk)
-            business.delete()
+            instance = self.get_object()
+            instance.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except AlumniBusiness.DoesNotExist:
             return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(f"Error occurred: {str(e)}")
             return Response({
                 'error': 'An unexpected error occurred while deleting the alumni business.',
                 'details': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def delete(self, request, pk, *args, **kwargs):
-        try:
-            business = AlumniBusiness.objects.get(pk=pk)
-            business.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except AlumniBusiness.DoesNotExist:
-            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 #new way of handling stories
 class StoryViewSet(viewsets.ModelViewSet):
