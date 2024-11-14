@@ -827,75 +827,62 @@ def delete_story(request, pk):
 
 #Alumni business
 class AlumniBusinessViewSet(viewsets.ModelViewSet):
-    queryset = AlumniBusiness.objects.all()
     serializer_class = AlumniBusinessSerializer
+    
+    def get_queryset(self):
+        return AlumniBusiness.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': 'Failed to create business'}, 
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                self.perform_update(serializer)
+                return Response(serializer.data)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': 'Failed to update business'}, 
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response({'error': 'Failed to delete business'}, 
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request, *args, **kwargs):
         try:
             queryset = self.get_queryset()
             serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         except Exception as e:
-            return Response({
-                'error': 'An unexpected error occurred while retrieving alumni businesses.',
-                'details': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Failed to retrieve businesses'}, 
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({
-                'error': 'An unexpected error occurred while creating the alumni business.',
-                'details': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def retrieve(self, request, pk=None, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response(serializer.data)
-        except AlumniBusiness.DoesNotExist:
-            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({
-                'error': 'An unexpected error occurred while retrieving the alumni business.',
-                'details': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def update(self, request, pk=None, *args, **kwargs):
-        try:
-            partial = kwargs.pop('partial', False)
-            instance = self.get_object()
-            serializer = self.get_serializer(instance, data=request.data, partial=partial)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except AlumniBusiness.DoesNotExist:
-            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': 'An unexpected error occurred while updating the alumni business.',
-                'details': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def destroy(self, request, pk=None, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            instance.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except AlumniBusiness.DoesNotExist:
-            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': 'An unexpected error occurred while deleting the alumni business.',
-                'details': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Failed to retrieve business'}, 
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 #new way of handling stories
 class StoryViewSet(viewsets.ModelViewSet):

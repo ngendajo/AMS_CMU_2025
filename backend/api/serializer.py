@@ -574,27 +574,22 @@ class StorySerializer(serializers.ModelSerializer):
 
 #Alumni Businesses
 class AlumniBusinessSerializer(serializers.ModelSerializer):
-    alumn = serializers.SerializerMethodField()
-    image = serializers.ImageField(required=False, allow_null=True)  # Image field (optional file upload)
-    video = serializers.URLField(required=False, allow_null=True)  # Video field (URL instead of file upload)
+    alumn_details = serializers.SerializerMethodField()
 
     class Meta:
         model = AlumniBusiness
-        fields = ['id', 'alumn', 'title', 'description', 'image', 'video', 'displayed', 'createdat']
+        fields = ['id', 'alumn', 'alumn_details', 'title', 'description', 'image', 
+                 'video', 'displayed', 'createdat']
 
-    def get_alumn(self, obj):
-        alumni_details = []
-        for alumn in obj.alumn.all():  # Accessing the ManyToMany relationship
-            alumni_details.append({
-                'id': alumn.id,
-                'first_name': alumn.user.first_name,
-                'last_name': alumn.user.last_name,
-                'grade_name': alumn.family.grade.grade_name,
-                'family_name': alumn.family.family_name,
-                'combination_name': alumn.combination.combination_name,
-            })
-        return alumni_details
-
+    def get_alumn_details(self, obj):
+        return [{
+            'id': alumn.id,
+            'first_name': alumn.user.first_name,
+            'last_name': alumn.user.last_name,
+            'grade_name': alumn.family.grade.grade_name,
+            'family_name': alumn.family.family_name,
+            'combination_name': alumn.combination.combination_name
+        } for alumn in obj.alumn.all()]
 
 
 #Studie serializers

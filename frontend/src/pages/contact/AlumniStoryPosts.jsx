@@ -325,54 +325,53 @@ const AlumniStoryPostForm = () => {
     return (
         <div className="alumni-story-container">
              <div className="DirectoryList">
-                <div className="alumni-list-container">
-                    <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." className="search-bar" />
-                    <div className="directory">
-                        <div className='list' >
-                            <AlumniList alumni={currentAlumni} onSelect={(alumni) => {
-                                setSelectedAlumni(alumni);
-                                setFormData({ ...formData, alumn: alumni.id });
-                                console.log("alumn_id", alumni.id);
-                            }} />
+            <div className="alumni-list-container">
+                <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." className="search-bar" />
+                <div className="directory">
+                    <div className='list' >
+                    <AlumniList alumni={currentAlumni} onSelect={(alumni) => {
+                        setSelectedAlumni(alumni);
+                        setFormData({ ...formData, alumn: alumni.id });
+                        console.log("alumn_id", alumni.id);
+                    }} />
 
-                        </div>
-                        <div className='alu-paginate'>
-                            <ReactPaginate
-                                previousLabel={'<'}
-                                nextLabel={'>'}
-                                breakLabel={'...'}
-                                pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
-                                marginPagesDisplayed={1}
-                                pageRangeDisplayed={3}
-                                onPageChange={handlePageClick}
-                                containerClassName={'alu-pagination'}
-                                activeClassName={'active'}
-                            />
+</div>
+<div className='alu-paginate'>
+<ReactPaginate
+                        previousLabel={'<'}
+                        nextLabel={'>'}
+                        breakLabel={'...'}
+                        pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
+                        marginPagesDisplayed={1}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName={'alu-pagination'}
+                        activeClassName={'active'}
+                    />
 
-                        </div>
-                    
-                    </div>
+</div>
+                  
                 </div>
-            
-                <div className="story-form-container">
-                    <div className="page-title">
-                        {selectedAlumni ? `Write Alumni Story for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Story'}
-                    </div>
-                    <div className="story-tabs">
-                        <button onClick={() => setActiveTab('New Story')} className={activeTab === 'New Story' ? 'active' : ''}>New Story</button>
-                        {(auth.user.is_crc || auth.user.is_superuser) && (
-                            <>
-                        <button onClick={() => setActiveTab('Submitted Posts')} className={activeTab === 'Submitted Posts' ? 'active' : ''}>Submitted Posts</button>
-                        <button onClick={() => setActiveTab('Displayed Posts')} className={activeTab === 'Displayed Posts' ? 'active' : ''}>Displayed Posts</button>
+            </div>
+            </div>
+            <div className="story-form-container">
+            <div className="page-title">
+                    {selectedAlumni ? `Write Alumni Story for ${selectedAlumni.firstName} ${selectedAlumni.lastName}  ` : 'Add Alumni Story'}
+                </div>
+                <div className="story-tabs">
+                    <button onClick={() => setActiveTab('New Story')} className={activeTab === 'New Story' ? 'active' : ''}>New Story</button>
+                    {(auth.user.is_crc || auth.user.is_superuser) && (
+                        <>
+                    <button onClick={() => setActiveTab('Submitted Posts')} className={activeTab === 'Submitted Posts' ? 'active' : ''}>Submitted Posts</button>
+                    <button onClick={() => setActiveTab('Displayed Posts')} className={activeTab === 'Displayed Posts' ? 'active' : ''}>Displayed Posts</button>
 
-                        </>
-                        )}
+                    </>
+                    )}
 
 
-                    </div>
-                    <div className="tab-content">
-                        {renderTabContent()}
-                    </div>
+                </div>
+                <div className="tab-content">
+                    {renderTabContent()}
                 </div>
             </div>
         </div>

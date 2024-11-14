@@ -70,6 +70,7 @@ export default function AlumniBusiness() {
             const displayed = stories.filter((story) => story.displayed);
             setSubmittedPosts(stories);
             setDisplayedPosts(displayed);
+            console.log(stories)
         } catch (err) {
             console.error(err);
         }
@@ -106,7 +107,7 @@ export default function AlumniBusiness() {
             return updatedSelection;
         });
     };
-
+    console.log("SelectedAlumni",selectedAlumni,"FormData",formData)
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -144,9 +145,10 @@ export default function AlumniBusiness() {
             formDataToSend.append("description", formData.description);
             formDataToSend.append("displayed", formData.displayed);
             formDataToSend.append("createdat", formData.createdat);
+            formDataToSend.append("alumn", formData.alumn.map(Number))
     
             // Append selected alumni IDs as an array
-            formData.alumn.forEach(alumId => formDataToSend.append("alumn", alumId));
+            //formData.alumn.forEach(alumId => formDataToSend.append("alumn", alumId));
             
             // Append image and video files only if they exist
             if (formData.image) {
@@ -155,7 +157,7 @@ export default function AlumniBusiness() {
             if (formData.video) {
                 formDataToSend.append("video", formData.video);
             }
-    
+            console.log(formData.alumn.map(Number))
             // Send the formDataToSend object in the request
             const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
                 headers: {
@@ -180,10 +182,40 @@ export default function AlumniBusiness() {
             console.error(err);
         }
     };
+    const handleDelete = async (id) => {
+        try {
+          await axios.delete(baseUrl + '/alumni-business/' + id + '/', {
+            headers: {
+              "Authorization": 'Bearer ' + String(auth.accessToken),
+              "Content-Type": 'application/json'
+            }
+          });
+          fetchStories();
+          alert("Deleted successfully");
+        } catch (err) {
+          console.log(err.response);
+        }
+      };
     
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
+    };
+    const handleEditStory = (story) => {
+        //selectedAlumni.firstName = story.firstName;
+        //console.log("story", story);
+        setFormData({
+            id: story.id,
+            alumn: story.alumn,
+            title: story.title,
+            description: story.description,
+            image: story.image,
+            video: story.video,
+            displayed: story.displayed,
+            createdat: new Date().toISOString(),
+        });
+        setSelectedAlumni(story.alumn);
+        setActiveTab('New Business');
     };
 
     const renderTabContent = () => {
@@ -234,11 +266,12 @@ export default function AlumniBusiness() {
                             
                             {showVideoInput && (
                                 <input
-                                    type="file"
+                                    type="text"
                                     id="video"
                                     name="video"
-                                    accept="video/*"
-                                    onChange={handleFileChange}
+                                    placeholder="Video Link"
+                                    value={formData.video}
+                                    onChange={handleInputChange}
                                 />
                             )}
                         </div>
@@ -258,20 +291,30 @@ export default function AlumniBusiness() {
                 );
             case 'Submitted Business':
                 return (
-                    <div className="submitted-posts-list">
-                        {submittedPosts.map((post) => (
-                            <div key={post.id} className="post-item">
-                                <p>{post.title}</p>
-                            </div>
-                        ))}
+                        <div className="submitted-posts-list">
+                            {displayedPosts.map((post) => (
+                                <div key={post.id} className="post-item">
+                                    <p onClick={() => handleEditStory(post)}>{post.title}</p>
+                                    {(auth.user.is_crc || auth.user.is_superuser) && (
+                                    <button onClick={() => handleDelete(post.id)} className="story-delete-button">
+                                        Delete
+                                    </button> 
+                                            )}
+                                </div>
+                            ))}
                     </div>
                 );
             case 'Displayed Business':
                 return (
                     <div className="submitted-posts-list">
-                        {displayedPosts.map((post) => (
-                            <div key={post.id} className="post-item">
+                        {submittedPosts.map((post) => (
+                            <div key={post.id} className="post-item" onClick={() => handleEditStory(post)}>
                                 <p>{post.title}</p>
+                                {(auth.user.is_crc || auth.user.is_superuser) && (
+                                <button onClick={() => handleDelete(post.id)} className="story-delete-button">
+                                    Delete
+                                </button>
+                                )}
                             </div>
                         ))}
                     </div>
