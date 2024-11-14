@@ -575,6 +575,11 @@ class StorySerializer(serializers.ModelSerializer):
 #Alumni Businesses
 class AlumniBusinessSerializer(serializers.ModelSerializer):
     alumn_details = serializers.SerializerMethodField()
+    alumn = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Alumni.objects.all(),
+        required=False
+    )
 
     class Meta:
         model = AlumniBusiness
@@ -591,6 +596,19 @@ class AlumniBusinessSerializer(serializers.ModelSerializer):
             'combination_name': alumn.combination.combination_name
         } for alumn in obj.alumn.all()]
 
+    def to_internal_value(self, data):
+        if 'alumn' in data and isinstance(data['alumn'], str):
+            try:
+                data = data.copy()
+                alumn_ids = [int(id.strip()) for id in data['alumn'].split(',') if id.strip()]
+                data['alumn'] = alumn_ids
+            except (ValueError, AttributeError):
+                raise serializers.ValidationError({
+                    'alumn': 'Invalid format. Please provide comma-separated IDs or list of IDs.',
+                    'received_value': data['alumn'],
+                    'expected_format': "Either '1,2,3' or [1,2,3]"
+                })
+        return super().to_internal_value(data)
 
 #Studie serializers
 

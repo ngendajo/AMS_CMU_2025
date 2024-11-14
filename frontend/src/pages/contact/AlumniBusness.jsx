@@ -139,13 +139,13 @@ export default function AlumniBusiness() {
         try {
             // Create a new FormData object to prepare for file upload
             const formDataToSend = new FormData();
-            
+            let alumn=formData.alumn.map(Number)
             // Append each field in formData to formDataToSend
             formDataToSend.append("title", formData.title);
             formDataToSend.append("description", formData.description);
             formDataToSend.append("displayed", formData.displayed);
             formDataToSend.append("createdat", formData.createdat);
-            formDataToSend.append("alumn", formData.alumn.map(Number))
+            formDataToSend.append("alumn", alumn)
     
             // Append selected alumni IDs as an array
             //formData.alumn.forEach(alumId => formDataToSend.append("alumn", alumId));
@@ -157,7 +157,7 @@ export default function AlumniBusiness() {
             if (formData.video) {
                 formDataToSend.append("video", formData.video);
             }
-            console.log(formData.alumn.map(Number))
+            console.log(alumn)
             // Send the formDataToSend object in the request
             const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
                 headers: {
