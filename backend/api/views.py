@@ -6108,8 +6108,8 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
-    @action(detail=True, methods=['put'])
-    def update_eap_attendance(self, request):
+    @action(detail=True, methods=['post'])
+    def update_eap_attendance(self, request,pk=None):
         try:
             # Retrieve the attendance object
             attendance = self.get_object()
