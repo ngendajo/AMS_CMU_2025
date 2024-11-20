@@ -1247,21 +1247,25 @@ class EapSerializer(serializers.ModelSerializer):
         return data
     
 #EAP Attendance
-class AttendanceSerializer(serializers.ModelSerializer):
+class EapAttendanceSerializer(serializers.ModelSerializer):
     student_id = serializers.IntegerField(read_only=True)
     first_name = serializers.CharField(read_only=True)
     last_name = serializers.CharField(read_only=True)
-    eap_id = serializers.IntegerField(source='id', read_only=True)
+    eapAttendance_id = serializers.IntegerField(source='id', read_only=True)
     staff_first_name = serializers.CharField(read_only=True)
     staff_last_name = serializers.CharField(read_only=True)
     eapabsenteeism_id = serializers.IntegerField(read_only=True)
     status = serializers.CharField(read_only=True)
+    class_name = serializers.CharField(read_only=True)
+    school_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = EapAttendance
-        fields = ['eap_id', 'date', 'staff', 'eap_class', 'student_id', 
-                 'first_name', 'last_name', 'staff_first_name', 
-                 'staff_last_name', 'eapabsenteeism_id', 'status']
+        fields = ['eapAttendance_id', 'date', 'staff', 'eap_class', 
+                 'student_id', 'first_name', 'last_name', 
+                 'staff_first_name', 'staff_last_name', 
+                 'eapabsenteeism_id', 'status', 'class_name', 
+                 'school_name']
        
 #new way of taking attendance
 class TimetableSerializer(serializers.ModelSerializer):

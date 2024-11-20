@@ -6052,9 +6052,9 @@ class AttendanceReportView(generics.GenericAPIView):
             )
             
 #Attendance in EAP
-class AttendanceViewSet(viewsets.ModelViewSet):
+class EapAttendanceViewSet(viewsets.ModelViewSet):
     queryset = EapAttendance.objects.all()
-    serializer_class = AttendanceSerializer
+    serializer_class = EapAttendanceSerializer
 
     def create(self, request, *args, **kwargs):
         try:
@@ -6129,12 +6129,14 @@ class AttendanceViewSet(viewsets.ModelViewSet):
                     'student_id': student.id,
                     'first_name': student.first_name,
                     'last_name': student.last_name,
-                    'eap_id': attendance.id if attendance else None,
+                    'eapAttendance_id': attendance.id if attendance else None,
                     'date': date,
                     'staff_first_name': attendance.staff.first_name if attendance else None,
                     'staff_last_name': attendance.staff.last_name if attendance else None,
                     'eapabsenteeism_id': None,
-                    'status': None
+                    'status': None,
+                    'class_name': student.current_class.name if student.current_class else None,
+                    'school_name': student.student_school.name if student.student_school else None
                 }
                 
                 if attendance:
@@ -6187,12 +6189,14 @@ class AttendanceViewSet(viewsets.ModelViewSet):
                         'student_id': student.id,
                         'first_name': student.first_name,
                         'last_name': student.last_name,
-                        'eap_id': attendance.id,
+                        'eapAttendance_id': attendance.id,
                         'date': attendance.date,
                         'staff_first_name': attendance.staff.first_name,
                         'staff_last_name': attendance.staff.last_name,
                         'eapabsenteeism_id': None,
-                        'status': None
+                        'status': None,
+                        'class_name': student.current_class.name if student.current_class else None,
+                        'school_name': student.student_school.name if student.student_school else None
                     }
                     
                     absenteeism = EapAbsenteeism.objects.filter(
