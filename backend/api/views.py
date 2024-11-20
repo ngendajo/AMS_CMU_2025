@@ -6106,7 +6106,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 'status': 'error',
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['put'])
     def update_attendance(self, request, *args, **kwargs):
         try:
             attendance = self.get_object()
@@ -6132,7 +6132,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
-    @action(detail=False, methods=['patch'])
+    @action(detail=False, methods=['put'])
     def update_absenteeism_status(self, request):
         try:
             absenteeism_id = request.data.get('absenteeism_id')

@@ -44,7 +44,7 @@ export const updateEapAtt = (auth, attendance_id, data) => {
   });
 };
 export const updateEapAbseStatus = (auth, data) => {
-    return axios.patch(`${baseUrl}/eap-attendance/update_absenteeism_status/`, data, {
+    return axios.put(`${baseUrl}/eap-attendance/update_absenteeism_status/`, data, {
       headers: {
         "Authorization": 'Bearer ' + String(auth.accessToken),
         "Content-Type": 'multipart/form-data'
