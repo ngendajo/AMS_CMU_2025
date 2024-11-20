@@ -6109,28 +6109,48 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['put'])
     def update_attendance(self, request):
         try:
+            # Retrieve the attendance object
             attendance = self.get_object()
+
+            # Extract absenteeism data
             absenteeism_data = request.data.get('absenteeism', {})
+            if not absenteeism_data:
+                return Response({
+                    'status': 'error',
+                    'message': 'Absenteeism data is required'
+                }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Create EapAbsenteeism
+            student_id = absenteeism_data.get('student')
+            status_value = absenteeism_data.get('status')
+
+            # Validate required fields
+            if not student_id or not status_value:
+                return Response({
+                    'status': 'error',
+                    'message': 'Both student ID and status are required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Create the absenteeism record
             absenteeism = EapAbsenteeism.objects.create(
-                student_id=absenteeism_data.get('student'),
-                status=absenteeism_data.get('status'),
+                student_id=student_id,
+                status=status_value,
                 date=attendance.date
             )
-            
-            # Update attendance with new absenteeism
+
+            # Add the absenteeism record to attendance
             attendance.absentees.add(absenteeism)
-            
+
             return Response({
                 'status': 'success',
                 'message': 'Attendance updated successfully'
             })
         except Exception as e:
+            # Log the error and return the response
             return Response({
-                'status': 'error here',
+                'status': 'error',
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             
     @action(detail=False, methods=['put'])
     def update_absenteeism_status(self, request):
