@@ -91,8 +91,8 @@ export default function EapsAtt() {
                                     "student": student_id,
                                     "status": status
                                 }
-
-                        })
+                            }
+                        )
                     }
                 }
             }
