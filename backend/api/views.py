@@ -6130,7 +6130,8 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             if not student_id or not status_value:
                 return Response({
                     'status': 'error',
-                    'message': 'Both student ID and status are required'
+                    'message': 'Both student ID and status are required',
+                    'received_data': absenteeism_data
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Create the absenteeism record
