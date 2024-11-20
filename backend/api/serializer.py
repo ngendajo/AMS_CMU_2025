@@ -1217,15 +1217,21 @@ class SchoolSerializer(serializers.ModelSerializer):
         return value
 
 class EapClassSerializer(serializers.ModelSerializer):
+    attendance_id = serializers.SerializerMethodField()
+
     class Meta:
         model = EapClass
-        fields = ['id', 'name', 'academic_year']
+        fields = ['id', 'name', 'academic_year', 'attendance_id']
 
-    def validate(self, data):
-        # Validate that academic year is reasonable
-        if data['academic_year'] < 2000 or data['academic_year'] > 2100:
-            raise serializers.ValidationError({"academic_year": "Academic year must be between 2000 and 2100"})
-        return data
+    def get_attendance_id(self, obj):
+        date = self.context.get('date')
+        if date:
+            attendance = EapAttendance.objects.filter(
+                eap_class=obj,
+                date=date
+            ).first()
+            return attendance.id if attendance else None
+        return None
 
 class EapSerializer(serializers.ModelSerializer):
     school = serializers.CharField(source='student_school.name', read_only=True)

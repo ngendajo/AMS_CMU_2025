@@ -5555,6 +5555,37 @@ class EapClassViewSet(viewsets.ModelViewSet):
     queryset = EapClass.objects.all()
     serializer_class = EapClassSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        # Get date from query parameters
+        date_param = self.request.query_params.get('date')
+        if date_param:
+            try:
+                # Convert string date to datetime.date object
+                date = datetime.strptime(date_param, '%Y-%m-%d').date()
+                context['date'] = date
+            except ValueError:
+                # If date format is invalid, don't add it to context
+                pass
+        return context
+
+    def list(self, request, *args, **kwargs):
+        if 'date' not in request.query_params:
+            return Response(
+                {'error': 'Date parameter is required (format: YYYY-MM-DD)'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        if 'date' not in request.query_params:
+            return Response(
+                {'error': 'Date parameter is required (format: YYYY-MM-DD)'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return super().retrieve(request, *args, **kwargs)
+
+    # Keep the rest of the methods (create, update, destroy) unchanged
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
@@ -5586,7 +5617,6 @@ class EapClassViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            # Check if class has any students
             if instance.eap_set.exists():
                 return Response(
                     {'error': 'Cannot delete class with existing students.'},
