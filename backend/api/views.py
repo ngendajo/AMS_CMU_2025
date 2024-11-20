@@ -6119,7 +6119,8 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             if not absenteeism_data:
                 return Response({
                     'status': 'error',
-                    'message': 'Absenteeism data is required'
+                    'message': 'Absenteeism data is required',
+                    'received_data': request.data
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             student_id = absenteeism_data.get('student')
