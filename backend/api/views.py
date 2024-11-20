@@ -6052,83 +6052,167 @@ class AttendanceReportView(generics.GenericAPIView):
             )
             
 #Attendance in EAP
-class EapAttendanceAPI(generics.ListCreateAPIView):
-    serializer_class = EapAttendanceSerializer
-    #permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = EapAttendance.objects.annotate(
-            absentees_count=Count('absentees')
-        )
-        
-        # Filter by date range
-        date1 = self.request.query_params.get('date1')
-        date2 = self.request.query_params.get('date2')
-        
-        if date1 and date2:
-            queryset = queryset.filter(date__range=[date1, date2])
-        elif date1:
-            queryset = queryset.filter(date=date1)
-            
-        return queryset.order_by('-date')
-
-    def perform_create(self, serializer):
-        serializer.save(staff=self.request.user)
-
-class EapAttendanceDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+class AttendanceViewSet(viewsets.ModelViewSet):
     queryset = EapAttendance.objects.all()
-    serializer_class = EapAttendanceSerializer
-    #permission_classes = [IsAuthenticated]
+    serializer_class = AttendanceSerializer
 
-    def perform_update(self, serializer):
-        serializer.save(staff=self.request.user)
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    'status': 'success',
+                    'message': 'Attendance created successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_201_CREATED)
+            return Response({
+                'status': 'error',
+                'message': 'Validation error',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class EapAbsenteeismAPI(generics.ListCreateAPIView):
-    serializer_class = EapAbsenteeismSerializer
-    #permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = EapAbsenteeism.objects.all()
-        
-        # Filter by date
-        date = self.request.query_params.get('date')
-        if date:
-            queryset = queryset.filter(created_at__date=date)
+    def update_attendance(self, request, *args, **kwargs):
+        try:
+            attendance = self.get_object()
+            absenteeism_data = request.data.get('absenteeism', {})
             
-        # Filter by status
-        status = self.request.query_params.get('status')
-        if status:
-            queryset = queryset.filter(status=status)
+            # Create EapAbsenteeism
+            absenteeism = EapAbsenteeism.objects.create(
+                student_id=absenteeism_data.get('student'),
+                status=absenteeism_data.get('status'),
+                date=attendance.date
+            )
             
-        return queryset.order_by('-created_at')
+            # Update attendance with new absenteeism
+            attendance.absentees.add(absenteeism)
+            
+            return Response({
+                'status': 'success',
+                'message': 'Attendance updated successfully'
+            })
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class EapAbsenteeismDetailAPI(generics.RetrieveUpdateDestroyAPIView):
-    queryset = EapAbsenteeism.objects.all()
-    serializer_class = EapAbsenteeismSerializer
-    #permission_classes = [IsAuthenticated]
+    @action(detail=False, methods=['get'])
+    def get_by_class_and_date(self, request):
+        try:
+            class_id = request.query_params.get('class_id')
+            date = request.query_params.get('date')
+            
+            if not class_id or not date:
+                return Response({
+                    'status': 'error',
+                    'message': 'class_id and date are required parameters'
+                }, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-#@permission_classes([IsAuthenticated])
-def add_absentee_to_attendance(request, attendance_id):
-    """Add an absentee to an attendance record"""
-    attendance = get_object_or_404(EapAttendance, id=attendance_id)
-    
-    serializer = EapAbsenteeismSerializer(data=request.data)
-    if serializer.is_valid():
-        absentee = serializer.save()
-        attendance.absentees.add(absentee)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # Get all students in the class
+            students = Eap.objects.filter(current_class_id=class_id)
+            
+            # Get attendance for the date
+            attendance = EapAttendance.objects.filter(
+                eap_class_id=class_id,
+                date=date
+            ).first()
 
-@api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
-def remove_absentee_from_attendance(request, attendance_id, absentee_id):
-    """Remove an absentee from an attendance record"""
-    attendance = get_object_or_404(EapAttendance, id=attendance_id)
-    absentee = get_object_or_404(EapAbsenteeism, id=absentee_id)
-    
-    attendance.absentees.remove(absentee)
-    absentee.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+            result = []
+            for student in students:
+                data = {
+                    'student_id': student.id,
+                    'first_name': student.first_name,
+                    'last_name': student.last_name,
+                    'eap_id': attendance.id if attendance else None,
+                    'date': date,
+                    'staff_first_name': attendance.staff.first_name if attendance else None,
+                    'staff_last_name': attendance.staff.last_name if attendance else None,
+                    'eapabsenteeism_id': None,
+                    'status': None
+                }
+                
+                if attendance:
+                    absenteeism = EapAbsenteeism.objects.filter(
+                        student=student,
+                        date=date,
+                        eapattendance=attendance
+                    ).first()
+                    
+                    if absenteeism:
+                        data['eapabsenteeism_id'] = absenteeism.id
+                        data['status'] = absenteeism.status
+                
+                result.append(data)
 
-    
+            return Response({
+                'status': 'success',
+                'data': result
+            })
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, methods=['get'])
+    def get_by_date_range(self, request):
+        try:
+            start_date = request.query_params.get('start_date')
+            end_date = request.query_params.get('end_date')
+            
+            if not start_date or not end_date:
+                return Response({
+                    'status': 'error',
+                    'message': 'start_date and end_date are required parameters'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Get all attendances within date range
+            attendances = EapAttendance.objects.filter(
+                date__range=[start_date, end_date]
+            )
+
+            result = []
+            for attendance in attendances:
+                # Get all students in the class
+                students = Eap.objects.filter(current_class=attendance.eap_class)
+                
+                for student in students:
+                    data = {
+                        'student_id': student.id,
+                        'first_name': student.first_name,
+                        'last_name': student.last_name,
+                        'eap_id': attendance.id,
+                        'date': attendance.date,
+                        'staff_first_name': attendance.staff.first_name,
+                        'staff_last_name': attendance.staff.last_name,
+                        'eapabsenteeism_id': None,
+                        'status': None
+                    }
+                    
+                    absenteeism = EapAbsenteeism.objects.filter(
+                        student=student,
+                        date=attendance.date,
+                        eapattendance=attendance
+                    ).first()
+                    
+                    if absenteeism:
+                        data['eapabsenteeism_id'] = absenteeism.id
+                        data['status'] = absenteeism.status
+                    
+                    result.append(data)
+
+            return Response({
+                'status': 'success',
+                'data': result
+            })
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

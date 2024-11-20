@@ -1246,43 +1246,22 @@ class EapSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"last_name": "Last name cannot be empty"})
         return data
     
-class EapAbsenteeismSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EapAbsenteeism
-        fields = ['id', 'student', 'status', 'created_at']
-        read_only_fields = ['created_at']
+#EAP Attendance
+class AttendanceSerializer(serializers.ModelSerializer):
+    student_id = serializers.IntegerField(read_only=True)
+    first_name = serializers.CharField(read_only=True)
+    last_name = serializers.CharField(read_only=True)
+    eap_id = serializers.IntegerField(source='id', read_only=True)
+    staff_first_name = serializers.CharField(read_only=True)
+    staff_last_name = serializers.CharField(read_only=True)
+    eapabsenteeism_id = serializers.IntegerField(read_only=True)
+    status = serializers.CharField(read_only=True)
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        # Add student details
-        data['student_name'] = f"{instance.student.last_name} {instance.student.first_name}"
-        data['student_class'] = instance.student.current_class.name
-        data['student_school'] = instance.student.student_school.name
-        data['student_id'] = instance.student.studentid
-        return data
-
-class EapAttendanceSerializer(serializers.ModelSerializer):
-    absentees_count = serializers.IntegerField(read_only=True)
-    
     class Meta:
         model = EapAttendance
-        fields = ['id', 'date', 'absentees', 'staff', 'created_at', 'absentees_count']
-        read_only_fields = ['created_at', 'staff']
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        # Add absentees details
-        data['absentees_details'] = [{
-            'id': absentee.id,
-            'student_name': f"{absentee.student.last_name} {absentee.student.first_name}",
-            'student_id': absentee.student.studentid,
-            'student_class': absentee.student.current_class.name,
-            'student_school': absentee.student.student_school.name,
-            'status': absentee.status,
-            'created_at': absentee.created_at
-        } for absentee in instance.absentees.all()]
-        return data
-
+        fields = ['eap_id', 'date', 'staff', 'eap_class', 'student_id', 
+                 'first_name', 'last_name', 'staff_first_name', 
+                 'staff_last_name', 'eapabsenteeism_id', 'status']
        
 #new way of taking attendance
 class TimetableSerializer(serializers.ModelSerializer):
