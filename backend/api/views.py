@@ -6106,7 +6106,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 'status': 'error',
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    @action(detail=True, methods=['post'])
     def update_attendance(self, request, *args, **kwargs):
         try:
             attendance = self.get_object()
@@ -6125,6 +6125,45 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             return Response({
                 'status': 'success',
                 'message': 'Attendance updated successfully'
+            })
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+    @action(detail=False, methods=['patch'])
+    def update_absenteeism_status(self, request):
+        try:
+            absenteeism_id = request.data.get('absenteeism_id')
+            new_status = request.data.get('status')
+            
+            if not absenteeism_id or not new_status:
+                return Response({
+                    'status': 'error',
+                    'message': 'absenteeism_id and status are required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Get the absenteeism record
+            try:
+                absenteeism = EapAbsenteeism.objects.get(id=absenteeism_id)
+            except EapAbsenteeism.DoesNotExist:
+                return Response({
+                    'status': 'error',
+                    'message': 'Absenteeism record not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # Update the status
+            absenteeism.status = new_status
+            absenteeism.save()
+
+            return Response({
+                'status': 'success',
+                'message': 'Absenteeism status updated successfully',
+                'data': {
+                    'absenteeism_id': absenteeism.id,
+                    'new_status': absenteeism.status
+                }
             })
         except Exception as e:
             return Response({
