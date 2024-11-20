@@ -6128,7 +6128,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             })
         except Exception as e:
             return Response({
-                'status': 'error',
+                'status': 'error here',
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
