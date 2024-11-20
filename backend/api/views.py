@@ -6109,102 +6109,55 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     @action(detail=True, methods=['put'])
     def update_eap_attendance(self, request):
-        try:
-            # Retrieve the attendance object with error handling
-            try:
-                attendance = self.get_object()
-            except ObjectDoesNotExist:
-                return Response({
-                    'status': 'error',
-                    'message': 'Attendance record not found'
-                }, status=status.HTTP_404_NOT_FOUND)
-
-            # Validate request data
-            absenteeism_data = request.data.get('absenteeism', {})
-            if not isinstance(absenteeism_data, dict):
-                return Response({
-                    'status': 'error',
-                    'message': 'Invalid absenteeism data format'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            # Extract and validate student ID
-            student_id = absenteeism_data.get('student')
-            if not student_id:
-                return Response({
-                    'status': 'error',
-                    'message': 'Student ID is required'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            # Validate student exists
-            try:
-                student = Student.objects.get(id=student_id)
-            except Student.DoesNotExist:
-                return Response({
-                    'status': 'error',
-                    'message': 'Invalid student ID'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            # Validate status
-            status_value = absenteeism_data.get('status')
-            valid_statuses = ['present', 'absent', 'excused']
-            if status_value not in valid_statuses:
-                return Response({
-                    'status': 'error',
-                    'message': f'Invalid status. Must be one of: {", ".join(valid_statuses)}'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            # Check for existing absenteeism record to avoid duplicates
-            existing_absenteeism = EapAbsenteeism.objects.filter(
-                student=student, 
-                date=attendance.date
-            ).first()
-
-            if existing_absenteeism:
-                # Update existing record
-                existing_absenteeism.status = status_value
-                existing_absenteeism.save()
-                absenteeism = existing_absenteeism
-            else:
-                # Create new absenteeism record
-                absenteeism = EapAbsenteeism.objects.create(
-                    student=student,
-                    status=status_value,
-                    date=attendance.date
-                )
-
-            # Add or update absenteeism record
-            attendance.absentees.add(absenteeism)
-
-            return Response({
-                'status': 'success',
-                'message': 'Attendance updated successfully',
-                'data': {
-                    'student_id': student_id,
-                    'status': status_value,
-                    'date': attendance.date
-                }
-            }, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            # Comprehensive error logging
-            logger.error(f"Attendance update error: {str(e)}", exc_info=True)
-            
-            return Response({
-                'status': 'error',
-                'message': 'An unexpected error occurred during attendance update',
-                'details': {
-                    'error_type': type(e).__name__,
-                    'error_message': str(e)
-                }
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            
-    @action(detail=False, methods=['put'])
-    def update_absenteeism_status(self, request):
         return Response({
                 'status': 'message',
                 'message': 'Time during attendance update'
             })
+
+            
+    @action(detail=False, methods=['put'])
+    def update_absenteeism_status(self, request):
+        try:
+            absenteeism_id = request.data.get('absenteeism_id')
+            new_status = request.data.get('status')
+            
+            if not absenteeism_id or not new_status:
+                return Response({
+                    'status': 'error',
+                    'message': 'absenteeism_id and status are required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Get the absenteeism record
+            try:
+                absenteeism = EapAbsenteeism.objects.get(id=absenteeism_id)
+            except EapAbsenteeism.DoesNotExist:
+                return Response({
+                    'status': 'error',
+                    'message': 'Absenteeism record not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # Update the status
+            absenteeism.status = new_status
+            absenteeism.save()
+
+            return Response({
+                'status': 'success',
+                'message': 'Absenteeism status updated successfully',
+                'data': {
+                    'absenteeism_id': absenteeism.id,
+                    'new_status': absenteeism.status
+                }
+            })
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': 'An unexpected error occurred during attendance update',
+                'error_details': {
+                    'error_type': type(e).__name__,
+                    'error_message': str(e),
+                    'full_traceback': traceback.format_exc()
+                }
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
     @action(detail=False, methods=['delete'])
     def delete_absenteeism(self, request):
