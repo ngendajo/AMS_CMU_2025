@@ -41,7 +41,7 @@ router.register(r'eap', views.EapViewSet)
 #alumni businesses
 router.register(r'alumni-business', views.AlumniBusinessViewSet, basename='alumnibusiness')
 #EAP Attendance
-router.register('eap-attendance', views.EapAttendanceViewSet, basename='eap-attendance')
+router.register(r'eap-attendance', views.EapAttendanceViewSet, basename='eap-attendance')
 
 urlpatterns = [
     # user paths
