@@ -601,15 +601,17 @@ class EapAbsenteeism(models.Model):
     student = models.ForeignKey(Eap, on_delete=models.PROTECT)
     status = models.CharField(max_length=10, choices=STATUSES)
     created_at = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(default=timezone.now)  # Added this field for better tracking
 
     def __str__(self):
         return f"{self.student} - {self.status} on {self.date}"
 
 class EapAttendance(models.Model):
     date = models.DateField(default=timezone.now)
-    absentees = models.ManyToManyField(EapAbsenteeism)
+    absentees = models.ManyToManyField(EapAbsenteeism, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     staff = models.ForeignKey(User, on_delete=models.CASCADE)
+    eap_class = models.ForeignKey('EapClass', on_delete=models.PROTECT)  # Added this field
 
     def __str__(self):
         return f"{self.eap_class} attendance on {self.date}"

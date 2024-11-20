@@ -107,7 +107,7 @@ export default function AlumniBusiness() {
             return updatedSelection;
         });
     };
-    console.log("SelectedAlumni",selectedAlumni,"FormData",formData)
+    //console.log("SelectedAlumni",selectedAlumni,"FormData",formData)
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -157,7 +157,7 @@ export default function AlumniBusiness() {
             if (formData.video) {
                 formDataToSend.append("video", formData.video);
             }
-            console.log(alumn)
+            //console.log(alumn)
             // Send the formDataToSend object in the request
             const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
                 headers: {
@@ -175,7 +175,16 @@ export default function AlumniBusiness() {
             } else {
                 setSubmittedPosts([...submittedPosts, newStory]);
             }
-    
+            setFormData({
+                alumn: [],
+                title: '',
+                description: '',
+                image: '',
+                video: '',
+                displayed: false,
+                createdat: new Date().toISOString(),
+            })
+            setSelectedAlumni({})
             alert("Submitted successfully");
             setActiveTab('Submitted Business');
         } catch (err) {
@@ -214,7 +223,9 @@ export default function AlumniBusiness() {
             displayed: story.displayed,
             createdat: new Date().toISOString(),
         });
-        setSelectedAlumni(story.alumn);
+        //setSelectedAlumni();
+        console.log(story.alumn)
+        console.log(alumniData[0]["id"])
         setActiveTab('New Business');
     };
 
