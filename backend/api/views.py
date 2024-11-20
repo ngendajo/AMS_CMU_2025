@@ -6115,7 +6115,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
             attendance = self.get_object()
 
             # Extract absenteeism data
-            absenteeism_data = request.data.get('absenteeism', {})
+            absenteeism_data = request.data
             if not absenteeism_data:
                 return Response({
                     'status': 'error',
