@@ -35,7 +35,7 @@ export const createEapAtt = (auth, data) => {
 
 // Update a Grade Time Slot
 export const updateEapAtt = (auth, attendance_id, data) => {
-  return axios.put(`${baseUrl}/eap-attendance/${attendance_id}/update_attendance/`, data, {
+  return axios.put(`${baseUrl}/eap-attendance/${attendance_id}/update_eap_attendance/`, data, {
     headers: {
       "Authorization": 'Bearer ' + String(auth.accessToken),
       "Content-Type": 'multipart/form-data'
