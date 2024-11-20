@@ -6120,7 +6120,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 return Response({
                     'status': 'error',
                     'message': 'Absenteeism data is required',
-                    'received_data': request.data
+                    'received_data': absenteeism_data
                 }, status=status.HTTP_400_BAD_REQUEST)
             
             student_id = absenteeism_data.get('student')
