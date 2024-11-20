@@ -46,16 +46,15 @@ export default function EapsAtt() {
         },
         [auth]
     );
-
+    const fetchCombinations = async () => {
+        try {
+            const response = await fetchEapClass(auth, selectedDate);
+            setCombinations(response.data);
+        } catch (error) {
+            console.error("Error fetching combinations:", error);
+        }
+    };
     useEffect(() => {
-        const fetchCombinations = async () => {
-            try {
-                const response = await fetchEapClass(auth, selectedDate);
-                setCombinations(response.data);
-            } catch (error) {
-                console.error("Error fetching combinations:", error);
-            }
-        };
         fetchCombinations();
     }, [auth, selectedDate]);
 
@@ -65,6 +64,7 @@ export default function EapsAtt() {
         if (selectedCombination) {
             await getStudentsForSelectedClass(selectedCombination.id, newDate);
         }
+        fetchCombinations();
     };
 
     const handleAttendanceChange = async (status, student_id, eapAttendance_id, absenteeism_id) => {
@@ -82,10 +82,6 @@ export default function EapsAtt() {
                             "status": status
                         })
                     }else{
-                        console.log( {"absenteeism": {
-                            "student": student_id,
-                            "status": status
-                        }})
                         await updateEapAtt(auth,eapAttendance_id,{
                             "absenteeism": {
                                     "student": student_id,
@@ -106,8 +102,8 @@ export default function EapsAtt() {
     const removeStudents = () => {
         setFilteredStudents([]);
         setSelectedCombination(null);
+        fetchCombinations()
     };
-
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -159,7 +155,7 @@ export default function EapsAtt() {
                         <h2>Attendance for Class {selectedCombination.name}</h2>
                         <DynamicTable
                             mockdata={filteredStudents.map(
-                                ({ student_id, last_name, first_name, absenteeism_id, eapAttendance_id, school_name, status }, index) => ({
+                                ({ student_id, last_name, first_name, eapabsenteeism_id, eapAttendance_id, school_name, status }, index) => ({
                                     No: index + 1,
                                     Name: `${last_name} ${first_name}`,
                                     School: school_name,
@@ -168,7 +164,7 @@ export default function EapsAtt() {
                                             type="radio"
                                             name={`attendance-${index}`}
                                             checked={status === "present" || status === null}
-                                            onChange={() => handleAttendanceChange("present", student_id,eapAttendance_id, absenteeism_id)}
+                                            onChange={() => handleAttendanceChange("present", student_id,eapAttendance_id, eapabsenteeism_id)}
                                         />
                                     ),
                                     Absent: (
@@ -176,7 +172,7 @@ export default function EapsAtt() {
                                             type="radio"
                                             name={`attendance-${index}`}
                                             checked={status === "absent"}
-                                            onChange={() => handleAttendanceChange("absent", student_id, eapAttendance_id, absenteeism_id)}
+                                            onChange={() => handleAttendanceChange("absent", student_id, eapAttendance_id, eapabsenteeism_id)}
                                         />
                                     ),
                                     Late: (
@@ -184,7 +180,7 @@ export default function EapsAtt() {
                                             type="radio"
                                             name={`attendance-${index}`}
                                             checked={status === "late"}
-                                            onChange={() => handleAttendanceChange("late", student_id, eapAttendance_id, absenteeism_id)}
+                                            onChange={() => handleAttendanceChange("late", student_id, eapAttendance_id, eapabsenteeism_id)}
                                         />
                                     ),
                                 })
@@ -211,6 +207,16 @@ export default function EapsAtt() {
                             }}
                         >
                             <h2 style={{ margin: '5px 0' }}>Class {comb.name}</h2>
+                            <p 
+                                style={{ // Cycle through colors
+                                color:  comb.attendance_id ? '#498160': "#d8b040",
+                                backgroundColor:"#000",
+                                padding: '5px',
+                                borderRadius: '4px',
+                                }}>
+                                {comb.attendance_id & comb.absentees_count>0? "Attendance taken showing "+comb.absentees_count+" absence(s)":comb.attendance_id?"Attendance teaken":"Not Yet taken"}
+                                </p>
+                            
                         </div>
                     ))
                 )}
