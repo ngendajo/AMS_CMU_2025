@@ -6052,7 +6052,7 @@ class AttendanceReportView(generics.GenericAPIView):
             )
             
 #Attendance in EAP
-class AttendanceViewSet(viewsets.ModelViewSet):
+class EapAttendanceViewSet(viewsets.ModelViewSet):
     queryset = EapAttendance.objects.all()
     serializer_class = EapAttendanceSerializer
 
@@ -6095,44 +6095,6 @@ class AttendanceViewSet(viewsets.ModelViewSet):
             return Response({
                 'status': 'success',
                 'message': 'Attendance updated successfully'
-            })
-        except Exception as e:
-            return Response({
-                'status': 'error',
-                'message': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    @action(detail=False, methods=['delete'])
-    def delete_absenteeism(self, request):
-        try:
-            absenteeism_id = request.query_params.get('absenteeism_id')
-            
-            if not absenteeism_id:
-                return Response({
-                    'status': 'error',
-                    'message': 'absenteeism_id is required'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            # Get the absenteeism record
-            try:
-                absenteeism = EapAbsenteeism.objects.get(id=absenteeism_id)
-            except EapAbsenteeism.DoesNotExist:
-                return Response({
-                    'status': 'error',
-                    'message': 'Absenteeism record not found'
-                }, status=status.HTTP_404_NOT_FOUND)
-
-            # Find related attendance and remove the absenteeism
-            attendance = EapAttendance.objects.filter(absentees=absenteeism).first()
-            if attendance:
-                attendance.absentees.remove(absenteeism)
-
-            # Delete the absenteeism record
-            absenteeism.delete()
-
-            return Response({
-                'status': 'success',
-                'message': 'Absenteeism record deleted successfully'
             })
         except Exception as e:
             return Response({
