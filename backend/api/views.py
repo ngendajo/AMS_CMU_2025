@@ -6123,8 +6123,8 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                     'received_data': absenteeism_data
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            student_id = absenteeism_data.get('student')
-            status_value = absenteeism_data.get('status')
+            student_id = absenteeism_data.absenteeism.get('student')
+            status_value = absenteeism_data.absenteeism.get('status')
 
             # Validate required fields
             if not student_id or not status_value:
