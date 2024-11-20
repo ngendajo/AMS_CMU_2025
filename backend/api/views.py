@@ -6235,7 +6235,12 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({
                 'status': 'error',
-                'message': str(e)
+                'message': 'An unexpected error occurred during attendance update',
+                'error_details': {
+                    'error_type': type(e).__name__,
+                    'error_message': str(e),
+                    'full_traceback': traceback.format_exc()
+                }
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
     @action(detail=False, methods=['delete'])
