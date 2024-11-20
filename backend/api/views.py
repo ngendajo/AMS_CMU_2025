@@ -6107,13 +6107,7 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 'status': 'error',
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    @action(detail=True, methods=['put'])
-    def update_eap_attendance(self, request):
-        return Response({
-                'status': 'message',
-                'message': 'Time during attendance update'
-            })
-
+    
             
     @action(detail=False, methods=['put'])
     def update_absenteeism_status(self, request):
