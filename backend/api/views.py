@@ -1,6 +1,7 @@
 
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
+from traceback import format_exc
 from django.db.models import OuterRef, Subquery, IntegerField,Count, Case, When, IntegerField,Q,Prefetch, F
 from rest_framework.decorators import action
 from django.db.models.functions import Coalesce
@@ -6145,10 +6146,16 @@ class EapAttendanceViewSet(viewsets.ModelViewSet):
                 'message': 'Attendance updated successfully'
             })
         except Exception as e:
-            # Log the error and return the response
+            # Capture and format detailed error information
+            error_details = {
+                'error_type': type(e).__name__,
+                'error_message': str(e),
+                'stack_trace': format_exc()  # Stack trace for debugging
+            }
             return Response({
                 'status': 'error',
-                'message': str(e)
+                'message': 'An error occurred during attendance update',
+                'details': error_details
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             
