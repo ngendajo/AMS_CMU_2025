@@ -3,9 +3,10 @@ import axios from 'axios';
 import useAuth from '../../hooks/useAuth';
 import baseUrl from '../../api/baseUrl';
 import DynamicTable from "../pages/dinamicTable/DynamicTable";
+import { fetchEapClass } from '../../services/eapclassservices';
 
 export default function EapsAtt() {
-    const [selectedCombination, setSelectedCombination] = useState('');
+    const [selectedCombination, setSelectedCombination] = useState({});
     const [combinations, setCombinations] = useState([]);
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
@@ -18,22 +19,8 @@ export default function EapsAtt() {
     const handleCombinationChange = async (comb) => {
             const combination = comb;
             setSelectedCombination(combination);
+            console.log(combination)
             
-            if (combination && students.length > 0) {
-                try {
-                    // Wait for the filtered students asynchronously
-                    const filteredStudents = await getStudentsForCombination(
-                        combination,
-                        selectedDate
-                    );
-        
-                    // Set the filtered students state after data is fetched
-                    setFilteredStudents(filteredStudents);
-                } catch (error) {
-                    console.error("Error fetching filtered students:", error);
-                    // Optionally, handle errors by displaying a message or taking some other action
-                }
-            }
         };
         const getStudentsForCombination = async (selectedCombination, selectedDate) => {
             try {
@@ -98,26 +85,6 @@ export default function EapsAtt() {
         };
       
     
-        const getStudents = useCallback(async () => {
-            if (!auth?.accessToken) return; // Ensure accessToken exists
-            try {
-                const response = await axios.get(`${baseUrl}/eap/`, {
-                    headers: {
-                        "Authorization": `Bearer ${String(auth.accessToken)}`,
-                    },
-                    withCredentials: true,
-                });
-                
-                const currentStudents = response.data; //.filter(student => student.eay > currentYear);
-                setStudents(currentStudents);
-                const uniqueClasses = [...new Set(currentStudents.map(student => student.eap_class))];
-                setCombinations(uniqueClasses)
-            } catch (err) {
-                console.error(err);
-                // navigate('/error');
-            }
-        }, [auth]); // Add auth and currentYear as dependencies since they're used inside the function
-    
         const getAttendances = useCallback(async () => {
             if (!auth?.accessToken) return; // Ensure accessToken exists
             try {
@@ -140,8 +107,8 @@ export default function EapsAtt() {
         }, [auth]); // Add necessary dependencies used in this function
         
         useEffect(() => {
-            getStudents();
-        }, [getStudents]); // Add the functions as dependencies
+            fetchEapClass(auth,selectedDate).then(response => setCombinations(response.data));
+        }, []); // Add the functions as dependencies
     
     
     
@@ -355,7 +322,7 @@ export default function EapsAtt() {
                     cursor: "pointer", // Change cursor style based on action
                 }}
                 >
-                  <h2 style={{ margin: '5px 0' }}>Class {comb}</h2>
+                  <h2 style={{ margin: '5px 0' }}>Class {comb.name}</h2>
                   
                 </div>
               );

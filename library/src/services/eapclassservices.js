@@ -2,8 +2,8 @@ import axios from 'axios';
 import baseUrl from "../api/baseUrl";
 
 // Fetch Grade Time Slots
-export const fetchEapClass = (auth) => {
-  return axios.get(`${baseUrl}/eap-classes/`, {
+export const fetchEapClass = (auth,date) => {
+  return axios.get(`${baseUrl}/eap-classes/?date=${date}`, {
     headers: {
       "Authorization": 'Bearer ' + String(auth.accessToken),
       "Content-Type": 'multipart/form-data'

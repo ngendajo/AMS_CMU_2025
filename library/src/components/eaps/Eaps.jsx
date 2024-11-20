@@ -8,6 +8,8 @@ import { BiEditAlt, BiSave } from "react-icons/bi";
 
 export default function Eaps() {
     let { auth } = useAuth();
+    const currentDate = new Date();
+    const initialDate = currentDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
     const [eap, setEap] = useState([]);
     const [eapSchools, setEapSchools] = useState([]);
     const [eapClasses, setEapClasses] = useState([]);
@@ -29,7 +31,7 @@ export default function Eaps() {
    
     useEffect(() => {
         fetchSchools(auth).then(response => setEapSchools(response.data));
-        fetchEapClass(auth).then(response => setEapClasses(response.data));
+        fetchEapClass(auth,initialDate).then(response => setEapClasses(response.data));
         fetchEap(auth).then(response => setEap(response.data));
     }, [auth]);
 

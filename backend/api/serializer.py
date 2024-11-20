@@ -1218,10 +1218,11 @@ class SchoolSerializer(serializers.ModelSerializer):
 
 class EapClassSerializer(serializers.ModelSerializer):
     attendance_id = serializers.SerializerMethodField()
+    absentees_count = serializers.SerializerMethodField()
 
     class Meta:
         model = EapClass
-        fields = ['id', 'name', 'academic_year', 'attendance_id']
+        fields = ['id', 'name', 'academic_year', 'attendance_id', 'absentees_count']
 
     def get_attendance_id(self, obj):
         date = self.context.get('date')
@@ -1232,6 +1233,16 @@ class EapClassSerializer(serializers.ModelSerializer):
             ).first()
             return attendance.id if attendance else None
         return None
+
+    def get_absentees_count(self, obj):
+        date = self.context.get('date')
+        if date:
+            attendance = EapAttendance.objects.filter(
+                eap_class=obj,
+                date=date
+            ).first()
+            return attendance.absentees.count() if attendance else 0
+        return 0
 
 class EapSerializer(serializers.ModelSerializer):
     school = serializers.CharField(source='student_school.name', read_only=True)
