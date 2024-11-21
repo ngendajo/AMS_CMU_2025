@@ -5510,11 +5510,11 @@ class StudentsPerGradeView(APIView):
                 total_students=Count('families__rfamily', filter=Q(families__rfamily__user__current=True), distinct=True),
                 total_male=Count('families__rfamily', filter=Q(
                     families__rfamily__user__current=True, 
-                    families__rfamily__user__gender='Male'
+                    families__rfamily__user__gender='M'
                 ), distinct=True),
                 total_female=Count('families__rfamily', filter=Q(
                     families__rfamily__user__current=True, 
-                    families__rfamily__user__gender='Female'
+                    families__rfamily__user__gender='F'
                 ), distinct=True)
             ).annotate(
                 # Additional filter to remove rows with zero total students
