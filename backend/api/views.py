@@ -5501,6 +5501,36 @@ class AttendanceViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Attendance not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class StudentsPerGradeView(APIView):
+    def get(self, request):
+        try:
+            # Annotate grades with student counts
+            grades_data = Grade.objects.annotate(
+                total_students=Count('families__rfamily__student'),
+                total_male=Count('families__rfamily__student', filter=Q(families__rfamily__user__gender='Male')),
+                total_female=Count('families__rfamily__student', filter=Q(families__rfamily__user__gender='Female'))
+            ).values(
+                'id', 
+                'grade_name', 
+                'total_students', 
+                'total_male', 
+                'total_female'
+            )
+            
+            # Convert QuerySet to list for response
+            result = list(grades_data)
+            
+            return Response({
+                'status': 'success',
+                'data': result
+            }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
        
 
 #English Access Program 
