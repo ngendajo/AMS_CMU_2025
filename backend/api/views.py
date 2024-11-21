@@ -5510,13 +5510,16 @@ class StudentsPerGradeView(APIView):
                 total_students=Count('families__rfamily', filter=Q(families__rfamily__user__current=True), distinct=True),
                 total_male=Count('families__rfamily', filter=Q(
                     families__rfamily__user__current=True, 
-                    families__rfamily__user__gender='M'
+                    families__rfamily__user__gender='Male'
                 ), distinct=True),
                 total_female=Count('families__rfamily', filter=Q(
                     families__rfamily__user__current=True, 
-                    families__rfamily__user__gender='F'
+                    families__rfamily__user__gender='Female'
                 ), distinct=True)
-            ).values(
+            ).annotate(
+                # Additional filter to remove rows with zero total students
+                has_students=Count('families__rfamily', filter=Q(families__rfamily__user__current=True), distinct=True)
+            ).filter(has_students__gt=0).values(
                 'id', 
                 'grade_name', 
                 'total_students', 
