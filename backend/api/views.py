@@ -5505,11 +5505,11 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 class StudentsPerGradeView(APIView):
     def get(self, request):
         try:
-            # Annotate grades with student counts
+            # Annotate grades with student counts using direct Student model
             grades_data = Grade.objects.annotate(
-                total_students=Count('families__rfamily__student'),
-                total_male=Count('families__rfamily__student', filter=Q(families__rfamily__user__gender='Male')),
-                total_female=Count('families__rfamily__student', filter=Q(families__rfamily__user__gender='Female'))
+                total_students=Count('families__rfamily', distinct=True),
+                total_male=Count('families__rfamily', filter=Q(families__rfamily__user__gender='Male'), distinct=True),
+                total_female=Count('families__rfamily', filter=Q(families__rfamily__user__gender='Female'), distinct=True)
             ).values(
                 'id', 
                 'grade_name', 
