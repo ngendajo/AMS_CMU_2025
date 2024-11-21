@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import baseUrl from "../../api/baseUrl";
 import DynamicTable from "./dinamicTable/DynamicTable";
-import './AttendanceTable.css';
+import './AttendanceTable.css'; 
 
 export default function GeneralReport() {
     const [startDate, setStartDate] = useState('');
