@@ -1,7 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import baseUrl from "../../api/baseUrl";
+import { utils, writeFile } from 'xlsx'; 
+import { fetchStudentsPerGrade } from '../../services/generalReportServices';
 import DynamicTable from "./dinamicTable/DynamicTable";
 import './AttendanceTable.css'; 
 
@@ -10,8 +12,10 @@ export default function GeneralReport() {
     const [endDate, setEndDate] = useState('');
     const [title, setTitle] = useState('');
     const [data, setData] = useState([]);
+    const [studentsPerGrade, setStudentsPerGrade]=useState([])
     const [late, setLate] = useState([]);
     const [generalList, setGeneralList] = useState([]);
+    const [generalReports, setGeneralReports] = useState([]);
     let {auth} = useAuth();
     const buttonStyles = {
         input: {
@@ -54,10 +58,53 @@ export default function GeneralReport() {
           backgroundColor: '#002F6C', // You can change this color if you prefer
         },
       };
-      const getClass = (grade_name, combination_name) => {
+      useEffect(() => {
+        fetchStudentsPerGrade(auth)
+            .then(response => {
+                // Transform the data by mapping over it and updating grade_name
+                const transformedData = response.data.data.map(item => ({
+                ...item,
+                grade_name: getGrade(item.grade_name)
+                }));
+                setStudentsPerGrade(transformedData);
+            });
+    }, [auth]);
+
+    const gradeOrder = ["EY", "S4", "S5", "S6"]; // Define the custom order
+
+const combineStats = (gradeStats) => {
+  const combined = [];
+  
+  studentsPerGrade.forEach(student => {
+    const matchingStat = gradeStats.find(stat => stat.grade_name === student.grade_name);
+    
+    combined.push({
+      grade: student.grade_name,
+      count_Female: matchingStat ? matchingStat.count_Female : 0,
+      count_Male: matchingStat ? matchingStat.count_Male : 0,
+      total_female: student.total_female,
+      total_male: student.total_male,
+      total_students: student.total_students
+    });
+  });
+
+  // Sort based on the defined grade order
+  return combined.sort((a, b) => {
+    const indexA = gradeOrder.indexOf(a.grade);
+    const indexB = gradeOrder.indexOf(b.grade);
+    return indexA - indexB;
+  });
+};
+
+    const getGrade = (grade_name) => {
         const grade = grade_name === "Intwali" ? "S6" :
                       grade_name === "Ishami" ? "S5" :
                       grade_name === "Ijabo" ? "S4" : "EY";
+        return grade
+      };
+
+      const getClass = (grade_name, combination_name) => {
+        const grade =getGrade(grade_name) 
         const comb = (combination_name.match(/\(([^)]+)\)/) || [])[1]?.trim() || combination_name;
         return grade === grade_name ? comb : grade + "_" + comb;
       };
@@ -112,6 +159,24 @@ export default function GeneralReport() {
     
         return { absentData, lateData };
     };
+    const processGradeStats = (students) => {
+        return Object.values(
+          students.reduce((acc, student) => {
+            const grade = student.grade_name;
+            
+            if (!acc[grade]) {
+              acc[grade] = {
+                grade_name: grade,
+                count_Female: 0,
+                count_Male: 0
+              };
+            }
+            
+            acc[grade][`count_${student.gender}`]++;
+            return acc;
+          }, {})
+        ).sort((a, b) => a.grade_name.localeCompare(b.grade_name));
+      };
     const groupByStudentId = (data) => {
         const grouped = {};
         let i=0;
@@ -125,6 +190,7 @@ export default function GeneralReport() {
                     last_name: item.last_name.trim(),
                     first_name: item.first_name.trim(),
                     class_name:getClass(item.grade_name,item.combination_name),
+                    grade_name:getGrade(item.grade_name),
                     family_name: item.family_name,
                     gender: item.gender,
                     count: 1 // Initialize count to 1 since this student appears at least once
@@ -150,9 +216,8 @@ export default function GeneralReport() {
             const groupedData = groupData(response.data);
             const { absentData, lateData } = separateByAbsenteeismStatus(groupedData);
             const groupedAbsentData = groupByStudentId(absentData);
-            console.log(absentData);
-            console.log(lateData );
-            console.log(groupedAbsentData);
+            const gradeStats = processGradeStats(groupedAbsentData);
+            setGeneralReports(combineStats(gradeStats))
             setData(absentData)
             setLate(lateData)
             setGeneralList(groupedAbsentData)
@@ -230,7 +295,106 @@ export default function GeneralReport() {
           console.log("Select date");
         }
       };
-        
+      const downloadData = () => {
+        if (generalList.length === 0) {
+            console.error("No data available to export.");
+            return;
+        }
+    
+        // Extract headers from the keys of the first object
+        const headers = Object.keys(generalList[0]);
+    
+        // Prepare the data for export
+        const data = generalList.map(item => 
+            Object.values(item) // Extract values for each row
+        );
+    
+        // Create a new worksheet with headers and data
+        const worksheet = utils.aoa_to_sheet([headers, ...data]);
+    
+        // Create a new workbook and append the worksheet
+        const workbook = utils.book_new();
+        utils.book_append_sheet(workbook, worksheet, "Student Absenteeism Data");
+    
+        // Create a filename with the current date, time, and nanoseconds
+        const now = new Date();
+        const currentTime = now.toISOString().replace(/[-:]/g, '').split('.')[0]; // Format: YYYYMMDDTHHMMSS
+        const nanoseconds = now.getMilliseconds() * 1000000; // Get nanoseconds
+        const fileName = `student_data_${currentTime}_${nanoseconds}.xlsx`;
+    
+        // Trigger the file download
+        writeFile(workbook, fileName);
+    };
+    const downloadGeneralReports = () => {
+        if (generalReports.length === 0) {
+            console.error("No data available to export.");
+            return;
+        }
+    
+        // Define headers for the table
+        const headers = [
+            "Department",
+            "Grade",
+            "Number of girls",
+            "Number of boys",
+            "Total",
+            "%",
+            "Total girls",
+            "Total boys",
+            "Total Number"
+        ];
+    
+        // Prepare data rows for absenteeism
+        const absenteeismRows = generalReports.map((row, index) => [
+            index === 0 ? "LFHS Absenteeism" : "", // Department column
+            row.grade,
+            row.count_Female || "",
+            row.count_Male || "",
+            (row.count_Female + row.count_Male) || "",
+            row.total_students && row.total_students > 0
+                ? `${(((row.count_Female + row.count_Male) / row.total_students) * 100).toFixed(2)}%`
+                : "",
+            row.total_female || "",
+            row.total_male || "",
+            row.total_students || ""
+        ]);
+    
+        // Prepare data rows for attendance
+        const attendanceRows = generalReports.map((row, index) => [
+            index === 0 ? "LFHS Attendance" : "", // Department column
+            row.grade,
+            (row.total_female - row.count_Female) || "",
+            (row.total_male - row.count_Male) || "",
+            (row.total_students - (row.count_Female + row.count_Male)) || "",
+            row.total_students && row.total_students > 0
+                ? `${(((row.total_students - (row.count_Female + row.count_Male)) / row.total_students) * 100).toFixed(2)}%`
+                : "",
+            "", // Total girls column (not applicable for attendance rows)
+            "", // Total boys column (not applicable for attendance rows)
+            ""  // Total number column (not applicable for attendance rows)
+        ]);
+    
+        // Combine headers and rows
+        const data = [headers, ...absenteeismRows, ...attendanceRows];
+    
+        // Create a new worksheet with the data
+        const worksheet = utils.aoa_to_sheet(data);
+    
+        // Create a new workbook and append the worksheet
+        const workbook = utils.book_new();
+        utils.book_append_sheet(workbook, worksheet, "General Reports");
+    
+        // Create a filename with the current date, time, and nanoseconds
+        const now = new Date();
+        const currentTime = now.toISOString().replace(/[-:]/g, '').split('.')[0]; // Format: YYYYMMDDTHHMMSS
+        const nanoseconds = now.getMilliseconds() * 1000000; // Get nanoseconds
+        const fileName = `general_reports_${currentTime}_${nanoseconds}.xlsx`;
+    
+        // Trigger the file download
+        writeFile(workbook, fileName);
+    };
+    
+       //console.log("data",generalList,"st",studentsPerGrade) 
   return (
     <div>
         <div style={buttonStyles.container}>
@@ -294,6 +458,11 @@ export default function GeneralReport() {
         <h2>{title}</h2>
         <div className="attendance-table">
             <h2>1.1 Students Attendance</h2>
+            <button 
+                style={{ ...buttonStyles.common, ...buttonStyles.today }} 
+                onClick={downloadGeneralReports}>
+                    Download Report
+            </button>
             <table>
                 <thead>
                 <tr>
@@ -310,95 +479,65 @@ export default function GeneralReport() {
                 </thead>
                 <tbody>
                 {/* LFHS attendance section */}
-                <tr className="section-header">
-                    <td rowSpan="4">LFH attendance</td>
-                    <td>EY</td>
-                    <td>70</td>
-                    <td>44</td>
-                    <td>114</td>
-                    <td className="percentage">89.1%</td>
-                    <td>80</td>
-                    <td>48</td>
-                    <td>128</td>
-                </tr>
-                <tr>
-                    <td>S4</td>
-                    <td>77</td>
-                    <td>44</td>
-                    <td>121</td>
-                    <td className="percentage">93.8%</td>
-                    <td>81</td>
-                    <td>48</td>
-                    <td>129</td>
-                </tr>
-                <tr>
-                    <td>S5</td>
-                    <td>75</td>
-                    <td>48</td>
-                    <td>123</td>
-                    <td className="percentage">95.3%</td>
-                    <td>81</td>
-                    <td>48</td>
-                    <td>129</td>
-                </tr>
-                <tr>
-                    <td>S6</td>
-                    <td>70</td>
-                    <td>46</td>
-                    <td>116</td>
-                    <td className="percentage">92.8%</td>
-                    <td>77</td>
-                    <td>48</td>
-                    <td>125</td>
-                </tr>
-
-                {/* LFHS Absenteeism section */}
-                <tr className="section-header">
-                    <td rowSpan="4">LFHS Absenteeism</td>
-                    <td>EY</td>
-                    <td>10</td>
-                    <td>4</td>
-                    <td>14</td>
-                    <td className="percentage">10.9%</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>S4</td>
-                    <td>4</td>
-                    <td>4</td>
-                    <td>8</td>
-                    <td className="percentage">6.2%</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>S5</td>
-                    <td>6</td>
-                    <td>0</td>
-                    <td>6</td>
-                    <td className="percentage">4.7%</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>S6</td>
-                    <td>7</td>
-                    <td>2</td>
-                    <td>9</td>
-                    <td className="percentage">7.2%</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                {
+                    generalReports.map((row, index) => (
+                        <tr key={index}>
+                            {index === 0 && (
+                                <td rowSpan={generalReports.length}>
+                                LFHS Absenteeism
+                                </td>
+                            )}
+                            <td>{row.grade}</td>
+                            <td>{row.count_Female || ""}</td>
+                            <td>{row.count_Male || ""}</td>
+                            <td>{row.count_Female+row.count_Male || ""}</td>
+                            <td className="percentage">
+                                {row.total_students && row.total_students > 0
+                                ? `${(((row.count_Female + row.count_Male) / row.total_students) * 100).toFixed(2)}%`
+                                : ""}
+                            </td>
+                            <td>{row.total_female || ""}</td>
+                            <td>{row.total_male || ""}</td>
+                            <td>{row.total_students || ""}</td>
+                        </tr>
+                        ))
+                        
+                }
+                {
+                    generalReports.map((row, index) => (
+                        <tr key={index}>
+                            {index === 0 && (
+                                <td rowSpan={generalReports.length}>
+                                LFHS Attendance
+                                </td>
+                            )}
+                            <td>{row.grade}</td>
+                            <td>{row.total_female-row.count_Female || ""}</td>
+                            <td>{row.total_male-row.count_Male || ""}</td>
+                            <td>{row.total_students-(row.count_Female+row.count_Male) || ""}</td>
+                            <td className="percentage">
+                                {row.total_students && row.total_students > 0
+                                ? `${(((row.total_students-(row.count_Female + row.count_Male)) / row.total_students) * 100).toFixed(2)}%`
+                                : ""}
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        ))
+                        
+                }
                 </tbody>
             </table>
             </div>
+        <button
+                style={{ ...buttonStyles.common, ...buttonStyles.today }}
+                onClick={downloadData}
+            >
+                Download Data
+        </button>
         <DynamicTable 
-            mockdata={generalList} 
+            mockdata={generalList.map(({ grade_name, ...rest }) => rest)} 
         />
         <div>
             <h2>Absenteeism</h2>
