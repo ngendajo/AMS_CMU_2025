@@ -615,4 +615,42 @@ class EapAttendance(models.Model):
 
     def __str__(self):
         return f"{self.eap_class} attendance on {self.date}"
+    
+#Exam timetable management
+
+class Term(models.Model):
+    term_name = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    academic_year = models.ForeignKey(Academic, on_delete=models.CASCADE, related_name='terms')
+
+    def __str__(self):
+        return self.term_name
+    
+class ExamSchedule(models.Model):
+    term = models.ForeignKey(Term, on_delete=models.CASCADE, related_name='exam_schedules')
+    rom = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='exam_schedules')
+    date = models.DateField()
+    time_slot = models.ForeignKey(TimeSlots, on_delete=models.CASCADE, related_name='exam_schedules')
+    supervisor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='supervised_exams')
+
+    class Meta:
+        unique_together = ['rom', 'date', 'time_slot']
+
+    def clean(self):
+        if self.date:
+            if self.date < self.term.start_date or self.date > self.term.end_date:
+                raise ValidationError("Exam date must be within term dates")
+
+    def __str__(self):
+        return f"{self.rom} - {self.date} - {self.time_slot}"
+
+class Exam(models.Model):
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE, related_name='exams')
+    exam_schedule = models.ForeignKey(ExamSchedule, on_delete=models.CASCADE, related_name='exams')
+    students = models.ManyToManyField(Student, related_name='exams')
+    duration = models.IntegerField(help_text="Duration in minutes")
+
+    def __str__(self):
+        return f"{self.subject} - {self.exam_schedule.date}"
 

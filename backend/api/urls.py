@@ -42,6 +42,10 @@ router.register(r'eap', views.EapViewSet)
 router.register(r'alumni-business', views.AlumniBusinessViewSet, basename='alumnibusiness')
 #EAP Attendance
 router.register(r'eap-attendance', views.EapAttendanceViewSet, basename='eap-attendance')
+#exam timetable
+router.register(r'terms', views.TermViewSet)
+router.register(r'exam-schedules', views.ExamScheduleViewSet)
+router.register(r'exams', views.ExamViewSet)
 
 urlpatterns = [
     # user paths

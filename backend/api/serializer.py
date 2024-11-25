@@ -1512,4 +1512,55 @@ class AttendanceReportSerializer(serializers.ModelSerializer):
         )
         
     #EAp
+    
+    #Exam timetable
+class TermSerializer(serializers.ModelSerializer):
+    academic_year = AcademicSerializer(read_only=True)
+    academic_year_id = serializers.PrimaryKeyRelatedField(
+        queryset=Academic.objects.all(),
+        source='academic_year',
+        write_only=True
+    )
+
+    class Meta:
+        model = Term
+        fields = ['id', 'term_name', 'start_date', 'end_date', 'academic_year', 'academic_year_id']
+
+class ExamScheduleSerializer(serializers.ModelSerializer):
+    term = TermSerializer(read_only=True)
+    term_id = serializers.PrimaryKeyRelatedField(
+        queryset=Term.objects.all(),
+        source='term',
+        write_only=True
+    )
+    supervisor = serializers.StringRelatedField(read_only=True)
+    supervisor_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        source='supervisor',
+        write_only=True
+    )
+
+    class Meta:
+        model = ExamSchedule
+        fields = ['id', 'term', 'rom', 'date', 'time_slot', 'supervisor', 'term_id', 'supervisor_id']
+
+class ExamSerializer(serializers.ModelSerializer):
+    exam_schedule = ExamScheduleSerializer(read_only=True)
+    exam_schedule_id = serializers.PrimaryKeyRelatedField(
+        queryset=ExamSchedule.objects.all(),
+        source='exam_schedule',
+        write_only=True
+    )
+    students = StudentSerializer(many=True, read_only=True)
+    student_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Student.objects.all(),
+        source='students',
+        many=True,
+        write_only=True
+    )
+
+    class Meta:
+        model = Exam
+        fields = ['id', 'subject', 'exam_schedule', 'students', 'duration', 'exam_schedule_id', 'student_ids']
+
 
