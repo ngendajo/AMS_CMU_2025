@@ -2,6 +2,7 @@
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 from traceback import format_exc
+import io
 from django.db.models import OuterRef, Subquery, IntegerField,Count, Case, When, IntegerField,Q,Prefetch, F
 from rest_framework.decorators import action
 from django.db.models.functions import Coalesce
@@ -6448,3 +6449,74 @@ class ExamViewSet(viewsets.ModelViewSet):
                 {'error': 'An unexpected error occurred'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+            
+class StudentExportByGradeView(APIView):
+    def get(self, request, grade_id):
+        try:
+            # Filter students by the specified grade
+            students = Student.objects.filter(
+                family__grade_id=grade_id
+            ).select_related(
+                'user', 
+                'family', 
+                'combination'
+            )
+
+            # Prepare data for DataFrame
+            data = []
+            for student in students:
+                data.append({
+                    'First Name': student.user.first_name,
+                    'Last Name': student.user.last_name,
+                    'Student ID': student.studentid,
+                    'Combination': student.combination.combination_name,
+                    'Grade': student.family.grade.name,  # Assuming Grade model has a 'name' field
+                    'Family Name': student.family.family_name,
+                    'Gender': student.user.gender
+                })
+
+            # Create DataFrame
+            df = pd.DataFrame(data)
+
+            # Create Excel file in memory
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                df.to_excel(writer, index=False, sheet_name='Students')
+
+                # Get the xlsxwriter workbook and worksheet objects
+                workbook = writer.book
+                worksheet = writer.sheets['Students']
+
+                # Add some formatting
+                header_format = workbook.add_format({
+                    'bold': True,
+                    'text_wrap': True,
+                    'valign': 'top',
+                    'fg_color': '#D7E4BC',
+                    'border': 1
+                })
+
+                # Write the column headers with the defined format
+                for col_num, value in enumerate(df.columns.values):
+                    worksheet.write(0, col_num, value, header_format)
+
+                # Auto-adjust columns' width
+                for i, col in enumerate(df.columns):
+                    # Find the maximum length of the data in each column
+                    column_len = max(df[col].astype(str).str.len().max(), len(col)) + 2
+                    worksheet.set_column(i, i, column_len)
+
+            # Prepare the response
+            output.seek(0)
+            response = HttpResponse(
+                output.read(), 
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = f'attachment; filename=student_export_grade_{grade_id}.xlsx'
+            
+            return response
+
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)

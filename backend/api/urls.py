@@ -175,6 +175,7 @@ urlpatterns = [
     
     #Genereting report
     path('generate-report/', views.Generate_reports.as_view(), name='generate-report'),
+    path('students/export/<int:grade_id>/', views.StudentExportByGradeView.as_view(), name='student-export'),
 
     path('alumni_count',alumni_count),
     
