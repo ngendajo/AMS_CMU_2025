@@ -162,7 +162,7 @@ export default function AlumniBusiness() {
             // Create a new FormData object to prepare for file upload
             const formDataToSend = new FormData();
             let alumn = formData.alumn.map(Number);
-            
+            console.log(alumn)
             // Append each field in formData to formDataToSend
             formDataToSend.append("title", formData.title.trim());
             formDataToSend.append("description", formData.description.trim());

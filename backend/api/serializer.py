@@ -589,6 +589,20 @@ class AlumniBusinessSerializer(serializers.ModelSerializer):
             'displayed', 'createdat'
         ]
 
+    def to_internal_value(self, data):
+        # Convert comma-separated alumn string to list of integers
+        if 'alumn' in data and isinstance(data['alumn'], str):
+            try:
+                data = data.copy()
+                # Split and convert to integers, removing any whitespace
+                data['alumn'] = [int(id.strip()) for id in data['alumn'].split(',') if id.strip()]
+            except ValueError:
+                raise serializers.ValidationError({
+                    'alumn': ['Invalid alumni ID format. Provide comma-separated integers.']
+                })
+        
+        return super().to_internal_value(data)
+
     def get_alumn_details(self, obj):
         return [{
             'id': alumn.id,
@@ -600,21 +614,15 @@ class AlumniBusinessSerializer(serializers.ModelSerializer):
         } for alumn in obj.alumn.select_related('user', 'family', 'family__grade', 'combination')]
 
     def validate(self, data):
-        """
-        Custom validation to ensure data integrity
-        """
-        # Ensure description is not empty if provided
+        # Convert string values to appropriate types
+        if 'displayed' in data and isinstance(data['displayed'], str):
+            data['displayed'] = data['displayed'].lower() == 'true'
+        
+        # Ensure description is not empty
         if 'description' in data and not data['description']:
             raise serializers.ValidationError({
-                'description': 'Description cannot be an empty string.'
+                'description': ['Description cannot be an empty string.']
             })
-
-        # Validate alumni input if provided
-        if 'alumn' in data:
-            if not isinstance(data['alumn'], list):
-                raise serializers.ValidationError({
-                    'alumn': 'Alumni must be provided as a list of IDs.'
-                })
 
         return data
 
