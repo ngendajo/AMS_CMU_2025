@@ -6470,7 +6470,7 @@ class StudentExportByGradeView(APIView):
                     'Last Name': student.user.last_name,
                     'Student ID': student.studentid,
                     'Combination': student.combination.combination_name,
-                    'Grade': student.family.grade.name,  # Assuming Grade model has a 'name' field
+                    'Grade': student.family.grade.grade_name,  # Assuming Grade model has a 'name' field
                     'Family Name': student.family.family_name,
                     'Gender': student.user.gender
                 })
