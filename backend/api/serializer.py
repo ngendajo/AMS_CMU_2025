@@ -574,17 +574,20 @@ class StorySerializer(serializers.ModelSerializer):
 
 #Alumni Businesses
 class AlumniBusinessSerializer(serializers.ModelSerializer):
-    alumn_details = serializers.SerializerMethodField()
     alumn = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Alumni.objects.all(),
         required=False
     )
-
+    alumn_details = serializers.SerializerMethodField()
+    
     class Meta:
         model = AlumniBusiness
-        fields = ['id', 'alumn', 'alumn_details', 'title', 'description', 'image', 
-                 'video', 'displayed', 'createdat']
+        fields = [
+            'id', 'alumn', 'alumn_details', 'title', 
+            'description', 'image', 'video', 
+            'displayed', 'createdat'
+        ]
 
     def get_alumn_details(self, obj):
         return [{
@@ -594,21 +597,26 @@ class AlumniBusinessSerializer(serializers.ModelSerializer):
             'grade_name': alumn.family.grade.grade_name,
             'family_name': alumn.family.family_name,
             'combination_name': alumn.combination.combination_name
-        } for alumn in obj.alumn.all()]
+        } for alumn in obj.alumn.select_related('user', 'family', 'family__grade', 'combination')]
 
-    def to_internal_value(self, data):
-        if 'alumn' in data and isinstance(data['alumn'], str):
-            try:
-                data = data.copy()
-                alumn_ids = [int(id.strip()) for id in data['alumn'].split(',') if id.strip()]
-                data['alumn'] = alumn_ids
-            except (ValueError, AttributeError):
+    def validate(self, data):
+        """
+        Custom validation to ensure data integrity
+        """
+        # Ensure description is not empty if provided
+        if 'description' in data and not data['description']:
+            raise serializers.ValidationError({
+                'description': 'Description cannot be an empty string.'
+            })
+
+        # Validate alumni input if provided
+        if 'alumn' in data:
+            if not isinstance(data['alumn'], list):
                 raise serializers.ValidationError({
-                    'alumn': 'Invalid format. Please provide comma-separated IDs or list of IDs.',
-                    'received_value': data['alumn'],
-                    'expected_format': "Either '1,2,3' or [1,2,3]"
+                    'alumn': 'Alumni must be provided as a list of IDs.'
                 })
-        return super().to_internal_value(data)
+
+        return data
 
 #Studie serializers
 

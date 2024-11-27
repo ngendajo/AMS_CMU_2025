@@ -829,87 +829,77 @@ def delete_story(request, pk):
 #Alumni business
 class AlumniBusinessViewSet(viewsets.ModelViewSet):
     serializer_class = AlumniBusinessSerializer
-    
-    def get_queryset(self):
-        return AlumniBusiness.objects.all()
+    queryset = AlumniBusiness.objects.all()
 
-    def get_request_data_details(self, request_data):
-        """Helper method to get detailed information about request data"""
-        details = {
-            'data': request_data,
-            'data_type': str(type(request_data).__name__),
+    def _prepare_data(self, request_data):
+        """
+        Prepare request data for processing
+        """
+        # Convert request data to dictionary if it's not already
+        if hasattr(request_data, 'dict'):
+            return request_data.dict()
+        return request_data
+
+    def _handle_errors(self, error, context=None):
+        """
+        Centralized error handling method
+        """
+        error_response = {
+            'error': str(error),
         }
         
-        if hasattr(request_data, 'dict'):
-            details['data'] = request_data.dict()
-        
-        # If there's an alumn field, add its specific details
-        if 'alumn' in details['data']:
-            details['alumn_details'] = {
-                'value': details['data']['alumn'],
-                'type': str(type(details['data']['alumn']).__name__)
-            }
-        
-        return details
+        if context:
+            error_response['context'] = context
+
+        return Response(error_response, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         try:
-            data = request.data.dict() if hasattr(request.data, 'dict') else request.data
-            serializer = self.get_serializer(data=data)
+            # Prepare data
+            data = self._prepare_data(request.data)
             
-            if serializer.is_valid(raise_exception=True):
-                self.perform_create(serializer)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except ValidationError as e:
-            return Response({
-                'error': str(e),
-                'request_details': self.get_request_data_details(request.data)
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except serializers.ValidationError as e:
-            return Response({
-                'error': e.detail,
-                'request_details': self.get_request_data_details(request.data)
-            }, status=status.HTTP_400_BAD_REQUEST)
+            # Validate and create
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        except (ValidationError, serializers.ValidationError) as e:
+            return self._handle_errors(e, {
+                'request_data': data,
+                'error_details': e.detail if hasattr(e, 'detail') else {}
+            })
+        
         except Exception as e:
             return Response({
-                'error': f'Failed to create business: {str(e)}',
-                'request_details': self.get_request_data_details(request.data)
+                'error': f'Unexpected error during business creation: {str(e)}',
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, *args, **kwargs):
         try:
+            # Get instance
             instance = self.get_object()
-            data = request.data.dict() if hasattr(request.data, 'dict') else request.data
-            serializer = self.get_serializer(instance, data=data, partial=True)
             
-            if serializer.is_valid(raise_exception=True):
-                self.perform_update(serializer)
-                return Response(serializer.data)
-        except ValidationError as e:
-            return Response({
-                'error': str(e),
-                'request_details': self.get_request_data_details(request.data)
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except serializers.ValidationError as e:
-            return Response({
-                'error': e.detail,
-                'request_details': self.get_request_data_details(request.data)
-            }, status=status.HTTP_400_BAD_REQUEST)
+            # Prepare data
+            data = self._prepare_data(request.data)
+            
+            # Validate and update
+            serializer = self.get_serializer(instance, data=data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            
+            return Response(serializer.data)
+        
+        except (ValidationError, serializers.ValidationError) as e:
+            return self._handle_errors(e, {
+                'request_data': data,
+                'error_details': e.detail if hasattr(e, 'detail') else {}
+            })
+        
         except Exception as e:
             return Response({
-                'error': f'Failed to update business: {str(e)}',
-                'request_details': self.get_request_data_details(request.data)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def destroy(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            self.perform_destroy(instance)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Exception as e:
-            return Response({
-                'error': f'Failed to delete business: {str(e)}',
-                'id': kwargs.get('pk')
+                'error': f'Unexpected error during business update: {str(e)}',
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request, *args, **kwargs):
@@ -917,9 +907,10 @@ class AlumniBusinessViewSet(viewsets.ModelViewSet):
             queryset = self.get_queryset()
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
+        
         except Exception as e:
             return Response({
-                'error': f'Failed to retrieve businesses: {str(e)}',
+                'error': f'Error retrieving businesses: {str(e)}',
                 'filters': dict(request.query_params)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -928,11 +919,12 @@ class AlumniBusinessViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             serializer = self.get_serializer(instance)
             return Response(serializer.data)
+        
         except Exception as e:
             return Response({
-                'error': f'Failed to retrieve business: {str(e)}',
-                'id': kwargs.get('pk')
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                'error': f'Error retrieving business: {str(e)}',
+                'business_id': kwargs.get('pk')
+            }, status=status.HTTP_404_NOT_FOUND)
 
 #new way of handling stories
 class StoryViewSet(viewsets.ModelViewSet):

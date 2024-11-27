@@ -136,33 +136,54 @@ export default function AlumniBusiness() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validation checks
+        const errors = [];
+        
+        if (!formData.title.trim()) {
+            errors.push("Title is required");
+        }
+        
+        if (!formData.description.trim()) {
+            errors.push("Description is required");
+        }
+        
+        if (formData.alumn.length === 0) {
+            errors.push("Please select at least one alumnus");
+        }
+        
+        // If there are any errors, show alert and stop submission
+        if (errors.length > 0) {
+            alert(errors.join("\n"));
+            return;
+        }
+    
         try {
             // Create a new FormData object to prepare for file upload
             const formDataToSend = new FormData();
-            let alumn=formData.alumn.map(Number)
+            let alumn = formData.alumn.map(Number);
+            
             // Append each field in formData to formDataToSend
-            formDataToSend.append("title", formData.title);
-            formDataToSend.append("description", formData.description);
+            formDataToSend.append("title", formData.title.trim());
+            formDataToSend.append("description", formData.description.trim());
             formDataToSend.append("displayed", formData.displayed);
             formDataToSend.append("createdat", formData.createdat);
-            formDataToSend.append("alumn", alumn)
-    
-            // Append selected alumni IDs as an array
-            //formData.alumn.forEach(alumId => formDataToSend.append("alumn", alumId));
+            formDataToSend.append("alumn", alumn);
             
             // Append image and video files only if they exist
             if (formData.image) {
                 formDataToSend.append("image", formData.image);
             }
+            
             if (formData.video) {
                 formDataToSend.append("video", formData.video);
             }
-            //console.log(alumn)
+            
             // Send the formDataToSend object in the request
             const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
                 headers: {
                     "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": "multipart/form-data", // Required for file upload
+                    "Content-Type": "multipart/form-data",
                 },
                 withCredentials: true,
             });
@@ -175,6 +196,8 @@ export default function AlumniBusiness() {
             } else {
                 setSubmittedPosts([...submittedPosts, newStory]);
             }
+            
+            // Reset form data
             setFormData({
                 alumn: [],
                 title: '',
@@ -183,12 +206,14 @@ export default function AlumniBusiness() {
                 video: '',
                 displayed: false,
                 createdat: new Date().toISOString(),
-            })
-            setSelectedAlumni({})
+            });
+            
+            setSelectedAlumni({});
             alert("Submitted successfully");
             setActiveTab('Submitted Business');
         } catch (err) {
             console.error(err);
+            alert("An error occurred while submitting the business story");
         }
     };
     const handleDelete = async (id) => {
@@ -287,7 +312,7 @@ export default function AlumniBusiness() {
                             )}
                         </div>
                         <div className="submit-container">
-                            <button type="submit">Submit</button>
+                            
                             <label>
                                 <input
                                     type="checkbox"
@@ -297,6 +322,7 @@ export default function AlumniBusiness() {
                                 />
                                 Make Displayed
                             </label>
+                            <button type="submit">Submit</button>
                         </div>
                     </form>
                 );
