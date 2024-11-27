@@ -162,7 +162,7 @@ export default function AlumniBusiness() {
             // Create a new FormData object to prepare for file upload
             const formDataToSend = new FormData();
             let alumn = formData.alumn.map(Number);
-            console.log(alumn)
+            //console.log(alumn)
             // Append each field in formData to formDataToSend
             formDataToSend.append("title", formData.title.trim());
             formDataToSend.append("description", formData.description.trim());
@@ -179,22 +179,41 @@ export default function AlumniBusiness() {
                 formDataToSend.append("video", formData.video);
             }
             
-            // Send the formDataToSend object in the request
-            const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
-                headers: {
-                    "Authorization": 'Bearer ' + String(auth.accessToken),
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
-            });
-    
-            const newStory = response.data;
-    
-            // Update posts based on the displayed status
-            if (formData.displayed) {
-                setDisplayedPosts([...displayedPosts, newStory]);
-            } else {
-                setSubmittedPosts([...submittedPosts, newStory]);
+            if(formData.id){
+                // Send the formDataToSend object in the request
+                const response = await axios.put(baseUrl + '/alumni-business/'+formData.id+'/', formDataToSend, {
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                });
+                console.log(response.data)
+                const updatedStory = response.data;
+                if (formData.displayed) {
+                    setDisplayedPosts(displayedPosts.map(post => post.id === updatedStory.id ? updatedStory : post));
+                } else {
+                    setSubmittedPosts(submittedPosts.map(post => post.id === updatedStory.id ? updatedStory : post));
+                }
+        
+            }else{
+                // Send the formDataToSend object in the request
+                const response = await axios.post(baseUrl + '/alumni-business/', formDataToSend, {
+                    headers: {
+                        "Authorization": 'Bearer ' + String(auth.accessToken),
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                });
+        
+                const newStory = response.data;
+                console.log(response.data)
+                // Update posts based on the displayed status
+                if (formData.displayed) {
+                    setDisplayedPosts([...displayedPosts, newStory]);
+                } else {
+                    setSubmittedPosts([...submittedPosts, newStory]);
+                }
             }
             
             // Reset form data
@@ -236,8 +255,19 @@ export default function AlumniBusiness() {
         setCurrentPage(selected);
     };
     const handleEditStory = (story) => {
-        //selectedAlumni.firstName = story.firstName;
-        //console.log("story", story);
+        // Transform the data to use firstName and lastName
+        const transformedAlumni = story.alumn_details.map(alumni => ({
+            ...alumni,
+            firstName: alumni.first_name,
+            lastName: alumni.last_name,
+            // Remove the original first_name and last_name keys
+            first_name: undefined,
+            last_name: undefined
+        }));
+    
+        // Set the transformed alumni details
+        setSelectedAlumni(transformedAlumni);
+        console.log("selectedAlumni", story.alumn_details);
         setFormData({
             id: story.id,
             alumn: story.alumn,
@@ -329,7 +359,7 @@ export default function AlumniBusiness() {
             case 'Submitted Business':
                 return (
                         <div className="submitted-posts-list">
-                            {displayedPosts.map((post) => (
+                            {submittedPosts.map((post) => (
                                 <div key={post.id} className="post-item">
                                     <p onClick={() => handleEditStory(post)}>{post.title}</p>
                                     {(auth.user.is_crc || auth.user.is_superuser) && (
@@ -344,7 +374,7 @@ export default function AlumniBusiness() {
             case 'Displayed Business':
                 return (
                     <div className="submitted-posts-list">
-                        {submittedPosts.map((post) => (
+                        {displayedPosts.map((post) => (
                             <div key={post.id} className="post-item" onClick={() => handleEditStory(post)}>
                                 <p>{post.title}</p>
                                 {(auth.user.is_crc || auth.user.is_superuser) && (
