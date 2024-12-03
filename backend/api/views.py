@@ -6521,6 +6521,32 @@ class StudentExportByGradeView(APIView):
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
             
+#Export students with books
+            
+def transform_grade_and_combination(grade_name, combination_name):
+    # Map grade_name to its short form
+    grade_mapping = {
+        "Ijabo": "S4",
+        "Ishami": "S5",
+        "Intwali": "S6"
+    }
+    
+    # If grade_name is EY2024_2025, return the combination_name as it is
+    if grade_name == "EY2024_2025":
+        return combination_name
+    
+    # Otherwise, extract the short grade name
+    short_grade = grade_mapping.get(grade_name, grade_name)
+    
+    # Extract the text inside parentheses from combination_name
+    if "(" in combination_name and ")" in combination_name:
+        combination_text = combination_name.split("(")[-1].split(")")[0]
+    else:
+        combination_text = combination_name  # Fallback if no parentheses exist
+    
+    # Return the combined string in the format grade_combination
+    return f"{short_grade}_{combination_text}"
+            
 def library_book_export_view(request):
     try:
         # Subquery to get the latest unreturn book for each user
@@ -6560,8 +6586,7 @@ def library_book_export_view(request):
                 'First Name': student.user.first_name or '',
                 'Last Name': student.user.last_name or '',
                 'Reg.No': student.studentid or '',
-                'Grade Name':student.grade_name,
-                'Combination': student.combination.combination_name or '',
+                'Class':transform_grade_and_combination(student.grade_name,student.combination.combination_name),
                 'Book Name': student.book_name or '',
                 'ISBN Number': student.isbn_number or '',
                 'Issued Date': student.issued_date or '',
