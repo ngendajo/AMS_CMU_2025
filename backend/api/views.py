@@ -6546,6 +6546,20 @@ def transform_grade_and_combination(grade_name, combination_name):
     
     # Return the combined string in the format grade_combination
     return f"{short_grade}_{combination_text}"
+
+def format_issued_date(issued_date):
+    if issued_date:
+        try:
+            # If issued_date is a string, parse it
+            if isinstance(issued_date, str):
+                issued_date = datetime.strptime(issued_date, '%Y-%m-%dT%H:%M:%S.%fZ')  # Adjust format if necessary
+            
+            # Convert to a readable format (e.g., Month Day, Year at Time)
+            formatted_date = issued_date.strftime('%B %d, %Y at %I:%M %p')  # "November 28, 2024 at 08:59 AM"
+            return formatted_date
+        except ValueError:
+            return 'Invalid Date'
+    return ''  # If no issued_date, return empty string
             
 def library_book_export_view(request):
     try:
@@ -6601,7 +6615,7 @@ def library_book_export_view(request):
                 'Class':transform_grade_and_combination(student.grade_name,student.combination.combination_name),
                 'Book Name': student.book_name or '',
                 'ISBN Number': student.isbn_number or '',
-                'Issued Date': student.issued_date or '',
+                'Issued Date': format_issued_date(student.issued_date),
                 'Days Since Issue': days_since_issue
             })
 
