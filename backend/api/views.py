@@ -6525,11 +6525,13 @@ def library_book_export_view(request):
     try:
         # Subquery to get the latest unreturn book for each user
         latest_unreturn_book = Issue_Book.objects.filter(
-            borrower=OuterRef('pk'),
-            returndate__isnull=True
-        ).order_by('-issuedate').values('book__book_name', 'book__isbnumber', 'issuedate')[:1]
+            borrower=OuterRef('user_id'),
+            returndate='Not yet Returned'
+        ).select_related('book').order_by('-issuedate').values(
+            'book__book_name', 'book__isbnumber', 'issuedate'
+        )[:1]
 
-        # Query to fetch students with their latest unreturn book
+        # Query to fetch students with their latest unreturned book
         queryset = Student.objects.select_related(
             'user', 'combination'
         ).annotate(
@@ -6537,7 +6539,7 @@ def library_book_export_view(request):
             isbn_number=Subquery(latest_unreturn_book.values('book__isbnumber')),
             issued_date=Subquery(latest_unreturn_book.values('issuedate'))
         ).filter(
-            book_name__isnull=False  # Ensure only students with unreturn books
+            book_name__isnull=False
         )
 
         # Prepare data for Excel
