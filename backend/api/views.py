@@ -6586,6 +6586,7 @@ def library_book_export_view(request):
 
         # Prepare data for Excel
         data = []
+        st_ids=1
         for student in queryset:
             try:
                 if student.issued_date:
@@ -6610,6 +6611,7 @@ def library_book_export_view(request):
                 days_since_issue = 'Invalid Date'
 
             data.append({
+                "#":st_ids,
                 'First Name': student.user.first_name or '',
                 'Last Name': student.user.last_name or '',
                 'Reg.No': student.studentid or '',
@@ -6619,6 +6621,7 @@ def library_book_export_view(request):
                 'Issued Date': format_issueddate(student.issued_date),
                 'Days Since Issue': days_since_issue
             })
+            st_ids+=1
 
         # Create DataFrame
         df = pd.DataFrame(data)
