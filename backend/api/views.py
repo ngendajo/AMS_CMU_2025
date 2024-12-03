@@ -6523,34 +6523,30 @@ class StudentExportByGradeView(APIView):
             
 def library_book_export_view(request):
     try:
-        # Query to fetch the required data
+        # Subquery to get the latest unreturn book for each user
+        latest_unreturn_book = Issue_Book.objects.filter(
+            borrower=OuterRef('pk'),
+            returndate__isnull=True
+        ).order_by('-issuedate').values('book__book_name', 'book__isbnumber', 'issuedate')[:1]
+
+        # Query to fetch students with their latest unreturn book
         queryset = Student.objects.select_related(
             'user', 'combination'
-        ).prefetch_related(
-            'user__issue_book_set__book'
         ).annotate(
-            book_name=F('user__issue_book__book__book_name'),
-            isbn_number=F('user__issue_book__book__isbnumber'),
-            issued_date=F('user__issue_book__issuedate')
+            book_name=Subquery(latest_unreturn_book.values('book__book_name')),
+            isbn_number=Subquery(latest_unreturn_book.values('book__isbnumber')),
+            issued_date=Subquery(latest_unreturn_book.values('issuedate'))
         ).filter(
-            user__issue_book__returndate__isnull=True
-        ).values(
-            'user__first_name',
-            'user__last_name', 
-            'studentid', 
-            'combination__combination_name',
-            'book_name',
-            'isbn_number',
-            'issued_date'
+            book_name__isnull=False  # Ensure only students with unreturn books
         )
 
         # Prepare data for Excel
         data = []
-        for item in queryset:
+        for student in queryset:
             # Calculate days since issue
             try:
-                if item['issued_date']:
-                    issue_date = datetime.strptime(item['issued_date'], '%Y-%m-%d')
+                if student.issued_date:
+                    issue_date = datetime.strptime(student.issued_date, '%Y-%m-%d')
                     days_since_issue = (timezone.now().date() - issue_date.date()).days
                 else:
                     days_since_issue = 0
@@ -6558,13 +6554,13 @@ def library_book_export_view(request):
                 days_since_issue = 'Invalid Date'
 
             data.append({
-                'First Name': item['user__first_name'] or '',
-                'Last Name': item['user__last_name'] or '',
-                'Reg.No': item['studentid'] or '',
-                'Combination': item['combination__combination_name'] or '',
-                'Book Name': item['book_name'] or '',
-                'ISBN Number': item['isbn_number'] or '',
-                'Issued Date': item['issued_date'] or '',
+                'First Name': student.user.first_name or '',
+                'Last Name': student.user.last_name or '',
+                'Reg.No': student.studentid or '',
+                'Combination': student.combination.combination_name or '',
+                'Book Name': student.book_name or '',
+                'ISBN Number': student.isbn_number or '',
+                'Issued Date': student.issued_date or '',
                 'Days Since Issue': days_since_issue
             })
 
