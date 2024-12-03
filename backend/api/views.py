@@ -6531,15 +6531,16 @@ def library_book_export_view(request):
             'book__book_name', 'book__isbnumber', 'issuedate'
         )[:1]
 
-        # Query to fetch students with their latest unreturned book
+        # Query to fetch students with their latest unreturned book and grade name
         queryset = Student.objects.select_related(
-            'user', 'combination'
+            'user', 'combination', 'family__grade'
         ).annotate(
             book_name=Subquery(latest_unreturn_book.values('book__book_name')),
             isbn_number=Subquery(latest_unreturn_book.values('book__isbnumber')),
-            issued_date=Subquery(latest_unreturn_book.values('issuedate'))
+            issued_date=Subquery(latest_unreturn_book.values('issuedate')),
+            grade_name=F('family__grade__grade_name')  # Add grade name
         ).filter(
-            book_name__isnull=False
+            book_name__isnull=False  # Ensure only students with unreturned books
         )
 
         # Prepare data for Excel
@@ -6559,6 +6560,7 @@ def library_book_export_view(request):
                 'First Name': student.user.first_name or '',
                 'Last Name': student.user.last_name or '',
                 'Reg.No': student.studentid or '',
+                'Grade Name':student.grade_name,
                 'Combination': student.combination.combination_name or '',
                 'Book Name': student.book_name or '',
                 'ISBN Number': student.isbn_number or '',
