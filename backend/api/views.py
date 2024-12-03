@@ -6520,3 +6520,81 @@ class StudentExportByGradeView(APIView):
             return Response({
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
+            
+def library_book_export_view(request):
+    # Query to fetch the required data
+    queryset = Student.objects.select_related(
+        'user', 'combination', 
+        'user__issue_book_set__book'
+    ).annotate(
+        book_name=F('user__issue_book__book__book_name'),
+        isbn_number=F('user__issue_book__book__isbnumber'),
+        issued_date=F('user__issue_book__issuedate')
+    ).filter(
+        user__issue_book__returndate__isnull=True
+    ).values(
+        'user__first_name',
+        'user__last_name', 
+        'studentid', 
+        'combination__combination_name',
+        'book_name',
+        'isbn_number',
+        'issued_date'
+    )
+
+    # Prepare data for Excel
+    data = []
+    for item in queryset:
+        # Calculate days since issue
+        if item['issued_date']:
+            issue_date = datetime.strptime(item['issued_date'], '%Y-%m-%d')
+            days_since_issue = (timezone.now().date() - issue_date.date()).days
+        else:
+            days_since_issue = 0
+
+        data.append({
+            'First Name': item['user__first_name'],
+            'Last Name': item['user__last_name'],
+            'Reg.No': item['studentid'],
+            'Combination': item['combination__combination_name'],
+            'Book Name': item['book_name'],
+            'ISBN Number': item['isbn_number'],
+            'Issued Date': item['issued_date'],
+            'Days Since Issue': days_since_issue
+        })
+
+    # Create DataFrame
+    df = pd.DataFrame(data)
+
+    # Create Excel writer
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=library_book_issuance.xlsx'
+
+    # Use XlsxWriter as the engine
+    with pd.ExcelWriter(response, engine='xlsxwriter') as writer:
+        # Write the dataframe to the excel file
+        df.to_excel(writer, index=False, sheet_name='Students')
+
+        # Get the xlsxwriter workbook and worksheet objects
+        workbook = writer.book
+        worksheet = writer.sheets['Students']
+
+        # Add some formatting
+        header_format = workbook.add_format({
+            'bold': True,
+            'text_wrap': True,
+            'valign': 'top',
+            'fg_color': '#D7E4BC',
+            'border': 1
+        })
+
+        # Write the column headers with the defined format
+        for col_num, value in enumerate(df.columns.values):
+            worksheet.write(0, col_num, value, header_format)
+
+        # Auto-adjust columns' width
+        for i, col in enumerate(df.columns):
+            column_len = max(df[col].astype(str).map(len).max(), len(col)) + 2
+            worksheet.set_column(i, i, column_len)
+
+    return response
