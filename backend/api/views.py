@@ -6572,11 +6572,23 @@ def library_book_export_view(request):
         # Prepare data for Excel
         data = []
         for student in queryset:
-            # Calculate days since issue
             try:
                 if student.issued_date:
-                    issue_date = datetime.strptime(student.issued_date, '%Y-%m-%d')
-                    days_since_issue = (timezone.now().date() - issue_date.date()).days
+                    # Try parsing with different formats
+                    try:
+                        issue_date = datetime.strptime(student.issued_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+                    except ValueError:
+                        try:
+                            issue_date = datetime.strptime(student.issued_date, '%Y-%m-%d %H:%M:%S')
+                        except ValueError:
+                            issue_date = None  # Fallback if date format is unrecognized
+
+                    if issue_date:
+                        # Convert to the local timezone
+                        issue_date = timezone.make_aware(issue_date)
+                        days_since_issue = (timezone.now().date() - issue_date.date()).days
+                    else:
+                        days_since_issue = 'Invalid Date'
                 else:
                     days_since_issue = 0
             except (ValueError, TypeError) as date_error:
