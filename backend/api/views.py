@@ -1,6 +1,7 @@
 
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
+import ast
 from traceback import format_exc
 import io
 from django.db.models import OuterRef, Subquery, IntegerField,Count, Case, When, IntegerField,Q,Prefetch, F
@@ -3655,6 +3656,129 @@ class AutoStudentDataExcelUploadAPIView(APIView):
                 # Now create student instances since all families and combinations exist
                 for index, row in df_students.iterrows():
                     Eap.objects.create(first_name=row['first_name'], last_name=row['last_name'], school=row['school'], eap_class=row['eap_class'])
+
+            else:
+                data["error"] = "Students sheet is empty!"
+                return Response(data)
+
+        except Exception as e:
+            data["error"] = str(e)
+            return Response(data)
+
+        return Response({"msg": "Data uploaded successfully"})
+    
+#Upload Alumni data from the existing students info and excel uploaded
+class AutoAlumniDataExcelUploadAPIView(APIView):
+    #permission_classes = [IsAuthenticated, ]
+    parser_classes = (MultiPartParser,)
+
+    def post(self, request, format=None):
+        file = request.FILES.get('file')
+        data = {}
+
+        if not file:
+            data["error"] = "The uploaded file is missing."
+            return Response(data)
+
+        if not is_excel_file(file):
+            data["error"] = "The uploaded file is not an Excel file."
+            return Response(data)
+
+        try:
+            workbook = openpyxl.load_workbook(file)
+            sheet_names = workbook.sheetnames
+            expected_sheet_names = ['alumni']
+
+            if set(sheet_names) != set(expected_sheet_names):
+                data["error"] = "The uploaded file contains different sheets."
+                return Response(data)
+
+            sheet = workbook['alumni']
+            df_alumni = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
+
+            if not df_alumni.empty:
+                expected_columns=["reg_number", "last_name", "first_name", "gender", "date_of_birth", "father", "mother", "guardian_names", "guardian_id", "guardian_mobile", "guardian_mobile_number", "place_of_birth_district_or_country", "place_of_birth_sector_or_city", "currresidence_district_or_country", "currresidence_sector_or_city", "currresidence_cell", "resident_village", "email", "phone1", "other_phones", "alumni_nid", "s4marks", "s5marks", "s6marks", "ne", "maxforne", "decision", "eps"]
+                if set(df_alumni.columns) != set(expected_columns):
+                    data["error"] = "Students sheets have different headers."
+                    data["come"] = df_alumni.columns
+                    data["going"] = set(expected_columns)
+                    return Response(data)
+
+                # Now create student instances since all families and combinations exist
+                for index, row in df_alumni.iterrows():
+                    student = Student.objects.get(studentid=row['reg_number'])
+
+                    # Access related instances
+                    user_instance = student.user
+
+                    # Update fields
+                    user_instance.last_name = row['last_name']
+                    user_instance.first_name = row['first_name']
+                    user_instance.phone1 = row['phone1']
+                    user_instance.is_alumni = True
+                    user_instance.save()
+
+                    family_instance = student.family
+                    combination_instance = student.combination
+
+                    # Parse and handle `eps`
+                    eps_list = ast.literal_eval(row['eps'])  # Convert string representation to Python list
+                    eps_instances = []
+                    for ep in eps_list:
+                        for title, ep_type in ep.items():
+                            title = title.strip()  # Normalize title by removing extra spaces
+                            # Check if `Ep` with this title already exists
+                            ep_instance, created = Ep.objects.get_or_create(title=title, type=ep_type)
+                            eps_instances.append(ep_instance)
+
+                    # Prepare kwargs for Alumni instance creation with optional fields
+                    alumni_kwargs = {
+                        'user': user_instance,
+                        'date_of_birth': row['date_of_birth'],
+                        'gender': row['gender'],
+                        'reg_number': row['reg_number'],
+                        'father': row['father'],
+                        'mother': row['mother'],
+                        'did_you_born_in_rwanda': "yes",
+                        'place_of_birth_district_or_country': row['place_of_birth_district_or_country'],
+                        'place_of_birth_sector_or_city': row['place_of_birth_sector_or_city'],
+                        'life_status': "A",
+                        'marital_status': "Single",
+                        'currresidence_in_rwanda': "yes",
+                        'currresidence_district_or_country': row['currresidence_district_or_country'],
+                        'family': family_instance,
+                        'combination': combination_instance,
+                        's4marks': row['s4marks'],
+                        's5marks': row['s5marks'],
+                        's6marks': row['s6marks'],
+                        'ne': row['ne'],
+                        'maxforne': row['maxforne'],
+                        'decision': row['decision'],
+                        'kids': "no"
+                    }
+
+                    # Add optional fields only if they are not None or empty
+                    optional_fields = [
+                        'currresidence_cell',
+                        'resident_village',
+                        'alumni_nid',
+                        'other_phones',
+                        'guardian_names',
+                        'guardian_mobile',
+                        'guardian_mobile_number',
+                        'guardian_id',
+                        'currresidence_sector_or_city'
+                    ]
+
+                    for field in optional_fields:
+                        if row[field] and str(row[field]).strip():
+                            alumni_kwargs[field] = row[field]
+
+                    # Create the Alumni instance
+                    alumni_instance = Alumni.objects.create(**alumni_kwargs)
+
+                    # Add the `eps` to the Alumni instance
+                    alumni_instance.eps.set(eps_instances)
 
             else:
                 data["error"] = "Students sheet is empty!"
