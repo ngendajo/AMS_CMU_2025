@@ -70,6 +70,7 @@ export default function UpStudents() {
           }
           )
           setMsg(response.data['msg'])
+          console.log(response.data)
           if(response.data["error"]){
             console.log(response.data)
             setMsg("There are problem in your data")

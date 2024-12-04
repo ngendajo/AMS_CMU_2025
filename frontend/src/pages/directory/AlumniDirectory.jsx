@@ -75,7 +75,10 @@ const AlumniDirectory = () => {
     }, [auth]);
 
     const filteredAlumni = alumniData
-        .filter((alum) => `${alum.firstName} ${alum.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()))
+        .filter((alum) => {
+            const fullName = `${alum.firstName || ''} ${alum.lastName || ''}`.toLowerCase().trim();
+            return fullName.includes(searchTerm.toLowerCase().trim());
+        })
         .filter((alum) => (gradeFilter === '' || alum.grade === gradeFilter))
         .filter((alum) => (familyFilter === '' || alum.family === familyFilter))
         .filter((alum) => (combinationFilter === '' || alum.combination === combinationFilter))

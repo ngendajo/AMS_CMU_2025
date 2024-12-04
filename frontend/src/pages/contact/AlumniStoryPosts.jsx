@@ -90,7 +90,10 @@ const AlumniStoryPostForm = () => {
         }, [auth]);
 
     const filteredAlumni = alumniData
-        .filter((alum) => `${alum.firstName} ${alum.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()))
+        .filter((alum) => {
+            const fullName = `${alum.firstName || ''} ${alum.lastName || ''}`.toLowerCase().trim();
+            return fullName.includes(searchTerm.toLowerCase().trim());
+        })
         .sort((a, b) => a.lastName.localeCompare(b.lastName));
 
         const alumniPerPage = 4;

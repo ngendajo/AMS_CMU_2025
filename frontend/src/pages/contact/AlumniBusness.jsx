@@ -81,7 +81,10 @@ export default function AlumniBusiness() {
     }, [auth]);
 
     const filteredAlumni = alumniData
-        .filter((alum) => `${alum.firstName} ${alum.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()))
+        .filter((alum) => {
+            const fullName = `${alum.firstName || ''} ${alum.lastName || ''}`.toLowerCase().trim();
+            return fullName.includes(searchTerm.toLowerCase().trim());
+        })
         .sort((a, b) => a.lastName.localeCompare(b.lastName));
 
     const alumniPerPage = 4;
@@ -95,7 +98,6 @@ export default function AlumniBusiness() {
             [name]: value,
         });
     };
-
     const handleSelectAlumni = (alumni) => {
         setSelectedAlumni((prev) => {
             const isSelected = prev.find((alum) => alum.id === alumni.id);

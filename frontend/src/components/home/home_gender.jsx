@@ -114,6 +114,10 @@ const GenderChart = ({ females, males }) => {
                     <BarText>Males</BarText>
                     <BarNumber>{males}</BarNumber>
                 </Bar>
+                <Bar color="var(--orange)" style={{ height: isVisible ? `${100}%` : '0%' }}>
+                    <BarText>Total</BarText>
+                    <BarNumber>{total}</BarNumber>
+                </Bar>
             </Chart>
         </BarChartContainer>
         

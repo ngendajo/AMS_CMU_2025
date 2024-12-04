@@ -6,7 +6,7 @@ const SearchBar = ({ value, onChange, placeholder, per }) => {
     width: per ? `${per}%` : '45%', // Set width based on per prop or default to 100%
   };
 
-  return (
+  return ( 
     <input
       type="text"
       placeholder={placeholder || "Search..."}
