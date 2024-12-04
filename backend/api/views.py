@@ -3697,11 +3697,19 @@ class AutoAlumniDataExcelUploadAPIView(APIView):
             df_alumni = pd.DataFrame(sheet.iter_rows(min_row=2, values_only=True), columns=[cell for cell in sheet.iter_rows(min_row=1, max_row=1, values_only=True)][0])
 
             if not df_alumni.empty:
-                expected_columns=["reg_number", "last_name", "first_name", "gender", "date_of_birth", "father", "mother", "guardian_names", "guardian_id", "guardian_mobile", "guardian_mobile_number", "place_of_birth_district_or_country", "place_of_birth_sector_or_city", "currresidence_district_or_country", "currresidence_sector_or_city", "currresidence_cell", "resident_village", "email", "phone1", "other_phones", "alumni_nid", "s4marks", "s5marks", "s6marks", "ne", "maxforne", "decision", "eps"]
-                if set(df_alumni.columns) != set(expected_columns):
+                expected_columns = ["reg_number", "last_name", "first_name", "gender", "date_of_birth", "father", "mother", "guardian_names", "guardian_id", "guardian_mobile", "guardian_mobile_number", "place_of_birth_district_or_country", "place_of_birth_sector_or_city", "currresidence_district_or_country", "currresidence_sector_or_city", "currresidence_cell", "resident_village", "email", "phone1", "other_phones", "alumni_nid", "s4marks", "s5marks", "s6marks", "ne", "maxforne", "decision", "eps"]
+
+                # Find columns that are in the dataframe but not in expected_columns
+                extra_columns = set(df_alumni.columns) - set(expected_columns)
+                # Find columns that are in expected_columns but not in the dataframe
+                missing_columns = set(expected_columns) - set(df_alumni.columns)
+
+                if extra_columns or missing_columns:
                     data["error"] = "Students sheets have different headers."
-                    data["come"] = df_alumni.columns
-                    data["going"] = set(expected_columns)
+                    if extra_columns:
+                        data["extra_columns"] = list(extra_columns)
+                    if missing_columns:
+                        data["missing_columns"] = list(missing_columns)
                     return Response(data)
 
                 # Now create student instances since all families and combinations exist
