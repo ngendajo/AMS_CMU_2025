@@ -228,5 +228,8 @@ urlpatterns = [
     path('borrowers/', views.AllBorrowersDisplayAPIView.as_view(), name='borrowers_report'),
     path('library/book-export/', views.library_book_export_view, name='library_book_export'),
     
+    #
+    path('alumnidata/', views.AlumniListView.as_view(), name='alumni-list'),
+    
     path('', views.getRoutes)
 ]

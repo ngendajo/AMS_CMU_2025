@@ -6808,3 +6808,31 @@ def library_book_export_view(request):
             'message': str(e),
             'traceback': error_traceback
         }, status=500)
+        
+#..............................................................................................................
+#New where of searching a alumni
+#..............................................................................................................       
+class AlumniListView(generics.ListAPIView):
+    serializer_class = AlumniListSerializer
+    #permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Get the queryset with all necessary related fields
+        queryset = Alumni.objects.select_related(
+            'user', 
+            'family', 
+            'family__grade',
+            'combination'
+        )
+
+        # Get search query parameter
+        search_query = self.request.query_params.get('search', None)
+
+        # If search query is provided, filter by first_name or last_name
+        if search_query:
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=search_query) | 
+                Q(user__last_name__icontains=search_query)
+            )
+
+        return queryset

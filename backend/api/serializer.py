@@ -1580,3 +1580,28 @@ class ExamSerializer(serializers.ModelSerializer):
         fields = ['id', 'subject', 'exam_schedule', 'students', 'duration', 'exam_schedule_id', 'student_ids']
 
 
+#..............................................................................................................
+#New where of searching a alumni
+#..............................................................................................................
+class AlumniListSerializer(serializers.ModelSerializer):
+    alumn_id = serializers.IntegerField(source='id')
+    profilePic = serializers.ImageField(source='user.image_url')
+    email = serializers.EmailField(source='user.email')
+    firstName = serializers.CharField(source='user.first_name')
+    lastName = serializers.CharField(source='user.last_name')
+    gradeName = serializers.CharField(source='family.grade.grade_name', read_only=True)
+    familyName = serializers.CharField(source='family.family_name', read_only=True)
+    combinationName = serializers.CharField(source='combination.combination_name', read_only=True)
+
+    class Meta:
+        model = Alumni
+        fields = [
+            'alumn_id', 
+            'profilePic', 
+            'email', 
+            'firstName', 
+            'lastName', 
+            'gradeName', 
+            'familyName', 
+            'combinationName'
+        ]
