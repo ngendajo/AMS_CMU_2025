@@ -4,14 +4,14 @@ import './AlumniStoryPostForm.css';
 import AlumniList from '../../components/directory/alumni-list';
 import axios from 'axios';
 import baseUrl from '../../api/baseUrl';
-import baseUrlforImg from '../../api/baseUrlforImg';
 import useAuth from '../../hooks/useAuth';
 import ReactPaginate from 'react-paginate';
 
 export default function AlumniBusiness() {
     const [selectedAlumni, setSelectedAlumni] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [alumniData, setAlumniData] = useState([]);
+    const [filteredAlumni, setFilteredAlumni] = useState('');
+    const [currentAlumni, setcCurrentAlumni] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const { auth } = useAuth();
 
@@ -31,32 +31,28 @@ export default function AlumniBusiness() {
     const [showImageInput, setShowImageInput] = useState(false); // Track image input visibility
     const [showVideoInput, setShowVideoInput] = useState(false); // Track video input visibility
 
+    const alumniPerPage = 4;
+    const offset = currentPage * alumniPerPage;
+
     useEffect(() => {
         const getAlumniUsers = async () => {
             try {
-                const response = await axios.get(baseUrl + '/alumnilist/', {
+                const response = await axios.get(baseUrl + '/alumnidata/?search='+searchTerm, {
                     headers: {
                         "Authorization": 'Bearer ' + String(auth.accessToken),
                     },
                     withCredentials: true,
                 });
-                const alumniList = response.data.map((element) => ({
-                    id: element.alumn_id,
-                    profilePic: baseUrlforImg + "/media/" + element.image_url,
-                    email: element.email,
-                    firstName: element.first_name,
-                    lastName: element.last_name,
-                    gradeName: element.grade_name,
-                    familyName: element.family_name,
-                    combinationName: element.combination_name,
-                }));
-                setAlumniData(alumniList);
+                setFilteredAlumni(response.data)
+                const currentAlumni = response.data.slice(offset, offset + alumniPerPage);
+                            
+                setcCurrentAlumni(currentAlumni);
             } catch (err) {
                 console.log(err);
             }
         };
         getAlumniUsers();
-    }, [auth]);
+    }, [auth,offset,searchTerm]);
 
     const fetchStories = async () => {
         try {
@@ -80,16 +76,13 @@ export default function AlumniBusiness() {
         fetchStories();
     }, [auth]);
 
-    const filteredAlumni = alumniData
+    /* const filteredAlumni = currentAlumni
         .filter((alum) => {
             const fullName = `${alum.firstName || ''} ${alum.lastName || ''}`.toLowerCase().trim();
             return fullName.includes(searchTerm.toLowerCase().trim());
         })
-        .sort((a, b) => a.lastName.localeCompare(b.lastName));
+        .sort((a, b) => a.lastName.localeCompare(b.lastName)); */
 
-    const alumniPerPage = 4;
-    const offset = currentPage * alumniPerPage;
-    const currentAlumni = filteredAlumni.slice(offset, offset + alumniPerPage);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -280,9 +273,6 @@ export default function AlumniBusiness() {
             displayed: story.displayed,
             createdat: new Date().toISOString(),
         });
-        //setSelectedAlumni();
-        console.log(story.alumn)
-        console.log(alumniData[0]["id"])
         setActiveTab('New Business');
     };
 
@@ -396,7 +386,6 @@ export default function AlumniBusiness() {
     const removeAlumni = (id) => {
         setSelectedAlumni(selectedAlumni.filter(alum => alum.id !== id));
     };
-
     return (
         <div className="alumni-story-container">
             <div className="DirectoryList">

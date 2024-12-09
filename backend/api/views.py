@@ -6748,6 +6748,7 @@ def library_book_export_view(request):
                 'Last Name': student.user.last_name or '',
                 'Reg.No': student.studentid or '',
                 'Class':transform_grade_and_combination(student.grade_name,student.combination.combination_name),
+                'Family':student.family.family_name,
                 'Book Name': student.book_name or '',
                 'ISBN Number': student.isbn_number or '',
                 'Issued Date': format_issueddate(student.issued_date),
