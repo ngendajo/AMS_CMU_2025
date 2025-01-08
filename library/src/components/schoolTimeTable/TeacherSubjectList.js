@@ -30,6 +30,38 @@ const TeacherSubjectList = () => {
         subject: '',
         academic: ''
     });
+    const [isModalOpen, setModalOpen] = useState(false);
+
+  // State for managing form data
+  const [formupdateData, setformupdateData] = useState([]);
+
+  // Handle changes in the form fields
+  const handleupdateChange = (e) => {
+    const { name, value } = e.target;
+    setformupdateData({ ...formupdateData, [name]: value });
+  };
+
+  // Handle form submission
+  const handleupdateSubmit = () => {
+    console.log(formupdateData); // Pass form data to the parent component
+    updateTeacherCombinationGradeSubject(auth,formupdateData.id,formupdateData)
+            .then(response => {
+                
+                //console.log('Updated successfully', response.data);
+                // handle success (e.g., redirect, show message)
+                // Update the teacherSubjects state with the new data
+                setTeacherSubjects(prevSubjects =>
+                    prevSubjects.map(subject =>
+                        subject.id === response.data.id ? response.data : subject
+                    )
+                );
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    setModalOpen(false); // Close the modal after submission
+  };
+  
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: parseInt(e.target.value, 10) });
     };
@@ -194,6 +226,10 @@ const TeacherSubjectList = () => {
         fetchTeacherCombinationGradeSubjects(auth).then(response => setTeacherSubjects(response.data));
     }, [auth]);
 
+    const handleUpdate = (data) =>{
+        setformupdateData(data)
+        setModalOpen(true)
+    }
     
     const handleDelete = (id) => {
         deleteTeacherCombinationGradeSubject(auth, id)
@@ -252,13 +288,45 @@ const TeacherSubjectList = () => {
           borderRadius: '4px',
           cursor: 'pointer',
         },
+        updateEventButton: {
+            backgroundColor: '#498160',
+            color: 'white',
+            padding: '3px 3px',
+            fontSize: '10px',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: '600',
+          },
+          overlay: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          },
+          modal: {
+            backgroundColor: "white",
+            borderRadius: "10px",
+            padding: "20px",
+            width: "400px",
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          },
       };
       const formatTime = (time) => {
             // Extract hours and minutes from the time string
             const [hours, minutes] = time.split(':').slice(0, 2); // Get first two parts (HH and mm)
             return `${hours}:${minutes}`;
         };
-      //console.log(formData)
+      //console.log("content",teacherSubjects)
     return (
         <div style={centeredContainerStyle}>
             <h1>
@@ -395,7 +463,13 @@ const TeacherSubjectList = () => {
                                                                                 <br />
                                                                                 {teacherSubject.room_name}
                                                                                 <br/>
-                                                                                {auth.user.is_superuser || auth.user.is_librarian?<span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>:null}
+                                                                                {auth.user.is_superuser || auth.user.is_librarian?<>
+                                                                                    {/* <span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>
+                                                                                        <br />
+                                                                                        <br />
+                                                                                    */}
+                                                                                    <span onClick={() => handleUpdate(teacherSubject)} style={styles.updateEventButton}>Edit</span>
+                                                                                </>:null}
                                                                                 
                                                                             </p>
                                                                         ))
@@ -427,6 +501,70 @@ const TeacherSubjectList = () => {
                         
                 </span>
             ))}
+            {/* Modal */}
+      {isModalOpen && (
+        <div style={styles.overlay}>
+          <div style={styles.modal}>
+            <form style={styles.form}>
+              <select
+                name="subject"
+                onChange={handleupdateChange}
+                value={formupdateData.subject}
+                style={styles.select}
+              >
+                <option value="">Select Subject</option>
+                {subjects.map((subject) => (
+                  <option key={subject.id} value={subject.id}>
+                    {subject.subject_name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                name="teacher"
+                onChange={handleupdateChange}
+                value={formupdateData.teacher}
+                style={styles.select}
+              >
+                <option value="">Select Teacher</option>
+                {teachers.map((teacher) => (
+                  <option key={teacher.id} value={teacher.id}>
+                    {teacher.first_name} {teacher.last_name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                name="room"
+                onChange={handleupdateChange}
+                value={formupdateData.room}
+                style={styles.select}
+              >
+                <option value="">Select Room</option>
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    {room.room_name}
+                  </option>
+                ))}
+              </select>
+
+              <div style={styles.buttonContainer}>
+                <span onClick={handleupdateSubmit} style={styles.submitButton}>
+                  Submit
+                </span>
+                <span
+                  onClick={() => {
+                    setModalOpen(false);
+                  }}
+                  style={styles.cancelButton}
+                >
+                  Cancel
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
         </div>
     );
 };
