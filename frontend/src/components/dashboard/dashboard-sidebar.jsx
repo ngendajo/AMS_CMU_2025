@@ -130,14 +130,16 @@ const Sidebar = () => {
   }, []);
   const getUsers = async () => {
     try {
-      const response = await axios.get(baseUrl + '/users/?id=' + auth.user.id, {
+      console.log(auth.user.id)
+      const response = await axios.get(baseUrl + '/users/' + auth.user.id +'/', {
         headers: {
           "Authorization": 'Bearer ' + String(auth.accessToken),
           "Content-Type": 'multipart/form-data'
         },
         withCredentials: true
-      });
+      }); 
       setUser(response.data);
+      //console.log(response.data)
     } catch (err) {
       console.log(err);
     }

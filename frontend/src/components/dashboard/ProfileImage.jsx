@@ -56,11 +56,11 @@ const ProfileImage = ({ user, onEdit }) => {
   const handleEditClick = () => {
     setIsDropzoneOpen(!isDropzoneOpen);
   }; 
-//console.log("imeage", auth.user)
+//console.log("imeage", user.data)
   return (
     <div className="profile-container" style={{ position: 'relative' }}>
       <img
-        src={baseUrlforImg + user[0]?.image_url}
+        src={user.data?.image_url}
         //alt={`${user[0].first_name} ${user[0].last_name}`}
         className="profile-image"
       />

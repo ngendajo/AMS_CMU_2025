@@ -464,10 +464,10 @@ const TeacherSubjectList = () => {
                                                                                 {teacherSubject.room_name}
                                                                                 <br/>
                                                                                 {auth.user.is_superuser || auth.user.is_librarian?<>
-                                                                                    {/* <span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>
+                                                                                    <span onClick={() => handleDelete(teacherSubject.id)} style={styles.cancelButton}>Delete</span>
                                                                                         <br />
                                                                                         <br />
-                                                                                    */}
+                                                                                    
                                                                                     <span onClick={() => handleUpdate(teacherSubject)} style={styles.updateEventButton}>Edit</span>
                                                                                 </>:null}
                                                                                 
