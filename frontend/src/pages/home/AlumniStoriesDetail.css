@@ -74,3 +74,27 @@
     color: var(--yellow);
     border-bottom: 2px var(--yellow) solid;
   }
+  @media (max-width: 768px) {
+  .story-wrapper {
+    padding: 20px;
+  }
+
+  .story-title {
+    font-size: 20px;
+  }
+
+  .story-name {
+    font-size: 16px;
+  }
+
+  .story-text-container {
+    font-size: 15px;
+    padding: 15px;
+  }
+
+  .story-back-button {
+    font-size: 16px;
+    top: 20px;
+    right: 20px;
+  }
+}

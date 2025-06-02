@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react"
 import './Home.css'
-import HomeHeaderAlumni from '../../components/home/home_header_alumni'
+import HomeHeader from '../../components/home/home_header'
 import HomeBannerAlumni from '../../components/home/home_banner_alumni'
 import { Alumni } from "../../components/home/home_alumni";
 import HomeFooter from '../../components/home/home_footer'
@@ -62,9 +62,9 @@ const handleDetail = (data) => {
 };
 const getPlaceholder = (index) => placeholders[index % placeholders.length];
   return (
-    <div id="top3">
+    <div id="top3" className="page-content">
       {/* 1. header: */}
-      <HomeHeaderAlumni onLoginClick={toggleLoginPopup}/>
+      <HomeHeader onLoginClick={toggleLoginPopup} currentPage="alumni_stories"/>
 
       {/* 2. banner: */}
       <HomeBannerAlumni/>

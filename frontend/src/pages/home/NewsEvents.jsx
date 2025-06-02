@@ -1,6 +1,10 @@
 import { React, useState, useEffect } from "react"
 import './Home.css'
+<<<<<<< HEAD
 import HomeHeaderNews from '../../components/home/home_header_news'
+=======
+import HomeHeader from '../../components/home/home_header'
+>>>>>>> 0aa87ca8 (public page and layout responsive)
 import HomeBannerNews from '../../components/home/home_banner_news'
 import { News } from "../../components/home/home_news";
 import HomeFooter from '../../components/home/home_footer'
@@ -65,9 +69,15 @@ const handleDetail = (data) => {
 //const getPlaceholder = (index) => placeholders[index % placeholders.length];
 console.log("data",data);
   return (
+<<<<<<< HEAD
     <div id="top2">
       {/* 1. header: */}
       <HomeHeaderNews onLoginClick={toggleLoginPopup}/>
+=======
+    <div id="top2" className="page-content">
+      {/* 1. header: */}
+      <HomeHeader onLoginClick={toggleLoginPopup} currentPage="news" />
+>>>>>>> 0aa87ca8 (public page and layout responsive)
 
       {/* 2. banner: */}
       <HomeBannerNews/>
