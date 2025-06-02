@@ -1,0 +1,155 @@
+.form-content{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 600px) {
+    .form-content {
+      flex-direction: column; /* Change flex direction to column on smaller screens */
+    }
+    .formpart ,.formpartpass{
+        width: 80%;
+        margin: 5px; /* Add some margin between items */
+        box-sizing: border-box;
+        }
+  }
+
+  .formpart{
+    width: 80%;
+    margin: 5px; /* Add some margin between items */
+    box-sizing: border-box;
+    }
+     
+    /* Style for input elements */
+    .formpart input {
+    padding: 8px;
+    margin: 5px 30%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Style for select elements */
+  .formpart select {
+    padding: 8px;
+    margin: 5px 30%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Optional: Style when the element is in focus (clicked) */
+  .formpart input:focus,
+  .formpart select:focus {
+    outline: none;
+    border-color: dodgerblue; /* Change border color on focus */
+  }
+
+  /* Basic button styles */
+.button {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #3498db;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  
+  /* Hover effect */
+  .button:hover {
+    background-color: #ffffff;
+    color: #3498db;
+  }
+  
+  /* Focus effect */
+  .button:focus {
+    outline: none;
+    border-color: #2c3e50;
+  }
+  
+  /* Active effect */
+  .button:active {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+    color: #ffffff;
+  }
+  .message{
+    color: red;
+  }
+
+  .formpartpass{
+    margin: 5px; /* Add some margin between items */
+    box-sizing: border-box;
+    }
+     
+    /* Style for input elements */
+    .formpartpass input {
+    padding: 2px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+ 
+  
+  /* Optional: Style when the element is in focus (clicked) */
+  .formpartpass input:focus,
+  .formpartpass select:focus {
+    outline: none;
+    border-color: dodgerblue; /* Change border color on focus */
+  }
+  .links{
+    cursor: pointer;
+  }
+  .popupreport {
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    }
+    
+    .popup-innerreport {
+    background-color: white;
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    padding: 3%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    width: 800px;
+    }
+   .reportitems{
+    display: flex;
+    flex-wrap: wrap;
+   }
+   .reportitems label,.all_items label{
+    flex: 30%;
+    display: inline-block;
+    margin-bottom: 2px; 
+   }
+   .reportitems label input[type="checkbox"],.all_items label input[type="checkbox"] {
+    margin-right: 1px; 
+    vertical-align: middle;
+    margin-right: -50px;
+}
+
+.all_items label input[type="checkbox"]{
+  width: 15px;
+  height: 15px
+}
+;
+
+    
+  
+  

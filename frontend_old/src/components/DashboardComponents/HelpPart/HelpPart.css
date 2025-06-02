@@ -1,0 +1,47 @@
+.help-center-container {
+  max-width: 88%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px;
+}
+
+.help-center-container h1 {
+  font-size: 31px;
+  color: #f90;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.help-center-container h2 {
+  font-size: 24px;
+  color: #498160;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.help-center-container h3 {
+  font-size: 18px;
+  color: #888;
+  text-align: justify;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.help-center-container p {
+  font-size: 16px;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.help-center-container br {
+  margin-bottom: 20px;
+}
+
+
+.help-center-container img {
+  max-width: 40%;
+  max-height: 30%;
+  display: block;
+  margin: 0 auto;
+}

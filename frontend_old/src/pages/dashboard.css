@@ -1,0 +1,20 @@
+
+@media screen and (min-width: 680px) {
+    .linksonmobile{
+        display: none;
+    }
+    .linksoncomputer{
+        display: flex;
+    }
+  }
+  @media screen and (max-width: 680px) {
+    
+    .linksoncomputer{
+        display: none;
+    }
+  }
+  .mainbody{
+    background: #e1f1fa;
+    width:100%;
+  }
+  
