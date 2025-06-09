@@ -1,0 +1,52 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+!*/migrations/__init__.py
+
+# Database files
+*.sqlite3
+
+# Django static files (if you collect static locally)
+staticfiles/
+static/
+
+# Media files (uploaded by users)
+media/
+
+# Environment variables file
+.env
+
+# Pytest cache and test reports
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# IDE/editor config files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS files
+.DS_Store
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.tmp
