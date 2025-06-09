@@ -1,0 +1,23 @@
+.card {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+    width: 90%;
+    height: 90%;
+}
+
+image {
+  width:35%;
+  height:10%;
+}
+.new-event{
+  width: 70px;
+  background-color: orange;
+  color: white;
+  padding: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+}

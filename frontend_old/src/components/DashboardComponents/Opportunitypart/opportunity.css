@@ -1,0 +1,119 @@
+h1 {
+  margin-bottom: 10px; /* 调整行间距的大小 */
+}
+
+.opportunity-data-header {
+  background-color: white;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.opportunity-header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.export-opportunity {
+  color: #F49D47;
+  border: 1px #F49D47 solid;
+  border-radius: 3px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.add-opportunity {
+  background-color: #F49D47;
+  color: #FFF;
+  border-radius: 3px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.add-opportunity .link {
+  color: #FFF;
+  text-decoration: none;
+}
+
+.addicon {
+  color: #FFF;
+  font-size: 14px;
+}
+
+.opportunity-info {
+  margin: 20px 3%;
+  background: #FFF;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.opportunity-edit {
+  background-color: #F49D47;
+  color: #FFF;
+  border-radius: 5px;
+  width: 100px;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 7px;
+  margin-right: 7px;
+}
+
+.opportunity-details {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.opportunity-table {
+  background-color: #FFF;
+  border-radius: 7px;
+  width: 98%;
+  margin: 20px 1%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.opportunity-table th,
+.opportunity-table td {
+  padding: 9px;
+}
+
+.opportunity-table th {
+  background-color: #FFF;
+  color: #3f3f3f;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.opportunity-table td {
+  background-color: #FFF;
+  color: #3f3f3f;
+  font-size: 13px;
+}
+
+.opportunity-table .displayed {
+  background-color: #F49D47;
+  color: #FFF;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 7px;
+  text-decoration: none;
+}
+
+.opportunity-table .notdisplayed {
+  color: #3f3f3f;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+

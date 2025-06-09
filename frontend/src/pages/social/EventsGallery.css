@@ -1,0 +1,15 @@
+.EventsGalleryContainer {
+    /* box */
+    width: 95%;
+    padding-bottom: 60px;
+    position: relative;
+}
+.PhotoWrapper {
+    /* display */
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(4, 1fr);
+    /* box */
+    width: 100%;
+    gap: 30px;
+}
