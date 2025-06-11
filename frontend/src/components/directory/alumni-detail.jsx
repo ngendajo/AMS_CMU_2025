@@ -11,7 +11,7 @@ import TotalEmpGraph from './total-emp-graph.jsx';
 import StuGraph from './stu-graph.jsx';
 import EmpGraph from './emp-graph.jsx';
 
-const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, combinationFilter, industryFilter }) => {
+const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, combinationFilter, industryFilter, outcomeSummary }) => {
     
     const combinationStyle = (combination) => combination.replace(/-/g, ', ')
     const navigate = useNavigate();
