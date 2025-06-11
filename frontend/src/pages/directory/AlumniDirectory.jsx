@@ -31,6 +31,7 @@ const AlumniDirectory = () => {
         industry: [],
     });
 
+    const [genderFilter, setGenderFilter] = useState('');
     const [gradeFilter, setGradeFilter] = useState('');
     const [familyFilter, setFamilyFilter] = useState('');
     const [combinationFilter, setCombinationFilter] = useState('');
@@ -49,6 +50,11 @@ const AlumniDirectory = () => {
     const observer = useRef();
 
     const loader = useRef(null);
+    const genderOptions = [ { label: 'All', value: '' }, 
+        ...filters.gender.map((item) => ({
+        label: item === 'M' ? 'Male' : item === 'F' ? 'Female' : item,
+        value: item,
+    }))]
     const gradeOptions = filters.graduation_year.map((item, index) => {
         const year = item.family__grade__graduation_year_to_asyv;
         const name = item.family__grade__grade_name;
@@ -77,6 +83,7 @@ const AlumniDirectory = () => {
                 page: pagination.current_page,
                 page_size: pagination.page_size,
             };
+            if (genderFilter) params.gender = genderFilter;
             if (gradeFilter) params.year = gradeFilter;
             if (familyFilter) params.family = familyFilter;
             if (combinationFilter) params.combination = combinationFilter;
@@ -107,7 +114,7 @@ const AlumniDirectory = () => {
                     combination: element.combination.combination_name || "",
                     industry: element.employment.industry || ""
                 }));
-    
+                console.log('Params:', params);
                 setAlumniData((prevData) => [...prevData, ...alumnilist]);
                 setFilters(response.data.filters);
                 setOutcomeSummary(response.data.outcome_summary);
@@ -118,13 +125,14 @@ const AlumniDirectory = () => {
                     has_previous: response.data.pagination.has_previous,
                 }));
             } catch (err) {
+                console.log('Params:', params);
                 console.error(err);
             }
             setLoading(false);
         };
     
         fetchAlumni();
-    }, [pagination.current_page, gradeFilter, familyFilter, combinationFilter, industryFilter]);
+    }, [pagination.current_page, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
 
     useEffect(() => {
         setAlumniData([]);
@@ -153,6 +161,7 @@ const AlumniDirectory = () => {
             const params = {
                 page_size: 10000, // or any high number to ensure you get all data
             };
+            if (genderFilter) params.gender = genderFilter;
             if (gradeFilter) params.year = gradeFilter;
             if (familyFilter) params.family = familyFilter;
             if (combinationFilter) params.combination = combinationFilter;
@@ -185,6 +194,7 @@ const AlumniDirectory = () => {
     
             // Add filter info on a second sheet
             const filterInfo = [
+                ['Gender Filter', genderFilter || 'None'] 
                 ['Grade Filter', gradeFilter || 'None'],
                 ['Family Filter', familyFilter || 'None'],
                 ['Combination Filter', combinationFilter || 'None'],
@@ -201,6 +211,10 @@ const AlumniDirectory = () => {
             console.error("Download error:", err);
         }
     };
+
+    const handleGenderFilter = () => {
+        setGenderFilter(''); 
+    }
 
     const handleGradeFilter = () => {
         setGradeFilter('');
@@ -223,6 +237,16 @@ const AlumniDirectory = () => {
                         <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." per="100"/>
                     </div>
                     <div className="filter-bar">
+                        <div className={`filter-button ${genderFilter ? 'filter-applied' : ''}`}>
+                            {genderFilter && <button onClick={handleGenderFilter}>&#x2715;</button>}
+                            <select onChange={(e) => setGenderFilter(e.target.value)}>
+                                {genderOptions.map((option) => (
+                                    <option key={option.value || 'All'} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <div className={`filter-button ${gradeFilter ? 'filter-applied' : ''}`}>
                             {gradeFilter && <button onClick={handleGradeFilter}>&#x2715;</button>}
                             <select value={gradeFilter} onChange={(e) => setGradeFilter(e.target.value)}>
