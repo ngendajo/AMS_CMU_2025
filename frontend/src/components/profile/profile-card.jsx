@@ -9,7 +9,7 @@ import countryList from 'react-select-country-list'
 const ProfileCard = () => {
   const [user, setUser] = useState([]);
   const { auth } = useAuth();
-  const [alumn_id, setAlumn_id] = useState();
+  const [user_id, setUser_id] = useState();
   const [study, setStudy] = useState([]);
   const [employment, setEmployment] = useState([]);
   const [activeTab, setActiveTab] = useState('personal');
@@ -139,17 +139,18 @@ const ProfileCard = () => {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response = await axios.get(baseUrl + '/alumni/?id=' + auth.user.id, {
+        const response = await axios.get(baseUrl + '/kid/' + auth.user.id, {
           headers: {
             "Authorization": 'Bearer ' + String(auth.accessToken),
             "Content-Type": 'multipart/form-data'
           },
           withCredentials: true
         });
-        setAlumn_id(response.data[0].alumn.id);
-        console.log(response.data);
+        setUser_id(auth.user.id);
+        //console.log("API response data:", response.data.data);
         setUser(response.data);
       } catch (err) {
+        //console.log(baseUrl + '/users/' + auth.user.id)
         console.log(err);
       }
     };
@@ -157,13 +158,19 @@ const ProfileCard = () => {
     getUsers();
   }, [auth]);
 
+  // useEffect(() => {
+  //   if (user) {
+  //     console.log("User state updated:", user);
+  //   }
+  // }, [user]);
+
   const sortStudyLevel = (studies) => {
     const levelOrder = {
-      A1: 1,
-      A0: 2,
-      M: 3,
-      PHD: 4,
-      C: 5,
+      C: 1,
+      A1: 2,
+      A0: 3,
+      M: 4,
+      PHD: 5,
     };
     return studies.sort((a, b) => {
       const levelComparison = levelOrder[a.level] - levelOrder[b.level];
@@ -174,35 +181,31 @@ const ProfileCard = () => {
     });
   }
 
-
   const getStudy = async () => {
     try {
-      if (alumn_id != null) {
-        const response = await axios.get(baseUrl + '/studie/?alumn_id=' + alumn_id, {
+        const response = await axios.get(baseUrl + '/alumni-academic/?id=' + user_id, {
           headers: {
             "Authorization": 'Bearer ' + String(auth.accessToken),
             "Content-Type": 'multipart/form-data'
           },
           withCredentials: true
         });
-        console.log(response.data);
         var studies = []
         response.data.forEach(element => {
           studies.push({
-            "id": element.id,
-            "alumn": element.alumn.id,
+            // "id": element.id,
+            // "alumn": element.alumn.id,
             "level": element.level,
             "degree": element.degree,
-            "university": element.university,
-            "country": element.country,
-            "city": element.city,
+            "college": element.college,
+            "location": element.location,
             "scholarship": element.scholarship,
             "scholarship_details": element.scholarship_details,
             "status": element.status
           })
         })
         setStudy(sortStudyLevel(studies));
-      }
+      
     } catch (err) {
       console.log(err);
     }
@@ -210,7 +213,7 @@ const ProfileCard = () => {
   
   useEffect(() => {
     getStudy();
-  }, [auth, alumn_id]);
+  }, [auth, user_id]);
 
   const sortJobDate = (jobs) => {
     return jobs.sort((a, b) => {
@@ -225,8 +228,8 @@ const ProfileCard = () => {
 
   const getEmploy = async () => {
     try {
-      if (alumn_id != null) {
-        const response = await axios.get(baseUrl + '/employment/?alumn_id=' + alumn_id, {
+      if (user_id != null) {
+        const response = await axios.get(baseUrl + '/alumni-employment/?id=' + user_id, {
           headers: {
             "Authorization": 'Bearer ' + String(auth.accessToken),
             "Content-Type": 'multipart/form-data'
@@ -237,15 +240,14 @@ const ProfileCard = () => {
         var jobs = []
         response.data.forEach(element => {
           jobs.push({
-            "id": element.id,
-            "alumn": element.alumn.id,
+            // "id": element.id,
+            // "alumn": element.alumn.id,
             "title": element.title,
             "status": element.status,
             "company": element.company,
-            "career": element.career,
+            "industry": element.industry,
             "start_date": element.start_date,
-            "end_date": element.end_date,
-            "on_going": element.on_going
+            "end_date": element.end_date
           })
         })
         setEmployment(sortJobDate(jobs));
@@ -257,7 +259,7 @@ const ProfileCard = () => {
 
   useEffect(() => {
     getEmploy();
-  }, [auth, alumn_id]);
+  }, [auth, user_id]);
 
   const [editMode, setEditMode] = useState(false);
   const [requestMode, setRequestMode] = useState(false);
@@ -305,7 +307,7 @@ const ProfileCard = () => {
       alert('Please fill out all fields of current address.');
       return;
     }
-    axios.put(baseUrl+'/alumni/update-profile/'+alumn_id+"/", {
+    axios.put(baseUrl+'/alumni/update-profile/'+user_id+"/", {
       "currresidence_in_rwanda": currentAddress.rwandaOrNot,
       "currresidence_district_or_country": currentAddress.districtOrCountry,
       "marital_status": maritalStatus,
@@ -396,7 +398,7 @@ const ProfileCard = () => {
   };
   const handleAddStudy = () => {
     setNewStudies([...newStudies, {
-        "alumn": alumn_id,
+        "alumn": user_id,
         "level": '',
         "degree": '',
         "university": '',
@@ -453,7 +455,7 @@ const ProfileCard = () => {
         !job.title ||
         !job.status ||
         !job.company ||
-        !job.career ||
+        !job.industry ||
         !job.start_date ||
         (job.on_going === false && !job.end_date)
       ) {
@@ -496,7 +498,7 @@ const ProfileCard = () => {
   };
   const handleAddJob = () => {
     setNewJobs([...newJobs, {
-      "alumn": alumn_id,
+      "alumn": user_id,
       "title": '',
       "status": '',
       "company": '',
@@ -549,16 +551,18 @@ const ProfileCard = () => {
   // parser
   const getEPSLabel = (eps) => {
     switch (eps) {
-      case 'A':
+      case 'art_center':
         return 'Art';
-      case 'S':
+      case 'sport':
         return 'Sport';
-      case 'SC':
+      case 'science_center':
         return 'Sciences';
-      case 'C':
+      case 'club':
         return 'Club';
-      case 'P':
+      case 'professional':
         return 'Professional';
+      case 'programming': 
+        return 'Programming';
       default:
         return '';
     }
@@ -595,8 +599,8 @@ const ProfileCard = () => {
         return 'Full Scholarship by ';
       case 'P':
         return 'Partial Scholarship by ';
-      case 'NS':
-        return 'No Scholarship';
+      case 'S':
+        return 'Self Sponsor';
       default:
         return '';
     }
@@ -605,14 +609,14 @@ const ProfileCard = () => {
     switch (status) {
       case 'O':
         return 'Ongoing';
-      case 'C':
-        return 'Completed';
+      case 'G':
+        return 'Graduated';
       case 'S':
         return 'Suspended';
       case 'D':
         return 'Dropped Out';
       default:
-        return '';
+        return 'NA';
     }
   };
   const getTypeLabel = (type) => {
@@ -715,7 +719,7 @@ const ProfileCard = () => {
   // layout starts here
   const renderContent = () => {
 
-    const combinationStyle = (combination) => combination.replace(/-/g, ', ')
+    //const combinationStyle = (combination) => combination.replace(/-/g, ', ')
 
     switch (activeTab) {
       case 'personal':
@@ -726,23 +730,22 @@ const ProfileCard = () => {
                 <thead>
                   <tr>
                     <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Rwandan Name</th>
                     <th>Gender</th>
                     <th>Date of Birth</th>
                     <th>Place of Birth</th>
                   </tr>
                 </thead>
                 <tbody>
-                {user.map((use, i) => (
+                {user && (
                   <tr>
-                    <td>{use.first_name}</td>
-                    <td>{use.last_name}</td>
-                    <td>{use.alumn.gender}</td>
-                    <td>{use.alumn.date_of_birth}</td>
-                    <td>{`${use.alumn.place_of_birth_district_or_country},
-                          ${use.alumn.place_of_birth_sector_or_city}`}</td>
+                    <td>{user.basic_information?.first_name}</td>
+                    <td>{user.basic_information?.rwandan_name}</td>
+                    <td>{user.basic_information?.gender}</td>
+                    <td>{user.basic_information?.date_of_birth}</td>
+                    <td>{user.place_of_birth?.origin_district}, {user.place_of_birth?.origin_sector}</td>
                   </tr>
-                ))}
+                )}
                 </tbody>
               </table>
               <table className={`fixed-table rest ${editMode ? 'edit-mode' : ''}`}>
@@ -756,27 +759,27 @@ const ProfileCard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                {user.map((use, i) => (
+                {user && (
                   <tr>
-                    <td>{`Grade: ${use.alumn.family.grade.grade_name}`}<br />
-                        {`Family: ${use.alumn.family.family_name}
-                        (No.${use.alumn.family.family_number})`}</td>
-                    <td>{combinationStyle(use.alumn.combination.combination_name)}</td>
-                    <td>{use.alumn.eps?<>
-                      {use.alumn.eps.map((ep,j)=>(
+                    <td>{`Grade: ${user.affiliation?.grade_info?.grade_name}`}<br />
+                        {`Family: ${user.affiliation?.family_name}
+                        (No.${user.affiliation?.family_number})`}</td>
+                    <td>{user.academic_combinations?.[user.academic_combinations.length - 1]?.combination_name}</td>
+                    <td>{user.leap_activities?<>
+                      {user.leap_activities.map((ep,j)=>(
                         <span key={j}>
-                          {`${j+1}.${ep.title} (${getEPSLabel(ep.type)})`}<br />
+                          {`${j+1}.${ep.leap_name} (${getEPSLabel(ep.category)})`}<br />
                         </span>
                       ))}
                     </>:<></>}
                     </td>
-                    <td>{`${use.alumn.s4marks}%,
-                          ${use.alumn.s5marks}%,
-                          ${use.alumn.s6marks}%`}</td>
-                    <td>{`${use.alumn.ne}/${use.alumn.maxforne} 
-                          (${use.alumn.decision === "P" ? "Pass" : "Fail"})`}</td>
+                    <td>{`${user.kid?.s4marks}%,
+                          ${user.kid?.s5marks}%,
+                          ${user.kid?.s6marks}%`}</td> 
+                    <td>{`${user.national_exam_results?.points_achieved}/${user.national_exam_results?.maximum_points} 
+                          (${user.national_exam_results?.mention })`}</td>
                   </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
               <table className={`fixed-table rest last ${editMode ? 'edit-mode' : ''}`}>
@@ -790,6 +793,12 @@ const ProfileCard = () => {
                   </tr>
                 </thead>
                 <tbody>
+                {user && (
+                  <tr>
+                    <td>{user.personal_status?.marital_status}</td>
+                    <td>{user.personal_status?.has_children === true ? 'True': 'False'}</td>
+                  </tr>
+                )}
                 {editMode ? (
                     <tr>
                       <td>
@@ -1072,16 +1081,26 @@ const ProfileCard = () => {
                   </tr>
                   </>
                 ) : (
-                  study.map((stu, i) => (
-                    <tr key={i}>
-                      <td>{getLevelLabel(stu.level)+stu.degree}</td>
-                      <td>{stu.university}</td>
-                      <td>{stu.country+", "+stu.city}</td>
-                      <td>{getScholarshipLabel(stu.scholarship)+stu.scholarship_details}</td>
-                      <td>{getStudyStatusLabel(stu.status)}</td>
-                      <td></td>
-                    </tr>
-                  )))}
+                  study.length > 0 ? (
+                    study.map((stu, i) => (
+                      <tr key={i}>
+                        <td>{getLevelLabel(stu.level)+stu.degree}</td>
+                        <td>{stu.college}</td>
+                        <td>{stu.location}</td>
+                        <td>{getScholarshipLabel(stu.scholarship)+stu.scholarship_details}</td>
+                        <td>{getStudyStatusLabel(stu.status)}</td>
+                        <td></td>
+                      </tr>
+                    )
+                  )
+                 ): (
+                  <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', color: 'gray' }}>
+                    No further education record
+                  </td>
+                </tr>
+                 )
+                 )}
                 </tbody>
               </table>
             </div>    
@@ -1257,6 +1276,7 @@ const ProfileCard = () => {
                   </tr>
                   </>
                 ) : (
+                  employment.length > 0 ? (
                   employment.map((emp, i) => (
                     <tr key={i}>
                       <td>{emp.title}</td>
@@ -1266,7 +1286,16 @@ const ProfileCard = () => {
                       <td>{emp.start_date}<br/>{"to "+(emp.on_going ? "Present" : emp.end_date)}</td>
                       <td></td>
                     </tr>
-                  )))}
+                  ))
+                ) : (
+                  <tr>
+                  <td colSpan={6} style={{ textAlign: 'center', color: 'gray' }}>
+                    No employment record
+                  </td>
+                </tr>
+                )
+                )
+                }
                 </tbody>
               </table>
             </div>
