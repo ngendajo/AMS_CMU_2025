@@ -72,32 +72,37 @@ export default function Home() {
     }, []);
 
     return (
-    <div id="top1">
+    <div id="top1" className="page-content">
         {/* 1. header: */}
-        <HomeHeader onLoginClick={toggleLoginPopup}/>
+        <HomeHeader onLoginClick={toggleLoginPopup} currentPage="home"/>
         
         {/* 2. banner: */}
         <HomeBanner/>
         
         {/* 3. gallery: */}
-        <div className="gallery">
+        <div className="gallery container flex-col center">
         <GalleryCarousel />
-            <div className="GalleryText">
-                <p>At <span className="GalleryBold">Liquidnet Family High School</span>, education extends beyond graduation. LFHS provides alumni with programs and resources to support them at every stage of their careers.</p>
-                <a href="https://www.asyv.org/our-alumni" target="_blank" rel="noopener noreferrer">
-                    <button>Learn More</button>
-                </a>
-            </div> 
+        <div className="GalleryText flex-col center">
+            <p>
+            At <span className="GalleryBold">Liquidnet Family High School</span>, education extends beyond graduation.
+            LFHS provides alumni with programs and resources to support them at every stage of their careers.
+            </p>
+            <a href="https://www.asyv.org/our-alumni" target="_blank" rel="noopener noreferrer">
+            <button className="LearnMoreButton">Learn More</button>
+            </a>
+        </div>
         </div>
         
         {/* 4. gender: */}
         {/* 5. combination: */}
-        <div className="charts">
-            <GenderChart females={totalG.female} males={totalG.male} />
-            <CombinationChart data={totalC} />
-            <div className="Mission">
-                <p>Through healing, education, and love, the Agahozo-Shalom Youth Village empowers orphaned and vulnerable Rwandan youth to build lives of dignity and contribute to a better world.</p>
-            </div>
+        <div className="charts container flex-col center">
+        <GenderChart females={totalG.female} males={totalG.male} />
+        <CombinationChart data={totalC} />
+        <div className="Mission">
+            <p>
+            Through healing, education, and love, the Agahozo-Shalom Youth Village empowers orphaned and vulnerable Rwandan youth to build lives of dignity and contribute to a better world.
+            </p>
+        </div>
         </div>
 
         {/* 6. news: */}

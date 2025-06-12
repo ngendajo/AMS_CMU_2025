@@ -13,13 +13,15 @@ import icon9 from '../../static/images/inquiries_icon.png'
 import icon10 from '../../static/images/story_posts_icon.png'
 import icon11 from '../../static/images/job_posts_icon.png'
 import useAuth from '../../hooks/useAuth';
+import DashboardLayout from '../../components/dashboard/dashboard-layout';
 
 const Dashboard = () => {
 
   const { auth } = useAuth();
   
   return (
-    <div class="DashboardCards">
+    <DashboardLayout>
+    <div className="DashboardGrid">
     {(auth.user.is_alumni) && (
       <>
         <DashboardCard
@@ -147,6 +149,7 @@ const Dashboard = () => {
         />
       </>)}
     </div>
+    </DashboardLayout>
   );
 };
 

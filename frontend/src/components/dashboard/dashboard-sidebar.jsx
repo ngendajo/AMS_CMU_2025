@@ -105,7 +105,7 @@ const ArrowIcon = styled.span`
   margin-left: auto;
 `;
 
-const Sidebar = () => {
+const Sidebar = ({ className }) => {
   const {auth} = useAuth();
   const location = useLocation();
   const [openSubNav, setOpenSubNav] = useState([]);
@@ -130,16 +130,14 @@ const Sidebar = () => {
   }, []);
   const getUsers = async () => {
     try {
-      console.log(auth.user.id)
-      const response = await axios.get(baseUrl + '/users/' + auth.user.id +'/', {
+      const response = await axios.get(baseUrl + '/users/?id=' + auth.user.id, {
         headers: {
           "Authorization": 'Bearer ' + String(auth.accessToken),
           "Content-Type": 'multipart/form-data'
         },
         withCredentials: true
-      }); 
+      });
       setUser(response.data);
-      //console.log(response.data)
     } catch (err) {
       console.log(err);
     }
@@ -194,7 +192,7 @@ const Sidebar = () => {
   
 
 return (
-  <div className="Sidebar">
+  <div className={`Sidebar ${className || ""}`}>
       <div className="SidebarWrap">
         <div className="Profile">
         {/* {user.map((use, i) =>
