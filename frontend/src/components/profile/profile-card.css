@@ -1,369 +1,177 @@
-/* 1. Card Layout */
-.profile-container{
-    /* color block */
-    position: relative;
-    /* box */
-    width: 100%;
-    height: 100%;
-    margin-bottom: 60px;
-}
-.profile-tabs{
-    /* display */
-    display: flex;
-    justify-content: space-around;
-    /* color block */
-    background-color: var(--palegreen);
-    position: absolute;
-    top: 0;
-    left: 0;
-    /* box */
-    width: 63%;
-}
-.profile-tabs button{
-    /* color block */
-    background-color: var(--green);
-    /* font */
-    color: var(--white);
-    font-family: Medium;
-    font-size: 18px;
-    cursor: pointer;
-    /* box */
-    padding: 20px 0;
-    border: none;
-    border-radius: 30px 30px 0 0;
-    flex: 1;
-    transition: background-color 0.1s;
-}
-.profile-tabs button.active{
-    /* color block */
-    background-color: var(--yellow);
-    /* box */
-    padding: 20px 0;
-    transform: none;
-    border-radius: 30px 30px 0 0;
-}
-.profile-whitecard{
-    /* color block */
-    background-color: var(--white);
-    position: relative;
-    top: 65px;
-    /* box */
-    width: 100%;
-    min-height: 460px;
-    border-radius: 0 8px 8px 8px;
-    box-shadow: 0 2px 10px var(--blackopa);
-}
-.profile-content{
-    /* display */
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    /* box */
-    padding: 30px calc((100vw - 400px) * 0.55 * 0.06);
-    position: relative;
-}
-.detail{
-    /* display */
-    display: grid;
-    /* box */
-    grid-template-columns: repeat(3, calc((100vw - 400px) * 0.55 * 0.33));
-    gap: 0 20px;
-    margin-left: calc((100vw - 400px) * 0.55 * 0.1);
-}
-.vertical-table{
-    /* display */
-    display: flex;
-    /* box */
-    padding: 40px;
-}
-.profile-table{
-    /* box */
-    padding: 40px;
+/* --------------------------------------
+  LAYOUT
+-------------------------------------- */
+.vertical-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px 16px;
+  box-sizing: border-box;
 }
 
-/* 2. Basic Info */
-.basic{
-    /* display */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* box */
-    width: 200px;
-    padding-right: calc((100vw - 400px) * 0.55 * 0.06);
-    padding-bottom: 60px;
-}
-.basic img{
-    /* box */
-    width: 120px;
-    border: 2px var(--white) solid;
-    border-radius: 50%;
-    margin-top: 40px;
-}
-.basic-info{
-    /* display */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* box */
-    margin-top: 20px;
+.profile-whitecard {
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px var(--blackopa);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 3. Fixed Table */
+.profile-whitecard.edit-mode {
+  background-color: var(--palegrey);
+}
+
+.profile-section-title {
+  font-family: Bold;
+  font-size: 22px;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+
+.scroll-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 8px;
+}
+
+/* --------------------------------------
+  TABLE STYLES
+-------------------------------------- */
 .fixed-table {
-    /* box */
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-.fixed-table th{
-    /* font */
-    color: var(--green);
-    font-family: Medium;
-    font-size: 18px;
-    text-align: left;
-    vertical-align: top;
-    /* box */
-    padding: 8px;
-    padding-bottom: 2px;
-}
-.fixed-table.rest th{
-    /* box */
-    padding-top: 16px;
-    border-top: 2px solid var(--palegrey);
-}
-.fixed-table td{
-    /* font */
-    color: var(--black);
-    font-family: Regular;
-    font-size: 16px;
-    text-align: left;
-    vertical-align: top;
-    /* box */
-    padding: 0 8px;
-    padding-bottom: 20px;
-}
-.fixed-table.last td{
-    /* box */
-    padding-bottom: 0;
-}
-.fixed-table.rest.edit-mode th {
-    /* box */
-    border-top: 2px solid var(--white);
-}
-.fixed-table.edit-mode td {
-    /* box */
-    padding: -4px 8px;
-}
-.fixed-table th:nth-child(1),
-.fixed-table td:nth-child(1) {
-    width: 20%;
-}
-.fixed-table th:nth-child(2),
-.fixed-table td:nth-child(2) {
-    width: 20%;
-}
-.fixed-table th:nth-child(3),
-.fixed-table td:nth-child(3) {
-    width: 20%;
-}
-.fixed-table th:nth-child(4),
-.fixed-table td:nth-child(4) {
-    width: 20%;
-}
-.fixed-table th:nth-child(5),
-.fixed-table td:nth-child(5) {
-    width: 20%;
-}
-.fixed-table select,
-.fixed-table input{
-    /* font */
-    background-color: var(--white);
-    color: var(--black);
-    caret-color: var(--grey);
-    font-family: Regular;
-    font-size: 16px;
-    /* box */
-    width: 100%;
-    padding: 2px 6px;
-    margin-bottom: 4px;
-    box-sizing: border-box;
-    box-shadow: 0 1px 5px var(--blackopa);
-    border: none;
-    border-radius: 8px;
-    outline: none;
-}
-.fixed-table input{
-    padding-left: 10px;
-}
-.fixed-table input::placeholder{
-    color: var(--grey);
-}
-.fixed-table input:focus::placeholder{
-    color: transparent;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 800px;
 }
 
-/* 4. Detail Table */
-.detail-table {
-    /* box */
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-.detail-table th {
-    /* font */
-    color: var(--brown);
-    font-family: Medium;
-    font-size: 18px;
-    text-align: left;
-    vertical-align: top;
-    /* box */
-    padding: 8px;
-}
-.detail-table td {
-    /* font */
-    color: var(--black);
-    font-family: Regular;
-    font-size: 16px;
-    text-align: left;
-    vertical-align: top;
-    /* box */
-    padding: 8px;
-    border-top: 2px solid var(--palegrey);
-}
-.detail-table.request-mode td {
-    /* box */
-    padding: 4px 8px;
-    border-top: 2px solid var(--white);
-}
-.detail-table th:nth-child(1),
-.detail-table td:nth-child(1) {
-    width: 19%;
-}
-.detail-table th:nth-child(2),
-.detail-table td:nth-child(2) {
-    width: 19%;
-}
-.detail-table th:nth-child(3),
-.detail-table td:nth-child(3) {
-    width: 19%;
-}
-.detail-table th:nth-child(4),
-.detail-table td:nth-child(4) {
-    width: 19%;
-}
-.detail-table th:nth-child(5),
-.detail-table td:nth-child(5) {
-    width: 19%;
-}
-.detail-table th:nth-child(6),
-.detail-table td:nth-child(6) {
-    width: 5%;
-}
-.detail-table select,
-.detail-table input{
-    /* font */
-    background-color: var(--white);
-    color: var(--black);
-    caret-color: var(--grey);
-    font-family: Regular;
-    font-size: 16px;
-    /* box */
-    width: 100%;
-    padding: 2px 6px;
-    margin: 2px 0;
-    box-sizing: border-box;
-    box-shadow: 0 1px 5px var(--blackopa);
-    border: none;
-    border-radius: 8px;
-    outline: none;
-}
-.detail-table input{
-    padding-left: 10px;
-}
-.detail-table input::placeholder{
-    color: var(--grey);
-}
-.detail-table input:focus::placeholder{
-    color: transparent;
-}
-.check-box{
-    display: flex;
-}
-.detail-table input[type="checkbox"]{
-    background: none;
-    box-shadow: none;
-    border: none;
-    outline: none;
+.fixed-table th,
+.fixed-table td {
+  padding: 10px;
+  font-family: Regular;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
-/* 5. Edit */
-.profile-whitecard button.change{
-    /* font */
-    background-color: var(--green);
-    color: var(--white);
-    font-family: Medium;
-    font-size: 16px;
-    text-decoration: none;
-    cursor: pointer;
-    /* box */
-    width: 100px;
-    padding: 5px 15px;
-    border: 2px var(--green) solid;
-    border-radius: 30px;
-    position: absolute;
-    right: 3%;
-    bottom: 6%;
+.fixed-table th {
+  font-family: Medium;
+  background-color: var(--palegrey);
+  color: var(--green);
 }
-.profile-whitecard button.change:hover{
-    /* font */
-    background-color: var(--yellow);
-    /* box */
-    border: 2px var(--yellow) solid;
+
+/* --------------------------------------
+  MOBILE STACKED VIEW
+-------------------------------------- */
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
-.profile-whitecard.edit-mode,
-.profile-whitecard.request-mode{
-    /* display */
-    background-color: var(--palegrey);
+
+.entry-block {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--palegrey);
+  padding-bottom: 12px;
 }
-.profile-whitecard button.addStudy,
-.profile-whitecard button.addJob{
-    /* font */
-    background-color: var(--yellow);
-    color: var(--white);
-    font-family: Medium;
-    font-size: 16px;
-    text-decoration: none;
-    cursor: pointer;
-    /* box */
-    padding: 5px 15px;
-    border: 2px var(--yellow) solid;
-    border-radius: 30px;
+
+.field {
+  font-size: 16px;
+  font-family: Regular;
+  line-height: 1.6;
 }
-.profile-whitecard button.addStudy:hover,
-.profile-whitecard button.addJob:hover{
-    /* font */
-    background-color: var(--white);
-    color: var(--yellow);
+
+.field span {
+  display: block;
+  font-family: Medium;
+  color: var(--green);
+  margin-bottom: 4px;
 }
-.detail-table .delete-cell{
-    text-align: center;
-    vertical-align: middle;
+
+/* --------------------------------------
+  VISIBILITY BY DEVICE
+-------------------------------------- */
+.desktop-only {
+  display: block;
 }
-.delete-button{
-    /* font */
-    background-color: var(--yellow);
-    color: var(--white);
-    font-family: Medium;
-    font-size: 25px;
-    text-align: center;
-    line-height: 1;
-    text-decoration: none;
-    cursor: pointer;
-    /* box */
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: 2px var(--yellow) solid;
-    border-radius: 50%;
-    margin: 4px 0;
+.mobile-only {
+  display: none;
 }
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .profile-button-group {
+    justify-content: center;
+  }
+}
+
+/* --------------------------------------
+  BUTTONS
+-------------------------------------- */
+.profile-button-group {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Common pill button base */
+.profile-button-group button {
+  font-family: Medium;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 5px 15px;
+  border-radius: 30px;
+  border: 2px solid;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* Edit / Done button */
+.profile-button-group button.change {
+  background-color: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+}
+.profile-button-group button.change:hover {
+  background-color: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--white);
+}
+
+/* Cancel button */
+.profile-button-group button.cancel {
+  background-color: var(--white);
+  color: var(--black);
+  border-color: var(--palegrey);
+}
+.profile-button-group button.cancel:hover {
+  background-color: var(--palegrey);
+}
+
+/* Add buttons */
+.profile-button-group button.addStudy,
+.profile-button-group button.addJob {
+  background-color: var(--yellow);
+  color: var(--white);
+  border-color: var(--yellow);
+}
+.profile-button-group button.addStudy:hover,
+.profile-button-group button.addJob:hover {
+  background-color: var(--white);
+  color: var(--yellow);
+}
+

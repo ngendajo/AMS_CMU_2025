@@ -1,20 +1,55 @@
+// src/components/directory/alumni-list.jsx
 import React from 'react';
-import "./alumni-list.css";
+import './alumni-list.css';
 
 const AlumniList = ({ alumni, onSelect }) => {
-    return (
-        <div className="alumni-list">
-            {alumni.map((alum) => {
-                const profilePic = alum.profilePic;
-                return (
-                    <div key={alum.id} className="alumni-item" onClick={() => onSelect(alum)}>
-                        <img src={profilePic} alt="Profile" className="alumni-pic" />
-                        <div className="alumni-name">{alum.firstName} {alum.lastName}<br/>({alum.gradeName} - {alum.familyName} -{alum.combinationName})</div>
-                    </div>
-                );
-            })}
-        </div>
-    );
+  return (
+    <>
+      {/* Desktop Table Layout */}
+      <table className="desktop-table alumni-table">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Grade</th>
+            <th>Family</th>
+            <th>Combination</th>
+            <th>Industry</th>
+          </tr>
+        </thead>
+        <tbody>
+          {alumni.map((alum) => (
+            <tr key={alum.id} onClick={() => onSelect(alum)} className="table-row">
+              <td>
+                <img src={alum.profilePic} alt="Profile" className="alumni-pic-table" />
+              </td>
+              <td>{alum.firstName}</td>
+              <td>{alum.lastName}</td>
+              <td>{alum.gradeName}</td>
+              <td>{alum.familyName}</td>
+              <td>{alum.combinationName}</td>
+              <td>{alum.industry}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Mobile Layout (Current Style) */}
+      <div className="mobile-list alumni-list">
+        {alumni.map((alum) => (
+          <div key={alum.id} className="alumni-item" onClick={() => onSelect(alum)}>
+            <img src={alum.profilePic} alt="Profile" className="alumni-pic" />
+            <div className="alumni-name">
+              {alum.firstName} {alum.lastName}
+              <br />
+              ({alum.gradeName} - {alum.familyName} - {alum.combinationName})
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default AlumniList;
