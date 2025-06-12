@@ -10,9 +10,11 @@ const ProfileCard = () => {
   const [user, setUser] = useState([]);
   const { auth } = useAuth();
   const [user_id, setUser_id] = useState();
+  const [kid_id, setKid_id] = useState(); 
   const [study, setStudy] = useState([]);
   const [employment, setEmployment] = useState([]);
   const [activeTab, setActiveTab] = useState('personal');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // change current address (from Joseph)
   const options = useMemo(() => countryList().getData(), []);
@@ -121,20 +123,33 @@ const ProfileCard = () => {
    ],
    'Rutsiro':['Boneza', 'Gihango', 'Kigeyo', 'Kivumu', 'Manihira', 'Mukura', 'Murunda', 'Musasa', 'Mushonyi', 'Mushubati', 'Nyabirasi', 'Ruhango', 'Rusebeya'], 
   };
-  const commonIndustry = 
-    ["Art and Performance",
-      "Beauty and Personal Care",
-      "Business and Management",
-      "Dining and Hospitality Services",
-      "Education",
-      "Engineering and Construction",
-      "Manufacturing",
-      "Finance and Banking",
-      "IT and Software Development",
-      "Healthcare and Medical Services",
-      "Media and Communication",
-      "Others"
-    ]
+  const commonIndustry = [
+    "Agriculture, Forestry, and Fishing",
+    "Art, Design, and Performance",
+    "Beauty and Personal Care",
+    "Business and Management",
+    "Construction and Engineering",
+    "Dining and Hospitality Services",
+    "Education and Training",
+    "Energy and Utilities",
+    "Finance and Banking",
+    "Government and Public Service",
+    "Healthcare and Medical Services",
+    "Information Technology and Software Development",
+    "Legal Services",
+    "Logistics and Transportation",
+    "Manufacturing and Production",
+    "Marketing, Sales, and Customer Service",
+    "Media and Communication",
+    "Real Estate and Property Management",
+    "Research and Development",
+    "Security and Law Enforcement",
+    "Social Work and Community Services",
+    "Sports and Recreation",
+    "Telecommunications",
+    "Trade and Skilled Labor",
+    "Others / Not Specified"
+]
 
   useEffect(() => {
     const getUsers = async () => {
@@ -149,6 +164,7 @@ const ProfileCard = () => {
         setUser_id(auth.user.id);
         //console.log("API response data:", response.data.data);
         setUser(response.data);
+        setKid_id(response.data.basic_information.kid_id);
       } catch (err) {
         //console.log(baseUrl + '/users/' + auth.user.id)
         console.log(err);
@@ -156,7 +172,7 @@ const ProfileCard = () => {
     };
 
     getUsers();
-  }, [auth]);
+  }, [auth, refreshTrigger, user_id]);
 
   // useEffect(() => {
   //   if (user) {
@@ -307,12 +323,11 @@ const ProfileCard = () => {
       alert('Please fill out all fields of current address.');
       return;
     }
-    axios.put(baseUrl+'/alumni/update-profile/'+user_id+"/", {
-      "currresidence_in_rwanda": currentAddress.rwandaOrNot,
-      "currresidence_district_or_country": currentAddress.districtOrCountry,
+    axios.put(baseUrl+'/kid/'+user_id+"/", {
+      "current_county": currentAddress.districtOrCountry,
       "marital_status": maritalStatus,
-      "kids": children,
-      "currresidence_sector_or_city": currentAddress.sectorOrCity,
+      "has_children": children,
+      "current_district_or_city": currentAddress.sectorOrCity,
     },
     {
       headers: {
@@ -325,6 +340,7 @@ const ProfileCard = () => {
         console.log(res)
         alert("Saved successfully") 
         setEditMode(false);
+        setRefreshTrigger(prev => prev + 1);
     })
     .catch(error => console.log(error.response))
     
@@ -398,7 +414,7 @@ const ProfileCard = () => {
   };
   const handleAddStudy = () => {
     setNewStudies([...newStudies, {
-        "alumn": user_id,
+        "alumn": kid_id,
         "level": '',
         "degree": '',
         "university": '',
@@ -498,7 +514,7 @@ const ProfileCard = () => {
   };
   const handleAddJob = () => {
     setNewJobs([...newJobs, {
-      "alumn": user_id,
+      "alumn": kid_id,
       "title": '',
       "status": '',
       "company": '',
@@ -797,6 +813,7 @@ const ProfileCard = () => {
                   <tr>
                     <td>{user.personal_status?.marital_status}</td>
                     <td>{user.personal_status?.has_children === true ? 'True': 'False'}</td>
+                    <td>{user.current_address?.current_district_or_city}, {user.current_address?.current_county}</td>
                   </tr>
                 )}
                 {editMode ? (

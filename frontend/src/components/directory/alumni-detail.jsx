@@ -195,7 +195,7 @@ const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, 
                         <div className="DetailTitle">ASYV Grade</div><div className="DetailValue" > {selectedAlumni.grade} </div>
                         <div className="DetailTitle">ASYV Family</div><div className="DetailValue" > {selectedAlumni.family} </div>
                         <div className="DetailTitle">Combination</div><div className="DetailValue" > {combinationStyle(selectedAlumni.combination)} </div>
-                        <div className="DetailTitle">Job Industry</div><div className="DetailValue" > {selectedAlumni.industry} </div>
+                        <div className="DetailTitle">Job Industry</div><div className="DetailValue" > {selectedAlumni.industry} </div> 
                     </div>
                     {(auth.user.is_crc || auth.user.is_superuser) && (
                     <div className="alumni-detail-button">

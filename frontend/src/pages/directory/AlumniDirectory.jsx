@@ -132,7 +132,7 @@ const AlumniDirectory = () => {
         };
     
         fetchAlumni();
-    }, [pagination.current_page, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
+    }, [auth, pagination.page_size, pagination.current_page, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
 
     useEffect(() => {
         setAlumniData([]);
@@ -140,7 +140,7 @@ const AlumniDirectory = () => {
             ...prev,
             current_page: 1
         }));
-    }, [gradeFilter, familyFilter, combinationFilter, industryFilter]);
+    }, [genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
 
     const lastAlumniElementRef = useCallback(node => {
         if (loading) return;
