@@ -30,23 +30,29 @@ export default function LoginPopUp({showLogin, toggleLoginPopup}) {
 
         try{
             const response = await axios.post(LOGIN_URL,
-                JSON.stringify({
-                    email:email,password:pwd
-                }),
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    withCredentials:true
-                }
+                    JSON.stringify({
+                        username: email,
+                        password: pwd
+                    }),
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    }
                 );
+
                 const accessToken = response?.data.access;
                 const refresh = response?.data.refresh;
-                const user =jwtDecode(accessToken); 
-                const roles = user.is_superuser ? "superuser" : user.is_crc ? "crc" : user.is_alumni ? "alumni": "visitor"
-                // console.log(user)
-                setAuth({user,roles,email, pwd, accessToken,refresh });
+                const token = response?.data.token;
+                const user = jwtDecode(token); // Using the token field which contains user data
+
+                // You can now access user data directly from the decoded token
+                // since it includes: first_name, rwandan_name, email, phone, is_superuser, etc.
+                console.log(user);
+
+                setAuth({ user, accessToken, refresh });
                 setEmail('');
                 setPwd('');
-                navigate(from, {replace:true})
+                navigate(from, { replace: true });
             } catch (err) {
                 if (!err?.response) {
                     setErrMsg("No response from server. Please check your internet connection.");
