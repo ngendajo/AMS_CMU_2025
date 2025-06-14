@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+// Final merged version of AlumniDirectory.jsx with responsive layout and scroll-based loading
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import AlumniList from '../../components/directory/alumni-list';
 import AlumniDetail from '../../components/directory/alumni-detail.jsx';
 import SearchBar from '../../components/dashboard/search-bar';
 import './AlumniDirectory.css';
-import ReactPaginate from 'react-paginate';
 
 import axios from 'axios';
 import baseUrl from '../../api/baseUrl';
@@ -17,136 +17,235 @@ const AlumniDirectory = () => {
   const [selectedAlumni, setSelectedAlumni] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [alumniData, setAlumniData] = useState([]);
+  const [outcomeSummary, setOutcomeSummary] = useState({});
 
+  const [filters, setFilters] = useState({
+    gender: [],
+    graduation_year: [],
+    family: [],
+    combination: [],
+    industry: [],
+  });
+
+  const [genderFilter, setGenderFilter] = useState('');
   const [gradeFilter, setGradeFilter] = useState('');
   const [familyFilter, setFamilyFilter] = useState('');
   const [combinationFilter, setCombinationFilter] = useState('');
   const [industryFilter, setIndustryFilter] = useState('');
 
-  const [gradeOptions, setGradeOptions] = useState([]);
-  const [familyOptions, setFamilyOptions] = useState([]);
-  const [combinationOptions, setCombinationOptions] = useState([]);
-  const [industryOptions, setIndustryOptions] = useState([]);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    page_size: 10,
+    total: 0,
+    has_next: false,
+    has_previous: false,
+  });
 
   const { auth } = useAuth();
-  const [currentPage, setCurrentPage] = useState(0);
-  const alumniPerPage = 4;
+  const [loading, setLoading] = useState(false);
+  const observer = useRef();
+  const loader = useRef(null);
+
+  const genderOptions = [{ label: 'All', value: '' }, ...filters.gender.map((item) => ({
+    label: item === 'M' ? 'Male' : item === 'F' ? 'Female' : item,
+    value: item,
+  }))];
+
+  const gradeOptions = filters.graduation_year.map((item) => {
+    const year = item.family__grade__graduation_year_to_asyv;
+    const name = item.family__grade__grade_name;
+    const label = `${name} (${year})`;
+    const value = year;
+    return (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    );
+  });
+
+  const familyOptions = filters.family.map((item) => ({
+    label: item.family__family_name,
+    value: item.family__id,
+  }));
+
+  const combinationOptions = filters.combination.map((item) => ({
+    label: item.combination__combination_name,
+    value: item.combination_id,
+  }));
+
+  const industryOptions = filters.industry;
 
   const handleClear = () => setSelectedAlumni(null);
 
   useEffect(() => {
-    const getAlumni = async () => {
+    const fetchAlumni = async () => {
+      setLoading(true);
+      const params = {
+        page: pagination.current_page,
+        page_size: pagination.page_size,
+      };
+      if (genderFilter) params.gender = genderFilter;
+      if (gradeFilter) params.year = gradeFilter;
+      if (familyFilter) params.family = familyFilter;
+      if (combinationFilter) params.combination = combinationFilter;
+      if (industryFilter) params.industry = industryFilter;
+
       try {
-        const response = await axios.get(baseUrl + '/alumnilist/', {
+        const response = await axios.get(baseUrl + '/alumni-directory/', {
+          params,
           headers: {
             Authorization: 'Bearer ' + auth.accessToken,
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
           },
-          withCredentials: true
+          withCredentials: true,
         });
 
-        const alumnilist = response.data.map((element) => ({
+        const alumnilist = response.data.data.map((element) => ({
           id: element.id,
-          profilePic: baseUrlforImg + "/media/" + element.image_url,
+          profilePic: baseUrlforImg + element.image_url,
           email: element.email,
           firstName: element.first_name,
-          lastName: element.last_name,
-          phone: element.phone1,
-          gradeName: element.grade_name,
-          familyName: element.family_name,
-          combinationName: element.combination_name,
-          grade: element.grade_name || "none",
-          family: element.family_name || "none",
-          combination: element.combination_name || "",
-          industry: element.career || ""
+          lastName: element.rwandan_name,
+          phone: element.phone,
+          gradeName: element.family.grade.grade_name,
+          familyName: element.family.family_name,
+          combinationName: element.combination.combination_name,
+          grade: element.family.grade.grade_name || 'none',
+          family: element.family.family_name || 'none',
+          combination: element.combination.combination_name || '',
+          industry: element.employment.industry || '',
         }));
 
-        setAlumniData(alumnilist);
-        setGradeOptions([...new Set(alumnilist.map(a => a.grade))]);
-        setFamilyOptions([...new Set(alumnilist.map(a => a.family))]);
-        setCombinationOptions([...new Set(alumnilist.map(a => a.combination))]);
-        setIndustryOptions([...new Set(alumnilist.map(a => a.industry))]);
-
+        setAlumniData((prevData) => [...prevData, ...alumnilist]);
+        setFilters(response.data.filters);
+        setOutcomeSummary(response.data.outcome_summary);
+        setPagination((prev) => ({
+          ...prev,
+          total: response.data.pagination.total,
+          has_next: response.data.pagination.has_next,
+          has_previous: response.data.pagination.has_previous,
+        }));
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
+      setLoading(false);
     };
 
-    getAlumni();
-  }, [auth]);
+    fetchAlumni();
+  }, [auth, pagination.current_page, pagination.page_size, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
 
-  const filteredAlumni = alumniData
-    .filter((a) =>
-      `${a.firstName} ${a.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((a) => !gradeFilter || a.grade === gradeFilter)
-    .filter((a) => !familyFilter || a.family === familyFilter)
-    .filter((a) => !combinationFilter || a.combination === combinationFilter)
-    .filter((a) => !industryFilter || a.industry === industryFilter)
-    .sort((a, b) => a.lastName.localeCompare(b.lastName));
+  useEffect(() => {
+    setAlumniData([]);
+    setPagination((prev) => ({ ...prev, current_page: 1 }));
+  }, [genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
 
-  const handleDownload = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredAlumni);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Alumni');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(data, 'alumni_list.xlsx');
+  const lastAlumniElementRef = useCallback((node) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && pagination.has_next) {
+        setPagination((prev) => ({ ...prev, current_page: prev.current_page + 1 }));
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, pagination.has_next]);
+
+  const handleDownload = async () => {
+    try {
+      const params = {
+        page_size: 10000,
+      };
+      if (genderFilter) params.gender = genderFilter;
+      if (gradeFilter) params.year = gradeFilter;
+      if (familyFilter) params.family = familyFilter;
+      if (combinationFilter) params.combination = combinationFilter;
+      if (industryFilter) params.industry = industryFilter;
+
+      const response = await axios.get(baseUrl + '/alumni-directory/', {
+        params,
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+
+      const allAlumni = response.data.data.map((element) => ({
+        id: element.id,
+        email: element.email,
+        firstName: element.first_name,
+        lastName: element.rwandan_name,
+        phone: element.phone,
+        grade: element.family.grade.grade_name || 'none',
+        family: element.family.family_name || 'none',
+        combination: element.combination.combination_name || '',
+        industry: element.employment.industry || '',
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(allAlumni);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Alumni');
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      saveAs(data, 'alumni_list.xlsx');
+    } catch (err) {
+      console.error('Download error:', err);
+    }
   };
-
-  const handlePageClick = ({ selected }) => setCurrentPage(selected);
-
-  const offset = currentPage * alumniPerPage;
-  const currentAlumni = filteredAlumni.slice(offset, offset + alumniPerPage);
 
   return (
     <div className="DirectoryWrapper">
-
       <div className="DirectorySearchWrapper">
         <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." per="100" />
       </div>
 
       <div className="filter-bar">
+        {/* Gender */}
+        <div className={`filter-button ${genderFilter ? 'filter-applied' : ''}`}>
+          {genderFilter && <button onClick={() => setGenderFilter('')}>&#x2715;</button>}
+          <select onChange={(e) => setGenderFilter(e.target.value)}>
+            {genderOptions.map((option) => (
+              <option key={option.value || 'All'} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* Grade */}
         <div className={`filter-button ${gradeFilter ? 'filter-applied' : ''}`}>
           {gradeFilter && <button onClick={() => setGradeFilter('')}>&#x2715;</button>}
           <select value={gradeFilter} onChange={(e) => setGradeFilter(e.target.value)}>
             <option value="" disabled>Grade</option>
-            {gradeOptions.sort().map((grade) => (
-              <option key={grade} value={grade}>{grade}</option>
-            ))}
+            {gradeOptions}
           </select>
         </div>
-
         {/* Family */}
         <div className={`filter-button ${familyFilter ? 'filter-applied' : ''}`}>
           {familyFilter && <button onClick={() => setFamilyFilter('')}>&#x2715;</button>}
           <select value={familyFilter} onChange={(e) => setFamilyFilter(e.target.value)}>
             <option value="" disabled>Family</option>
-            {familyOptions.sort().map((f) => (
-              <option key={f} value={f}>{f}</option>
+            {familyOptions.sort((a, b) => a.label.localeCompare(b.label)).map((family) => (
+              <option key={family.value} value={family.value}>{family.label}</option>
             ))}
           </select>
         </div>
-
         {/* Combination */}
         <div className={`filter-button ${combinationFilter ? 'filter-applied' : ''}`}>
           {combinationFilter && <button onClick={() => setCombinationFilter('')}>&#x2715;</button>}
           <select value={combinationFilter} onChange={(e) => setCombinationFilter(e.target.value)}>
             <option value="" disabled>Combination</option>
-            {combinationOptions.sort().map((c) => (
-              <option key={c} value={c}>{c}</option>
+            {combinationOptions.sort((a, b) => a.label.localeCompare(b.label)).map((combo) => (
+              <option key={combo.value} value={combo.value}>{combo.label}</option>
             ))}
           </select>
         </div>
-
         {/* Industry */}
         <div className={`filter-button ${industryFilter ? 'filter-applied' : ''}`}>
           {industryFilter && <button onClick={() => setIndustryFilter('')}>&#x2715;</button>}
           <select value={industryFilter} onChange={(e) => setIndustryFilter(e.target.value)}>
             <option value="" disabled>Industry</option>
-            {industryOptions.sort().map((i) => (
-              <option key={i} value={i}>{i}</option>
+            {industryOptions.sort().map((industry) => (
+              <option key={industry} value={industry}>{industry}</option>
             ))}
           </select>
         </div>
@@ -158,22 +257,11 @@ const AlumniDirectory = () => {
       </div>
 
       <div className="directory-content">
-        <AlumniList alumni={currentAlumni} onSelect={setSelectedAlumni} />
+        <AlumniList alumni={alumniData} onSelect={setSelectedAlumni} lastRef={lastAlumniElementRef} />
+        <div ref={loader}></div>
       </div>
 
-      <ReactPaginate
-        previousLabel={'<'}
-        nextLabel={'>'}
-        breakLabel={'...'}
-        pageCount={Math.ceil(filteredAlumni.length / alumniPerPage)}
-        marginPagesDisplayed={1}
-        pageRangeDisplayed={3}
-        onPageChange={handlePageClick}
-        containerClassName={'alu-pagination'}
-        activeClassName={'active'}
-      />
-
-      {/* MODAL */}
+      {/* MODAL STYLE like responsive-fixed */}
       {selectedAlumni && (
         <div className="lockScreen" onClick={handleClear}>
           <div className="zoomedInContainer" onClick={(e) => e.stopPropagation()}>
@@ -185,6 +273,7 @@ const AlumniDirectory = () => {
                 familyFilter={familyFilter}
                 combinationFilter={combinationFilter}
                 industryFilter={industryFilter}
+                outcomeSummary={outcomeSummary}
               />
             </div>
           </div>

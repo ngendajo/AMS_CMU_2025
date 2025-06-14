@@ -2,7 +2,7 @@
 import React from 'react';
 import './alumni-list.css';
 
-const AlumniList = ({ alumni, onSelect }) => {
+const AlumniList = ({ alumni, onSelect, lastRef }) => {
   return (
     <>
       {/* Desktop Table Layout */}
@@ -19,8 +19,13 @@ const AlumniList = ({ alumni, onSelect }) => {
           </tr>
         </thead>
         <tbody>
-          {alumni.map((alum) => (
-            <tr key={alum.id} onClick={() => onSelect(alum)} className="table-row">
+          {alumni.map((alum, index) => (
+            <tr
+              key={alum.id}
+              onClick={() => onSelect(alum)}
+              className="table-row"
+              ref={index === alumni.length - 1 ? lastRef : null}
+            >
               <td>
                 <img src={alum.profilePic} alt="Profile" className="alumni-pic-table" />
               </td>
@@ -35,10 +40,15 @@ const AlumniList = ({ alumni, onSelect }) => {
         </tbody>
       </table>
 
-      {/* Mobile Layout (Current Style) */}
+      {/* Mobile Layout */}
       <div className="mobile-list alumni-list">
-        {alumni.map((alum) => (
-          <div key={alum.id} className="alumni-item" onClick={() => onSelect(alum)}>
+        {alumni.map((alum, index) => (
+          <div
+            key={alum.id}
+            className="alumni-item"
+            onClick={() => onSelect(alum)}
+            ref={index === alumni.length - 1 ? lastRef : null}
+          >
             <img src={alum.profilePic} alt="Profile" className="alumni-pic" />
             <div className="alumni-name">
               {alum.firstName} {alum.lastName}
