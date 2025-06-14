@@ -1,20 +1,23 @@
-// Final merged version of AlumniDirectory.jsx with scroll-based loading
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import AlumniList from '../../components/directory/alumni-list';
 import AlumniDetail from '../../components/directory/alumni-detail.jsx';
 import SearchBar from '../../components/dashboard/search-bar';
 import './AlumniDirectory.css';
+
 import axios from 'axios';
 import baseUrl from '../../api/baseUrl';
 import baseUrlforImg from '../../api/baseUrlforImg';
 import useAuth from '../../hooks/useAuth';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+
 const AlumniDirectory = () => {
   const [selectedAlumni, setSelectedAlumni] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [alumniData, setAlumniData] = useState([]);
   const [outcomeSummary, setOutcomeSummary] = useState({});
+
   const [filters, setFilters] = useState({
     gender: [],
     graduation_year: [],
@@ -22,11 +25,13 @@ const AlumniDirectory = () => {
     combination: [],
     industry: [],
   });
+
   const [genderFilter, setGenderFilter] = useState('');
   const [gradeFilter, setGradeFilter] = useState('');
   const [familyFilter, setFamilyFilter] = useState('');
   const [combinationFilter, setCombinationFilter] = useState('');
   const [industryFilter, setIndustryFilter] = useState('');
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     page_size: 10,
@@ -34,14 +39,17 @@ const AlumniDirectory = () => {
     has_next: false,
     has_previous: false,
   });
+
   const { auth } = useAuth();
   const [loading, setLoading] = useState(false);
   const observer = useRef();
   const loader = useRef(null);
+
   const genderOptions = [{ label: 'All', value: '' }, ...filters.gender.map((item) => ({
     label: item === 'M' ? 'Male' : item === 'F' ? 'Female' : item,
     value: item,
   }))];
+
   const gradeOptions = filters.graduation_year.map((item) => {
     const year = item.family__grade__graduation_year_to_asyv;
     const name = item.family__grade__grade_name;
@@ -53,14 +61,17 @@ const AlumniDirectory = () => {
       </option>
     );
   });
+
   const familyOptions = filters.family.map((item) => ({
     label: item.family__family_name,
     value: item.family__id,
   }));
+
   const combinationOptions = filters.combination.map((item) => ({
     label: item.combination__combination_name,
     value: item.combination_id,
   }));
+
   const industryOptions = filters.industry;
   const handleClear = () => setSelectedAlumni(null);
   useEffect(() => {
@@ -75,6 +86,7 @@ const AlumniDirectory = () => {
       if (familyFilter) params.family = familyFilter;
       if (combinationFilter) params.combination = combinationFilter;
       if (industryFilter) params.industry = industryFilter;
+
       try {
         const response = await axios.get(baseUrl + '/alumni-directory/', {
           params,
@@ -84,6 +96,7 @@ const AlumniDirectory = () => {
           },
           withCredentials: true,
         });
+
         const alumnilist = response.data.data.map((element) => ({
           id: element.id,
           profilePic: baseUrlforImg + element.image_url,
@@ -99,6 +112,7 @@ const AlumniDirectory = () => {
           combination: element.combination.combination_name || '',
           industry: element.employment.industry || '',
         }));
+
         setAlumniData((prevData) => [...prevData, ...alumnilist]);
         setFilters(response.data.filters);
         setOutcomeSummary(response.data.outcome_summary);
@@ -113,12 +127,14 @@ const AlumniDirectory = () => {
       }
       setLoading(false);
     };
+
     fetchAlumni();
   }, [auth, pagination.current_page, pagination.page_size, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
   useEffect(() => {
     setAlumniData([]);
     setPagination((prev) => ({ ...prev, current_page: 1 }));
   }, [genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
+
   const lastAlumniElementRef = useCallback((node) => {
     if (loading) return;
     if (observer.current) observer.current.disconnect();
@@ -129,6 +145,7 @@ const AlumniDirectory = () => {
     });
     if (node) observer.current.observe(node);
   }, [loading, pagination.has_next]);
+
   const handleDownload = async () => {
     try {
       const params = {
@@ -139,6 +156,7 @@ const AlumniDirectory = () => {
       if (familyFilter) params.family = familyFilter;
       if (combinationFilter) params.combination = combinationFilter;
       if (industryFilter) params.industry = industryFilter;
+
       const response = await axios.get(baseUrl + '/alumni-directory/', {
         params,
         headers: {
@@ -147,6 +165,7 @@ const AlumniDirectory = () => {
         },
         withCredentials: true,
       });
+
       const allAlumni = response.data.data.map((element) => ({
         id: element.id,
         email: element.email,
@@ -158,6 +177,7 @@ const AlumniDirectory = () => {
         combination: element.combination.combination_name || '',
         industry: element.employment.industry || '',
       }));
+
       const worksheet = XLSX.utils.json_to_sheet(allAlumni);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Alumni');
@@ -168,11 +188,13 @@ const AlumniDirectory = () => {
       console.error('Download error:', err);
     }
   };
+
   return (
     <div className="DirectoryWrapper">
       <div className="DirectorySearchWrapper">
         <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." per="100" />
       </div>
+
       <div className="filter-bar">
         {/* Gender */}
         <div className={`filter-button ${genderFilter ? 'filter-applied' : ''}`}>
@@ -224,14 +246,17 @@ const AlumniDirectory = () => {
           </select>
         </div>
       </div>
+
       <div className="directory-title">
         Search Results:
         <button onClick={handleDownload}>Download Excel</button>
       </div>
+
       <div className="directory-content">
         <AlumniList alumni={alumniData} onSelect={setSelectedAlumni} lastRef={lastAlumniElementRef} />
         <div ref={loader}></div>
       </div>
+
       {/* MODAL STYLE like responsive-fixed */}
       {selectedAlumni && (
         <div className="lockScreen" onClick={handleClear}>
@@ -253,4 +278,6 @@ const AlumniDirectory = () => {
     </div>
   );
 };
+
 export default AlumniDirectory;
+

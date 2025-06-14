@@ -44,6 +44,9 @@
 body, html {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  width: 100vw;
+
 }
 
 button:focus {
@@ -126,5 +129,48 @@ button:focus {
 @media (min-width: 769px) {
   .hide-mobile {
     display: block;
+  }
+}
+.app-layout,
+.MarginContainer {
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal scroll */
+html, body, .app-layout {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Sidebar base width (same as actual Sidebar component, usually 264px) */
+.Sidebar {
+  width: 264px;
+  flex-shrink: 0;
+}
+
+/* Main content should leave space for sidebar */
+.MarginContainer {
+  flex: 1;
+  padding: 1rem;
+  padding-top: 100px; /* Header height */
+  margin-left: 264px; /* Sidebar width */
+  box-sizing: border-box;
+}
+
+/* On mobile, hide Sidebar and let content go full width */
+@media (max-width: 768px) {
+  .Sidebar {
+    display: none;
+  }
+
+  .MarginContainer {
+    margin-left: 0;
+    padding-top: 100px;
   }
 }

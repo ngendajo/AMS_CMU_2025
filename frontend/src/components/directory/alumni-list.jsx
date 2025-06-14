@@ -1,5 +1,7 @@
+// src/components/directory/alumni-list.jsx
 import React from 'react';
 import './alumni-list.css';
+
 const AlumniList = ({ alumni, onSelect, lastRef }) => {
   return (
     <>
@@ -37,6 +39,7 @@ const AlumniList = ({ alumni, onSelect, lastRef }) => {
           ))}
         </tbody>
       </table>
+
       {/* Mobile Layout */}
       <div className="mobile-list alumni-list">
         {alumni.map((alum, index) => (
@@ -58,4 +61,5 @@ const AlumniList = ({ alumni, onSelect, lastRef }) => {
     </>
   );
 };
+
 export default AlumniList;
