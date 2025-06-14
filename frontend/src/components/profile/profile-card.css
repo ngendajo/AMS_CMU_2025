@@ -46,7 +46,6 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  min-width: 800px;
 }
 
 .fixed-table th,
