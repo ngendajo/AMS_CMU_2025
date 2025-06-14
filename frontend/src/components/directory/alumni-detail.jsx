@@ -11,7 +11,9 @@ import TotalEmpGraph from './total-emp-graph.jsx';
 import StuGraph from './stu-graph.jsx';
 import EmpGraph from './emp-graph.jsx';
 
-const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, combinationFilter, industryFilter }) => {
+import OutcomePieChart from './outcome-pie-chart.jsx';
+
+const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, combinationFilter, industryFilter, outcomeSummary }) => {
     
     const combinationStyle = (combination) => combination.replace(/-/g, ', ')
     const navigate = useNavigate();
@@ -193,7 +195,7 @@ const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, 
                         <div className="DetailTitle">ASYV Grade</div><div className="DetailValue" > {selectedAlumni.grade} </div>
                         <div className="DetailTitle">ASYV Family</div><div className="DetailValue" > {selectedAlumni.family} </div>
                         <div className="DetailTitle">Combination</div><div className="DetailValue" > {combinationStyle(selectedAlumni.combination)} </div>
-                        <div className="DetailTitle">Job Industry</div><div className="DetailValue" > {selectedAlumni.industry} </div>
+                        <div className="DetailTitle">Job Industry</div><div className="DetailValue" > {selectedAlumni.industry} </div> 
                     </div>
                     {(auth.user.is_crc || auth.user.is_superuser) && (
                     <div className="alumni-detail-button">
@@ -211,56 +213,16 @@ const AlumniDetail = ({ selectedAlumni, handleClear, gradeFilter, familyFilter, 
                     {auth.user.is_alumni &&
                         <div className="detail-empty-message">Select an alumnus to see details.</div>
                     }
-                    {(auth.user.is_crc || auth.user.is_superuser) && (
-                        <>
-                        {gradeFilter==="" && familyFilter==="" && combinationFilter==="" && industryFilter==="" &&
-                        <div className="detail-graph">
-                            <>
-                                <div className="detail-graph-title">
-                                    General Report
-                                </div>
-                                <div className="detail-graph-description">
-                                    {getTotal(stuByGrade) === getTotal(empByGrade) 
-                                    && getCurrent(stuByGrade) === getCurrent(empByGrade)
-                                    ? (`Alumni Alive: ${getCurrent(stuByGrade)}/${getTotal(empByGrade)}`)
-                                    : (`Alumni Alive: Error`)}
-                                </div>
-                                <Legend data={[["Male Yes", "var(--coffee)"],
-                                               ["Male No", "var(--coffeeli)"],
-                                               ["Female Yes", "var(--orange)"],
-                                               ["Female No", "var(--orangeli)"]]}
-                                />
-                                <TotalStuGraph data={cleanData(stuByGrade)} dataGiven={cleanDataGivenEmp(stuEmpByGrade)}/>
-                                <TotalEmpGraph data={cleanData(empByGrade)} dataGiven={cleanDataGivenStu(stuEmpByGrade)}/>
-                            </>
-                        </div>}
-                        {gradeFilter && familyFilter==="" && combinationFilter==="" && industryFilter==="" &&
-                        <div className="detail-graph">
-                            <>
-                                <div className="detail-graph-title">
-                                    {drawEmpGraph(gradeFilter).grade_name} Grade Report
-                                </div>
-                                <div className="detail-graph-description">
-                                    {getGradeTotal(drawStuGraph(gradeFilter)) === getGradeTotal(drawEmpGraph(gradeFilter)) 
-                                    && getGradeCurrent(drawStuGraph(gradeFilter)) === getGradeCurrent(drawEmpGraph(gradeFilter))
-                                    ? (`Alumni Alive: ${getGradeCurrent(drawStuGraph(gradeFilter))}/${getGradeTotal(drawStuGraph(gradeFilter))}`)
-                                    : (`Alumni Alive: Error`)}
-                                </div>
-                                <Legend data={[["Male", "var(--coffee)"],
-                                            ["Female", "var(--orange)"]]}
-                                />
-                                <StuGraph data={cleanGradeData(drawStuGraph(gradeFilter))}/>
-                                <EmpGraph data={cleanGradeData(drawEmpGraph(gradeFilter))}/>
-                            </>
-                        </div>}
-                        {familyFilter && combinationFilter==="" && industryFilter==="" &&
-                        <div className="detail-empty-message">Currently no reports for family.</div>}
-                        {combinationFilter && industryFilter==="" &&
-                        <div className="detail-empty-message">Currently no reports for combination.</div>}
-                        {industryFilter &&
-                        <div className="detail-empty-message">Currently no reports for industry.</div>}
-                        </>
+                    {(auth.user.is_crc || auth.user.is_superuser) && outcomeSummary && (
+                    <div className="detail-graph">
+                        <div className="detail-graph-title">Outcome Summary</div>
+                        <div className="detail-graph-description">
+                        Total Alumni: {outcomeSummary.total_alumni}
+                        </div>
+                        <OutcomePieChart summary={outcomeSummary} />
+                    </div>
                     )}
+
                 </>
             )}
         </div>

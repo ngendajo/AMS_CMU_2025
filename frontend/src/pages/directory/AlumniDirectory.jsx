@@ -1,4 +1,4 @@
-// Final merged version of AlumniDirectory.jsx with responsive layout and scroll-based loading
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import AlumniList from '../../components/directory/alumni-list';
 import AlumniDetail from '../../components/directory/alumni-detail.jsx';
@@ -9,7 +9,6 @@ import axios from 'axios';
 import baseUrl from '../../api/baseUrl';
 import baseUrlforImg from '../../api/baseUrlforImg';
 import useAuth from '../../hooks/useAuth';
-
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
@@ -74,9 +73,7 @@ const AlumniDirectory = () => {
   }));
 
   const industryOptions = filters.industry;
-
   const handleClear = () => setSelectedAlumni(null);
-
   useEffect(() => {
     const fetchAlumni = async () => {
       setLoading(true);
@@ -133,7 +130,6 @@ const AlumniDirectory = () => {
 
     fetchAlumni();
   }, [auth, pagination.current_page, pagination.page_size, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
-
   useEffect(() => {
     setAlumniData([]);
     setPagination((prev) => ({ ...prev, current_page: 1 }));
@@ -284,3 +280,4 @@ const AlumniDirectory = () => {
 };
 
 export default AlumniDirectory;
+
