@@ -175,7 +175,7 @@ const ProfileCard = () => {
     { label: 'National Exam Score', value: u => `${u.national_exam_results?.points_achieved}/${u.national_exam_results?.maximum_points} (${u.national_exam_results?.mention})` }
   ];
   const leapProgramFields = [
-    { label: 'Leap Program', value: u => u.leap_activities?.map((a, i) => `${i + 1}. ${a.leap_name}`).join(" | ") || 'Not Found' }
+    { label: 'Leap Program', value: u => u.leap_activities?.map((a) => `${a.leap_name}`).join(" , ") || 'Not Found' }
   ];
   const academicFields = [
     { label: 'Level', value: 'level' },

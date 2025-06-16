@@ -1,0 +1,58 @@
+.requests-wrapper {
+  width: 100%;
+}
+
+.requests-table {
+  display: block;
+}
+
+.requests-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Regular;
+  border-radius: 10px;
+}
+
+.requests-table th,
+.requests-table td {
+  padding: 10px 15px;
+  text-align: left;
+}
+
+.requests-table th {
+  background-color: var(--coffee);
+  color: var(--white);
+  font-family: Light;
+}
+
+.requests-table tr:nth-child(even) td {
+  background-color: #ffffff;
+}
+
+.requests-table tr:nth-child(odd) td {
+  background-color: #ffffff8d;
+}
+
+/* Mobile card view */
+.requests-mobile {
+  display: none;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.request-card {
+  border: 1px solid var(--grey);
+  padding: 15px;
+  border-radius: 8px;
+  background-color: var(--white);
+  font-family: Regular;
+}
+
+@media (max-width: 768px) {
+  .requests-table {
+    display: none;
+  }
+  .requests-mobile {
+    display: flex;
+  }
+}
