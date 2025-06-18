@@ -24,6 +24,8 @@ import AddData from './pages/AddData';
 
 import AlumniDirectory from './pages/directory/AlumniDirectory';
 import CareerOpportunity from './pages/career/CareerOpportunity';
+import CareerOpportunityStaff from "./pages/career/CareerOpportunityStaff";
+
 import FurtherEducation from './pages/education/FurtherEducation';
 // support and giving
 import DonationOptions from './pages/support/DonationOptions.jsx';
@@ -88,6 +90,8 @@ function App() {
                     <Route path="/add_data" element={<AddData />} />
                     <Route path="/alumni_directory" element={<AlumniDirectory />} />
                     <Route path="/career_opportunity" element={<CareerOpportunity />} />
+                    <Route path="/career_opportunity_staff" element={<CareerOpportunityStaff />}
+/>
                     <Route path="/further_education" element={<FurtherEducation />} />
                     <Route path="/donation_options" element={<DonationOptions />} />
                     <Route path="/mentoring_programs" element={<MentoringPrograms />} />

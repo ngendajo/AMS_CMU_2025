@@ -96,3 +96,140 @@
     font-size: 16px;
   }
 }
+
+/* Fix alignment of support tab on desktop */
+.support-tab {
+  font-family: Medium;
+  font-size: 16px;
+  background-color: var(--white);
+  border: 2px solid var(--green);
+  border-radius: 30px;
+  padding: 6px 16px;
+  transition: all 0.2s ease;
+  height: fit-content;
+}
+
+.support-tab:hover {
+  background-color: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+
+.support-tab.active {
+  background-color: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+
+/* Fix select padding/spacing to match tab buttons */
+.mobile-tabs select {
+  padding: 6px 16px;
+  border-radius: 30px;
+  border: 2px solid var(--green);
+  background-color: var(--white);
+}
+
+.tab-button {
+  font-family: Medium;
+  font-size: 16px;
+  border: 2px solid var(--green);
+  background-color: var(--white);
+  padding: 6px 16px;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.tab-button.active {
+    color: white;
+}
+
+.mobile-back {
+  display: none;
+  margin-top: 10px;
+  text-align: left;
+}
+
+.back-tab-button {
+  background-color: var(--white);
+  border: 2px solid var(--green);
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-family: Medium;
+  font-size: 14px;
+  color: var(--black);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.back-tab-button:hover {
+  background-color: var(--green);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .desktop-tabs {
+    display: none;
+  }
+
+  .mobile-tabs {
+    display: block;
+  }
+
+  .mobile-back {
+    display: block;
+  }
+}
+
+.support-requests-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.tab-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.tab-button {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tab-buttons-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mobile-tab-controls-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 600px) {
+  .mobile-tab-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.mobile-tab-controls-row .support-tab,
+.mobile-tab-controls-row select {
+  flex: 1;
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+
+

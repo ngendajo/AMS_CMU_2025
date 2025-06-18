@@ -16,7 +16,7 @@ export const SidebarDataCrc = [
   },
   {
     title: 'Career Opportunity',
-    path: '/career_opportunity',
+    path: '/career_opportunity_staff',
     cName: 'nav-text'
   },
   {

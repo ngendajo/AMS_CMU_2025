@@ -164,7 +164,7 @@ html, body, .app-layout {
 }
 
 /* On mobile, hide Sidebar and let content go full width */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .Sidebar {
     display: none;
   }

@@ -134,6 +134,8 @@ const CareerOpportunity = () => {
           date={job.diedline}
           link={job.link}
           type={job.op_type}
+          company={job.organization}
+          onSupportRequest={handleRequestSupport}
           renderActions={() => (
             <>
               <button onClick={() => alert("Apply logic here")}>Apply</button>

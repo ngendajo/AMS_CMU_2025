@@ -1,9 +1,11 @@
 .requests-wrapper {
   width: 100%;
+  box-sizing: border-box;
 }
 
 .requests-table {
-  display: block;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .requests-table table {
@@ -17,6 +19,7 @@
 .requests-table td {
   padding: 10px 15px;
   text-align: left;
+  white-space: nowrap;
 }
 
 .requests-table th {
@@ -33,11 +36,24 @@
   background-color: #ffffff8d;
 }
 
-/* Mobile card view */
+.no-requests-message {
+  font-family: Regular;
+  padding: 20px;
+  text-align: center;
+  color: var(--brown);
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile View */
 .requests-mobile {
   display: none;
   gap: 20px;
   flex-direction: column;
+  width: 100%;
 }
 
 .request-card {
@@ -46,6 +62,8 @@
   border-radius: 8px;
   background-color: var(--white);
   font-family: Regular;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -55,4 +73,13 @@
   .requests-mobile {
     display: flex;
   }
+}
+.requests-table {
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.requests-table table {
+  min-width: 600px; /* allows scroll instead of squish */
 }
