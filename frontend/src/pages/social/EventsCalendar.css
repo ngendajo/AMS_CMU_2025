@@ -29,29 +29,56 @@
   border: 2px var(--yellow) solid;
 }
 .CalendarWrapper {
-  /* display */
   display: flex;
-  /* box */
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 40px;
   width: 100%;
-  padding-bottom: 60px;
-  position: relative;
+  margin-top:5px; /* pushes calendar lower to avoid overlap */
 }
+
 .calendar-side {
-  margin-top: -60px;
-  margin-right: 60px;
+  flex: 1;
+  max-width: 325px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+
 .events-side {
   flex: 1;
-}
-.has-events {
-  /* display */
-  display: grid;
-  place-items: center;
-  grid-template-columns: repeat(2, 1fr);
-  /* box */
   width: 100%;
-  gap: 40px;
 }
+
+/* responsive card grid */
+.has-events {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  width: 100%;
+  place-items: center;
+}
+
+/* Responsive layout for calendar and events */
+@media (max-width: 768px) {
+  .CalendarWrapper {
+    flex-direction: column;
+    margin-top: 40px;
+  }
+
+  .calendar-side {
+    margin-right: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .events-side {
+    width: 100%;
+  }
+  
+}
+
 .no-events {
   /* font */
   color: var(--green);
@@ -64,14 +91,16 @@
 
 /* REACT */
 .react-calendar {
-  /* color block */
   background-color: var(--white);
   border: 2px var(--brown) solid;
-  /* box */
   padding: 30px;
   border-radius: 8px;
-  width: 390px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
+
+
 .react-calendar__navigation__label{
   /* font */
   background-color: var(--white) !important;
@@ -194,7 +223,10 @@
 /* legend */
 .calendar-legend {
   /* box */
-  margin-top: 30px;
+    display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  justify-content: center;
 }
 .legend-item {
   /* display */

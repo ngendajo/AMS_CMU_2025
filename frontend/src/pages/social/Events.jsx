@@ -121,7 +121,6 @@ const Events = () => {
       <div className="HeadWrapper">
         <Link to="/events-calendar" className="calendar-view-button">Calendar</Link>
         <Link to="/events-gallery" className="gallery-button">Photos</Link>
-        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder={"Search events..."}/>
       </div>
       {(auth.user.is_crc || auth.user.is_superuser) && (
         <button onClick={() => setCreatingNew(true)} className="add-new-event">Add Event</button>
