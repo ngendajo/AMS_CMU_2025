@@ -74,3 +74,62 @@
   background-color: var(--green);
   color: white;
 }
+
+.modal-card input,
+.modal-card textarea {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--grey, #ccc);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: Regular;
+  box-sizing: border-box;
+  background-color: var(--light-grey, #f9f9f9);
+  color: var(--dark-text);
+}
+
+.modal-card textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modal-card label {
+  font-size: 13px;
+  margin-bottom: 4px;
+  display: block;
+  font-family: Medium;
+  color: var(--black);
+}
+
+.modal-field-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.modal-field-row label {
+  min-width: 110px;
+  font-size: 14px;
+  font-family: Medium;
+  color: var(--black);
+  text-align: right;
+}
+
+.modal-field-row input,
+.modal-field-row textarea {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--grey, #ccc);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: Regular;
+  background-color: var(--light-grey, #f9f9f9);
+  color: var(--dark-text);
+}
+
+.modal-field-row textarea {
+  resize: vertical;
+  min-height: 100px;
+}

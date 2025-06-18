@@ -1,3 +1,4 @@
+// src/components/opportunities/tabbed-card-page.jsx
 import React, { useState, useEffect } from "react";
 import "./tabbed-card-page.css";
 
@@ -10,7 +11,7 @@ const TabbedCardPage = ({
   showCreateButton = false,
   onCreateClick
 }) => {
-  const [prevTab, setPrevTab] = useState(tabs[0]);
+  const [prevTab, setPrevTab] = useState(tabs.find(t => t !== "Support Requests"));
 
   // Track last non-support tab to return from Support Requests
   useEffect(() => {
@@ -32,7 +33,7 @@ const TabbedCardPage = ({
       <div className="tabs-container">
         {/* Desktop Tabs */}
         <div className="tabs desktop-tabs">
-          {tabs.filter(tab => tab !== "Support Requests").map(tab => (
+          {tabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -41,12 +42,6 @@ const TabbedCardPage = ({
               {tab}
             </button>
           ))}
-          <button
-            className={`tab-button ${activeTab === "Support Requests" ? "active" : ""}`}
-            onClick={() => setActiveTab("Support Requests")}
-          >
-            Support Requests
-          </button>
         </div>
 
         {/* Mobile Tabs */}
@@ -74,14 +69,15 @@ const TabbedCardPage = ({
             </button>
           )}
         </div>
-
-
       </div>
 
+      {/* Button now always BELOW the tabs */}
       {showCreateButton && activeTab !== "Support Requests" && (
-        <button className="create-new-button" onClick={onCreateClick}>
-          Create Draft
-        </button>
+        <div className="create-button-wrapper">
+          <button className="create-new-button" onClick={onCreateClick}>
+            Create Draft
+          </button>
+        </div>
       )}
 
       {activeTab === "Support Requests" ? (

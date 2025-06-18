@@ -26,7 +26,7 @@ const CareerOpportunityStaff = () => {
   const fetchOpportunities = async () => {
     try {
       const res = await axios.get(baseUrl + '/opportunity');
-      const sorted = res.data.sort((a, b) => a.approved - b.approved); // drafts (false = 0) first
+      const sorted = res.data.sort((a, b) => a.approved - b.approved); // Show drafts first
       setOpportunities(sorted);
     } catch (err) {
       console.error(err);
@@ -35,10 +35,8 @@ const CareerOpportunityStaff = () => {
 
   const handlePostToggle = async (id, approved) => {
     try {
-      await axios.patch(baseUrl + `/opportunity/${id}/approve`, { approved: !approved }, {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`
-        }
+      await axios.patch(`${baseUrl}/opportunity/${id}/approve`, { approved: !approved }, {
+        headers: { Authorization: `Bearer ${auth.accessToken}` }
       });
       fetchOpportunities();
     } catch (err) {
@@ -49,11 +47,11 @@ const CareerOpportunityStaff = () => {
   const handleSaveEdit = async (data, isNew) => {
     try {
       if (isNew) {
-        await axios.post(baseUrl + '/opportunity/create/', data, {
+        await axios.post(`${baseUrl}/opportunity/create/`, data, {
           headers: { Authorization: `Bearer ${auth.accessToken}` }
         });
       } else {
-        await axios.put(baseUrl + `/opportunity/${data.id}/update/`, data, {
+        await axios.put(`${baseUrl}/opportunity/${data.id}/update/`, data, {
           headers: { Authorization: `Bearer ${auth.accessToken}` }
         });
       }
@@ -68,7 +66,7 @@ const CareerOpportunityStaff = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(baseUrl + `/opportunity/${id}/delete/`, {
+      await axios.delete(`${baseUrl}/opportunity/${id}/delete/`, {
         headers: { Authorization: `Bearer ${auth.accessToken}` }
       });
       fetchOpportunities();
@@ -77,7 +75,7 @@ const CareerOpportunityStaff = () => {
     }
   };
 
-  const handleSupportRequest = (op) => {
+  const handleRequestSupport = (op) => {
     const timestamp = new Date().toLocaleString();
     setSupportRequests(prev => [
       ...prev,
@@ -87,40 +85,17 @@ const CareerOpportunityStaff = () => {
         type: op.op_type,
         timestamp,
         status: 'Pending',
-        alumni: "John Doe" // Add real alumni info when integrating
+        alumni: "John Doe" // Placeholder for real alumni data
       }
     ]);
   };
 
-  const filtered = opportunities.filter(op => op.op_type === activeTab);
-
   const renderCards = () => {
-    const cards = [];
+    const filtered = opportunities.filter(op => op.op_type === activeTab);
 
-    if (creatingNew) {
-      cards.push(
-        <OpportunityCard
-          key="new"
-          title=""
-          description=""
-          date=""
-          type={activeTab}
-          draft
-          onClick={() => {
-            setEditingOpportunity({
-              title: "", description: "", deadline: "", op_type: activeTab,
-              link: "", organization: "", location: ""
-            });
-            setEditMode(true);
-          }}
-          renderActions={() => <></>}
-        />
-      );
-    }
-
-    filtered.forEach(op => {
+    return filtered.map(op => {
       const isDraft = !op.approved;
-      cards.push(
+      return (
         <OpportunityCard
           key={op.id}
           title={op.title}
@@ -132,6 +107,7 @@ const CareerOpportunityStaff = () => {
           onClick={() => {
             setEditingOpportunity(op);
             setEditMode(false);
+            setCreatingNew(false);
           }}
           renderActions={() => (
             <>
@@ -141,6 +117,7 @@ const CareerOpportunityStaff = () => {
                   <button onClick={() => {
                     setEditingOpportunity(op);
                     setEditMode(true);
+                    setCreatingNew(false);
                   }}>Edit</button>
                   <button onClick={() => handleDelete(op.id)}>Delete</button>
                 </>
@@ -150,6 +127,7 @@ const CareerOpportunityStaff = () => {
                   <button onClick={() => {
                     setEditingOpportunity(op);
                     setEditMode(true);
+                    setCreatingNew(false);
                   }}>Edit</button>
                 </>
               )}
@@ -158,16 +136,30 @@ const CareerOpportunityStaff = () => {
         />
       );
     });
-
-    return cards;
   };
 
   const renderSupportRequests = () => (
-    <SupportRequestTable requests={supportRequests.map(r => ({
-      ...r,
-      alumni: r.alumni || "Unknown" // Placeholder for real alumni data
-    }))} />
+    <SupportRequestTable
+      requests={supportRequests.map(r => ({
+        ...r,
+        alumni: r.alumni || "Unknown"
+      }))}
+    />
   );
+
+  const handleCreateClick = () => {
+    setEditingOpportunity({
+      title: "",
+      description: "",
+      deadline: "",
+      op_type: activeTab,
+      link: "",
+      organization: "",
+      location: ""
+    });
+    setEditMode(true);
+    setCreatingNew(true);
+  };
 
   return (
     <>
@@ -178,7 +170,7 @@ const CareerOpportunityStaff = () => {
         renderCards={renderCards}
         renderFinalTab={renderSupportRequests}
         showCreateButton={activeTab !== "Support Requests"}
-        onCreateClick={() => setCreatingNew(true)}
+        onCreateClick={handleCreateClick}
       />
 
       {editingOpportunity && (

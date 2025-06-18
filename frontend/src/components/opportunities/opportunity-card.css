@@ -88,3 +88,16 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
+.draft-label {
+  background-color: var(--brown, #7b5e57);
+  color: white;
+  font-size: 10px;
+  font-family: Bold;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  margin-left: 10px;
+  margin-top: 2px;
+  height: fit-content;
+}

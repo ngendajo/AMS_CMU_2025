@@ -49,24 +49,6 @@
   color: var(--brown);
 }
 
-.create-new-button {
-  background-color: var(--green);
-  color: var(--white);
-  font-family: Medium;
-  font-size: 16px;
-  padding: 5px 15px;
-  border: 2px solid var(--green);
-  border-radius: 30px;
-  margin-bottom: 15px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.create-new-button:hover {
-  background-color: var(--yellow);
-  border-color: var(--yellow);
-}
 
 .opportunity-cards-container {
   display: grid;
@@ -229,6 +211,24 @@
   flex: 1;
   min-width: 150px;
   white-space: nowrap;
+}
+
+.create-button-wrapper {
+  margin: 16px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.create-new-button {
+  background-color: var(--green);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-family: Regular;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 
