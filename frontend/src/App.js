@@ -27,6 +27,7 @@ import CareerOpportunity from './pages/career/CareerOpportunity';
 import CareerOpportunityStaff from "./pages/career/CareerOpportunityStaff";
 
 import FurtherEducation from './pages/education/FurtherEducation';
+import FurtherEducationStaff from './pages/education/FurtherEducationStaff';
 // support and giving
 import DonationOptions from './pages/support/DonationOptions.jsx';
 import MentoringPrograms from './pages/support/MentoringPrograms.jsx';
@@ -93,6 +94,7 @@ function App() {
                     <Route path="/career_opportunity_staff" element={<CareerOpportunityStaff />}
 />
                     <Route path="/further_education" element={<FurtherEducation />} />
+                    <Route path="/further_education_staff" element={<FurtherEducationStaff />} />
                     <Route path="/donation_options" element={<DonationOptions />} />
                     <Route path="/mentoring_programs" element={<MentoringPrograms />} />
                     <Route path="/events" element={<Events />} />

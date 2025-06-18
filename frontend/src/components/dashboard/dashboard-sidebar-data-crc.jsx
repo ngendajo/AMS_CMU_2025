@@ -21,7 +21,7 @@ export const SidebarDataCrc = [
   },
   {
     title: 'Further Education',
-    path: '/further_education',
+    path: '/further_education_staff',
     cName: 'nav-text'
   },
     {
