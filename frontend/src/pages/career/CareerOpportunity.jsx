@@ -1,160 +1,92 @@
 import React, { useState, useEffect } from 'react';
-import JobCard from '../../components/career/job-card';
-import "./CareerOpportunity.css";
-
+import TabbedCardPage from '../../components/opportunities/tabbed-card-page';
+import OpportunityCard from '../../components/opportunities/opportunity-card';
+import SupportRequestTable from '../../components/opportunities/support-request-table';
+import './CareerOpportunity.css';
 import axios from 'axios';
 import useAuth from "../../hooks/useAuth";
 import baseUrl from '../../api/baseUrl';
 
 const CareerOpportunity = () => {
-    const [activeTab, setActiveTab] = useState('Full Time');
-    const [opportunity, setOpportunity] = useState([]);
-    const [creatingNew, setCreatingNew] = useState(false);
-    const { auth } = useAuth();
-    
-    const fetchOpportunity = async () => {
+  const { auth } = useAuth();
+
+  const [activeTab, setActiveTab] = useState('Full Time');
+  const [opportunities, setOpportunities] = useState([]);
+  const [supportRequests, setSupportRequests] = useState([]);
+
+  const TABS = [
+    'Full Time',
+    'Part Time',
+    'Internship',
+    'Volunteer',
+    'Professional',
+    'Support Requests'
+  ];
+
+  useEffect(() => {
+    fetchOpportunities();
+  }, []);
+
+  const fetchOpportunities = async () => {
     try {
-      const response = await axios.get(baseUrl+'/opportunity');
-      console.log(response.data)
-      const sortedOpportunities = response.data.sort((a, b) => a.approved - b.approved);
-      setOpportunity(sortedOpportunities);
+      const response = await axios.get(baseUrl + '/opportunity');
+      const sorted = response.data.sort((a, b) => a.approved - b.approved);
+      setOpportunities(sorted);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  useEffect(() => {
-    fetchOpportunity();
-  }, []);
-
-    const jobData = opportunity;
-  
-    const filteredJob = jobData.filter(job => job.op_type === activeTab);
-
-    const handleApprove = async (jobId, approved) => {
-      try {
-        await axios.patch(baseUrl + "/opportunity/" + jobId + "/approve",
-        { approved: !approved },
-          {
-            headers: {
-              "Authorization": 'Bearer ' + String(auth.accessToken),
-              "Content-Type": 'application/json'
-            }
-          }
-        ).then(res => {
-          console.log(res);
-          alert(!approved ? "Posted successfully" : "Removed successfully");
-          fetchOpportunity();
-        }).catch(error => console.log(error.response.data));
-      } catch (error) {
-        console.log(error);
+  const handleRequestSupport = (op) => {
+    const timestamp = new Date().toLocaleString();
+    setSupportRequests(prev => [
+      ...prev,
+      {
+        title: op.title,
+        company: op.organization,
+        type: op.op_type,
+        timestamp,
+        status: 'Pending'
       }
-    };
+    ]);
+    alert("CRC support requested.");
+  };
 
-    const handleSaveEdit = async (jobId, approved, opportunityData) => {
-      try {
-        await axios.put(baseUrl + "/opportunity/" + jobId + "/update/", opportunityData,
-          {
-            headers: {
-              "Authorization": 'Bearer ' + String(auth.accessToken),
-              "Content-Type": 'application/json'
-            }
-          }
-        ).then(res => {
-          console.log(res);
-          alert(approved ? "Posted successfully" : "Saved successfully");
-          fetchOpportunity();
-        }).catch(error => console.log(error.response.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const renderCards = () => {
+    return opportunities
+      .filter((op) => op.op_type === activeTab && op.approved)
+      .map((job) => (
+        <OpportunityCard
+          key={job.id}
+          title={job.title}
+          description={job.description}
+          date={job.deadline}
+          link={job.link}
+          type={job.op_type}
+          company={job.organization}
+          onSupportRequest={handleRequestSupport}
+          renderActions={() => (
+            <>
+              <button onClick={() => window.open(job.link, "_blank")}>Apply</button>
+              <button onClick={() => handleRequestSupport(job)}>Request CRC Support</button>
+            </>
+          )}
+        />
+      ));
+  };
 
-    const handleCreateNew = async (opportunityData) => {
-      if (opportunityData === null) {
-        setCreatingNew(false);
-        return;
-      }
-      try {
-        await axios.post(baseUrl + "/opportunity/create/", opportunityData,
-          {
-            headers: {
-              "Authorization": 'Bearer ' + String(auth.accessToken),
-              "Content-Type": 'application/json'
-            }
-          }
-        ).then(res => {
-          console.log(res);
-          alert("Created successfully");
-          fetchOpportunity();
-          setCreatingNew(false);
-        }).catch(error => console.log(error.response.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const renderFinalTab = () => (
+    <SupportRequestTable requests={supportRequests} />
+  );
 
-    return (
-      <div className="job-page">
-        <div className="tabs">
-          <button onClick={() => setActiveTab('Full Time')} className={activeTab === 'Full Time' ? 'active' : ''}>Full Time</button>
-          <button onClick={() => setActiveTab('Part Time')} className={activeTab === 'Part Time' ? 'active' : ''}>Part Time</button>
-          <button onClick={() => setActiveTab('Internship')} className={activeTab === 'Internship' ? 'active' : ''}>Internship</button>
-          <button onClick={() => setActiveTab('Volunteer')} className={activeTab === 'Volunteer' ? 'active' : ''}>Volunteer</button>
-          <button onClick={() => setActiveTab('Professional')} className={activeTab === 'Professional' ? 'active' : ''}>Proffesional Development</button>
-        </div>
-        {(auth.user.is_crc || auth.user.is_superuser) && (
-          <button onClick={() => setCreatingNew(true)} className="create-new-button">Create Draft</button>
-        )}
-        <div className="job-cards-container">
-        {creatingNew && (
-          <JobCard
-            alumni='false'
-            title=""
-            type={activeTab}
-            description=""
-            date=""
-            link=""
-            approved={false}
-            onApprove={() => handleApprove(null, false)}
-            onSave={(x) => handleCreateNew(x)}
-            isNew={true}
-          />
-        )}
-        {auth.user.is_alumni && (
-          filteredJob.map(job => (
-            job.approved ?
-            <JobCard
-              key={job.id}
-              alumni='true'
-              title={job.title}
-              type={job.op_type}
-              description={job.description}
-              date={job.diedline}
-              link={job.link}
-              approved={job.approved}
-            />
-            : null
-          ))
-        )}
-        {(auth.user.is_crc || auth.user.is_superuser) && (
-        filteredJob.map(job => (
-          <JobCard
-            key={job.id}
-            alumni='false'
-            title={job.title}
-            type={job.op_type}
-            description={job.description}
-            date={job.diedline}
-            link={job.link}
-            approved={job.approved}
-            onApprove={() => handleApprove(job.id, job.approved)}
-            onChange={(x) => handleSaveEdit(job.id, job.approved, x)}
-          />
-        ))
-      )}
-      </div>
-    </div>
+  return (
+    <TabbedCardPage
+      tabs={TABS}
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      renderCards={renderCards}
+      renderFinalTab={renderFinalTab}
+    />
   );
 };
 
