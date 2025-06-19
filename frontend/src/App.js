@@ -19,6 +19,7 @@ import Container from './pages/Container';
 import Dashboard from './pages/dashboard/Dashboard';
 import PersonalProfile from './pages/profile/PersonalProfile';
 
+import AddData from './pages/AddData';
 import AlumniDirectory from './pages/directory/AlumniDirectory';
 import CareerOpportunity from './pages/career/CareerOpportunity';
 import FurtherEducation from './pages/education/FurtherEducation';
@@ -84,6 +85,7 @@ function App() {
                     <Route path="/personal_profile" element={<PersonalProfile />} />
                     <Route path="/alumni_directory" element={<AlumniDirectory />} />
                     <Route path="/career_opportunity" element={<CareerOpportunity />} />
+                    <Route path="/add_data" element={<AddData />} />
                     <Route path="/further_education" element={<FurtherEducation />} />
                     <Route path="/donation_options" element={<DonationOptions />} />
                     <Route path="/mentoring_programs" element={<MentoringPrograms />} />

@@ -2,10 +2,11 @@
 import React from 'react';
 import './alumni-list.css';
 
-const AlumniList = ({ alumni, onSelect, lastRef }) => {
+const AlumniList = ({ alumni, onSelect }) => {
   return (
     <>
       {/* Desktop Table Layout */}
+      <div className='desktop-table-wrapper'>
       <table className="desktop-table alumni-table">
         <thead>
           <tr>
@@ -15,7 +16,7 @@ const AlumniList = ({ alumni, onSelect, lastRef }) => {
             <th>Grade</th>
             <th>Family</th>
             <th>Combination</th>
-            <th>Industry</th>
+            <th>Job Title</th>
           </tr>
         </thead>
         <tbody>
@@ -24,7 +25,7 @@ const AlumniList = ({ alumni, onSelect, lastRef }) => {
               key={alum.id}
               onClick={() => onSelect(alum)}
               className="table-row"
-              ref={index === alumni.length - 1 ? lastRef : null}
+           
             >
               <td>
                 <img src={alum.profilePic} alt="Profile" className="alumni-pic-table" />
@@ -34,12 +35,12 @@ const AlumniList = ({ alumni, onSelect, lastRef }) => {
               <td>{alum.gradeName}</td>
               <td>{alum.familyName}</td>
               <td>{alum.combinationName}</td>
-              <td>{alum.industry}</td>
+              <td>{alum.employment}</td>
             </tr>
           ))}
         </tbody>
       </table>
-
+      </div>
       {/* Mobile Layout */}
       <div className="mobile-list alumni-list">
         {alumni.map((alum, index) => (
@@ -47,7 +48,7 @@ const AlumniList = ({ alumni, onSelect, lastRef }) => {
             key={alum.id}
             className="alumni-item"
             onClick={() => onSelect(alum)}
-            ref={index === alumni.length - 1 ? lastRef : null}
+           
           >
             <img src={alum.profilePic} alt="Profile" className="alumni-pic" />
             <div className="alumni-name">
