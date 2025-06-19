@@ -6,9 +6,12 @@ import './EventsGallery.css';
 
 import axios from 'axios';
 import useAuth from "../../hooks/useAuth";
-import baseUrl from '../../api/baseUrl';
+
 
 import './Events.css';
+
+// import baseUrl from '../../api/baseUrl';
+const  baseUrl='https://backend.asyv.ac.rw/api';
 
 const EventsGallery = () => {
   const [searchQuery, setSearchQuery] = useState('');

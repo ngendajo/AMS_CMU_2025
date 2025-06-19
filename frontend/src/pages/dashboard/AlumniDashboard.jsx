@@ -5,8 +5,10 @@ import './alumni-dashboard.css';
 import useAuth from '../../hooks/useAuth';
 import { Event } from '../../components/social/events-cards';
 import OpportunityCard from '../../components/opportunities/opportunity-card';
-import baseUrl from '../../api/baseUrl';
 import axios from 'axios';
+// import baseUrl from '../../api/baseUrl';
+const  baseUrl='https://backend.asyv.ac.rw/api';
+
 
 const AlumniDashboard = () => {
   const { auth } = useAuth();
@@ -22,11 +24,11 @@ const AlumniDashboard = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get(baseUrl + '/events/', {
-        headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
+        // headers: {
+        //   Authorization: 'Bearer ' + auth.accessToken,
+        //   'Content-Type': 'multipart/form-data',
+        // },
+        // withCredentials: true,
       });
       setEvents(response.data);
     } catch (err) {

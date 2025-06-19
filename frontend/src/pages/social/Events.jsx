@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../../components/dashboard/search-bar';
 import { Event } from '../../components/social/events-cards';
 import './Events.css';
-
-import baseUrl from "../../api/baseUrl";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+
+// import baseUrl from "../../api/baseUrl";
+const  baseUrl='https://backend.asyv.ac.rw/api';
 
 const Events = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,11 +27,11 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get(baseUrl+'/events/',{
-        headers: {
-          "Authorization": 'Bearer ' + String(auth.accessToken),
-          "Content-Type": 'multipart/form-data'
-        },
-        withCredentials:true
+        // headers: {
+        //   "Authorization": 'Bearer ' + String(auth.accessToken),
+        //   "Content-Type": 'multipart/form-data'
+        // },
+        // withCredentials:true
       });
       setEvent(response.data); 
       console.log(response.data)

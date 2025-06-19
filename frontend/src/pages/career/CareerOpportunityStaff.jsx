@@ -4,9 +4,10 @@ import TabbedCardPage from '../../components/opportunities/tabbed-card-page';
 import OpportunityCard from '../../components/opportunities/opportunity-card';
 import SupportRequestTable from '../../components/opportunities/support-request-table';
 import OpportunityModal from '../../components/opportunities/opportunity-modal';
-import baseUrl from '../../api/baseUrl';
 import axios from 'axios';
 import useAuth from "../../hooks/useAuth";
+// import baseUrl from '../../api/baseUrl';
+const  baseUrl='https://backend.asyv.ac.rw/api';
 
 const CareerOpportunityStaff = () => {
   const { auth } = useAuth();
