@@ -88,7 +88,7 @@ const ProfileCard = () => {
     employement_status:[]
   });
   const { auth } = useAuth();
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
   const [study, setStudy] = useState([]);
   const [employment, setEmployment] = useState([]);
   const [user_id, setUser_id] = useState();
@@ -111,8 +111,8 @@ const ProfileCard = () => {
         ]);
   
         setUser_id(auth.user.id);
-        setUser([userRes.data]);
-        setKid_id(userRes.data.basic_information.kid_id);
+        setUser(userRes.data);
+        setKid_id(userRes.data.basic_information?.kid_id);
         setDropdownOptions(dropdownRes.data);  
   
       } catch (err) {
@@ -192,6 +192,10 @@ const ProfileCard = () => {
   };
 
   useEffect(() => {
+    console.log("user data", user);
+  }, [user]);
+
+  useEffect(() => {
     if (user_id) getEmployment();
   }, [auth, user_id]);
 //Edit employment data
@@ -242,8 +246,9 @@ const ProfileCard = () => {
   };
 //Edit current info
   const saveCurrentInfo = async () => {
+    console.log(user);
     try {
-      await axios.put(`${baseUrl}/kid/${user_id}`, currentInfo, {
+      await axios.put(`${baseUrl}/kid/${user_id}/`, user, {
         headers: {
           Authorization: 'Bearer ' + String(auth.accessToken),
           'Content-Type': 'application/json'
@@ -262,197 +267,242 @@ const ProfileCard = () => {
   );
   //console.log(collegeLookup);
 
+  const getNestedValue = (obj, path) => {
+    return path.split('.').reduce((o, key) => o?.[key], obj);
+  };
   
- const renderSection = (
-  data,
-  setData,
-  fields,
-  editing = false,
-  isEmploymentSection = false,
-  isAcademicSection = false
-) => (
-  <>
-    <div className="profile-table desktop-only">
-      <table className="fixed-table">
-        <thead>
-          <tr>{fields.map((f, i) => <th key={i}>{f.label}</th>)}</tr>
-        </thead>
-        <tbody>
-          {data.map((item, i) => (
-            <tr key={i}>
-              {fields.map((f, j) => {
-                const val = typeof f.value === 'function' ? f.value(item) : item[f.value];
-
-                // Dropdown editing
-                if (editing && f.dropdownKey && dropdownOptions[f.dropdownKey]) {
+  const setNestedValue = (obj, path, value) => {
+    const keys = path.split('.');
+    const lastKey = keys.pop();
+    const nested = keys.reduce((o, k) => o[k] = o[k] || {}, obj);
+    nested[lastKey] = value;
+  };
+  
+  const renderSection = (
+    data,
+    setData,
+    fields,
+    editing = false,
+    isEmploymentSection = false,
+    isAcademicSection = false
+  ) => (
+    <>
+      <div className="profile-table desktop-only">
+        <table className="fixed-table">
+          <thead>
+            <tr>{fields.map((f, i) => <th key={i}>{f.label}</th>)}</tr>
+          </thead>
+          <tbody>
+            {data.map((item, i) => (
+              <tr key={i}>
+                {fields.map((f, j) => {
+                  const val = f.path
+                    ? getNestedValue(item, f.path)
+                    : typeof f.value === 'function'
+                    ? f.value(item)
+                    : item[f.value];
+  
+                  if (editing && f.dropdownKey && dropdownOptions[f.dropdownKey]) {
+                    return (
+                      <td key={j}>
+                        <select
+                          value={val ?? ""}
+                          onChange={(e) => {
+                            const updated = [...data];
+                            const itemCopy = { ...updated[i] };
+                            const newValue = e.target.value;
+  
+                            if (f.path) {
+                              setNestedValue(itemCopy, f.path, newValue);
+                            } else {
+                              itemCopy[f.value] = newValue;
+                            }
+  
+                            // Special handling: update location when college changes
+                            if (isAcademicSection && f.value === 'college') {
+                              const locationInfo = collegeLookup[newValue];
+                              setNestedValue(itemCopy, 'location', locationInfo?.location || "");
+                            }
+  
+                            updated[i] = itemCopy;
+                            setData(updated);
+                          }}
+                          style={{ width: "100%" }}
+                        >
+                          <option value="" disabled>Select...</option>
+                          {dropdownOptions[f.dropdownKey].map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      </td>
+                    );
+                  }
+  
+                  if (isAcademicSection && f.value === 'country') {
+                    return <td key={j}>{val || '-'}</td>;
+                  }
+  
+                  if (editing) {
+                    return (
+                      <td key={j}>
+                        <input
+                          type="text"
+                          value={val ?? ""}
+                          onChange={(e) => {
+                            const updated = [...data];
+                            const itemCopy = { ...updated[i] };
+                            const newValue = e.target.value;
+  
+                            if (f.path) {
+                              setNestedValue(itemCopy, f.path, newValue);
+                            } else {
+                              itemCopy[f.value] = newValue;
+                            }
+  
+                            updated[i] = itemCopy;
+                            setData(updated);
+                          }}
+                          style={{ width: "100%" }}
+                          disabled={isAcademicSection && f.value === 'country'}
+                        />
+                      </td>
+                    );
+                  }
+  
                   return (
                     <td key={j}>
-                      <select
-                        value={item[f.value] ?? ""}
-                        onChange={(e) => {
-                          const updated = [...data];
-                          updated[i][f.value] = e.target.value;
-
-                          // Example: for academics, update location dynamically when college changes
-                          if (isAcademicSection && f.value === 'college') {
-                            // Suppose you have a map: collegeId -> {city, country}
-                            const locationInfo = collegeLookup[e.target.value]; // define this in scope
-                            //console.log(e.target.value);
-                            updated[i]['location'] = `${locationInfo.location}`;
-                          }
-
-                          setData(updated);
-                        }}
-                        style={{ width: "100%" }}
-                      >
-                        <option value="" disabled>Select...</option>
-                        {dropdownOptions[f.dropdownKey].map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
+                      {isEmploymentSection && f.value === 'status' ? (
+                        getEmployementStatusLabel(val)
+                      ) : isAcademicSection && f.value === 'college' ? (
+                        dropdownOptions.colleges.find(opt => String(opt.value) === String(val))?.label ?? val
+                      ) : isAcademicSection && f.value === 'level' ? (
+                        getLevelLabel(val)
+                      ) : isAcademicSection && f.value === 'status' ? (
+                        getStudyStatusLabel(val)
+                      ) : (
+                        safeValue(val)
+                      )}
                     </td>
                   );
-                }
-
-                // For academic location: make it readonly (no input) or just display string
-                if (isAcademicSection && f.value === 'country') {
-                  return <td key={j}>{val || '-'}</td>;
-                }
-
-                // Editable input field
-                if (editing) {
-                  return (
-                    <td key={j}>
-                      <input
-                        type="text"
-                        value={item[f.value] ?? ""}
-                        onChange={(e) => {
-                          const updated = [...data];
-                          updated[i][f.value] = e.target.value;
-                          setData(updated);
-                        }}
-                        style={{ width: "100%" }}
-                        // Disable input if academic section and location field
-                        disabled={isAcademicSection && f.value === 'country'}
-                      />
-                    </td>
-                  );
-                }
-
-                // Non-editing display formatting
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+  
+      <div className="profile-fields mobile-only">
+        {data.map((item, i) => (
+          <div key={i} className="entry-block">
+            {fields.map((f, j) => {
+              const val = f.path
+                ? getNestedValue(item, f.path)
+                : typeof f.value === 'function'
+                ? f.value(item)
+                : item[f.value];
+  
+              if (editing && f.dropdownKey && dropdownOptions[f.dropdownKey]) {
                 return (
-                  <td key={j}>
-                    {isEmploymentSection && f.value === 'status' ? (
-                      getEmployementStatusLabel(val)
-                    ) : isAcademicSection && f.value === 'college' ? (
-                      dropdownOptions.colleges.find(opt => String(opt.value) === String(val))?.label ?? val
-                    ) : isAcademicSection && f.value === 'level' ? (
-                      getLevelLabel(val)
-                    ) : isAcademicSection && f.value === 'status' ? (
-                      getStudyStatusLabel(val)
-                    ) : (
-                      safeValue(val)
-                    )}
-                  </td>
+                  <div key={j}>
+                    <select
+                      value={val ?? ""}
+                      onChange={(e) => {
+                        const updated = [...data];
+                        const itemCopy = { ...updated[i] };
+                        const newValue = e.target.value;
+  
+                        if (f.path) {
+                          setNestedValue(itemCopy, f.path, newValue);
+                        } else {
+                          itemCopy[f.value] = newValue;
+                        }
+  
+                        if (isAcademicSection && f.value === 'college') {
+                          const locationInfo = collegeLookup[newValue];
+                          setNestedValue(itemCopy, 'location', locationInfo?.location || "");
+                        }
+  
+                        updated[i] = itemCopy;
+                        setData(updated);
+                      }}
+                      style={{ width: "100%" }}
+                    >
+                      <option value="" disabled>Select...</option>
+                      {dropdownOptions[f.dropdownKey].map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
                 );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-
-    <div className="profile-fields mobile-only">
-      {data.map((item, i) => (
-        <div key={i} className="entry-block">
-          {fields.map((f, j) => {
-            const val = typeof f.value === 'function' ? f.value(item) : item[f.value];
-
-            if (editing && f.dropdownKey && dropdownOptions[f.dropdownKey]) {
+              }
+  
+              if (isAcademicSection && f.value === 'country') {
+                return <div key={j}>{val || '-'}</div>;
+              }
+  
               return (
                 <div key={j}>
-                  <select
-                    value={item[f.value] ?? ""}
-                    onChange={(e) => {
-                      const updated = [...data];
-                      updated[i][f.value] = e.target.value;
-
-                      if (isAcademicSection && f.value === 'college') {
-                        const locationInfo = collegeLookup[e.target.value];
-                        updated[i]['location'] = `${locationInfo.location}`;
-                      }
-
-                      setData(updated);
-                    }}
-                    style={{ width: "100%" }}
-                  >
-                    <option value="" disabled>Select...</option>
-                    {dropdownOptions[f.dropdownKey].map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
+                  {editing ? (
+                    <input
+                      type="text"
+                      value={val ?? ""}
+                      onChange={(e) => {
+                        const updated = [...data];
+                        const itemCopy = { ...updated[i] };
+                        const newValue = e.target.value;
+  
+                        if (f.path) {
+                          setNestedValue(itemCopy, f.path, newValue);
+                        } else {
+                          itemCopy[f.value] = newValue;
+                        }
+  
+                        updated[i] = itemCopy;
+                        setData(updated);
+                      }}
+                      style={{ width: "100%" }}
+                      disabled={isAcademicSection && f.value === 'country'}
+                    />
+                  ) : (
+                    safeValue(val)
+                  )}
                 </div>
               );
-            }
+            })}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+  
 
-            if (isAcademicSection && f.value === 'country') {
-              return <div key={j}>{val || '-'}</div>;
-            }
-
-            return (
-              <div key={j}>
-                {editing ? (
-                  <input
-                    type="text"
-                    value={item[f.value] ?? ""}
-                    onChange={(e) => {
-                      const updated = [...data];
-                      updated[i][f.value] = e.target.value;
-                      setData(updated);
-                    }}
-                    style={{ width: "100%" }}
-                    disabled={isAcademicSection && f.value === 'country'}
-                  />
-                ) : (
-                  safeValue(val)
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  </>
-);
-
-  const personalFields = user.length > 0 ? [
+  const personalFields =  user ? [
     { label: 'First Name', value: u => u.basic_information?.first_name },
     { label: 'Rwandan Name', value: u => u.basic_information?.rwandan_name },
     { label: 'Gender', value: u => u.basic_information?.gender },
     { label: 'Date of Birth', value: u => u.basic_information?.date_of_birth },
     { label: 'Place of Birth', value: u => `${u.place_of_birth?.origin_district}, ${u.place_of_birth?.origin_sector}` }
+  ]  : [] ;
+  const currentInfoFields = user ? [
+    { label: 'Marital Status', path: 'personal_status.marital_status', dropdownKey: 'marital_statuses' },
+    { label: 'Children', path: 'personal_status.has_children' ? "Yes" : "No", dropdownKey: 'children_options' },
+    { label: 'City', path: 'current_address.current_district_or_city' },
+    { label: 'Country', path: 'current_address.current_county' }
   ] : [];
-  const currentInfoFields = user.length > 0 ? [
-    { label: 'Marital Status', value: u => u.personal_status?.marital_status, dropdownKey: 'marital_statuses' },
-    { label: 'Children', value: u => u.personal_status?.has_children ? "Yes" : "No", dropdownKey: 'children_options' },
-    { label: 'City', value: u => u.current_address?.current_district_or_city },
-    { label: 'Country', value: u => u.current_address?.current_county }
-  ] : [];
-  const asyvIdentityFields = [
+  const asyvIdentityFields =  user ? [
     { label: 'Grade', value: u => u.affiliation?.grade_info?.grade_name },
     { label: 'Family', value: u => u.affiliation?.family_name },
-    { label: 'Combination', value: u => u.academic_combinations?.slice(-1)[0]?.combination_name }
-  ];
-  const asyvAcademicFields = [
-    { label: 'S4 Grade', value: u => u.kid?.s4marks + '%' },
-    { label: 'S5 Grade', value: u => u.kid?.s5marks + '%' },
-    { label: 'S6 Grade', value: u => u.kid?.s6marks + '%' },
+    { label: 'Combination', value: u => u.academic_combinations?.[0]?.combination_name }
+  ] : [];
+  const asyvAcademicFields = user ? [
+    { label: 'S4 Grade', value: u => u.academic_combinations?.[2]?.marks + '%' },
+    { label: 'S5 Grade', value: u => u.academic_combinations?.[1]?.marks + '%' },
+    { label: 'S6 Grade', value: u => u.academic_combinations?.[0]?.marks + '%' },
     { label: 'National Exam Score', value: u => `${u.national_exam_results?.points_achieved}/${u.national_exam_results?.maximum_points} (${u.national_exam_results?.mention})` }
-  ];
-  const leapProgramFields = [
-
+  ] : [];
+  const leapProgramFields = user ? [
     { label: 'Leap Program', value: u => u.leap_activities?.map((a) => `${a.leap_name}`).join(", ") || 'Not Found' }
-  ];
+  ] : [];
   const academicFields = [
     { label: 'Level', value: 'level', dropdownKey: 'levels' },
     { label: 'Degree', value: 'degree' },
@@ -472,7 +522,7 @@ const ProfileCard = () => {
   return (
     <div className="profile-container vertical-cards">
       <ProfileCardSection title="Personal Info" canEdit={false}>
-        {renderSection(user, setUser, personalFields)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), personalFields)}
       </ProfileCardSection>
       <ProfileCardSection
         title="Current Info"
@@ -485,12 +535,12 @@ const ProfileCard = () => {
         }}
         onCancelEdit={() => setEditState(prev => ({ ...prev, current: false }))}
       >
-        {renderSection(user, setCurrentInfo, currentInfoFields, editState.current)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), currentInfoFields, editState.current)}
       </ProfileCardSection>
       <ProfileCardSection title="ASYV Info" canEdit={false}>
-        {renderSection(user, setUser, asyvIdentityFields)}
-        {renderSection(user, setUser, asyvAcademicFields)}
-        {renderSection(user, setUser, leapProgramFields)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), asyvIdentityFields)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), asyvAcademicFields)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), leapProgramFields)}
       </ProfileCardSection>
       <ProfileCardSection
         title="Academic Info"
