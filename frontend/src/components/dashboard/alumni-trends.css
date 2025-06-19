@@ -1,0 +1,36 @@
+.trends-wrapper {
+    padding: 1rem;
+    max-width: 100vw;       /* never wider than viewport */
+    overflow-x: hidden;    /* prevent horizontal scroll on whole page */
+    box-sizing: border-box;
+  }
+  
+  /* Limit select container width and allow it to shrink */
+  .select-width {
+    max-width: 400px;      /* or whatever max width you want */
+    width: 100%;
+    min-width: 200px;
+    margin-bottom: 1.5rem;
+    box-sizing: border-box;
+  }
+
+.scrollable-table-container {
+    overflow-x: auto;      /* enables horizontal scroll when needed */
+    max-width: 100%;       /* constrain container width */
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+  }
+  /* Optional: make table full width inside container */
+.trend-table {
+    width: max-content;    /* allow table to be wider than container to enable scrolling */
+    min-width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* For fixed layout or better readability */
+  .trend-table th, .trend-table td {
+    white-space: nowrap;   /* prevent wrapping inside cells */
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  

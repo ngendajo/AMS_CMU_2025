@@ -20,7 +20,6 @@ import Dashboard from './pages/dashboard/Dashboard';
 import AlumniDashboard from './pages/dashboard/AlumniDashboard.jsx';
 import PersonalProfile from './pages/profile/PersonalProfile';
 
-// add data
 import AddData from './pages/AddData';
 
 import AlumniDirectory from './pages/directory/AlumniDirectory';
@@ -93,8 +92,10 @@ function App() {
                     <Route path="/add_data" element={<AddData />} />
                     <Route path="/alumni_directory" element={<AlumniDirectory />} />
                     <Route path="/career_opportunity" element={<CareerOpportunity />} />
-                    <Route path="/career_opportunity_staff" element={<CareerOpportunityStaff />}
-/>
+
+                    <Route path="/career_opportunity_staff" element={<CareerOpportunityStaff />}/>
+                    <Route path="/add_data" element={<AddData />} />
+
                     <Route path="/further_education" element={<FurtherEducation />} />
                     <Route path="/further_education_staff" element={<FurtherEducationStaff />} />
                     <Route path="/donation_options" element={<DonationOptions />} />

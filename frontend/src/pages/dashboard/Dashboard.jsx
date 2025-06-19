@@ -14,7 +14,7 @@ import icon10 from '../../static/images/story_posts_icon.png'
 import icon11 from '../../static/images/job_posts_icon.png'
 import useAuth from '../../hooks/useAuth';
 import DashboardLayout from '../../components/dashboard/dashboard-layout';
-import AlumniOutcomesDashboard from '../../components/dashboard/AlumniTrends.jsx';
+import AlumniOutcomesDashboard from '../../components/dashboard/alumni-trends.jsx';
 
 const Dashboard = () => {
 

@@ -24,9 +24,11 @@ export const SidebarDataCrc = [
     path: '/further_education_staff',
     cName: 'nav-text'
   },
+
     {
     title: 'Add Data',
     path: '/add_data', // This route can be updated later
     cName: 'nav-text'
   }
 ];
+

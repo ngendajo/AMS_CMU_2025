@@ -75,8 +75,10 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: clamp(0.5rem, 2vw, 1.5rem);
   padding: 1rem;
-  width: 100%;
+  width: 100vw;              /* limit container to viewport width */
+  max-width: 70%;           /* safety cap */
   box-sizing: border-box;
+  overflow-x: hidden;        /* prevent horizontal scroll caused by grid */
 }
 
 @media (max-width: 768px) {

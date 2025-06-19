@@ -12,6 +12,8 @@ import useAuth from '../../hooks/useAuth';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
+import OutcomePieChart from '../../components/directory/outcome-pie-chart.jsx';
+
 const AlumniDirectory = () => {
   const [selectedAlumni, setSelectedAlumni] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,6 +26,7 @@ const AlumniDirectory = () => {
     family: [],
     combination: [],
     industry: [],
+    college:[],
   });
 
   const [genderFilter, setGenderFilter] = useState('');
@@ -31,6 +34,7 @@ const AlumniDirectory = () => {
   const [familyFilter, setFamilyFilter] = useState('');
   const [combinationFilter, setCombinationFilter] = useState('');
   const [industryFilter, setIndustryFilter] = useState('');
+  const [collegeFilter, setCollegeFilter] = useState('');
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -73,8 +77,17 @@ const AlumniDirectory = () => {
   }));
 
   const industryOptions = filters.industry;
+
+    const collegeOptions = (filters.college || []).map((item) => ({
+    label: item.college__college_name,
+    value: item.college__id,
+    }));
+
+
+
   const handleClear = () => setSelectedAlumni(null);
   useEffect(() => {
+    console.log("Fetching alumni with searchTerm:", searchTerm);
     const fetchAlumni = async () => {
       setLoading(true);
       const params = {
@@ -86,8 +99,11 @@ const AlumniDirectory = () => {
       if (familyFilter) params.family = familyFilter;
       if (combinationFilter) params.combination = combinationFilter;
       if (industryFilter) params.industry = industryFilter;
+      if (searchTerm) params.search = searchTerm;
+      if (collegeFilter) params.college = collegeFilter;
 
       try {
+        console.log("Request params:", params);
         const response = await axios.get(baseUrl + '/alumni-directory/', {
           params,
           headers: {
@@ -110,10 +126,12 @@ const AlumniDirectory = () => {
           grade: element.family.grade.grade_name || 'none',
           family: element.family.family_name || 'none',
           combination: element.combination.combination_name || '',
-          industry: element.employment.industry || '',
+          employment: element.employment?.[0]?.title || '',
         }));
 
-        setAlumniData((prevData) => [...prevData, ...alumnilist]);
+        setAlumniData((prevData) =>
+            pagination.current_page === 1 ? alumnilist : [...prevData, ...alumnilist]
+          );
         setFilters(response.data.filters);
         setOutcomeSummary(response.data.outcome_summary);
         setPagination((prev) => ({
@@ -129,24 +147,52 @@ const AlumniDirectory = () => {
     };
 
     fetchAlumni();
-  }, [auth, pagination.current_page, pagination.page_size, genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
-  useEffect(() => {
+  }, [auth, pagination.current_page, pagination.page_size, genderFilter, gradeFilter, familyFilter, 
+    combinationFilter, industryFilter, searchTerm, collegeFilter]);
+  
+useEffect(() => {
     setAlumniData([]);
     setPagination((prev) => ({ ...prev, current_page: 1 }));
-  }, [genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter]);
+}, [genderFilter, gradeFilter, familyFilter, combinationFilter, industryFilter, searchTerm, collegeFilter]);
 
-  const lastAlumniElementRef = useCallback((node) => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && pagination.has_next) {
-        setPagination((prev) => ({ ...prev, current_page: prev.current_page + 1 }));
+useEffect(() => {
+    const isDesktop = window.innerWidth >= 768; // adjust breakpoint if needed
+  
+    const scrollContainer = isDesktop 
+      ? document.querySelector('.desktop-table-wrapper') 
+      : window;
+  
+    if (!scrollContainer) return;
+  
+    const onScroll = () => {
+      let scrollTop, clientHeight, scrollHeight;
+  
+      if (scrollContainer === window) {
+        scrollTop = window.scrollY || document.documentElement.scrollTop;
+        clientHeight = window.innerHeight;
+        scrollHeight = document.documentElement.scrollHeight;
+      } else {
+        scrollTop = scrollContainer.scrollTop;
+        clientHeight = scrollContainer.clientHeight;
+        scrollHeight = scrollContainer.scrollHeight;
       }
-    });
-    if (node) observer.current.observe(node);
-  }, [loading, pagination.has_next]);
+  
+      if (scrollTop + clientHeight >= scrollHeight - 20) {
+        if (pagination.has_next && !loading) {
+          setPagination((prev) => ({ ...prev, current_page: prev.current_page + 1 }));
+        }
+      }
+    };
+  
+    scrollContainer.addEventListener('scroll', onScroll);
+  
+    return () => {
+      scrollContainer.removeEventListener('scroll', onScroll);
+    };
+  }, [pagination.has_next, loading]);
+  
 
-  const handleDownload = async () => {
+const handleDownload = async () => {
     try {
       const params = {
         page_size: 10000,
@@ -156,6 +202,7 @@ const AlumniDirectory = () => {
       if (familyFilter) params.family = familyFilter;
       if (combinationFilter) params.combination = combinationFilter;
       if (industryFilter) params.industry = industryFilter;
+      if (collegeFilter) params.college = collegeFilter;
 
       const response = await axios.get(baseUrl + '/alumni-directory/', {
         params,
@@ -188,11 +235,17 @@ const AlumniDirectory = () => {
       console.error('Download error:', err);
     }
   };
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
 
   return (
     <div className="DirectoryWrapper">
+        <div className = "ChartWrapper">
+            <OutcomePieChart summary={outcomeSummary} />
+        </div>
       <div className="DirectorySearchWrapper">
-        <SearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search alumni..." per="100" />
+        <SearchBar value={searchTerm} onChange={handleSearchChange} placeholder="Search alumni..." per="100" />
       </div>
 
       <div className="filter-bar">
@@ -245,6 +298,18 @@ const AlumniDirectory = () => {
             ))}
           </select>
         </div>
+        {/* College */}
+        <div className={`filter-button ${collegeFilter ? 'filter-applied' : ''}`}>
+        {collegeFilter && <button onClick={() => setCollegeFilter('')}>&#x2715;</button>}
+        <select value={collegeFilter} onChange={(e) => setCollegeFilter(e.target.value)}>
+            <option value="" disabled>College</option>
+            {(collegeOptions || [])
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+        </select>
+        </div>
       </div>
 
       <div className="directory-title">
@@ -253,7 +318,7 @@ const AlumniDirectory = () => {
       </div>
 
       <div className="directory-content">
-        <AlumniList alumni={alumniData} onSelect={setSelectedAlumni} lastRef={lastAlumniElementRef} />
+        <AlumniList alumni={alumniData} onSelect={setSelectedAlumni} />
         <div ref={loader}></div>
       </div>
 

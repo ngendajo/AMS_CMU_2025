@@ -29,4 +29,6 @@ export const SidebarDataAlu = [
     path: '/further_education',
     cName: 'nav-text'
   }
+
 ];
+

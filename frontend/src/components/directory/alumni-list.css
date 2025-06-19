@@ -89,3 +89,10 @@
     display: none;
   }
 }
+.desktop-table-wrapper {
+  max-height: 600px;  /* or any fixed height */
+  overflow-y: auto;
+}
+.desktop-table {
+  min-width: 800px;
+}
