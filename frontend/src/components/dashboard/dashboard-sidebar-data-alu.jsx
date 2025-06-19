@@ -1,7 +1,7 @@
 export const SidebarDataAlu = [
   {
     title: 'Dashboard',
-    path: '/',
+    path: '/alumni_dashboard',
     cName: 'nav-text'
   },
   {

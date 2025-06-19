@@ -17,6 +17,7 @@ import StoryDetail from './pages/home/AlumniStoriesDetail.jsx';
 import Container from './pages/Container';
 
 import Dashboard from './pages/dashboard/Dashboard';
+import AlumniDashboard from './pages/dashboard/AlumniDashboard.jsx';
 import PersonalProfile from './pages/profile/PersonalProfile';
 
 // add data
@@ -87,6 +88,7 @@ function App() {
                 <Route element={<RequireAuth />}>
                   <Route path='/' element={<Container />}>
                     <Route path="/" element={<Dashboard />} />
+                    <Route path="alumni_dashboard" element={<AlumniDashboard />} />
                     <Route path="/personal_profile" element={<PersonalProfile />} />
                     <Route path="/add_data" element={<AddData />} />
                     <Route path="/alumni_directory" element={<AlumniDirectory />} />
