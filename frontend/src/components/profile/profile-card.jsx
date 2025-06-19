@@ -72,7 +72,7 @@ const ProfileCardSection = ({
         {isEditing && (
           <button className="cancel" onClick={onCancelEdit}>Cancel</button>
         )}
-        <button className="change" onClick={onToggleEdit}>{isEditing ? "Done" : "Edit"}</button>
+        <button className="change" onClick={onToggleEdit}>{isEditing ? "Save" : "Edit"}</button>
       </div>
     )}
   </div>
@@ -258,8 +258,9 @@ const ProfileCard = () => {
   };
 
   const collegeLookup = Object.fromEntries(
-    dropdownOptions.colleges.map(c => [c.label, c.location])
+    dropdownOptions.colleges.map(c => [c.value, c.location])
   );
+  //console.log(collegeLookup);
 
   
  const renderSection = (
@@ -296,7 +297,8 @@ const ProfileCard = () => {
                           if (isAcademicSection && f.value === 'college') {
                             // Suppose you have a map: collegeId -> {city, country}
                             const locationInfo = collegeLookup[e.target.value]; // define this in scope
-                            updated[i]['location'] = `${locationInfo.city}, ${locationInfo.country}`;
+                            //console.log(e.target.value);
+                            updated[i]['location'] = `${locationInfo.location}`;
                           }
 
                           setData(updated);
@@ -313,7 +315,7 @@ const ProfileCard = () => {
                 }
 
                 // For academic location: make it readonly (no input) or just display string
-                if (isAcademicSection && f.value === 'location') {
+                if (isAcademicSection && f.value === 'country') {
                   return <td key={j}>{val || '-'}</td>;
                 }
 
@@ -331,7 +333,7 @@ const ProfileCard = () => {
                         }}
                         style={{ width: "100%" }}
                         // Disable input if academic section and location field
-                        disabled={isAcademicSection && f.value === 'location'}
+                        disabled={isAcademicSection && f.value === 'country'}
                       />
                     </td>
                   );
@@ -377,7 +379,7 @@ const ProfileCard = () => {
 
                       if (isAcademicSection && f.value === 'college') {
                         const locationInfo = collegeLookup[e.target.value];
-                        updated[i]['location'] = `${locationInfo.city}, ${locationInfo.country}`;
+                        updated[i]['location'] = `${locationInfo.location}`;
                       }
 
                       setData(updated);
@@ -393,7 +395,7 @@ const ProfileCard = () => {
               );
             }
 
-            if (isAcademicSection && f.value === 'location') {
+            if (isAcademicSection && f.value === 'country') {
               return <div key={j}>{val || '-'}</div>;
             }
 
@@ -409,7 +411,7 @@ const ProfileCard = () => {
                       setData(updated);
                     }}
                     style={{ width: "100%" }}
-                    disabled={isAcademicSection && f.value === 'location'}
+                    disabled={isAcademicSection && f.value === 'country'}
                   />
                 ) : (
                   safeValue(val)
