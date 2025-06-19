@@ -6,9 +6,12 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './EventsCalendar.css';
 
-import baseUrl from "../../api/baseUrl";
+
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+
+// import baseUrl from "../../api/baseUrl";
+const  baseUrl='https://backend.asyv.ac.rw/api';
 
 const EventsCalendar = () => {
   const [event, setEvent] = useState([]);
@@ -54,11 +57,11 @@ const EventsCalendar = () => {
   const fetchCalendarEvents = async () => {
     try {
       const response = await axios.get(baseUrl+'/events/',{
-        headers: {
-          "Authorization": 'Bearer ' + String(auth.accessToken),
-          "Content-Type": 'multipart/form-data'
-        },
-        withCredentials:true
+        // headers: {
+        //   "Authorization": 'Bearer ' + String(auth.accessToken),
+        //   "Content-Type": 'multipart/form-data'
+        // },
+        // withCredentials:true
       });
       setEvent(response.data); 
     } catch(err) {

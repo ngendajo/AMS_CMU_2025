@@ -14,9 +14,9 @@ const DashboardLayout = ({ children }) => {
       <DashboardHeader onToggleSidebar={toggleSidebar} isSidebarVisible={isSidebarVisible} />
       {/* Sidebar always shows on desktop, never on mobile */}
       <DashboardSidebar className="hide-mobile" />
-      <main className="page-content full-width">
+      <>
         {children}
-      </main>
+      </>
     </div>
   );
 };

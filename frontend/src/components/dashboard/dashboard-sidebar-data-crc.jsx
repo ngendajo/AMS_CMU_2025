@@ -16,17 +16,19 @@ export const SidebarDataCrc = [
   },
   {
     title: 'Career Opportunity',
-    path: '/career_opportunity',
+    path: '/career_opportunity_staff',
     cName: 'nav-text'
   },
   {
     title: 'Further Education',
-    path: '/further_education',
+    path: '/further_education_staff',
     cName: 'nav-text'
   },
+
     {
     title: 'Add Data',
     path: '/add_data', // This route can be updated later
     cName: 'nav-text'
   }
 ];
+

@@ -1,7 +1,7 @@
 export const SidebarDataAlu = [
   {
     title: 'Dashboard',
-    path: '/',
+    path: '/alumni_dashboard',
     cName: 'nav-text'
   },
   {
@@ -29,4 +29,6 @@ export const SidebarDataAlu = [
     path: '/further_education',
     cName: 'nav-text'
   }
+
 ];
+

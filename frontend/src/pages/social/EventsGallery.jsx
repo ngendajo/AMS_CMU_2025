@@ -6,9 +6,12 @@ import './EventsGallery.css';
 
 import axios from 'axios';
 import useAuth from "../../hooks/useAuth";
-import baseUrl from '../../api/baseUrl';
+
 
 import './Events.css';
+
+// import baseUrl from '../../api/baseUrl';
+const  baseUrl='https://backend.asyv.ac.rw/api';
 
 const EventsGallery = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -110,7 +113,6 @@ const EventsGallery = () => {
     <div className="EventsGalleryContainer">
         <div className="HeadWrapper">
           <button onClick={() => navigate(-1)} className="gallery-button">Back</button>
-          <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder={"Search album..."}/>
         </div>
         {(auth.user.is_crc || auth.user.is_superuser) && (
         <button onClick={() => setCreatingNew(true)} className="add-new-event">Add Album</button>

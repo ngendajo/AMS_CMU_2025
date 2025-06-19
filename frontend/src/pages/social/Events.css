@@ -80,11 +80,9 @@
   border: 2px var(--yellow) solid;
 }
 .CardsWrapper {
-  /* display */
   display: grid;
-  place-items: center;
-  grid-template-columns: repeat(3, 1fr);
-  /* box */
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 40px;
+  width: 100%;
+  place-items: center;
 }

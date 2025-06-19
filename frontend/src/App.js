@@ -17,12 +17,17 @@ import StoryDetail from './pages/home/AlumniStoriesDetail.jsx';
 import Container from './pages/Container';
 
 import Dashboard from './pages/dashboard/Dashboard';
+import AlumniDashboard from './pages/dashboard/AlumniDashboard.jsx';
 import PersonalProfile from './pages/profile/PersonalProfile';
 
 import AddData from './pages/AddData';
+
 import AlumniDirectory from './pages/directory/AlumniDirectory';
 import CareerOpportunity from './pages/career/CareerOpportunity';
+import CareerOpportunityStaff from "./pages/career/CareerOpportunityStaff";
+
 import FurtherEducation from './pages/education/FurtherEducation';
+import FurtherEducationStaff from './pages/education/FurtherEducationStaff';
 // support and giving
 import DonationOptions from './pages/support/DonationOptions.jsx';
 import MentoringPrograms from './pages/support/MentoringPrograms.jsx';
@@ -82,11 +87,17 @@ function App() {
                 <Route element={<RequireAuth />}>
                   <Route path='/' element={<Container />}>
                     <Route path="/" element={<Dashboard />} />
+                    <Route path="alumni_dashboard" element={<AlumniDashboard />} />
                     <Route path="/personal_profile" element={<PersonalProfile />} />
+                    <Route path="/add_data" element={<AddData />} />
                     <Route path="/alumni_directory" element={<AlumniDirectory />} />
                     <Route path="/career_opportunity" element={<CareerOpportunity />} />
+
+                    <Route path="/career_opportunity_staff" element={<CareerOpportunityStaff />}/>
                     <Route path="/add_data" element={<AddData />} />
+
                     <Route path="/further_education" element={<FurtherEducation />} />
+                    <Route path="/further_education_staff" element={<FurtherEducationStaff />} />
                     <Route path="/donation_options" element={<DonationOptions />} />
                     <Route path="/mentoring_programs" element={<MentoringPrograms />} />
                     <Route path="/events" element={<Events />} />
