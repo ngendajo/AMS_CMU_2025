@@ -204,3 +204,29 @@
 .big-space{
     height: 40px
 }
+
+.outcome-summary {
+    margin-top: 2rem;
+  }
+  .outcome-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  .outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .outcome-item {
+    background: #f7f7f7;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .label {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  .value {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
