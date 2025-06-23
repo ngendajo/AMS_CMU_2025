@@ -241,9 +241,11 @@ const handleDownload = async () => {
 
   return (
     <div className="DirectoryWrapper">
-        <div className = "ChartWrapper">
+        {auth.user?.is_superuser && (
+            <div className = "ChartWrapper">
             <OutcomePieChart summary={outcomeSummary} />
         </div>
+        )}
       <div className="DirectorySearchWrapper">
         <SearchBar value={searchTerm} onChange={handleSearchChange} placeholder="Search alumni..." per="100" />
       </div>
