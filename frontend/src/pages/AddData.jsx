@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AddData.css";
+import baseUrl from "../api/baseUrl";
+import axios from "../api/axios";
+import GradeForm from "../components/AddData/addGradeData";
+import GradeList from "../components/AddData/listGradeData";
 
 const AddData = () => {
   const [expanded, setExpanded] = useState(null);
@@ -14,6 +18,7 @@ const AddData = () => {
 
   const [cityOther, setCityOther] = useState(false);
   const [countryOther, setCountryOther] = useState(false);
+  const [mamas, setMamas] = useState([]);
 
   const toggleSection = (section) => {
     if (expanded === section) {
@@ -33,11 +38,16 @@ const AddData = () => {
     });
   };
 
-  const mockMamas = [
-    { id: 1, name: "Mama Jean" },
-    { id: 2, name: "Mama Claire" },
-    { id: 3, name: "Mama Esther" },
-  ];
+  useEffect(() => {
+    axios.get(baseUrl + '/options/mamas/') //get all mamas
+    .then((res) => {
+        setMamas(res.data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch mamas:", err);
+      });
+  }, []);
+
 
   return (
     <div className="add-data-container">
@@ -50,38 +60,7 @@ const AddData = () => {
           <span>{expanded === "grade" ? "▲" : "▼"}</span>
         </div>
         {expanded === "grade" && (
-          <div className="form-section">
-            <label className="required">Grade Name</label>
-            <input type="text" />
-
-            <label className="required">Admission Year to ASYV</label>
-            <input type="number" />
-
-            <label className="required">Graduation Year from ASYV</label>
-            <input type="number" />
-
-            <h4>Families</h4>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="family-group">
-                <label className="required">Family {i} Name</label>
-                <input type="text" />
-
-                <label className="required">Mother</label>
-                <select>
-                  <option value="">Select mama</option>
-                  {mockMamas.map((mama) => (
-                    <option key={mama.id} value={mama.id}>
-                      {mama.name}
-                    </option>
-                  ))}
-                </select>
-
-                <input type="hidden" value={i} />
-              </div>
-            ))}
-
-            <button>Submit Grade & Families</button>
-          </div>
+        <GradeForm /> 
         )}
       </div>
 
