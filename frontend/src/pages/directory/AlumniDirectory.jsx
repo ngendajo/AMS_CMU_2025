@@ -326,19 +326,18 @@ const handleDownload = async () => {
 
       {/* MODAL STYLE like responsive-fixed */}
       {selectedAlumni && (
-        <div className="lockScreen" onClick={handleClear}>
-          <div className="zoomedInContainer" onClick={(e) => e.stopPropagation()}>
-            <div className="zoomedIn">
-              <AlumniDetail
-                selectedAlumni={selectedAlumni}
-                handleClear={handleClear}
-                gradeFilter={gradeFilter}
-                familyFilter={familyFilter}
-                combinationFilter={combinationFilter}
-                industryFilter={industryFilter}
-                outcomeSummary={outcomeSummary}
-              />
-            </div>
+        <div className="modal-overlay" onClick={handleClear}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={handleClear}>×</button>
+            <AlumniDetail
+              selectedAlumni={selectedAlumni}
+              handleClear={handleClear}
+              gradeFilter={gradeFilter}
+              familyFilter={familyFilter}
+              combinationFilter={combinationFilter}
+              industryFilter={industryFilter}
+              outcomeSummary={outcomeSummary}
+            />
           </div>
         </div>
       )}
