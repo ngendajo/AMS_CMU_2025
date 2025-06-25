@@ -9,28 +9,6 @@ const AlumniDetail = ({ selectedAlumni, handleClear }) => {
   const navigate = useNavigate();
   const { auth } = useAuth();
 
-  const [stuByGrade, setStuByGrade] = useState([]);
-  const [empByGrade, setEmpByGrade] = useState([]);
-  const [stuEmpByGrade, setStuEmpByGrade] = useState([]);
-
-  useEffect(() => {
-    console.log("selected alumni", selectedAlumni)
-    const fetchData = async () => {
-      try {
-        const [stuRes, empRes, bothRes] = await Promise.all([
-          axios.get(baseUrl + '/stubygrade/', { headers: { Authorization: `Bearer ${auth.accessToken}` } }),
-          axios.get(baseUrl + '/emplbygrade/', { headers: { Authorization: `Bearer ${auth.accessToken}` } }),
-          axios.get(baseUrl + '/empstubygrade/', { headers: { Authorization: `Bearer ${auth.accessToken}` } })
-        ]);
-        setStuByGrade(stuRes.data || []);
-        setEmpByGrade(empRes.data || []);
-        setStuEmpByGrade(bothRes.data || []);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-  }, [auth]);
-
   if (!selectedAlumni) return null;
 
   const combinationStyle = (combination) => combination?.replace(/-/g, ', ') || '';

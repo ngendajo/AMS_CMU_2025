@@ -4,7 +4,6 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import './profile-card.css';
 
-import { useLocation } from 'react-router-dom';
 
 const safeValue = (val) => {
   if (val === null || val === undefined || val === "") return "Not Found";
@@ -53,7 +52,7 @@ const getStudyStatusLabel = (status) => {
   }
 };
 
-const getEmployementStatusLabel = (status) => {
+const getEmploymentStatusLabel = (status) => {
   switch (status) {
     case 'F':
       return 'Full-time';
@@ -92,7 +91,7 @@ const ProfileCardSection = ({
     )}
   </div>
 );
-const ProfileCard = ({ userId }) => {
+const ProfileCard = ({ propId }) => {
   const [dropdownOptions, setDropdownOptions] = useState({
     marital_statuses: [],
     children_options: [],
@@ -100,20 +99,19 @@ const ProfileCard = ({ userId }) => {
     colleges: [],
     industries: [],
     status:[],
-    employement_status:[], 
+    employment_status:[], 
     scholarship:[],
   });
   const { auth } = useAuth();
-  const location = useLocation();
-  const { userId } = location.state?.userId || auth.user?.id;
+  const [userId, setUserId] = useState(propId || auth.user?.id);
   const [user, setUser] = useState(null);
   const [study, setStudy] = useState([]);
   const [employment, setEmployment] = useState([]);
-  //const [user_id, setUser_id] = useState();
   const [kid_id, setKid_id] = useState();
   const [editState, setEditState] = useState({ current: false, academic: false, employment: false });
-  const [currentInfo, setCurrentInfo] = useState(null);
-  //fetch kid user information
+ 
+
+  console.log(userId)
 
   useEffect(() => {
     console.log("Received userId:", userId);
@@ -125,20 +123,16 @@ const ProfileCard = ({ userId }) => {
             withCredentials: true
           }),
           axios.get(baseUrl + '/options/all-dropdowns/', { 
-          axios.get(baseUrl + '/options/all-dropdowns/', { 
             headers: { Authorization: 'Bearer ' + String(auth.accessToken) },
             withCredentials: true
-            withCredentials: true
+          
           })
         ]);
   
         //setUser_id(auth.user.id);
         setUser(userRes.data);
         setKid_id(userRes.data.basic_information?.kid_id);
-        setDropdownOptions(dropdownRes.data);  
-  
-        setKid_id(userRes.data.basic_information?.kid_id);
-        setDropdownOptions(dropdownRes.data);  
+        setDropdownOptions(dropdownRes.data); 
   
       } catch (err) {
         console.error(err);
@@ -402,7 +396,7 @@ const ProfileCard = ({ userId }) => {
                   return (
                     <td key={j}>
                       {isEmploymentSection && f.value === 'status' ? (
-                        getEmployementStatusLabel(val)
+                        getEmploymentStatusLabel(val)
                       ) : isAcademicSection && f.value === 'college' ? (
                         dropdownOptions.colleges.find(opt => String(opt.value) === String(val))?.label ?? val
                       ) : isAcademicSection && f.value === 'level' ? (
@@ -506,7 +500,7 @@ const ProfileCard = ({ userId }) => {
               return (
                 <td key={j}>
                   {isEmploymentSection && f.value === 'status' ? (
-                    getEmployementStatusLabel(val)
+                    getEmploymentStatusLabel(val)
                   ) : isAcademicSection && f.value === 'college' ? (
                     dropdownOptions.colleges.find(opt => String(opt.value) === String(val))?.label ?? val
                   ) : isAcademicSection && f.value === 'level' ? (

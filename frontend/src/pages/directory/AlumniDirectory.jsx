@@ -128,8 +128,9 @@ const AlumniDirectory = () => {
           family: element.family.family_name || 'none',
           combination: element.combination.combination_name || '',
           employment: element.employment?.[0]?.title || '',
+          industry: element.employment?.[0]?.industry || '',
         }));
-        console.log("sample alumni data", alumnilist[0])
+        console.log("sample alumni data", alumnilist[1])
         setAlumniData((prevData) =>
             pagination.current_page === 1 ? alumnilist : [...prevData, ...alumnilist]
           );

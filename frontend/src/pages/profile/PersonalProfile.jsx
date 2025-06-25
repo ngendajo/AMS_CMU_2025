@@ -6,11 +6,12 @@ import '../../App.css';
 
 const Profile = () => {
   const location = useLocation();
-  const selectedID = location.state?.selectedID; // passed from alumni-detail
+  const selectedID = location.state?.userId; // passed from alumni-detail
 
+  console.log("Seleced iD", selectedID);
   return (
     <div className="ProfileWrapper">
-      <ProfileCard userId={selectedID} />
+      <ProfileCard propId={selectedID} />
       <Link to="/personal_profile-resume" className="toResume">Generate Resume &gt;</Link>
     </div>
   );
