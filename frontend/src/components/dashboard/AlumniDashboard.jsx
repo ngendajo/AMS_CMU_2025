@@ -1,10 +1,10 @@
 // src/pages/AlumniDashboard.jsx
 import React, { useEffect, useState } from 'react';
-import './dashboard.css';
+import '../../pages/dashboard/dashboard.css';
 import './alumni-dashboard.css';
 import useAuth from '../../hooks/useAuth';
-import { Event } from '../../components/social/events-cards';
-import OpportunityCard from '../../components/opportunities/opportunity-card';
+import { Event } from '../social/events-cards';
+import OpportunityCard from '../opportunities/opportunity-card';
 import axios from 'axios';
 // import baseUrl from '../../api/baseUrl';
 const  baseUrl='https://backend.asyv.ac.rw/api';
