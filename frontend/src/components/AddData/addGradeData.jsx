@@ -52,6 +52,8 @@ const GradeForm = () => {
         })),
       };
 
+      console.log(payload)
+
       const res = await axios.post(baseUrl + '/grades/', payload);
       alert('Grade created successfully!');
       console.log(res.data);

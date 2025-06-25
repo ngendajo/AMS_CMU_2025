@@ -7,6 +7,18 @@ const safeValue = (val) => {
   if (val === null || val === undefined || val === "") return "Not Found";
   return val;
 };
+const getScholarshipLabel = (status) => {
+  switch (status) {
+    case 'F': 
+      return 'Full' ;
+    case 'P': 
+      return 'Partial';
+    case 'S': 
+      return 'Self-Sponsor';
+    default: 
+      return ""
+  }
+}
 const getLevelLabel = (level) => {
     switch (level) {
       case 'A1':
@@ -85,7 +97,8 @@ const ProfileCard = () => {
     colleges: [],
     industries: [],
     status:[],
-    employement_status:[]
+    employement_status:[], 
+    scholarship:[],
   });
   const { auth } = useAuth();
   const [user, setUser] = useState(null);
@@ -296,12 +309,16 @@ const ProfileCard = () => {
             {data.map((item, i) => (
               <tr key={i}>
                 {fields.map((f, j) => {
-                  const val = f.path
-                    ? getNestedValue(item, f.path)
-                    : typeof f.value === 'function'
-                    ? f.value(item)
-                    : item[f.value];
-  
+                  let val = f.path
+                  ? getNestedValue(item, f.path)
+                  : typeof f.value === 'function'
+                  ? f.value(item)
+                  : item[f.value];
+                
+                if (typeof val === 'boolean') {
+                  val = val ? 'Yes' : 'No';
+                }
+                  
                   if (editing && f.dropdownKey && dropdownOptions[f.dropdownKey]) {
                     return (
                       <td key={j}>
@@ -346,7 +363,7 @@ const ProfileCard = () => {
                     return (
                       <td key={j}>
                         <input
-                          type="text"
+                          type={f.type || "text"}
                           value={val ?? ""}
                           onChange={(e) => {
                             const updated = [...data];
@@ -379,6 +396,8 @@ const ProfileCard = () => {
                         getLevelLabel(val)
                       ) : isAcademicSection && f.value === 'status' ? (
                         getStudyStatusLabel(val)
+                      ) : isAcademicSection && f.value === 'scholarship' ? (
+                        getScholarshipLabel(val)
                       ) : (
                         safeValue(val)
                       )}
@@ -392,6 +411,9 @@ const ProfileCard = () => {
       </div>
   
       <div className="profile-fields mobile-only">
+        <thead>
+          <tr>{fields.map((f, i) => <th key={i}>{f.label}</th>)}</tr>
+        </thead>
         {data.map((item, i) => (
           <div key={i} className="entry-block">
             {fields.map((f, j) => {
@@ -410,18 +432,19 @@ const ProfileCard = () => {
                         const updated = [...data];
                         const itemCopy = { ...updated[i] };
                         const newValue = e.target.value;
-  
+
                         if (f.path) {
                           setNestedValue(itemCopy, f.path, newValue);
                         } else {
                           itemCopy[f.value] = newValue;
                         }
-  
+
+                        // Special handling: update location when college changes
                         if (isAcademicSection && f.value === 'college') {
                           const locationInfo = collegeLookup[newValue];
                           setNestedValue(itemCopy, 'location', locationInfo?.location || "");
                         }
-  
+
                         updated[i] = itemCopy;
                         setData(updated);
                       }}
@@ -440,33 +463,49 @@ const ProfileCard = () => {
                 return <div key={j}>{val || '-'}</div>;
               }
   
-              return (
-                <div key={j}>
-                  {editing ? (
+              if (editing) {
+                return (
+                  <td key={j}>
                     <input
-                      type="text"
+                      type={f.type || "text"}
                       value={val ?? ""}
                       onChange={(e) => {
                         const updated = [...data];
                         const itemCopy = { ...updated[i] };
                         const newValue = e.target.value;
-  
+
                         if (f.path) {
                           setNestedValue(itemCopy, f.path, newValue);
                         } else {
                           itemCopy[f.value] = newValue;
                         }
-  
+
                         updated[i] = itemCopy;
                         setData(updated);
                       }}
                       style={{ width: "100%" }}
                       disabled={isAcademicSection && f.value === 'country'}
                     />
+                  </td>
+                );
+              }
+
+              return (
+                <td key={j}>
+                  {isEmploymentSection && f.value === 'status' ? (
+                    getEmployementStatusLabel(val)
+                  ) : isAcademicSection && f.value === 'college' ? (
+                    dropdownOptions.colleges.find(opt => String(opt.value) === String(val))?.label ?? val
+                  ) : isAcademicSection && f.value === 'level' ? (
+                    getLevelLabel(val)
+                  ) : isAcademicSection && f.value === 'status' ? (
+                    getStudyStatusLabel(val)
+                  ) : isAcademicSection && f.value === 'scholarship' ? (
+                    getScholarshipLabel(val)
                   ) : (
                     safeValue(val)
                   )}
-                </div>
+                </td>
               );
             })}
           </div>
@@ -485,7 +524,7 @@ const ProfileCard = () => {
   ]  : [] ;
   const currentInfoFields = user ? [
     { label: 'Marital Status', path: 'personal_status.marital_status', dropdownKey: 'marital_statuses' },
-    { label: 'Children', path: 'personal_status.has_children' ? "Yes" : "No", dropdownKey: 'children_options' },
+    { label: 'Children', path: 'personal_status.has_children', dropdownKey: 'children_options' },
     { label: 'City', path: 'current_address.current_district_or_city' },
     { label: 'Country', path: 'current_address.current_county' }
   ] : [];
@@ -506,8 +545,10 @@ const ProfileCard = () => {
   const academicFields = [
     { label: 'Level', value: 'level', dropdownKey: 'levels' },
     { label: 'Degree', value: 'degree' },
-    { label: 'University', value: 'college', dropdownKey: 'colleges' },
+    { label: 'University', value: 'college', dropdownKey: 'colleges' , allowCustom: true},
     { label: 'Location', value: 'country' },
+    { label: 'Scholarship', value: 'scholarship', dropdownKey: 'scholarship'},
+    { label: 'Scholarship Details', value: 'scholarship_details'},
     { label: 'Status', value: 'status', dropdownKey: 'status' }
   ];
   const employmentFields = [

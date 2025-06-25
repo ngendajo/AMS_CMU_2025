@@ -7,6 +7,9 @@ import {
 import axios from 'axios';
 import baseUrl from '../../api/baseUrl';
 import CollegesList from './college-list';
+import EmploymentDistribution from './employment-distribution';
+import DistributionList from './industry-distribution';
+import AlumniLocationMap from './alumni-location';
 
 // Helper function to aggregate distributions from multiple year objects
 const aggregateDistributions = (dataArray, key) => {
@@ -51,11 +54,16 @@ const aggregateColleges = (dataArray) => {
 const AlumniOutcomesDashboard = () => {
   const [data, setData] = useState([]);
   const [selectedYears, setSelectedYears] = useState([]);
+  const [alumniLocations, setAlumniLocations] = useState([]);
 
   useEffect(() => {
     axios.get(baseUrl + '/alumni-trends/')
       .then(res => setData(res.data.yearly_outcomes))
       .catch(err => console.error('Error loading data:', err));
+
+    axios.get(baseUrl + '/alumni-map/')
+      .then(res => setAlumniLocations(res.data))
+      .catch(err => console.error('Error loading alumni locations:', err));
   }, []);
 
   const yearOptions = data.map(item => ({
@@ -175,6 +183,13 @@ const AlumniOutcomesDashboard = () => {
         </table>
       </div>
       <CollegesList data={collegeData} />
+      <EmploymentDistribution distribution={employmentStatusData} />
+      <DistributionList
+        title="Industry Distribution"
+        distribution={industryData}
+        showZero={false} 
+      />
+
     </div>
   );
 };
