@@ -3,6 +3,9 @@ import baseUrl from "../../api/baseUrl";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import './profile-card.css';
+
+import { useLocation } from 'react-router-dom';
+
 const safeValue = (val) => {
   if (val === null || val === undefined || val === "") return "Not Found";
   return val;
@@ -89,7 +92,7 @@ const ProfileCardSection = ({
     )}
   </div>
 );
-const ProfileCard = () => {
+const ProfileCard = ({ userId }) => {
   const [dropdownOptions, setDropdownOptions] = useState({
     marital_statuses: [],
     children_options: [],
@@ -101,30 +104,39 @@ const ProfileCard = () => {
     scholarship:[],
   });
   const { auth } = useAuth();
+  const location = useLocation();
+  const { userId } = location.state?.userId || auth.user?.id;
   const [user, setUser] = useState(null);
   const [study, setStudy] = useState([]);
   const [employment, setEmployment] = useState([]);
-  const [user_id, setUser_id] = useState();
+  //const [user_id, setUser_id] = useState();
   const [kid_id, setKid_id] = useState();
   const [editState, setEditState] = useState({ current: false, academic: false, employment: false });
   const [currentInfo, setCurrentInfo] = useState(null);
   //fetch kid user information
+
   useEffect(() => {
+    console.log("Received userId:", userId);
     const fetchData = async () => {
       try {
         const [userRes, dropdownRes] = await Promise.all([
-          axios.get(baseUrl + '/kid/' + auth.user.id, {
+          axios.get(baseUrl + '/kid/' + userId, {
             headers: { Authorization: 'Bearer ' + String(auth.accessToken), "Content-Type": 'multipart/form-data' },
             withCredentials: true
           }),
           axios.get(baseUrl + '/options/all-dropdowns/', { 
+          axios.get(baseUrl + '/options/all-dropdowns/', { 
             headers: { Authorization: 'Bearer ' + String(auth.accessToken) },
+            withCredentials: true
             withCredentials: true
           })
         ]);
   
-        setUser_id(auth.user.id);
+        //setUser_id(auth.user.id);
         setUser(userRes.data);
+        setKid_id(userRes.data.basic_information?.kid_id);
+        setDropdownOptions(dropdownRes.data);  
+  
         setKid_id(userRes.data.basic_information?.kid_id);
         setDropdownOptions(dropdownRes.data);  
   
@@ -133,8 +145,9 @@ const ProfileCard = () => {
       }
     };
   
-    if (auth?.user?.id) fetchData();
-  }, [auth]);
+    fetchData();
+  }, [auth, userId]);
+
   const sortStudyLevel = (studies) => {
     const levelOrder = { C: 1, A1: 2, A0: 3, M: 4, PHD: 5 };
     return studies.sort((a, b) => {
@@ -145,7 +158,7 @@ const ProfileCard = () => {
 
   const getStudy = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/alumni-academic/?id=${user_id}`, {
+      const response = await axios.get(`${baseUrl}/alumni-academic/?id=${userId}`, {
         headers: { Authorization: 'Bearer ' + String(auth.accessToken), "Content-Type": 'multipart/form-data' },
         withCredentials: true
       });
@@ -167,8 +180,8 @@ const ProfileCard = () => {
   };
 
   useEffect(() => {
-    if (user_id) getStudy();
-  }, [auth, user_id]);
+    if (userId) getStudy();
+  }, [auth, userId]);
 
   const sortJobDate = (jobs) => {
     return jobs.sort((a, b) => {
@@ -183,7 +196,7 @@ const ProfileCard = () => {
 
   const getEmployment = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/alumni-employment/?id=${user_id}`, {
+      const response = await axios.get(`${baseUrl}/alumni-employment/?id=${userId}`, {
         headers: { Authorization: 'Bearer ' + String(auth.accessToken), "Content-Type": 'multipart/form-data' },
         withCredentials: true
       });
@@ -209,8 +222,8 @@ const ProfileCard = () => {
   }, [user]);
 
   useEffect(() => {
-    if (user_id) getEmployment();
-  }, [auth, user_id]);
+    if (userId) getEmployment();
+  }, [auth, userId]);
 //Edit employment data
   const saveEmploymentData = async () => {
     console.log("called api to save employment data")
@@ -218,7 +231,7 @@ const ProfileCard = () => {
       employment: employment
     });
     try {
-      await axios.put(`${baseUrl}/alumni-employment/?id=${user_id}`, {
+      await axios.put(`${baseUrl}/alumni-employment/?id=${userId}`, {
         employment: employment
       }, {
         headers: {
@@ -241,7 +254,7 @@ const ProfileCard = () => {
       academic: study
     });
     try {
-      await axios.put(`${baseUrl}/alumni-academic/?id=${user_id}`, {
+      await axios.put(`${baseUrl}/alumni-academic/?id=${userId}`, {
         academic: study
       }, {
         headers: {
@@ -261,7 +274,7 @@ const ProfileCard = () => {
   const saveCurrentInfo = async () => {
     console.log(user);
     try {
-      await axios.put(`${baseUrl}/kid/${user_id}/`, user, {
+      await axios.put(`${baseUrl}/kid/${userId}/`, user, {
         headers: {
           Authorization: 'Bearer ' + String(auth.accessToken),
           'Content-Type': 'application/json'

@@ -115,6 +115,7 @@ const AlumniDirectory = () => {
 
         const alumnilist = response.data.data.map((element) => ({
           id: element.id,
+          user_id: element.user_id,
           profilePic: baseUrlforImg + element.image_url,
           email: element.email,
           firstName: element.first_name,
@@ -128,7 +129,7 @@ const AlumniDirectory = () => {
           combination: element.combination.combination_name || '',
           employment: element.employment?.[0]?.title || '',
         }));
-
+        console.log("sample alumni data", alumnilist[0])
         setAlumniData((prevData) =>
             pagination.current_page === 1 ? alumnilist : [...prevData, ...alumnilist]
           );

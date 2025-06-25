@@ -14,6 +14,7 @@ const AlumniDetail = ({ selectedAlumni, handleClear }) => {
   const [stuEmpByGrade, setStuEmpByGrade] = useState([]);
 
   useEffect(() => {
+    console.log("selected alumni", selectedAlumni)
     const fetchData = async () => {
       try {
         const [stuRes, empRes, bothRes] = await Promise.all([
@@ -28,7 +29,6 @@ const AlumniDetail = ({ selectedAlumni, handleClear }) => {
         console.log(err);
       }
     };
-    fetchData();
   }, [auth]);
 
   if (!selectedAlumni) return null;
@@ -36,8 +36,9 @@ const AlumniDetail = ({ selectedAlumni, handleClear }) => {
   const combinationStyle = (combination) => combination?.replace(/-/g, ', ') || '';
 
   const handleViewClick = () => {
+    console.log("alumni user id", selectedAlumni.user_id);
     navigate("/personal_profile", {
-    state: { selectedID: selectedAlumni.id }
+    state: { userId: selectedAlumni.user_id }
 });
   };
 

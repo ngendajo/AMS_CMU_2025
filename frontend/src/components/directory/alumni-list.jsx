@@ -22,7 +22,7 @@ const AlumniList = ({ alumni, onSelect }) => {
         <tbody>
           {alumni.map((alum, index) => (
             <tr
-              key={alum.id}
+              key={alum.user_id}
               onClick={() => onSelect(alum)}
               className="table-row"
            
@@ -45,7 +45,7 @@ const AlumniList = ({ alumni, onSelect }) => {
       <div className="mobile-list alumni-list">
         {alumni.map((alum, index) => (
           <div
-            key={alum.id}
+            key={alum.user_id}
             className="alumni-item"
             onClick={() => onSelect(alum)}
            
