@@ -265,7 +265,7 @@ const ProfileCard = ({ propId }) => {
     }
   };
 //Edit current info
-  const saveCurrentInfo = async () => {
+  const saveKidInfo = async () => {
     console.log(user);
     try {
       await axios.put(`${baseUrl}/kid/${userId}/`, user, {
@@ -275,10 +275,10 @@ const ProfileCard = ({ propId }) => {
         },
         withCredentials: true
       });
-      alert('Current info saved!');
+      alert('Kid info saved!');
     } catch (err) {
       console.error(err);
-      alert('Failed to save current info.');
+      alert('Failed to save Kid info.');
     }
   };
 
@@ -523,10 +523,10 @@ const ProfileCard = ({ propId }) => {
   
 
   const personalFields =  user ? [
-    { label: 'First Name', value: u => u.basic_information?.first_name },
-    { label: 'Rwandan Name', value: u => u.basic_information?.rwandan_name },
-    { label: 'Gender', value: u => u.basic_information?.gender },
-    { label: 'Date of Birth', value: u => u.basic_information?.date_of_birth },
+    { label: 'First Name', path: 'basic_information.first_name'},
+    { label: 'Rwandan Name', path: 'basic_information.rwandan_name' },
+    { label: 'Gender', path: 'basic_information.gender' },
+    { label: 'Date of Birth', path: 'basic_information.date_of_birth'},
     { label: 'Place of Birth', value: u => `${u.place_of_birth?.origin_district}, ${u.place_of_birth?.origin_sector}` }
   ]  : [] ;
   const currentInfoFields = user ? [
@@ -569,15 +569,24 @@ const ProfileCard = ({ propId }) => {
   
   return (
     <div className="profile-container vertical-cards">
-      <ProfileCardSection title="Personal Info" canEdit={false}>
-        {renderSection([user], (newArr) => setUser(newArr[0]), personalFields)}
+      <ProfileCardSection 
+        title="Personal Info" canEdit={auth.user?.is_superuser}
+        isEditing={editState.info}
+        onToggleEdit={() => {
+          if (editState.info) {
+            saveKidInfo();
+          }
+          setEditState(prev => ({ ...prev, info: !prev.info }));
+        }}
+        onCancelEdit={() => setEditState(prev => ({ ...prev, info: false }))}>
+        {renderSection([user], (newArr) => setUser(newArr[0]), personalFields, editState.info)}
       </ProfileCardSection>
       <ProfileCardSection
         title="Current Info"
         isEditing={editState.current}
         onToggleEdit={() => {
           if (editState.current) {
-            saveCurrentInfo();
+            saveKidInfo();
           }
           setEditState(prev => ({ ...prev, current: !prev.current }));
         }}
@@ -585,10 +594,18 @@ const ProfileCard = ({ propId }) => {
       >
         {renderSection([user], (newArr) => setUser(newArr[0]), currentInfoFields, editState.current)}
       </ProfileCardSection>
-      <ProfileCardSection title="ASYV Info" canEdit={false}>
-        {renderSection([user], (newArr) => setUser(newArr[0]), asyvIdentityFields)}
-        {renderSection([user], (newArr) => setUser(newArr[0]), asyvAcademicFields)}
-        {renderSection([user], (newArr) => setUser(newArr[0]), leapProgramFields)}
+      <ProfileCardSection title="ASYV Info" canEdit={auth.user?.is_superuser}
+        isEditing={editState.asyv}
+        onToggleEdit={() => {
+          if (editState.asyv) {
+            saveKidInfo();
+          }
+          setEditState(prev => ({ ...prev, asyv: !prev.asyv }));
+        }}
+        onCancelEdit={() => setEditState(prev => ({ ...prev, asyv: false }))}>
+        {renderSection([user], (newArr) => setUser(newArr[0]), asyvIdentityFields, editState.asyv)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), asyvAcademicFields, editState.asyv)}
+        {renderSection([user], (newArr) => setUser(newArr[0]), leapProgramFields, editState.asyv)}
       </ProfileCardSection>
       <ProfileCardSection
         title="Academic Info"
