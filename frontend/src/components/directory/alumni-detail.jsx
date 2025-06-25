@@ -60,11 +60,13 @@ const AlumniDetail = ({ selectedAlumni, handleClear }) => {
         <div className="DetailValue">{selectedAlumni.industry}</div>
       </div>
 
-      <div className="alumni-detail-button">
-        <button onClick={handleViewClick} className="alumni-view-button">
-          View Profile
-        </button>
-      </div>
+     {(auth.user?.is_crc || auth.user?.is_superuser) && (
+          <div className="alumni-detail-button">
+            <button onClick={handleViewClick} className="alumni-view-button">
+              View
+            </button>
+          </div>
+        )}
     </div>
   );
 };
