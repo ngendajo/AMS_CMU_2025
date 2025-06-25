@@ -15,89 +15,27 @@ import icon11 from '../../static/images/job_posts_icon.png'
 import useAuth from '../../hooks/useAuth';
 import DashboardLayout from '../../components/dashboard/dashboard-layout';
 import AlumniOutcomesDashboard from '../../components/dashboard/alumni-trends.jsx';
+import AlumniDashboard from '../../components/dashboard/AlumniDashboard.jsx';
+
 
 const Dashboard = () => {
 
   const { auth } = useAuth();
   
   return (
-    <DashboardLayout>
-    <div className="DashboardGrid">
+    <div>
     {(auth.user.is_alumni) && (
       <>
-        <DashboardCard
-          imgSrc={icon1}
-          imgAlt="Personal profile icon"
-          buttonText="Personal Profile"
-          path="/personal_profile"
-        />
-        <DashboardCard
-          imgSrc={icon2}
-          imgAlt="Alumni directory icon"
-          buttonText="Alumni Directory"
-          path="/alumni_directory"
-        />
-        <DashboardCard
-          imgSrc={icon3}
-          imgAlt="Career opportunity icon"
-          buttonText="Career Opportunity"
-          path="/career_opportunity"
-        />
-        <DashboardCard
-          imgSrc={icon4}
-          imgAlt="Further education icon"
-          buttonText="Further Education"
-          path="/further_education"
-        />
-        <DashboardCard
-          imgSrc={icon5}
-          imgAlt="Donation options icon"
-          buttonText="Donation Options"
-          path="/donation_options"
-        />
-        <DashboardCard
-          imgSrc={icon6}
-          imgAlt="Mentoring programs icon"
-          buttonText="Mentoring Programs"
-          path="/mentoring_programs"
-        />
-        <DashboardCard
-          imgSrc={icon7}
-          imgAlt="Reunion events icon"
-          buttonText="Reunion Events"
-          path="/events"
-        />
-        <DashboardCard
-          imgSrc={icon8}
-          imgAlt="Discussion forums icon"
-          buttonText="Discussion Forums"
-          path="/discussion_forums"
-        />
-        <DashboardCard
-          imgSrc={icon9}
-          imgAlt="Frequent inquiries icon"
-          buttonText="Frequent Inquiries"
-          path="/frequent_inquiries"
-        />
-        <DashboardCard
-          imgSrc={icon10}
-          imgAlt="Alumni story posts icon"
-          buttonText="Alumni Story Posts"
-          path="/alumni_story_posts"
-        />
-        <DashboardCard
-          imgSrc={icon11}
-          imgAlt="Alumni job posts icon"
-          buttonText="Alumni Job Posts"
-          path="/alumni_job_posts"
-        />
+        <AlumniDashboard />
       </>)}
     {(auth.user.is_crc || auth.user.is_superuser) && (
       <>
+      <div className="DashboardGrid">
         <AlumniOutcomesDashboard />
+      </div>
       </>)}
     </div>
-    </DashboardLayout>
+    
   );
 };
 

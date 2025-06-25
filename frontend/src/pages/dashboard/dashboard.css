@@ -76,7 +76,7 @@ body {
   gap: clamp(0.5rem, 2vw, 1.5rem);
   padding: 1rem;
   width: 100vw;              /* limit container to viewport width */
-  max-width: 70%;           /* safety cap */
+  max-width: 75%;           /* safety cap */
   box-sizing: border-box;
   overflow-x: hidden;        /* prevent horizontal scroll caused by grid */
 }
@@ -85,5 +85,9 @@ body {
   .MarginContainer {
     padding-left: 1rem;
     padding-top: 5rem;
+  }
+  .DashboardGrid{
+    max-width: 100%;
+    width: 100%;
   }
 }
